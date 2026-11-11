@@ -5,6 +5,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import {
   boundsOf,
+  containBounds,
   minZoomToFit,
   SALVADOR_FALLBACK,
 } from '../../lib/map/bounds.ts';
@@ -63,16 +64,16 @@ export async function createBeachMap(
   // O usuário não sai de Salvador: área fixa (ampliada se algum ponto ficar fora) e zoom mínimo
   // calculado para essa área caber na tela.
   const navBounds = navigationBounds(markers);
-  const minZoomFor = () =>
-    minZoomToFit(navBounds, {
-      width: container.clientWidth,
-      height: container.clientHeight,
-    });
+  const viewport = () => ({
+    width: container.clientWidth,
+    height: container.clientHeight,
+  });
+  const minZoomFor = () => minZoomToFit(navBounds, viewport());
   const map = new maplibregl.Map({
     container,
     style,
     attributionControl: false,
-    maxBounds: navBounds,
+    maxBounds: containBounds(navBounds, viewport()),
     minZoom: minZoomFor(),
     ...(bounds
       ? { bounds, fitBoundsOptions: { padding: VIEW_PADDING, animate: false } }
@@ -89,7 +90,10 @@ export async function createBeachMap(
   );
 
   // Tela redimensionada (ou painel abrindo): recalcula o zoom mínimo.
-  const resizeObserver = new ResizeObserver(() => map.setMinZoom(minZoomFor()));
+  const resizeObserver = new ResizeObserver(() => {
+    map.setMaxBounds(containBounds(navBounds, viewport()));
+    map.setMinZoom(minZoomFor());
+  });
   resizeObserver.observe(container);
 
   const entries = new Map<

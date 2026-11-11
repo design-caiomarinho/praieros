@@ -86,3 +86,38 @@ export function minZoomToFit(
   );
   return Math.max(0, zoom);
 }
+
+function mercatorLat(y: number): number {
+  return (Math.atan(Math.sinh(Math.PI * (1 - 2 * y))) * 180) / Math.PI;
+}
+
+/**
+ * Retângulo com a proporção da tela que contém `b`, centrado nele. O MapLibre, com `maxBounds`,
+ * nunca mostra além do limite e por isso preenche a tela (corta o retângulo no lado maior).
+ * Dando a ele este retângulo, o zoom mínimo mostra `b` inteiro e o excesso vira margem
+ * simétrica, sem o mapa subir ou descer além disso.
+ */
+export function containBounds(
+  b: Bounds,
+  size: { width: number; height: number },
+): Bounds {
+  if (size.width <= 0 || size.height <= 0) return b;
+  const dLng = b[1][0] - b[0][0];
+  const yTop = mercatorY(b[1][1]);
+  const yBottom = mercatorY(b[0][1]);
+  const dY = yBottom - yTop;
+  const wantedLng = 360 * dY * (size.width / size.height);
+  const cLng = (b[0][0] + b[1][0]) / 2;
+  if (wantedLng >= dLng) {
+    return [
+      [cLng - wantedLng / 2, b[0][1]],
+      [cLng + wantedLng / 2, b[1][1]],
+    ];
+  }
+  const wantedY = (dLng / 360) * (size.height / size.width);
+  const cY = (yTop + yBottom) / 2;
+  return [
+    [b[0][0], mercatorLat(cY + wantedY / 2)],
+    [b[1][0], mercatorLat(cY - wantedY / 2)],
+  ];
+}

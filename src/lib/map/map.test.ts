@@ -85,13 +85,18 @@ describe('applyPalette', () => {
 
 import { readFileSync } from 'node:fs';
 import {
+  containBounds,
   containsPoint,
   extendBounds,
   minZoomToFit,
   padBounds,
   type Bounds,
 } from './bounds.ts';
-import { navigationBounds, SALVADOR_OSM_BOUNDS } from './salvador-bounds.ts';
+import {
+  navigationBounds,
+  SALVADOR_OSM_BOUNDS,
+  SALVADOR_URBAN_BOUNDS,
+} from './salvador-bounds.ts';
 
 describe('padBounds e extendBounds', () => {
   const b: Bounds = [
@@ -150,8 +155,12 @@ describe('minZoomToFit', () => {
 describe('navigationBounds', () => {
   it('tem folga em relação ao limite do OpenStreetMap', () => {
     const b = navigationBounds();
-    expect(b[0][0]).toBeLessThan(SALVADOR_OSM_BOUNDS[0][0]);
-    expect(b[1][1]).toBeGreaterThan(SALVADOR_OSM_BOUNDS[1][1]);
+    expect(b[0][0]).toBeLessThan(SALVADOR_URBAN_BOUNDS[0][0]);
+    // O oeste das ilhas da Baía fica de fora.
+    expect(b[0][0]).toBeGreaterThan(SALVADOR_OSM_BOUNDS[0][0]);
+    expect(b[1][1]).toBeGreaterThan(SALVADOR_URBAN_BOUNDS[1][1]);
+    // O norte (além do litoral, rumo a Camaçari) fica de fora.
+    expect(b[1][1]).toBeLessThan(SALVADOR_OSM_BOUNDS[1][1]);
   });
   it('inclui todos os pontos do catálogo (se um ficar fora, o retângulo cresce)', () => {
     const catalog = JSON.parse(
@@ -170,5 +179,35 @@ describe('navigationBounds', () => {
     expect(pts.every((p) => containsPoint(b, p))).toBe(true);
     // Hoje nenhum ponto está fora do limite com folga: a constante não precisou crescer.
     expect(b).toEqual(navigationBounds());
+  });
+});
+
+describe('containBounds', () => {
+  const b: Bounds = [
+    [-38.5, -13],
+    [-38.3, -12.8],
+  ];
+  it('tela larga: amplia os lados, simétrico, sem mexer no norte e no sul', () => {
+    const c = containBounds(b, { width: 2000, height: 500 });
+    expect(c[0][1]).toBe(-13);
+    expect(c[1][1]).toBe(-12.8);
+    expect(c[0][0]).toBeLessThan(-38.5);
+    expect(c[1][0]).toBeGreaterThan(-38.3);
+    expect((c[0][0] + c[1][0]) / 2).toBeCloseTo(-38.4, 9);
+  });
+  it('tela alta: amplia norte e sul, sem mexer nos lados', () => {
+    const c = containBounds(b, { width: 300, height: 1000 });
+    expect(c[0][0]).toBe(-38.5);
+    expect(c[1][0]).toBe(-38.3);
+    expect(c[0][1]).toBeLessThan(-13);
+    expect(c[1][1]).toBeGreaterThan(-12.8);
+  });
+  it('o retângulo resultante cabe na tela exatamente no zoom mínimo do original', () => {
+    const size = { width: 1440, height: 843 };
+    const c = containBounds(b, size);
+    expect(minZoomToFit(c, size)).toBeCloseTo(minZoomToFit(b, size), 6);
+  });
+  it('tela sem tamanho: devolve o original', () => {
+    expect(containBounds(b, { width: 0, height: 0 })).toBe(b);
   });
 });
