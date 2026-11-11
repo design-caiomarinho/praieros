@@ -1,0 +1,100 @@
+# Praieros
+
+Site independente que apresenta o Boletim de Balneabilidade do Inema (praias de Salvador, BA) de forma clara. **Não tem vínculo com o Inema e não é canal oficial.**
+Idioma do produto: pt-BR. Código, commits e nomes técnicos: inglês.
+
+## Princípios inegociáveis
+
+1. **Nunca inventar, corrigir ou "suavizar" um resultado.** O status exibido é exatamente o do boletim. Na dúvida, não exibir.
+2. **Toda ficha mostra fonte e data do boletim** ("Boletim nº X · dd/mm/aaaa" + "Fonte: Inema").
+3. **Status nunca é transmitido só por cor.** Sempre cor + símbolo + texto.
+4. Dado de saúde: se a leitura do PDF falhar ou gerar dúvida, manter o último boletim válido e avisar. Nunca publicar dado lido com incerteza.
+
+## Fonte de dados
+
+- Página oficial: https://www.ba.gov.br/inema/iniciativas/qualidade-das-praias (atualizada semanalmente; **mostra só o boletim mais recente, sem arquivo de edições anteriores**).
+- Um PDF por região. **Escopo:** "SALVADOR" e "BAÍA DE TODOS-OS-SANTOS" (ambos contêm praias de Salvador).
+- **Os nomes dos arquivos não seguem padrão.** Nunca montar a URL: abrir a página e localizar o link pelo **rótulo** da região.
+- O PDF tem texto extraível (não é imagem). Cada ponto traz código (ex.: `SSA IN 100`), local da coleta e categoria (Própria | Imprópria). As colunas são inferidas pela ordem do texto: **validar a leitura** (campos obrigatórios, nº de pontos, categoria reconhecida) antes de gravar. Confirmar na Fase 1 que o código do ponto é um identificador estável entre boletins.
+- **Histórico é nosso:** cada boletim lido válido é salvo em `data/bulletins/` (JSON versionado no Git). R3 depende de comparar com o anterior. Se a leitura falhar, não sobrescrever (D4).
+- A leitura roda em tarefa agendada (GitHub Actions); novo boletim válido dispara novo build do site.
+- Pendente: confirmar termos de uso do site para reutilização e leitura automática.
+
+## Modelo de dados
+
+`Boletim` (região, nº/ano, data de emissão, url do PDF) → `Praia` (nome, bairro) → `Ponto` (código, descrição do local, posição aproximada) → `Resultado` (Própria | Imprópria, por ponto e boletim).
+Uma praia pode ter 1 ou mais pontos. A posição no mapa é aproximada (informar isso na UI).
+
+## Regras de negócio (fonte da verdade)
+
+- **R1** Existe um **boletim atual**: o mais recente publicado no site oficial. Os dados vêm de **leitura automática** dos PDFs.
+- **R2** Cada praia mostra o resultado do **último boletim em que apareceu**.
+- **R3** **Desatualizada:** praia que já teve informação, mas **não aparece no boletim atual**. Mantém o último status conhecido (Própria/Imprópria), mostra a faixa de aviso e a **data do boletim em que apareceu pela última vez**. Só vira desatualizada quando sai um novo boletim; o tempo corrido não conta.
+- **R4** **Sem resultado:** o boletim não traz informação utilizável da praia. Não exibir status nem faixa. Há **dois casos**: (a) a praia **nunca apareceu** em nenhum boletim lido; (b) a praia já teve resultado, mas **passou do limite D3** (antigo demais). No caso (b) mostrar só a **data da última análise**, nunca o status antigo.
+- **R5** Cada **ponto de coleta** tem seu próprio badge no mapa (3 pontos = 3 badges).
+- **R6** **Link compartilhado:** abre sempre o estado atual. A mensagem enviada (WhatsApp) fica como estava; a prévia leva status + data do boletim do momento do envio.
+- **D1** Em listas e busca, a praia mostra o **pior status** dos pontos ("1 de 3 pontos impróprios"). No mapa, cada ponto mantém o seu badge.
+- **D2** O resumo (próprias / impróprias / sem resultado) conta **pontos**, e o rótulo deve dizer isso.
+- **D3** Praia desatualizada por mais de **N boletins** consecutivos sem aparecer vira "Sem resultado". `N = 3`, constante configurável (`STALE_BULLETINS_LIMIT`). Valor a confirmar.
+- **D4** Falha ou mudança de formato na leitura do PDF: manter o último boletim válido, registrar o erro e exibir aviso discreto. Não bloquear o site.
+- **D5** Demora do site oficial em publicar: não marcar nada como desatualizado sem boletim novo.
+- **D6 (opcional, Could Have)** Ao abrir link antigo: faixa "Você abriu um link do boletim de dd/mm. Este é o mais recente."
+
+### Estados da ficha
+
+| Situação                                  | Chip do ponto                     | Faixa                                                | Data exibida                                                                         |
+| ----------------------------------------- | --------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| No boletim atual, própria                 | Própria                           | Nenhuma                                              | Do boletim atual                                                                     |
+| No boletim atual, imprópria               | Imprópria                         | Nenhuma                                              | Do boletim atual                                                                     |
+| No boletim atual, sem informação          | Sem resultado                     | Nenhuma                                              | Do boletim atual                                                                     |
+| Nunca apareceu em boletim                 | Sem resultado                     | Nenhuma                                              | Do boletim atual ("Esta praia não consta no boletim nº X.")                          |
+| Antigo demais (> N boletins sem aparecer) | Sem resultado                     | Nenhuma                                              | Do boletim atual + "A última análise foi em dd/mm/aaaa, antiga demais para mostrar." |
+| Fora do boletim atual, já teve resultado  | Último status (Própria/Imprópria) | "Boletim desatualizado. A situação pode ter mudado." | Do último boletim em que apareceu                                                    |
+
+Implementar R1–R4 e D1–D3 como **funções puras** (sem I/O), com testes unitários cobrindo cada linha da tabela acima.
+
+## Telas (escopo)
+
+Mapa + painel · Busca (sugestões antes de digitar; resultados ao digitar) · Ficha da praia · Classificação · Fonte e como ler · Compartilhar praia · Compartilhar site · Resumo do boletim (desktop) · Estados: carregando, erro, mapa indisponível, sem resultado de busca, praia não encontrada, desatualizada.
+Layout: desktop = mapa + painel lateral; mobile = mapa + folha inferior. Medidas e detalhes vêm do Figma e de `tokens/tokens.json`.
+**Design é a fonte visual.** O Figma é a referência; o wireframe antigo não é. Onde o design não define algo, decidir com bom senso e **registrar a decisão em `docs/decisions.md`**.
+
+## Copy e terminologia
+
+- Use exatamente: **Própria**, **Imprópria**, **Sem resultado**, **Boletim desatualizado**, **Ponto de coleta**.
+- Tom direto, sem culpar o usuário. Evitar "Oops". Erros dizem o que houve e o que fazer.
+- Singular/plural correto ("1 ponto", "3 pontos"). Nomes de praia com capitalização do boletim.
+- Textos oficiais (resolução CONAMA nº 274/2000) **não são reescritos**: só citados, com link.
+- Os textos finais ficam em `docs/copy.md`. Não inventar copy nova sem registrar lá.
+
+## Stack e comandos
+
+- **Astro + TypeScript**, estilos em **CSS puro com variáveis** (tokens), mapa com **MapLibre GL**. Sem banco de dados nem servidor: dados em JSON versionado, hospedagem estática.
+- Interatividade (mapa, busca) em componentes isolados; o resto é HTML/CSS estático. Evitar dependências novas sem registrar em `docs/decisions.md`.
+- Pendente: provedor de tiles do mapa (plano gratuito e regras de uso).
+- Comandos:
+  - instalar: `npm install`
+  - rodar: `npm run dev`
+  - testar: `npm test` (Vitest; `npm run test:watch` em modo contínuo)
+  - lint: `npm run lint` (ESLint); formatar: `npm run format` (Prettier)
+  - tipos: `npm run check` (astro check)
+  - build: `npm run build`
+
+Tokens de design: `tokens/tokens.json` (fonte única). Não usar valores soltos de cor, espaçamento ou tipografia: sempre token.
+
+## Como trabalhar neste repositório (economia de tokens)
+
+- **Uma tarefa por sessão.** Uma fatia vertical pequena, terminada, testada e comitada. `/clear` ao trocar de assunto.
+- **Planejar antes de codar** em qualquer tarefa que mexa em mais de 2 arquivos: propor plano curto e esperar aprovação.
+- **Não ler o repositório inteiro.** Buscar com Grep/Glob e ler só os trechos necessários. Para pesquisa ampla, usar subagente (Explore) e trazer só o resumo.
+- **Detalhes ficam em `docs/`**, não aqui. Ler `docs/*` só quando a tarefa pedir.
+- **Dados de teste em fixtures** (`fixtures/`): PDFs e saídas de exemplo salvos. Nunca baixar o site oficial repetidamente.
+- Não colar arquivos grandes, logs completos ou PDFs no chat. Mostrar só o erro relevante.
+- Verificar o que foi feito rodando teste/lint/build antes de dizer que terminou.
+- Commits pequenos e frequentes, mensagem no formato `tipo: resumo` (feat, fix, test, docs, refactor).
+- Ao fim de cada fatia: atualizar a seção **Estado atual** abaixo (máx. 5 linhas).
+
+## Estado atual
+
+Fase 0 concluída: projeto Astro + TypeScript, Vitest, ESLint, Prettier, pastas e docs criados. Nenhuma funcionalidade implementada.
+Próxima: Fase 1 (tokens e teste de leitura do PDF). Remover `tests/smoke.test.ts` ao criar o primeiro teste real.
