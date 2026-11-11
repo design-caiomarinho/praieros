@@ -1,20 +1,13 @@
 ---
-type Status = 'propria' | 'impropria' | 'desatualizado' | 'sem-resultado';
+import { STATUS_LABELS, type ChipStatus } from '../lib/rules/status.ts';
 
 interface Props {
-  status: Status;
+  status: ChipStatus;
 }
 
 // Cor + texto (princípio 3). Sem símbolo, como no Figma (nó 37:626).
-const config = {
-  propria: { label: 'Própria' },
-  impropria: { label: 'Imprópria' },
-  desatualizado: { label: 'Desatualizado' },
-  'sem-resultado': { label: 'Sem resultado' },
-} as const;
-
 const { status } = Astro.props;
-const { label } = config[status];
+const label = STATUS_LABELS[status];
 ---
 
 <span class={`chip chip--${status}`}>{label}</span>
@@ -35,22 +28,22 @@ const { label } = config[status];
     letter-spacing: var(--s-typo-label-medium-spacing);
     white-space: nowrap;
   }
-  .chip--propria {
+  .chip--suitable {
     background: var(--s-color-surface-positive-soft);
     border-color: var(--s-color-border-positive);
     color: var(--s-color-content-positive);
   }
-  .chip--impropria {
+  .chip--unsuitable {
     background: var(--s-color-surface-negative-soft);
     border-color: var(--s-color-border-negative);
     color: var(--s-color-content-negative);
   }
-  .chip--desatualizado {
+  .chip--outdated {
     background: var(--s-color-surface-warning-soft);
     border-color: var(--s-color-border-warning);
     color: var(--s-color-content-warning);
   }
-  .chip--sem-resultado {
+  .chip--no-result {
     background: var(--s-color-surface-unknown-soft);
     border-color: var(--s-color-border-strong);
     border-style: dashed;

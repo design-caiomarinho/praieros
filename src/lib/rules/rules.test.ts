@@ -7,6 +7,7 @@ import {
   worstStatus,
 } from './evaluate.ts';
 import { beachKey, normalizeBeachName } from './group.ts';
+import { categoryToStatus } from './status.ts';
 import type { BeachState, Category, RuleBulletin, RulePoint } from './types.ts';
 
 const pt = (
@@ -57,7 +58,7 @@ describe('estados da ficha (tabela do CLAUDE.md)', () => {
       'Barra',
     );
     expect(b.kind).toBe('current');
-    expect(b.worstStatus).toBe('Própria');
+    expect(b.worstStatus).toBe('suitable');
     expect(b.stalePoints).toBe(0);
     expect(b.displayDate).toBe('2026-01-01');
   });
@@ -68,7 +69,7 @@ describe('estados da ficha (tabela do CLAUDE.md)', () => {
       'Barra',
     );
     expect(b.kind).toBe('current');
-    expect(b.worstStatus).toBe('Imprópria');
+    expect(b.worstStatus).toBe('unsuitable');
     expect(b.stalePoints).toBe(0);
     expect(b.displayDate).toBe('2026-01-01');
   });
@@ -76,8 +77,8 @@ describe('estados da ficha (tabela do CLAUDE.md)', () => {
   it('no boletim atual, sem informação', () => {
     const b = beach([bulletin(1, [pt('SSA AA 100', 'Barra', null)])], 'Barra');
     expect(b.kind).toBe('current');
-    expect(b.points[0]!.status).toBe('Sem resultado');
-    expect(b.worstStatus).toBe('Sem resultado');
+    expect(b.points[0]!.status).toBe('no-result');
+    expect(b.worstStatus).toBe('no-result');
     expect(b.stalePoints).toBe(0);
     expect(b.displayDate).toBe('2026-01-01');
   });
@@ -87,7 +88,7 @@ describe('estados da ficha (tabela do CLAUDE.md)', () => {
     const b = beach(bs, 'Jaguaribe', { catalog: [{ name: 'Jaguaribe' }] });
     expect(b.kind).toBe('never');
     expect(b.points).toEqual([]);
-    expect(b.worstStatus).toBe('Sem resultado');
+    expect(b.worstStatus).toBe('no-result');
     expect(b.stalePoints).toBe(0);
     expect(b.displayDate).toBe('2026-01-01'); // data do boletim atual
     expect(b.lastAnalysisDate).toBeNull();
@@ -103,8 +104,8 @@ describe('estados da ficha (tabela do CLAUDE.md)', () => {
     ];
     const b = beach(bs, 'Barra');
     expect(b.kind).toBe('too-old');
-    expect(b.points[0]!.status).toBe('Sem resultado'); // nunca o status antigo
-    expect(b.worstStatus).toBe('Sem resultado');
+    expect(b.points[0]!.status).toBe('no-result'); // nunca o status antigo
+    expect(b.worstStatus).toBe('no-result');
     expect(b.stalePoints).toBe(0);
     expect(b.displayDate).toBe('2026-01-05'); // boletim atual
     expect(b.lastAnalysisDate).toBe('2026-01-01');
@@ -117,8 +118,8 @@ describe('estados da ficha (tabela do CLAUDE.md)', () => {
     ];
     const b = beach(bs, 'Barra');
     expect(b.kind).toBe('stale');
-    expect(b.points[0]!.status).toBe('Imprópria');
-    expect(b.worstStatus).toBe('Imprópria');
+    expect(b.points[0]!.status).toBe('unsuitable');
+    expect(b.worstStatus).toBe('unsuitable');
     expect(b.stalePoints).toBe(1);
     expect(b.displayDate).toBe('2026-01-01'); // última aparição
     expect(b.lastAnalysisDate).toBeNull();
@@ -165,7 +166,7 @@ describe('R2: último boletim em que apareceu', () => {
       bulletin(3, []),
     ];
     const b = beach(bs, 'Barra');
-    expect(b.points[0]!.status).toBe('Imprópria');
+    expect(b.points[0]!.status).toBe('unsuitable');
     expect(b.displayDate).toBe('2026-01-02');
   });
   it('ignora aparição sem informação ao buscar o último resultado', () => {
@@ -176,7 +177,7 @@ describe('R2: último boletim em que apareceu', () => {
     ];
     const b = beach(bs, 'Barra');
     expect(b.kind).toBe('stale');
-    expect(b.points[0]!.status).toBe('Própria');
+    expect(b.points[0]!.status).toBe('suitable');
     expect(b.displayDate).toBe('2026-01-01');
   });
   it('só apareceu sem informação: nunca teve resultado', () => {
@@ -196,14 +197,14 @@ describe('D1: pior status entre os pontos', () => {
   ];
   it('1 de 3 pontos impróprios => Imprópria', () => {
     const b = beach([bulletin(1, three)], 'Farol da Barra');
-    expect(b.worstStatus).toBe('Imprópria');
+    expect(b.worstStatus).toBe('unsuitable');
     expect(b.improperPoints).toBe(1);
     expect(b.shownPoints).toBe(3);
   });
   it('todos próprios => Própria', () => {
     const ps = three.map((p) => ({ ...p, category: 'Própria' as const }));
     expect(beach([bulletin(1, ps)], 'Farol da Barra').worstStatus).toBe(
-      'Própria',
+      'suitable',
     );
   });
   it('própria + sem informação => Própria', () => {
@@ -212,13 +213,13 @@ describe('D1: pior status entre os pontos', () => {
       pt('SSA FB 200', 'Farol da Barra', null),
     ];
     expect(beach([bulletin(1, ps)], 'Farol da Barra').worstStatus).toBe(
-      'Própria',
+      'suitable',
     );
   });
   it('worstStatus puro', () => {
-    expect(worstStatus([])).toBe('Sem resultado');
-    expect(worstStatus(['Própria', 'Imprópria', 'Sem resultado'])).toBe(
-      'Imprópria',
+    expect(worstStatus([])).toBe('no-result');
+    expect(worstStatus(['suitable', 'unsuitable', 'no-result'])).toBe(
+      'unsuitable',
     );
   });
 });
@@ -236,7 +237,7 @@ describe('praia com pontos em estados diferentes', () => {
     expect(b.kind).toBe('current');
     expect(b.stalePoints).toBe(1);
     expect(b.points.map((p) => p.kind)).toEqual(['current', 'stale']);
-    expect(b.worstStatus).toBe('Imprópria'); // o ponto desatualizado mantém o último status
+    expect(b.worstStatus).toBe('unsuitable'); // o ponto desatualizado mantém o último status
   });
 });
 
@@ -253,8 +254,8 @@ describe('agrupamento e renomeação', () => {
         pt('SSA CO 200', 'Patamares', 'Imprópria'),
       ]),
     ];
-    expect(beach(bs, 'Corsário').worstStatus).toBe('Própria');
-    expect(beach(bs, 'Patamares').worstStatus).toBe('Imprópria');
+    expect(beach(bs, 'Corsário').worstStatus).toBe('suitable');
+    expect(beach(bs, 'Patamares').worstStatus).toBe('unsuitable');
   });
   it('mudança de nome sem alias: nome novo é praia nova e o antigo fica desatualizado', () => {
     const bs = [
@@ -263,7 +264,7 @@ describe('agrupamento e renomeação', () => {
     ];
     const old = beach(bs, 'Praia Velha');
     expect(old.kind).toBe('stale');
-    expect(old.worstStatus).toBe('Imprópria');
+    expect(old.worstStatus).toBe('unsuitable');
     expect(beach(bs, 'Praia Nova').kind).toBe('current');
   });
   it('mudança de nome com alias aprovado: é a mesma praia', () => {
@@ -277,7 +278,7 @@ describe('agrupamento e renomeação', () => {
     expect(result.beaches).toHaveLength(1);
     expect(result.beaches[0]!.name).toBe('Praia Nova');
     expect(result.beaches[0]!.kind).toBe('current');
-    expect(result.beaches[0]!.worstStatus).toBe('Própria');
+    expect(result.beaches[0]!.worstStatus).toBe('suitable');
   });
   it('beachKey não encadeia aliases', () => {
     expect(beachKey('A', { A: 'B', B: 'C' })).toBe('b');
@@ -303,5 +304,13 @@ describe('D2: resumo conta pontos', () => {
     );
     // Antiga está antiga demais (4 > 3) => Sem resultado. Jaguaribe não tem pontos.
     expect(s).toEqual({ proper: 1, improper: 2, noResult: 2, totalPoints: 5 });
+  });
+});
+
+describe('categoryToStatus (única conversão do valor do boletim)', () => {
+  it('converte as categorias do boletim e a ausência de informação', () => {
+    expect(categoryToStatus('Própria')).toBe('suitable');
+    expect(categoryToStatus('Imprópria')).toBe('unsuitable');
+    expect(categoryToStatus(null)).toBe('no-result');
   });
 });

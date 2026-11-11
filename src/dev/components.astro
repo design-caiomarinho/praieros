@@ -1,14 +1,15 @@
 ---
 import '../styles/tokens.css';
 import '../styles/fonts.css';
-import StatusChip from '../components/StatusChip.astro';
+import StatusChip from '../components/status-chip.astro';
+import type { ChipStatus } from '../lib/rules/status.ts';
 
-const statuses = [
-  'propria',
-  'impropria',
-  'desatualizado',
-  'sem-resultado',
-] as const;
+const statuses: ChipStatus[] = [
+  'suitable',
+  'unsuitable',
+  'outdated',
+  'no-result',
+];
 ---
 
 <html lang="pt-BR">

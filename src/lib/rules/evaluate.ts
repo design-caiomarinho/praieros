@@ -1,5 +1,6 @@
 import { STALE_BULLETINS_LIMIT } from './config.ts';
 import { beachKey } from './group.ts';
+import { categoryToStatus } from './status.ts';
 import type {
   BeachAliases,
   BeachKind,
@@ -38,16 +39,16 @@ export function currentBulletin(
 }
 
 const SEVERITY: Record<Status, number> = {
-  'Sem resultado': 0,
-  Própria: 1,
-  Imprópria: 2,
+  'no-result': 0,
+  suitable: 1,
+  unsuitable: 2,
 };
 
 /** D1: pior status. Imprópria > Própria > Sem resultado. */
 export function worstStatus(statuses: readonly Status[]): Status {
   return statuses.reduce<Status>(
     (worst, s) => (SEVERITY[s] > SEVERITY[worst] ? s : worst),
-    'Sem resultado',
+    'no-result',
   );
 }
 
@@ -93,7 +94,7 @@ export function evaluateBeaches(
         kind: 'current',
         code,
         location: now.location,
-        status: now.category ?? 'Sem resultado',
+        status: categoryToStatus(now.category),
         bulletin: ref(current),
       };
     }
@@ -109,7 +110,7 @@ export function evaluateBeaches(
             kind: 'too-old',
             code,
             location: p.location,
-            status: 'Sem resultado',
+            status: 'no-result',
             lastSeen,
             bulletinsMissed,
           }
@@ -117,7 +118,7 @@ export function evaluateBeaches(
             kind: 'stale',
             code,
             location: p.location,
-            status: p.category,
+            status: categoryToStatus(p.category),
             lastSeen,
             bulletinsMissed,
           };
@@ -171,7 +172,7 @@ function beachState(
     points,
     worstStatus: worstStatus(shown.map((p) => p.status)),
     shownPoints: shown.length,
-    improperPoints: shown.filter((p) => p.status === 'Imprópria').length,
+    improperPoints: shown.filter((p) => p.status === 'unsuitable').length,
     stalePoints: stale.length,
     displayDate:
       kind === 'stale' ? (latestLastSeen?.issuedAt ?? null) : current.issuedAt,
@@ -186,8 +187,8 @@ export function summarize(beaches: readonly BeachState[]): Summary {
   for (const b of beaches) {
     for (const p of b.points) {
       s.totalPoints++;
-      if (p.status === 'Própria') s.proper++;
-      else if (p.status === 'Imprópria') s.improper++;
+      if (p.status === 'suitable') s.proper++;
+      else if (p.status === 'unsuitable') s.improper++;
       else s.noResult++;
     }
   }

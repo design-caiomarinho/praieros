@@ -1,9 +1,9 @@
 import type { Category } from '../inema/bulletin.ts';
 
 export type { Category };
+import type { Status } from './status.ts';
 
-/** Status exibível de um ponto ou praia. */
-export type Status = Category | 'Sem resultado';
+export type { Status, ChipStatus } from './status.ts';
 
 /** Ponto de um boletim. `category: null` = boletim sem informação utilizável do ponto. */
 export interface RulePoint {
@@ -43,19 +43,19 @@ interface PointBase {
 }
 
 export type PointState =
-  /** No boletim atual (R2). `status` é "Sem resultado" se o boletim não traz informação do ponto. */
+  /** No boletim atual (R2). `status` é "no-result" se o boletim não traz informação do ponto. */
   | (PointBase & { kind: 'current'; status: Status; bulletin: BulletinRef })
   /** R3: fora do boletim atual, mantém o último status e a data da última aparição. */
   | (PointBase & {
       kind: 'stale';
-      status: Category;
+      status: 'suitable' | 'unsuitable';
       lastSeen: BulletinRef;
       bulletinsMissed: number;
     })
   /** R4(b): antigo demais. Só a data da última análise; nunca o status. */
   | (PointBase & {
       kind: 'too-old';
-      status: 'Sem resultado';
+      status: 'no-result';
       lastSeen: BulletinRef;
       bulletinsMissed: number;
     });

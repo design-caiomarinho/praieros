@@ -62,6 +62,7 @@ Layout: desktop = mapa + painel lateral; mobile = mapa + folha inferior. Medidas
 ## Copy e terminologia
 
 - Use exatamente: **Própria**, **Imprópria**, **Sem resultado**, **Boletim desatualizado**, **Ponto de coleta**.
+- **Nomenclatura.** Código (arquivos, componentes, props, tipos, enums, funções, variáveis) em inglês; textos da interface em português. Arquivos de componentes em kebab-case, iguais ao Figma (`status-chip.astro`); a maiúscula só na importação (`import StatusChip from './status-chip.astro'`). Status no código: `suitable | unsuitable | outdated | no-result` (Própria, Imprópria, Desatualizado, Sem resultado); `outdated` só existe na interface (`ChipStatus`). O valor do boletim (`Category`: "Própria" | "Imprópria") fica em português, como vem do Inema e como é gravado em `data/bulletins/`; a conversão para o enum acontece só em `src/lib/rules/status.ts` (`categoryToStatus`). Comentários e descrições de testes seguem em português.
 - Tom direto, sem culpar o usuário. Evitar "Oops". Erros dizem o que houve e o que fazer.
 - Singular/plural correto ("1 ponto", "3 pontos"). Nomes de praia com capitalização do boletim.
 - Textos oficiais (resolução CONAMA nº 274/2000) **não são reescritos**: só citados, com link.
@@ -104,6 +105,7 @@ Fase 1, sessão 2 concluída: leitura e validação dos PDFs (`ingest-bulletin.t
 Fase 1, sessão 3 concluída: R1–R4 e D1–D3 como funções puras em `src/lib/rules/` (identidade, renomeação e pendências em `docs/decisions.md`).
 Fase 1, sessão 4 concluída: workflow diário `.github/workflows/ingest-bulletins.yml` (`npm run bulletins:ingest`), D4 por região; GITHUB_TOKEN não dispara outros workflows (ver `docs/decisions.md`).
 Fase 2, sessão 1 concluída: `tokens/tokens.json` (do Figma, com aliases) e `src/styles/tokens.css` gerado por `npm run tokens:build`; pendências em `docs/decisions.md`.
-Fase 2, sessão 2 (parcial): tokens do Figma + `tokens/extra.json`; `StatusChip` em `src/components/`; página `/dev/components` só em dev. Faltam faixas e PointCard (aguardam links).
+Fase 2, sessão 2 (parcial): tokens do Figma + `tokens/extra.json`; `StatusChip` em `src/components/status-chip.astro`; página `/dev/components` só em dev. Faltam faixas e PointCard (aguardam links).
 Fonte Switzer self-host (`public/fonts/`, `src/styles/fonts.css`); atribuição da licença dispensada por decisão (ver `docs/decisions.md`).
+Nomenclatura em inglês padronizada (status `suitable | unsuitable | outdated | no-result`, arquivos em kebab-case).
 Próxima: sessão 5 (comparar com o boletim anterior: mudança de código, provável renomeação) ou tokens. Termos de uso do site seguem pendentes.

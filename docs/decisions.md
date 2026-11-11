@@ -98,3 +98,11 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Arquivos.** `public/fonts/`: `Switzer-Regular.otf` (400), `Switzer-Medium.otf` (500), `Switzer-Semibold.otf` (600), só os pesos que o `tokens.json` referencia. Os outros 15 (Thin, Light, Bold, Black, itálicos etc.) foram removidos, pois tudo em `public/` iria para o site.
 - **Formato: `.otf` (CFF) direto, sem converter para woff2.** Cada arquivo tem 35–48 KB. Verificado: versão 1.200, pesos internos 400/500/600, cobertura dos caracteres do português (acentos, ç, aspas e travessões, reticências, º, ª). Otimização futura possível: converter para woff2 (exigiria ferramenta nova, a registrar aqui).
 - **`@font-face`** em `src/styles/fonts.css`, `font-display: swap`, família `Switzer`; o fallback `system-ui, sans-serif` vem de `tokens.css`. Por ora é importado só na página de dev; quando existir um layout base, importar lá.
+
+## Padronização de nomenclatura (inglês)
+
+- **Auditoria.** O código já estava quase todo em inglês. Em português estavam: o arquivo `StatusChip.astro` (PascalCase), os valores do status do chip (`propria`, `impropria`, `desatualizado`, `sem-resultado`) e o enum `Status` das regras (`'Própria' | 'Imprópria' | 'Sem resultado'`) com seus usos em `evaluate.ts` e nos testes.
+- **Convenção.** Código em inglês, arquivos em kebab-case, textos da interface em português (regra no `CLAUDE.md`). Status: `suitable | unsuitable | no-result` (`Status`) e `ChipStatus = Status | 'outdated'`. `outdated` é só visual: uma praia desatualizada mantém `suitable` ou `unsuitable` e ganha a faixa.
+- **Conversão em um único lugar.** `src/lib/rules/status.ts`: `categoryToStatus` (valor do boletim -> enum) e `STATUS_LABELS` (rótulos pt-BR).
+- **Ficou em português, de propósito.** `Category = 'Própria' | 'Imprópria'` (dado do boletim, gravado em `data/bulletins/`, validado no parser); ids de região (`salvador`, `baia-de-todos-os-santos`, nomes próprios que também estão em `data/`); rótulos e aliases do site do Inema; mensagens de erro; comentários e descrições de testes.
+- **Componentes planejados:** `OutdatedBanner`, `NoResultBanner`, `PointCard` (arquivos em kebab-case). Ainda não criados.
