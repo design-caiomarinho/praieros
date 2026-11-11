@@ -11,6 +11,8 @@ import type { ChipStatus } from '../lib/rules/status.ts';
 // Painel da ficha da praia: só estrutura e apresentação. Recebe tudo pronto por props,
 // sem ler dados nem aplicar regras de negócio (R1–R4 ficam fora daqui).
 export interface PanelPoint {
+  /** Id do marcador do ponto no mapa (liga cartão e pin). */
+  id?: string;
   name: string;
   location?: string;
   status: ChipStatus;
@@ -83,6 +85,7 @@ const subtitle =
         <div class="cards">
           {points.map((p) => (
             <PointCard
+              pointId={p.id}
               name={p.name}
               location={p.location}
               status={p.status}

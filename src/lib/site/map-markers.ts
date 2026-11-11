@@ -1,4 +1,4 @@
-import type { ChipStatus } from '../rules/status.ts';
+import type { ChipStatus, Status } from '../rules/status.ts';
 import type { BeachModel } from './build-beach-models.ts';
 import { markerAriaLabel } from './panel-props.ts';
 
@@ -11,6 +11,10 @@ export interface MarkerData {
   lng: number;
   /** `outdated` quando o ponto é de um boletim antigo (símbolo "!"). */
   status: ChipStatus;
+  /** Status sem o "desatualizado" (usado na severidade do grupo). */
+  baseStatus: Status;
+  /** Número do ponto na praia (Ponto 1, Ponto 2), igual ao da ficha. */
+  number: number;
   ariaLabel: string;
 }
 
@@ -31,6 +35,8 @@ export function toMarkers(beaches: readonly BeachModel[]): MarkerData[] {
         lat: p.position.lat,
         lng: p.position.lng,
         status,
+        baseStatus: shown,
+        number: i + 1,
         ariaLabel: markerAriaLabel(
           beach.name,
           i + 1,

@@ -21,8 +21,11 @@ export const SALVADOR_URBAN_BOUNDS: Bounds = [
   [SALVADOR_OSM_BOUNDS[1][0], -12.83],
 ];
 
-/** Folga em graus (cerca de 2 km) para praias na borda não ficarem cortadas. */
-export const SALVADOR_BOUNDS_MARGIN = 0.02;
+/**
+ * Folga em graus (cerca de 5,5 km): praias na borda não ficam cortadas e o mapa, no zoom
+ * mínimo, deixa um respiro de terreno fora de Salvador.
+ */
+export const SALVADOR_BOUNDS_MARGIN = 0.05;
 
 /** Área de navegação do mapa; `points` amplia o retângulo se algum ponto ficar de fora. */
 export function navigationBounds(points: readonly LngLat[] = []): Bounds {

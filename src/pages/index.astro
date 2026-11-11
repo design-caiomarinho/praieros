@@ -59,35 +59,58 @@ const panels = site.beaches
 <script>
   const map = document.getElementById('beach-map')!;
   const panel = document.getElementById('panel')!;
-  let lastMarker: string | null = null;
+  let lastSlug: string | null = null;
+
+  function setActivePoint(slug: string | null, pointId: string | null) {
+    panel.querySelectorAll<HTMLElement>('[data-point-id]').forEach((card) => {
+      const active =
+        !!pointId &&
+        card.getAttribute('data-point-id') === pointId &&
+        card.closest('[data-beach]')?.getAttribute('data-beach') === slug;
+      card.toggleAttribute('data-active', active);
+      if (active) card.setAttribute('aria-current', 'true');
+      else card.removeAttribute('aria-current');
+    });
+  }
 
   function close() {
     panel.hidden = true;
     panel.querySelectorAll('[data-beach]').forEach((el) => {
       (el as HTMLElement).hidden = true;
     });
-    map.dispatchEvent(new CustomEvent('marker-set', { detail: { id: null } }));
-    // Devolve o foco ao marcador de onde a ficha foi aberta.
-    if (lastMarker) {
-      document
-        .querySelector<HTMLElement>(
-          `[data-marker-id="${CSS.escape(lastMarker)}"]`,
-        )
+    setActivePoint(null, null);
+    map.dispatchEvent(
+      new CustomEvent('marker-set', { detail: { slug: null, pointId: null } }),
+    );
+    // Devolve o foco ao marcador da praia (o grupo pode ter fechado ou virado pins).
+    if (lastSlug) {
+      [
+        ...document.querySelectorAll<HTMLElement>(
+          `[data-beach-marker="${CSS.escape(lastSlug)}"]`,
+        ),
+      ]
+        .find((m) => m.offsetParent !== null)
         ?.focus();
     }
-    lastMarker = null;
+    lastSlug = null;
   }
 
   map.addEventListener('marker-select', (e) => {
-    const { id, slug } = (e as CustomEvent<{ id: string; slug: string }>)
-      .detail;
-    lastMarker = id;
+    const { slug, pointId = null } = (
+      e as CustomEvent<{ slug: string; pointId?: string | null }>
+    ).detail;
+    const sameBeach = !panel.hidden && lastSlug === slug;
+    lastSlug = slug;
     panel.querySelectorAll('[data-beach]').forEach((el) => {
       (el as HTMLElement).hidden = el.getAttribute('data-beach') !== slug;
     });
     panel.hidden = false;
-    map.dispatchEvent(new CustomEvent('marker-set', { detail: { id } }));
-    // Foco na ficha visível (teclado e leitor de tela).
+    setActivePoint(slug, pointId);
+    map.dispatchEvent(
+      new CustomEvent('marker-set', { detail: { slug, pointId } }),
+    );
+    // Foco na ficha só ao abrir (clicar em pin com a ficha aberta não tira o foco do pin).
+    if (sameBeach) return;
     [
       ...panel.querySelectorAll<HTMLElement>(
         `[data-beach="${CSS.escape(slug)}"] [data-panel-close] button`,
@@ -96,9 +119,32 @@ const panels = site.beaches
       .find((b) => b.offsetParent !== null)
       ?.focus();
   });
+  map.addEventListener('map-clear', () => {
+    if (!panel.hidden) close();
+  });
 
+  // Cartão do ponto: destaca o pin correspondente (e vice-versa, acima).
+  function selectCard(card: Element | null) {
+    const pointId = card?.getAttribute('data-point-id');
+    const slug = card?.closest('[data-beach]')?.getAttribute('data-beach');
+    if (!pointId || !slug) return;
+    setActivePoint(slug, pointId);
+    map.dispatchEvent(
+      new CustomEvent('marker-set', { detail: { slug, pointId } }),
+    );
+  }
   panel.addEventListener('click', (e) => {
-    if ((e.target as Element).closest('[data-panel-close]')) close();
+    const target = e.target as Element;
+    if (target.closest('[data-panel-close]')) close();
+    else selectCard(target.closest('[data-point-id]'));
+  });
+  panel.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = (e.target as Element).closest('[data-point-id]');
+    if (card && e.target === card) {
+      e.preventDefault();
+      selectCard(card);
+    }
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !panel.hidden) close();

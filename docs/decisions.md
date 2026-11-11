@@ -273,3 +273,15 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 
 - **Decisão:** o movimento é definido pelo designer no Figma (variáveis de duração e curva + quadro de especificação). O Claude Code só implementa o que estiver escrito lá, sem inventar valores.
 - **Quando:** tokens e transições de fluxo depois da Fase 3 (fluxos); microinterações de componentes na Fase 4 (acabamento). Antes disso, nenhuma animação. Plano em `docs/motion.md`.
+
+## Marcador por praia, selo e pins numerados (Fase 3)
+
+- **Agrupamento:** por praia (`slug`), nunca por proximidade. Praia com 1 ponto: marcador normal, sem selo. Com 2+ pontos: um marcador no centro do retângulo dos pontos.
+- **Severidade do grupo:** Imprópria > Sem resultado > Própria (`src/lib/map/group-status.ts`). "Desatualizada" não entra: é faixa de aviso, e o ponto desatualizado conta com o último status. O `aria-label` do grupo acrescenta "Boletim desatualizado" se algum ponto estiver nessa situação.
+- **Selo:** todos iguais = quantidade ("2"). Diferentes = "pior/total" ("1/2", lido como "1 de 2 impróprias") com borda de alerta (`border.warning`, largura `accent`). Sem ícone novo.
+- **Pins numerados:** mesmo marcador do ponto, com o número no selo ao lado (símbolo do status dentro do círculo). O nome da praia aparece no pin 1; nos outros só ao selecionar, focar ou passar o mouse.
+- **R5 passa a valer com o grupo aberto**, que acontece de duas formas: (a) a praia está selecionada (clique no grupo, num pin ou no cartão; fica aberta em qualquer zoom); (b) os pontos ficam afastados na tela por pelo menos `GROUP_OPEN_MIN_SPREAD_PX = 56` (maior distância entre dois pontos, Web Mercator, tile de 512 px). 56 px = pin de 24 px + selo + folga de toque. Ao afastar o zoom, volta ao marcador único (se não estiver selecionada).
+- **Clique no grupo:** enquadra os pontos com `maxZoom = GROUP_FIT_MAX_ZOOM = 17`. Recolher: clicar no mapa vazio, fechar a ficha ou Esc (a seleção sai; o grupo volta a seguir o zoom).
+- **Zoom máximo do mapa:** 22 (padrão do MapLibre; os tiles são ampliados). Pontos a 40 m ficam a 56 px por volta do zoom 16,7 (tile de 512 px), então abrem sem precisar de 19 ou 20.
+- **Nomes por zoom:** `LABEL_MIN_ZOOM = 13` (`src/lib/map/label-visibility.ts`). O zoom mínimo calculado fica em ~9,5 (celular) a ~10,8 (desktop); 13 é cerca de 2 a 3,5 níveis acima, onde vizinhas como Barra e Rio Vermelho ficam a mais de 100 px. Abaixo, só ícones, números e selos; selecionado, foco ou hover mostram o nome em qualquer zoom. Sem animação.
+- **Limite de navegação:** folga em torno de Salvador de 0,02° para 0,05° (~5,5 km), para o zoom mínimo mostrar mais terreno fora da cidade.

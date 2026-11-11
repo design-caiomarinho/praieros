@@ -24,6 +24,8 @@ export interface BeachPanelData {
   neighborhood: string;
   bulletin: { number: string; date: string; pdfUrl: string };
   points: {
+    /** Mesmo id do marcador do ponto (`slug:código`). */
+    id: string;
     name: string;
     location?: string;
     status: ChipStatus;
@@ -80,6 +82,7 @@ export function toPanelData(
   return {
     ...base,
     points: beach.points.map((p, i) => ({
+      id: `${beach.slug}:${p.code}`,
       name: `Ponto ${i + 1}`,
       location: p.location ?? undefined,
       status: p.status,

@@ -61,7 +61,7 @@ export function containsPoint(b: Bounds, p: LngLat): boolean {
 const TILE_SIZE = 512; // tamanho de tile do MapLibre
 
 /** Posição vertical (0 a 1, de cima para baixo) de uma latitude na projeção Web Mercator. */
-function mercatorY(lat: number): number {
+export function mercatorY(lat: number): number {
   const rad = (lat * Math.PI) / 180;
   return 0.5 - Math.log(Math.tan(Math.PI / 4 + rad / 2)) / (2 * Math.PI);
 }

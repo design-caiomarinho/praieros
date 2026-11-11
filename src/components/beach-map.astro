@@ -103,7 +103,8 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   });
 
   let controller: BeachMapController | null = null;
-  let selectedId: string | null = null;
+  let selectedSlug: string | null = null;
+  let selectedPointId: string | null = null;
 
   function show(state: 'loading' | 'ready' | 'error') {
     root.toggleAttribute('data-ready', state === 'ready');
@@ -121,15 +122,13 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
       container: canvas,
       markers,
       palette: palette(),
-      onSelect: (id) => {
-        const m = markers.find((x) => x.id === id);
-        if (m)
-          root.dispatchEvent(
-            new CustomEvent('marker-select', {
-              bubbles: true,
-              detail: { id, slug: m.slug },
-            }),
-          );
+      onSelect: (detail) => {
+        root.dispatchEvent(
+          new CustomEvent('marker-select', { bubbles: true, detail }),
+        );
+      },
+      onClear: () => {
+        root.dispatchEvent(new CustomEvent('map-clear', { bubbles: true }));
       },
       onState: (s) => {
         show(s);
@@ -139,12 +138,21 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
         }
       },
     });
-    if (controller && selectedId) controller.select(selectedId);
+    if (controller && selectedSlug)
+      controller.select(selectedSlug, selectedPointId);
+    // Só em dev: acesso ao mapa para conferir zoom e posições no navegador.
+    if (controller && import.meta.env.DEV)
+      (window as unknown as { __beachMap?: unknown }).__beachMap =
+        controller.getMap();
   }
 
   root.addEventListener('marker-set', (e) => {
-    selectedId = (e as CustomEvent<{ id: string | null }>).detail.id;
-    controller?.select(selectedId);
+    const d = (
+      e as CustomEvent<{ slug: string | null; pointId?: string | null }>
+    ).detail;
+    selectedSlug = d.slug;
+    selectedPointId = d.pointId ?? null;
+    controller?.select(selectedSlug, selectedPointId);
   });
   zoom.addEventListener('click', (e) => {
     const kind = (e.target as Element)
@@ -308,6 +316,35 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     font-weight: var(--s-typo-label-medium-weight);
     font-size: var(--s-typo-label-medium-size);
     line-height: 1;
+  }
+  :global(.marker[hidden]) {
+    display: none;
+  }
+  /* Selo ao lado do ícone: quantidade, divergência ("1/2") ou número do pin. */
+  :global(.marker__tag) {
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: calc(50% + 16px);
+    min-width: 24px;
+    height: 24px;
+    padding: 0 var(--space-inset-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    border-radius: var(--radius-full);
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+    white-space: nowrap;
+  }
+  /* Divergência: borda de alerta mais grossa, além do texto "1/2". */
+  :global(.marker__tag[data-divergent]) {
+    border: var(--border-width-accent) solid var(--s-color-border-warning);
+  }
+  /* Zoom afastado: some só o texto do nome (sem animação). */
+  :global(.marker[data-label='hidden'] .marker__label) {
+    display: none;
   }
   :global(.marker__badge) {
     box-sizing: border-box;
