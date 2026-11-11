@@ -35,6 +35,8 @@ export interface BeachMapOptions {
 export interface BeachMapController {
   zoomIn(): void;
   zoomOut(): void;
+  /** Reenquadra todos os pontos, respeitando o limite de Salvador (mesma visão inicial). */
+  fit(): void;
   /** Marca o marcador selecionado (ou nenhum, com null). */
   select(id: string | null): void;
   destroy(): void;
@@ -135,6 +137,15 @@ export async function createBeachMap(
     // Sem animação de câmera: movimento instantâneo (motion fica para depois da Fase 3).
     zoomIn: () => map.zoomIn({ duration: 0 }),
     zoomOut: () => map.zoomOut({ duration: 0 }),
+    fit() {
+      if (bounds)
+        map.fitBounds(bounds, { padding: VIEW_PADDING, animate: false });
+      else
+        map.jumpTo({
+          center: [SALVADOR_FALLBACK.lng, SALVADOR_FALLBACK.lat],
+          zoom: SALVADOR_FALLBACK.zoom,
+        });
+    },
     select(id) {
       apply(selectedId, false);
       selectedId = id;

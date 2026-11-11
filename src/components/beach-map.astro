@@ -58,6 +58,13 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     <div data-zoom="out">
       <ButtonIcon variant="outlined" icon="minus" label="Diminuir o zoom" />
     </div>
+    <div data-zoom="fit">
+      <ButtonIcon
+        variant="outlined"
+        icon="fit-screen"
+        label="Ajustar o mapa à tela"
+      />
+    </div>
   </div>
 
   <script
@@ -99,6 +106,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   let selectedId: string | null = null;
 
   function show(state: 'loading' | 'ready' | 'error') {
+    root.toggleAttribute('data-ready', state === 'ready');
     loading.hidden = state !== 'loading';
     errorBox.hidden = state !== 'error';
     zoom.hidden = state === 'error';
@@ -144,6 +152,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
       ?.getAttribute('data-zoom');
     if (kind === 'in') controller?.zoomIn();
     if (kind === 'out') controller?.zoomOut();
+    if (kind === 'fit') controller?.fit();
   });
   document.getElementById('map-retry')!.addEventListener('click', () => {
     void start();
@@ -157,7 +166,8 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     position: relative;
     flex: 1;
     min-width: 0;
-    background: var(--s-color-surface-strong);
+    /* Cor do mar desde o primeiro quadro (sem cinza antes dos tiles). */
+    background: var(--s-color-surface-accent-soft);
     overflow: clip;
     /* Contexto próprio: a ficha (folha inferior) fica acima dos controles do MapLibre. */
     isolation: isolate;
@@ -165,6 +175,11 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   .canvas {
     position: absolute;
     inset: 0;
+    /* Escondido até o primeiro desenho: mostra o fundo do mar, não o terreno sem tiles. */
+    opacity: 0;
+  }
+  .map-root[data-ready] .canvas {
+    opacity: 1;
   }
 
   /* Carregando (Figma 117:4900): pílula no topo, centralizada. */

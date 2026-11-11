@@ -202,6 +202,9 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Atribuição no mobile:** abaixo de 1024px o controle de atribuição fica no topo do mapa (a folha da ficha cobre a base). No desktop continua no canto inferior esquerdo. Substitui a pendência da sessão 8a sobre a atribuição coberta pela folha.
 - **Textos do Figma relidos** (117:4816, 117:4959): "Carregando o mapa…" (corrigido no Figma). O erro seguiu igual ("Tente de novo…" no corpo e "Tente novamente" no botão, mantidos). Pílula do marcador (117:4522) agora com tokens (8px e 4px), iguais ao que já estava.
 
+- **Fundo do mapa (sessão 8a-2):** a área do mapa tem a cor do mar (`surface/accent/soft`) desde o primeiro quadro, e o canvas do MapLibre fica invisível (`opacity: 0`, sem transição) até o primeiro desenho, para não aparecer o cinza do terreno antes dos tiles. O estado de carregando (Figma 117:4900) não mudou; sem tempo limite nem shimmer.
+- **Ajustar à tela (Figma 117:4831, terceiro botão da pilha):** `ButtonIcon` outlined com o ícone de cantos (`fit-screen-24.svg`), rótulo "Ajustar o mapa à tela". Reenquadra todos os pontos como na visão inicial (`fitBounds` com o mesmo padding, sem animação), respeitando o `maxBounds` de Salvador; sem pontos, volta ao centro de Salvador. Não é tela cheia. **Desvio no SVG:** o export do Figma tem um canto com preenchimento (`fill`) e outro com traço de 1,8 (os demais, 2); usei traço de 2 nos quatro cantos, sem preenchimento, porque o preenchimento desenharia um triângulo. **Conferir no Figma** se é um defeito do ícone.
+
 ## Motion
 
 - **Decisão:** o movimento é definido pelo designer no Figma (variáveis de duração e curva + quadro de especificação). O Claude Code só implementa o que estiver escrito lá, sem inventar valores.
