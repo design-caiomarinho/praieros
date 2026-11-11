@@ -94,7 +94,8 @@ Tokens de design: `tokens/tokens.json` (fonte única). Não usar valores soltos 
 - Verificar o que foi feito rodando teste/lint/build antes de dizer que terminou.
 - Commits pequenos e frequentes, mensagem no formato `tipo: resumo` (feat, fix, test, docs, refactor).
 - Ao fim de cada fatia: atualizar a seção **Estado atual** abaixo (máx. 5 linhas).
-- **Componentes sem nó no Figma** (alguns não foram componentizados de propósito; catálogo em `docs/components.md`). Ao precisar de um: PARE e peça o link do nó ou da tela onde ele aparece. Leia só esse nó (uma chamada), sem screenshots de telas inteiras. Derive a aparência dessa tela usando apenas tokens; se faltar um valor, pergunte, não invente. Registre-o em `docs/components.md` como "Pendente de componentizar". Ao fim de cada sessão, liste os componentes novos "Pendentes de componentizar" para eu criá-los no Figma; depois da minha confirmação, mude a situação para "Componentizado" e a origem para o novo nó.
+- **Figma é estático e não tem todas as variações.** As telas do Figma são exemplos de preenchimento: o status ou o dado mostrado em uma tela não define o componente. Derive variações e estados pela lógica (regras de negócio, tabela de estados e concept), reutilizando componentes e tokens existentes, e registre cada premissa em `docs/decisions.md`. Só PARE e pergunte quando faltar algo que não dá para derivar: um asset (SVG, imagem) ou um valor visual sem token e sem equivalente razoável nos tokens existentes.
+- **Componentes sem nó no Figma** (alguns não foram componentizados de propósito; catálogo em `docs/components.md`). Leia só o nó que tiver (uma chamada), sem screenshots de telas inteiras, e use apenas tokens. Registre-o em `docs/components.md` como "Pendente de componentizar". Ao fim de cada sessão, liste os componentes novos "Pendentes de componentizar" para eu criá-los no Figma; depois da minha confirmação, mude a situação para "Componentizado" e a origem para o novo nó.
 - Motion: ver docs/motion.md. Não implementar animações antes da fase indicada e não inventar valores.
 - Rotinas de manutenção (git pull antes de começar, ingestão, falhas do workflow): `docs/maintenance.md`.
 
@@ -111,4 +112,5 @@ Fonte Switzer self-host (`public/fonts/`, `src/styles/fonts.css`); atribuição 
 Nomenclatura em inglês padronizada (status `suitable | unsuitable | outdated | no-result`, arquivos em kebab-case).
 Fase 2, sessão 3: `OutdatedBanner`, `NoResultBanner` e `PointCard` criados (pendentes de componentizar no Figma); valores assumidos em `docs/decisions.md`.
 Fase 2, sessão 4: `Button`, `ButtonIcon`, `InputText` e `Icon` (SVGs em `src/icons/`) com todos os estados do Figma, foco só por teclado; vitrine em `/dev/components`.
-Próxima: sessão 5 (comparar com o boletim anterior: mudança de código, provável renomeação) ou tokens. Termos de uso do site seguem pendentes.
+Fase 2, sessão 5: `AppHeader` e `BeachPanel` (genérico, por props; desktop e mobile) em `/dev/components`; ícones compartilhar, fechar e link externo. Pendente: SVG do nome PRAIEROS em contorno (logo só com o símbolo).
+Próxima: sessão 6 (comparar com o boletim anterior: mudança de código, provável renomeação) ou tokens. Termos de uso do site seguem pendentes.

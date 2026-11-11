@@ -9,7 +9,80 @@ import Button from '../components/button.astro';
 import ButtonIcon from '../components/button-icon.astro';
 import InputText from '../components/input-text.astro';
 import Icon from '../components/icon.astro';
+import AppHeader from '../components/app-header.astro';
+import BeachPanel from '../components/beach-panel.astro';
 import type { ChipStatus } from '../lib/rules/status.ts';
+
+// Dados fictícios, só para a vitrine. Cobrem as linhas da tabela de estados do CLAUDE.md.
+const fakeBulletin = {
+  number: '99/2026',
+  date: '01/01/2026',
+  pdfUrl: 'https://example.com/boletim.pdf',
+};
+const fakePoints = [
+  {
+    name: 'Ponto 1',
+    location: 'Em frente ao posto de exemplo',
+    status: 'suitable' as const,
+  },
+  {
+    name: 'Ponto 2',
+    location: 'Próximo à rua de exemplo',
+    status: 'suitable' as const,
+  },
+  {
+    name: 'Ponto 3',
+    location: 'Final da orla de exemplo',
+    status: 'unsuitable' as const,
+  },
+];
+const panelStates = [
+  {
+    name: 'própria',
+    props: {
+      name: 'Praia Exemplo Um',
+      neighborhood: 'Bairro Exemplo',
+      points: [fakePoints[0]],
+    },
+  },
+  {
+    name: 'imprópria (1 de 3 pontos)',
+    props: {
+      name: 'Praia Exemplo Dois',
+      neighborhood: 'Bairro Exemplo',
+      points: fakePoints,
+    },
+  },
+  {
+    name: 'desatualizada (com a faixa)',
+    props: {
+      name: 'Praia Exemplo Três',
+      neighborhood: 'Bairro Exemplo',
+      points: [{ ...fakePoints[2], status: 'unsuitable' as const }],
+      notice: 'outdated' as const,
+    },
+  },
+  {
+    name: 'sem resultado: nunca apareceu',
+    props: {
+      name: 'Praia Exemplo Quatro',
+      neighborhood: 'Bairro Exemplo',
+      points: [],
+      notice: 'no-result' as const,
+      note: 'Esta praia não consta no boletim nº 99/2026.',
+    },
+  },
+  {
+    name: 'sem resultado: antiga demais',
+    props: {
+      name: 'Praia Exemplo Cinco',
+      neighborhood: 'Bairro Exemplo',
+      points: [],
+      notice: 'no-result' as const,
+      note: 'A última análise foi em 01/06/2025, antiga demais para mostrar.',
+    },
+  },
+];
 
 const buttonVariants = ['primary', 'secondary', 'ghost'] as const;
 const buttonSizes = ['medium', 'small'] as const;
@@ -169,6 +242,39 @@ const statuses: ChipStatus[] = [
           ))}
         </div>
       </section>
+      <section>
+        <h2>AppHeader</h2>
+        <div class="frame frame--desktop">
+          <AppHeader />
+        </div>
+        <div class="frame frame--mobile">
+          <AppHeader />
+        </div>
+      </section>
+      <section>
+        <h2>BeachPanel</h2>
+        {panelStates.map((s) => (
+          <div class="group">
+            <code>{s.name}</code>
+            <div class="pair">
+              <div class="frame frame--desktop">
+                <BeachPanel
+                  {...s.props}
+                  bulletin={fakeBulletin}
+                  layout="desktop"
+                />
+              </div>
+              <div class="frame frame--mobile">
+                <BeachPanel
+                  {...s.props}
+                  bulletin={fakeBulletin}
+                  layout="mobile"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </section>
     </main>
   </body>
 </html>
@@ -230,6 +336,23 @@ const statuses: ChipStatus[] = [
     align-items: center;
     gap: var(--space-gap-lg);
     padding: var(--space-inset-xs);
+  }
+  .pair {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-gap-lg);
+  }
+  .frame {
+    border: var(--border-width-default) dashed var(--s-color-border-default);
+  }
+  .frame--desktop {
+    width: 428px;
+    max-width: 100%;
+  }
+  .frame--mobile {
+    width: 375px;
+    max-width: 100%;
   }
   .fields {
     display: flex;

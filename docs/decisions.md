@@ -124,6 +124,22 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **InputText** ocupa 100% do contêiner (o Figma usa 428px fixos).
 - **Vitrine:** a prop `state` (hover, focus, typing) existe só para mostrar os estados em `/dev/components`.
 
+## Fase 2 / sessão 5: cabeçalho e painel da ficha
+
+- **Regra de trabalho (2026-11-11):** o Figma é estático; telas são exemplos de preenchimento e não definem o componente. Variações e estados saem da lógica (regras, tabela de estados, concept). Só se pergunta por asset faltando ou valor visual sem token e sem equivalente. Regra no `CLAUDE.md`.
+- **Nó do cabeçalho:** `126:4735` (tela Início / Desktop, `115:4277`): 56px, `surface/default`, borda inferior 1px, três ButtonIcon de 56px separados por divisores 1px. Ordem: compartilhar, informações (ghost), busca (filled/accent). Rótulos acessíveis: "Compartilhar o site", "Fonte e como ler" (link para `/fonte`), "Buscar praia". Mobile usa o mesmo cabeçalho (sem frame mobile no Figma).
+- **Logo (decisão 3):** `src/assets/logo.svg` salvo do nó `126:4737` (só o símbolo, 24px, cores próprias). O Figma ainda traz "PRAIEROS" como texto vivo (Khand), não como contorno: o SVG não tem o nome. Por ora o cabeçalho mostra só o símbolo, com o nome em texto oculto para leitores de tela. Falta o SVG do nome em contorno.
+- **Khand (decisão 4):** não hospedada.
+- **Cor #0a2461 (decisão 5):** fica dentro do SVG do logo, sem token.
+- **Ícones novos** (conjunto `30:99`): compartilhar (`126:5439`), fechar (`42:1104`), link externo (`46:2856`). `share-24` veio do botão do cabeçalho; `share-20`, `close-20`, `external-20` do conjunto, com cor em `currentColor`. `close-24` foi derivado de `close-20` (coordenadas x1,2; traço 2), como search/info 24 se relacionam com os de 20. Não existe `external-24` (usado só em 20px).
+- **BeachPanel (genérico):** recebe nome, bairro, boletim, pontos, `notice`, `note` e `layout` por props; não lê dados nem aplica regras. A tela da ficha do Figma não foi consultada (o link do pedido veio sem URL); estrutura derivada do escopo e da tabela de estados.
+- **Estados por props:** própria/imprópria: pontos com seus status, sem faixa. Desatualizada: `notice="outdated"` + pontos com o último status; o boletim passado é o da última aparição. Sem resultado: `notice="no-result"`, sem cartões de ponto, e `note` com a frase da tabela.
+- **Divergência a confirmar:** a tabela do CLAUDE.md diz "Faixa: Nenhuma" para sem resultado, mas o pedido da sessão pede a faixa cinza. Seguiu-se o pedido (faixa cinza). Se a faixa não deve aparecer, basta não passar `notice`.
+- **Subtítulo sem pontos:** sem cartões não há contagem confiável, então mostra só o bairro. Com pontos: "bairro · N ponto(s) de coleta" (`pointsLabel`, testado).
+- **Mobile (folha inferior):** mesmo conteúdo do desktop; muda a borda (topo em vez de esquerda). Sem raio nos cantos e sem alça de arrastar: não há token de raio além de `radius-full` nem especificação. A interação da folha (arrastar, altura) fica para a fase do mapa.
+- **Chip do boletim:** pílula com borda `border/default`, texto `label/medium` em `content/secondary` (neutro, para não ser confundido com o chip de status). Links "Como ler e fonte" e "Boletim original": `content/accent`, sublinhados, `body/medium` Semibold; o segundo abre em nova aba com ícone de link externo. "Ver detalhes" é Button primário (link) e "Compartilhar praia" é secundário com ícone; ambos na vertical, largura total.
+- **Dados fictícios** só em `src/dev/components.astro` (vitrine, 428px e 375px).
+
 ## Motion
 
 - **Decisão:** o movimento é definido pelo designer no Figma (variáveis de duração e curva + quadro de especificação). O Claude Code só implementa o que estiver escrito lá, sem inventar valores.

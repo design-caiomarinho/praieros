@@ -1,0 +1,227 @@
+---
+import PointCard from './point-card.astro';
+import OutdatedBanner from './outdated-banner.astro';
+import NoResultBanner from './no-result-banner.astro';
+import Button from './button.astro';
+import ButtonIcon from './button-icon.astro';
+import Icon from './icon.astro';
+import { pointsLabel } from '../lib/format/points-label.ts';
+import type { ChipStatus } from '../lib/rules/status.ts';
+
+// Painel da ficha da praia: só estrutura e apresentação. Recebe tudo pronto por props,
+// sem ler dados nem aplicar regras de negócio (R1–R4 ficam fora daqui).
+export interface PanelPoint {
+  name: string;
+  location?: string;
+  status: ChipStatus;
+}
+
+interface Props {
+  name: string;
+  neighborhood: string;
+  /** Boletim exibido na ficha (o atual, ou o último em que a praia apareceu). */
+  bulletin: { number: string; date: string; pdfUrl: string };
+  points: PanelPoint[];
+  /** Faixa de topo: 'outdated' (Boletim desatualizado) ou 'no-result' (Sem resultado). */
+  notice?: 'outdated' | 'no-result';
+  /** Frase já pronta sob o chip do boletim (ex.: "Esta praia não consta no boletim nº 37/2026."). */
+  note?: string;
+  layout?: 'desktop' | 'mobile';
+  detailsHref?: string;
+  sourceHref?: string;
+}
+
+const {
+  name,
+  neighborhood,
+  bulletin,
+  points,
+  notice,
+  note,
+  layout = 'desktop',
+  detailsHref = '#',
+  sourceHref = '/fonte',
+} = Astro.props;
+
+const subtitle =
+  points.length > 0
+    ? `${neighborhood} · ${pointsLabel(points.length)}`
+    : neighborhood;
+---
+
+<section class={`panel panel--${layout}`} aria-label={`Ficha: ${name}`}>
+  {notice === 'outdated' && <OutdatedBanner />}
+  {notice === 'no-result' && <NoResultBanner />}
+  <div class="content">
+    <div class="top">
+      <div class="titles">
+        <h2>{name}</h2>
+        <p class="subtitle">{subtitle}</p>
+      </div>
+      <ButtonIcon
+        variant="ghost"
+        size="xsmall"
+        icon="close"
+        label="Fechar ficha da praia"
+      />
+    </div>
+
+    <div class="bulletin">
+      <span class="bulletin-chip">
+        Boletim nº {bulletin.number} · {bulletin.date}
+      </span>
+      {note && <p class="note">{note}</p>}
+    </div>
+
+    {points.length > 0 && (
+      <div class="points">
+        <h3>Pontos de coleta</h3>
+        <div class="cards">
+          {points.map((p) => (
+            <PointCard name={p.name} location={p.location} status={p.status} />
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="buttons">
+      <Button variant="primary" href={detailsHref}>
+        Ver detalhes
+      </Button>
+      <Button variant="secondary" iconLeft="share">
+        Compartilhar praia
+      </Button>
+    </div>
+
+    <div class="links">
+      <a href={sourceHref}>Como ler e fonte</a>
+      <a href={bulletin.pdfUrl} target="_blank" rel="noopener noreferrer">
+        Boletim original <Icon name="external" size={20} />
+      </a>
+    </div>
+
+    <p class="credit">Fonte: Inema · Praieros não é canal oficial</p>
+  </div>
+</section>
+
+<style>
+  .panel {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+  }
+  /* Desktop: painel lateral. Mobile: folha inferior (sem raio, não há token). */
+  .panel--desktop {
+    border-left: var(--border-width-default) solid var(--s-color-border-default);
+  }
+  .panel--mobile {
+    border-top: var(--border-width-default) solid var(--s-color-border-default);
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+    padding: var(--space-inset-lg);
+  }
+  .top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-gap-md);
+  }
+  h2 {
+    margin: 0;
+    font-family: var(--s-typo-heading-medium-family);
+    font-weight: var(--s-typo-heading-medium-weight);
+    font-size: var(--s-typo-heading-medium-size);
+    line-height: var(--s-typo-heading-medium-line);
+    letter-spacing: var(--s-typo-heading-medium-spacing);
+  }
+  .subtitle,
+  .note {
+    margin: 0;
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  .bulletin {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-stack-xs);
+  }
+  .bulletin-chip {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-inset-2xs) var(--space-inset-xs);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    border-radius: var(--radius-full);
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-label-medium-family);
+    font-weight: var(--s-typo-label-medium-weight);
+    font-size: var(--s-typo-label-medium-size);
+    line-height: var(--s-typo-label-medium-line);
+    letter-spacing: var(--s-typo-label-medium-spacing);
+  }
+  .points {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+  }
+  h3 {
+    margin: 0;
+    font-family: var(--s-typo-body-large-family);
+    font-weight: var(--s-typo-label-medium-weight);
+    font-size: var(--s-typo-body-large-size);
+    line-height: var(--s-typo-body-large-line);
+  }
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+  }
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+  }
+  .buttons > :global(*) {
+    justify-content: center;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-gap-lg);
+  }
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-gap-2xs);
+    color: var(--s-color-content-accent);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-label-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    text-decoration: underline;
+  }
+  .links a:focus-visible {
+    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline-offset: var(--space-inset-2xs);
+  }
+  .credit {
+    margin: 0;
+    color: var(--s-color-content-muted);
+    font-family: var(--s-typo-caption-small-family);
+    font-weight: var(--s-typo-caption-small-weight);
+    font-size: var(--s-typo-caption-small-size);
+    line-height: var(--s-typo-caption-small-line);
+    letter-spacing: var(--s-typo-caption-small-spacing);
+  }
+</style>

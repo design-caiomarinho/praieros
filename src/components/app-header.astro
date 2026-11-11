@@ -1,0 +1,70 @@
+---
+import ButtonIcon from './button-icon.astro';
+import logo from '../assets/logo.svg';
+
+// Cabeçalho do app (Figma, nó 126:4735 da tela Início / Desktop).
+// Ordem: compartilhar, informações, busca (busca em destaque).
+interface Props {
+  homeHref?: string;
+  /** Destino de "Informações" (Fonte e como ler). */
+  infoHref?: string;
+}
+
+const { homeHref = '/', infoHref = '/fonte' } = Astro.props;
+---
+
+<header class="header">
+  <a class="logo" href={homeHref}>
+    <img src={logo.src} alt="" width="24" height="24" />
+    <span class="sr-only">Praieros, página inicial</span>
+  </a>
+  <div class="actions">
+    <ButtonIcon variant="ghost" icon="share" label="Compartilhar o site" />
+    <ButtonIcon
+      variant="ghost"
+      icon="info"
+      label="Fonte e como ler"
+      href={infoHref}
+    />
+    <ButtonIcon variant="filled" icon="search" label="Buscar praia" />
+  </div>
+</header>
+
+<style>
+  .header {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: var(--space-inset-lg);
+    background: var(--s-color-surface-default);
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+  }
+  .logo img {
+    display: block;
+  }
+  .actions {
+    display: flex;
+    align-items: stretch;
+  }
+  /* Divisor de 1px antes de cada botão (como no Figma). */
+  .actions > :global(*) {
+    border-left: var(--border-width-default) solid var(--s-color-border-default);
+  }
+  .actions > :global(*:first-child) {
+    border-left: 0;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>
