@@ -15,8 +15,12 @@ const { homeHref = '/', infoHref = '/fonte' } = Astro.props;
 
 <header class="header">
   <a class="logo" href={homeHref}>
-    <img src={logo.src} alt="" width="24" height="24" />
-    <span class="sr-only">Praieros, página inicial</span>
+    <img
+      src={logo.src}
+      alt="Praieros, página inicial"
+      width="115"
+      height="24"
+    />
   </a>
   <div class="actions">
     <ButtonIcon variant="ghost" icon="share" label="Compartilhar o site" />
@@ -58,13 +62,5 @@ const { homeHref = '/', infoHref = '/fonte' } = Astro.props;
   }
   .actions > :global(*:first-child) {
     border-left: 0;
-  }
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
   }
 </style>
