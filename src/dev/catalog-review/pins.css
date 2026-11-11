@@ -70,3 +70,11 @@
   background: var(--s-color-surface-warning-soft);
   color: var(--s-color-content-warning);
 }
+
+/* Praia de referência (OSM, fora do boletim): contorno neutro e símbolo ◇, sem número. */
+.pin--reference .pin__badge {
+  border-style: dotted;
+  border-color: var(--s-color-border-default);
+  background: var(--s-color-surface-default);
+  color: var(--s-color-content-secondary);
+}

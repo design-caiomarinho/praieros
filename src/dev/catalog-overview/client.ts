@@ -10,6 +10,14 @@ import {
 const raw = JSON.parse(document.getElementById('ov-data')!.textContent!);
 const catalog = migrateCatalog(raw.catalog);
 const locations: Record<string, string> = raw.locations;
+interface Ref {
+  name: string;
+  lat: number;
+  lng: number;
+  osmType: string;
+  osmId: number;
+}
+const refs: Ref[] = raw.references ?? [];
 
 const $ = <T extends HTMLElement>(id: string) =>
   document.getElementById(id) as T;
@@ -62,11 +70,12 @@ const rows: Row[] = catalog.beaches.flatMap((b) => {
   });
 });
 
-const visible = new Set<PointState>([
+const visible = new Set<PointState | 'reference'>([
   'verified',
   'auto',
   'very-approximate',
   'pending',
+  'reference',
 ]);
 let selected: string | null = null;
 let map: Awaited<ReturnType<typeof createReviewMap>> | null = null;
@@ -88,45 +97,67 @@ const originText = (p: CatalogPoint) => {
 };
 
 function pins(): ReviewPin[] {
-  return rows
-    .filter((r) => r.state !== 'unplaced' && visible.has(r.state))
-    .map((r) => ({
-      id: r.id,
-      number: r.number,
-      label: r.first ? r.beach : null,
-      lat: r.point.lat!,
-      lng: r.point.lng!,
-      state: r.state as Exclude<PointState, 'unplaced'>,
-      tag:
-        r.point.source?.provider === 'auto'
-          ? ` ${r.point.source.level ?? 'g'}`
-          : undefined,
-      ariaLabel: `${r.beach}, ponto ${r.number}, ${TITLES[r.state]}`,
-    }));
+  const refPins: ReviewPin[] = visible.has('reference')
+    ? refs.map((r) => ({
+        id: `ref|${r.name}`,
+        number: 0,
+        label: r.name,
+        lat: r.lat,
+        lng: r.lng,
+        state: 'reference' as const,
+        ariaLabel: `${r.name}, praia de referência (OSM), fora do boletim`,
+      }))
+    : [];
+  return refPins.concat(
+    rows
+      .filter((r) => r.state !== 'unplaced' && visible.has(r.state))
+      .map((r) => ({
+        id: r.id,
+        number: r.number,
+        label: r.first ? r.beach : null,
+        lat: r.point.lat!,
+        lng: r.point.lng!,
+        state: r.state as Exclude<PointState, 'unplaced'>,
+        tag:
+          r.point.source?.provider === 'auto'
+            ? ` ${r.point.source.level ?? 'g'}`
+            : undefined,
+        ariaLabel: `${r.beach}, ponto ${r.number}, ${TITLES[r.state]}`,
+      })),
+  );
 }
 
 function render() {
   const count = (s: PointState) => rows.filter((r) => r.state === s).length;
   $('ov-summary').textContent =
-    `${rows.length} pontos: ${count('verified')} verificados · ${count('auto')} automáticos (g/a/b) · ${count('very-approximate')} muito aproximados (c/d/e) · ${count('pending')} aguardando aprovação · ${count('unplaced')} sem posição`;
-  $('ov-list').innerHTML = ORDER.map((s) => {
-    const list = rows.filter((r) => r.state === s);
-    if (list.length === 0) return '';
-    return `<h2 class="ov__group">${TITLES[s]} · ${list.length}</h2>${list
-      .map((r) => {
-        const where = locations[r.point.code] ?? '';
-        const detail =
-          s === 'unplaced'
-            ? (r.point.placementNote ?? 'sem tentativa de posicionamento')
-            : `${originText(r.point)}${r.point.checks ? ` — ${checkText(r.point)}` : ''}`;
-        return `<button type="button" class="ov__item" data-id="${esc(r.id)}" aria-pressed="${r.id === selected}">
+    `${rows.length} pontos: ${count('verified')} verificados · ${count('auto')} automáticos (g/a/b) · ${count('very-approximate')} muito aproximados (c/d/e) · ${count('pending')} aguardando aprovação · ${count('unplaced')} sem posição · ${refs.length} praias de referência (sem ponto de coleta)`;
+  $('ov-list').innerHTML =
+    ORDER.map((s) => {
+      const list = rows.filter((r) => r.state === s);
+      if (list.length === 0) return '';
+      return `<h2 class="ov__group">${TITLES[s]} · ${list.length}</h2>${list
+        .map((r) => {
+          const where = locations[r.point.code] ?? '';
+          const detail =
+            s === 'unplaced'
+              ? (r.point.placementNote ?? 'sem tentativa de posicionamento')
+              : `${originText(r.point)}${r.point.checks ? ` — ${checkText(r.point)}` : ''}`;
+          return `<button type="button" class="ov__item" data-id="${esc(r.id)}" aria-pressed="${r.id === selected}">
           <strong>${esc(r.beach)} · ponto ${r.number}</strong>
           <span class="ov__note">${esc(r.point.code)}${where ? ` · ${esc(where)}` : ''}</span>
           <span class="ov__note">${esc(detail)}</span>
         </button>`;
-      })
-      .join('')}`;
-  }).join('');
+        })
+        .join('')}`;
+    }).join('') +
+    (refs.length
+      ? `<h2 class="ov__group">◇ Praias de referência (OSM) · ${refs.length}</h2>${refs
+          .map(
+            (r) =>
+              `<button type="button" class="ov__item" data-id="${esc(`ref|${r.name}`)}" aria-pressed="${selected === `ref|${r.name}`}"><strong>${esc(r.name)}</strong><span class="ov__note">${esc(r.osmType)}/${r.osmId}</span></button>`,
+          )
+          .join('')}`
+      : '');
 }
 
 function sync() {
@@ -137,7 +168,9 @@ function sync() {
 function select(id: string) {
   selected = id;
   const r = rows.find((x) => x.id === id);
+  const ref = refs.find((x) => `ref|${x.name}` === id);
   render();
+  if (ref) map?.frame([ref]);
   map?.highlight(new Set([id]));
   if (r && r.state !== 'unplaced')
     map?.frame([{ lat: r.point.lat!, lng: r.point.lng! }]);
@@ -151,7 +184,7 @@ document
   .querySelectorAll<HTMLInputElement>('input[data-state]')
   .forEach((box) =>
     box.addEventListener('change', () => {
-      const s = box.dataset.state as PointState;
+      const s = box.dataset.state as PointState | 'reference';
       if (box.checked) visible.add(s);
       else visible.delete(s);
       sync();

@@ -5,16 +5,22 @@ import { loadSalvadorInputs } from '../lib/site/load-data.ts';
 
 // Visão geral do catálogo (só em `astro dev`; registrada em astro.config.mjs, fora do build).
 // Todos os pontos num único mapa, por estado, para conferência visual rápida.
-const { bulletins, catalog } = await loadSalvadorInputs();
+const { bulletins, catalog, references, referenceExclude } =
+  await loadSalvadorInputs();
+const shownReferences = references.filter(
+  (r) =>
+    !referenceExclude.some((n) => n.toLowerCase() === r.name.toLowerCase()),
+);
 const latest = [...bulletins].sort(
   (a, b) => b.year - a.year || b.number - a.number,
 )[0];
 const locations: Record<string, string> = {};
 for (const p of latest?.points ?? []) locations[p.code] = p.location;
-const dataJson = JSON.stringify({ catalog, locations }).replace(
-  /</g,
-  '\\u003c',
-);
+const dataJson = JSON.stringify({
+  catalog,
+  locations,
+  references: shownReferences,
+}).replace(/</g, '\\u003c');
 ---
 
 <html lang="pt-BR">
@@ -43,6 +49,10 @@ const dataJson = JSON.stringify({ catalog, locations }).replace(
             <label>
               <input type="checkbox" data-state="very-approximate" checked /> ≈!
               Muito aproximado (níveis c, d, e)
+            </label>
+            <label>
+              <input type="checkbox" data-state="reference" checked /> ◇ Praia
+              de referência (OSM, fora do boletim, sem ponto de coleta)
             </label>
             <label>
               <input type="checkbox" data-state="pending" checked /> ?

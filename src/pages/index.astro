@@ -9,10 +9,14 @@ import { toMarkers } from '../lib/site/map-markers.ts';
 import { bulletinNumber, toPanelData } from '../lib/site/panel-props.ts';
 
 // Pontos com verified: false só aparecem em desenvolvimento; em produção, nenhum.
-const { bulletins, catalog } = await loadSalvadorInputs();
+const { bulletins, catalog, references, referenceExclude, aliases } =
+  await loadSalvadorInputs();
 const site = buildSiteModel(bulletins, catalog, {
   includeUnverified: import.meta.env.DEV,
   excluded: NOT_BEACHES,
+  references,
+  referenceExclude,
+  aliases,
 });
 
 const markers = toMarkers(site.beaches);

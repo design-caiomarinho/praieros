@@ -24,6 +24,7 @@ Idioma do produto: pt-BR. Código, commits e nomes técnicos: inglês.
 
 `Boletim` (região, nº/ano, data de emissão, url do PDF) → `Praia` (nome, bairro) → `Ponto` (código, descrição do local, posição aproximada) → `Resultado` (Própria | Imprópria, por ponto e boletim).
 Uma praia pode ter 1 ou mais pontos. A posição no mapa é aproximada (informar isso na UI).
+**O universo de praias não é só o boletim:** existem também as **praias de referência** (nome e posição do OpenStreetMap, em `data/catalog/reference-beaches.json`, sem ponto de coleta), que aparecem como "Sem resultado" (R4a). O resumo (D2) não as conta. Ver `docs/decisions.md`, sessão 10.
 
 ## Regras de negócio (fonte da verdade)
 
@@ -121,4 +122,5 @@ Fase 3, sessão 8a-2: estilo Bright sem texto, cores por tokens, mapa limitado a
 Fase 3, sessão 8b: página `/dev/catalog-review` e endpoint `/dev/api/catalog` (só em `npm run dev`) para aprovar praias, arrastar pontos, posicionar e editar bairro (sugestão por consulta inversa do OSM); catálogo em schema v4 (`proposals`). Só essa página grava `verified: true`; o commit dos dados é pedido por você.
 Fase 3, sessão 8c/8d: posicionamento automático (`npm run catalog:place`, só OpenStreetMap, nunca memória nem Google, nunca grava `verified`). Nenhum ponto fica fora do mapa: nível g (geometria da praia) e, para o resto, níveis a–e do mais confiável ao menos (referências da descrição, nome da praia, bairro, interpolação pela ordem do boletim, último recurso no litoral), com verificações (polígono de Salvador, ≤150 m do litoral, 40 m entre pontos). **Regra de produção (substitui "só `verified: true`" e "geometria n/a nunca vai"):** aparecem todos os pontos `verified` ou `auto-placed`; a ficha avisa sempre "Posição aproximada" (g, a, b) ou "Posição muito aproximada" (c, d, e), textos provisórios. Nunca altera `verified`/`manual`. Conferência em `/dev/catalog-overview` (só dev, mostra o nível de cada ponto).
 Fase 3, sessão 9: marcador por praia com selo com o total de pontos; grupo abre em pins numerados no clique ou quando os pontos ficam a 56 px ou mais na tela; nomes só a partir do zoom 13; funções puras em `src/lib/map/` com testes; folga do mapa maior (0,05°).
+Fase 3, sessão 10: praias de referência do OSM (`npm run catalog:reference`, `reference-exclude.json`, lista de suspeitas de duplicata), `kind: 'reference'` nas regras, marcador "?" sem selo e ficha "não consta no boletim"; testes com boletins sintéticos de R3/R4b. Dados em `data/catalog/` ainda fora do commit.
 Próxima: busca/lista e ficha completa. Pendentes: ler os Termos do OpenFreeMap antes de publicar; termos de uso do site do Inema.

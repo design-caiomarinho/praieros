@@ -22,6 +22,7 @@ const SYMBOLS = {
   'very-approximate': '≈!',
   pending: '?',
   proposed: '?',
+  reference: '◇',
 } as const;
 
 export interface ReviewPin {
@@ -34,7 +35,13 @@ export interface ReviewPin {
   lat: number;
   lng: number;
   /** proposed/verified: página de revisão. auto/pending: visão geral (automático; aguardando aprovação). */
-  state: 'proposed' | 'verified' | 'auto' | 'very-approximate' | 'pending';
+  state:
+    | 'proposed'
+    | 'verified'
+    | 'auto'
+    | 'very-approximate'
+    | 'pending'
+    | 'reference';
   /** Texto curto depois do número (visão geral: o nível a–g do posicionamento). */
   tag?: string;
   ariaLabel: string;
@@ -99,8 +106,9 @@ export async function createReviewMap(
         el.innerHTML = `<span class="pin__badge"><span aria-hidden="true">${symbol}</span><span class="pin__num"></span></span>${
           pin.label ? '<span class="pin__label"></span>' : ''
         }`;
+        // Praia de referência não tem ponto de coleta: sem número.
         el.querySelector('.pin__num')!.textContent =
-          `${pin.number}${pin.tag ?? ''}`;
+          pin.state === 'reference' ? '' : `${pin.number}${pin.tag ?? ''}`;
         if (pin.label) el.querySelector('.pin__label')!.textContent = pin.label;
         el.addEventListener('click', (ev) => {
           ev.stopPropagation();

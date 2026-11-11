@@ -37,6 +37,8 @@ const beach = (over: Partial<BeachModel> = {}): BeachModel => ({
   banner: 'none',
   lastAnalysisDate: null,
   notInCurrentBulletin: false,
+  isReference: false,
+  referencePosition: null,
   ...over,
 });
 

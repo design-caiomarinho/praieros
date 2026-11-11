@@ -43,3 +43,12 @@
 | Aviso de posição: níveis g, a, b (cartão do ponto) | Posição aproximada                                                                             | Provisório (sessão 8d). Sempre visível. Definir com Caio e conferir no Figma                             |
 | Aviso de posição: níveis c, d, e (cartão do ponto) | Posição muito aproximada                                                                       | Provisório (sessão 8d). Sempre visível, em destaque (cor de aviso). Definir com Caio e conferir no Figma |
 | Marcador (aria-label), acréscimo                   | …, Posição aproximada / Posição muito aproximada                                               | Provisório (sessão 8d)                                                                                   |
+
+## Praia de referência (sessão 10, provisório)
+
+| Onde                             | Texto                                                             | Origem                                            |
+| -------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------- |
+| Nota da ficha                    | Esta praia não consta no boletim nº X.                            | Tabela de estados do CLAUDE.md (já existente)     |
+| Chip da ficha (praia sem pontos) | Sem resultado                                                     | Terminologia fixa                                 |
+| Marcador (aria-label)            | Praia, Praia fora do boletim, Sem resultado                       | Provisório (sessão 10). Sem "Ponto de coleta"     |
+| Resumo do boletim (rótulo)       | N pontos de coleta (não inclui praias que não constam no boletim) | Provisório (sessão 10); a tela do resumo é futura |

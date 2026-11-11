@@ -9,6 +9,7 @@ import type {
   CatalogBeach,
   Evaluation,
   PointState,
+  ReferenceBeachName,
   RuleBulletin,
   Status,
   Summary,
@@ -17,6 +18,11 @@ import type {
 export interface EvaluateOptions {
   /** Praias conhecidas; as que nunca apareceram viram "never" (R4a). */
   catalog?: readonly CatalogBeach[];
+  /**
+   * Praias de referência (fora do boletim, sem ponto de coleta). Se o nome também existe no
+   * boletim ou no catálogo, vale a praia do boletim e a referência é ignorada.
+   */
+  reference?: readonly ReferenceBeachName[];
   aliases?: BeachAliases;
   /** D3. Padrão: `STALE_BULLETINS_LIMIT`. */
   staleLimit?: number;
@@ -63,6 +69,7 @@ export function evaluateBeaches(
 ): Evaluation {
   const {
     catalog = [],
+    reference = [],
     aliases = {},
     staleLimit = STALE_BULLETINS_LIMIT,
   } = options;
@@ -136,6 +143,24 @@ export function evaluateBeaches(
     }
     points.sort((a, b) => a.code.localeCompare(b.code));
     beaches.push(beachState(key, name, points, current));
+  }
+  // Praias de referência: só as que não existem no boletim nem no catálogo.
+  for (const r of reference) {
+    const key = beachKey(r.name, aliases);
+    if (names.has(key)) continue;
+    names.set(key, r.name);
+    beaches.push({
+      key,
+      name: r.name,
+      kind: 'reference',
+      points: [],
+      worstStatus: 'no-result',
+      shownPoints: 0,
+      improperPoints: 0,
+      stalePoints: 0,
+      displayDate: current.issuedAt,
+      lastAnalysisDate: null,
+    });
   }
   return {
     current: ref(current),

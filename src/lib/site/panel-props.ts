@@ -60,7 +60,7 @@ export function toPanelData(
   };
 
   // R4: sem status exibível. Mostra só a nota (a data do boletim é a do atual).
-  if (beach.kind === 'never') {
+  if (beach.kind === 'never' || beach.kind === 'reference') {
     return {
       ...base,
       points: [],

@@ -1,6 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { migrateCatalog } from '../catalog/review.ts';
+import type { ReferenceFile } from '../catalog/reference.ts';
 import type { Catalog } from '../catalog/types.ts';
 import type { StoredBulletin } from '../inema/bulletin.ts';
 import {
@@ -34,7 +35,34 @@ export async function loadSalvadorInputs(dataDir = DATA) {
   const catalog: Catalog = migrateCatalog(
     JSON.parse(await readFile(`${dataDir}catalog/salvador.json`, 'utf8')),
   );
-  return { bulletins, catalog };
+  const optional = async <T>(file: string, fallback: T): Promise<T> => {
+    try {
+      return JSON.parse(await readFile(`${dataDir}catalog/${file}`, 'utf8'));
+    } catch {
+      return fallback;
+    }
+  };
+  // Arquivos opcionais: sem eles o site funciona só com o boletim e o catálogo.
+  const references = await optional<ReferenceFile>('reference-beaches.json', {
+    schemaVersion: 1,
+    region: 'salvador',
+    beaches: [],
+  });
+  const referenceExclude = await optional<string[]>(
+    'reference-exclude.json',
+    [],
+  );
+  const aliases = await optional<Record<string, string>>(
+    'beach-aliases.json',
+    {},
+  );
+  return {
+    bulletins,
+    catalog,
+    references: references.beaches,
+    referenceExclude,
+    aliases,
+  };
 }
 
 /** Em páginas: `loadSalvadorModel({ includeUnverified: import.meta.env.DEV })`. */
@@ -42,9 +70,13 @@ export async function loadSalvadorModel(
   options: BuildOptions = {},
   dataDir?: string,
 ): Promise<SiteModel> {
-  const { bulletins, catalog } = await loadSalvadorInputs(dataDir);
+  const { bulletins, catalog, references, referenceExclude, aliases } =
+    await loadSalvadorInputs(dataDir);
   return buildSiteModel(bulletins, catalog, {
     excluded: NOT_BEACHES,
+    references,
+    referenceExclude,
+    aliases,
     ...options,
   });
 }

@@ -34,6 +34,11 @@ export interface CatalogBeach {
   neighborhood?: string;
 }
 
+/** Praia de referência: existe no mapa (OSM), mas não no boletim. Sem ponto de coleta. */
+export interface ReferenceBeachName {
+  name: string;
+}
+
 /** Tabela manual de renomeações aprovadas: nome antigo -> nome atual. */
 export type BeachAliases = Readonly<Record<string, string>>;
 
@@ -64,6 +69,8 @@ export type BeachKind =
   | 'current'
   | 'stale'
   | 'too-old'
+  /** Praia de referência (OSM): nunca consta em boletim e não tem ponto de coleta (R4a). */
+  | 'reference'
   /** R4(a): nunca apareceu em nenhum boletim lido (ou só sem informação). */
   | 'never';
 

@@ -1,4 +1,8 @@
-import type { ChipStatus, Status } from '../rules/status.ts';
+import {
+  STATUS_LABELS,
+  type ChipStatus,
+  type Status,
+} from '../rules/status.ts';
 import type { BeachModel } from './build-beach-models.ts';
 import { markerAriaLabel } from './panel-props.ts';
 
@@ -16,12 +20,30 @@ export interface MarkerData {
   /** Número do ponto na praia (Ponto 1, Ponto 2), igual ao da ficha. */
   number: number;
   ariaLabel: string;
+  /** Praia de referência (sem ponto de coleta): sem número nem selo. */
+  reference?: boolean;
 }
 
 /** Só pontos com posição (`onMap`); `verified` já foi tratado em `buildSiteModel`. */
 export function toMarkers(beaches: readonly BeachModel[]): MarkerData[] {
   const markers: MarkerData[] = [];
   for (const beach of beaches) {
+    // Praia de referência: um marcador "Sem resultado" (?), sem ponto de coleta.
+    if (beach.isReference && beach.referencePosition) {
+      markers.push({
+        id: `${beach.slug}:ref`,
+        slug: beach.slug,
+        beachName: beach.name,
+        lat: beach.referencePosition.lat,
+        lng: beach.referencePosition.lng,
+        status: 'no-result',
+        baseStatus: 'no-result',
+        number: 1,
+        ariaLabel: `${beach.name}, Praia fora do boletim, ${STATUS_LABELS['no-result']}`,
+        reference: true,
+      });
+      continue;
+    }
     beach.points.forEach((p, i) => {
       if (!p.onMap || !p.position) return;
       // Praia antiga demais ou nunca vista não mostra status antigo (R4).

@@ -52,8 +52,12 @@ export interface BeachModel {
   banner: BannerKind;
   /** `too-old`: data da última análise (AAAA-MM-DD). Nunca o status antigo. */
   lastAnalysisDate: string | null;
-  /** `never`: a praia não consta no boletim atual. */
+  /** `never` ou `reference`: a praia não consta no boletim atual. */
   notInCurrentBulletin: boolean;
+  /** Praia de referência (OSM): sem ponto de coleta; o Inema não a analisa neste boletim. */
+  isReference: boolean;
+  /** Só praia de referência: posição representativa, sobre a geometria da praia no OSM. */
+  referencePosition: { lat: number; lng: number } | null;
 }
 
 export interface SiteModel {
@@ -77,6 +81,10 @@ export interface BuildOptions {
    * Os boletins gravados não mudam; é só decisão de exibição.
    */
   excluded?: readonly string[];
+  /** Praias de referência (`data/catalog/reference-beaches.json`). Não entram no resumo (D2). */
+  references?: readonly { name: string; lat: number; lng: number }[];
+  /** Nomes de referência a ignorar (`data/catalog/reference-exclude.json`). */
+  referenceExclude?: readonly string[];
 }
 
 /** Slug estável derivado do nome do boletim (sem caixa nem acento; hífen no lugar de espaços). */
@@ -100,13 +108,23 @@ export function buildSiteModel(
     staleLimit,
     includeUnverified = false,
     excluded = [],
+    references: allReferences = [],
+    referenceExclude = [],
   } = options;
+  const skipped = new Set(referenceExclude.map((n) => beachKey(n, aliases)));
+  const references = allReferences.filter(
+    (r) => !skipped.has(beachKey(r.name, aliases)),
+  );
+  const referenceByKey = new Map(
+    references.map((r) => [beachKey(r.name, aliases), r]),
+  );
   const hidden = new Set(excluded.map((n) => beachKey(n, aliases)));
   const shownNeighborhood = (b: Catalog['beaches'][number]) =>
     b.neighborhoodVerified || includeUnverified ? b.neighborhood : null;
 
   const evaluation = evaluateBeaches(bulletins, {
     aliases,
+    reference: references,
     staleLimit,
     catalog: catalog.beaches.map((b) => ({
       name: b.name,
@@ -121,6 +139,8 @@ export function buildSiteModel(
   const shown = evaluation.beaches.filter((b) => !hidden.has(b.key));
   const beaches = shown.map((state): BeachModel => {
     const entry = entries.get(state.key);
+    const reference =
+      state.kind === 'reference' ? referenceByKey.get(state.key) : undefined;
     const coords = new Map(entry?.points.map((p) => [p.code, p]) ?? []);
 
     const toModel = (code: string, p: PointState | undefined): PointModel => {
@@ -168,7 +188,12 @@ export function buildSiteModel(
         state.kind === 'stale' ? (lastSeen ?? null) : evaluation.current,
       banner: state.kind === 'stale' ? 'outdated' : 'none',
       lastAnalysisDate: state.lastAnalysisDate,
-      notInCurrentBulletin: state.kind === 'never',
+      notInCurrentBulletin:
+        state.kind === 'never' || state.kind === 'reference',
+      isReference: state.kind === 'reference',
+      referencePosition: reference
+        ? { lat: reference.lat, lng: reference.lng }
+        : null,
     };
   });
 

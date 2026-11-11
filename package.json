@@ -24,7 +24,8 @@
     "catalog:todo": "node scripts/catalog.ts todo",
     "catalog:propose": "node --env-file-if-exists=.env scripts/propose-catalog.ts",
     "tokens:build": "node scripts/build-tokens.ts",
-    "catalog:place": "node --env-file-if-exists=.env scripts/place-catalog.ts"
+    "catalog:place": "node --env-file-if-exists=.env scripts/place-catalog.ts",
+    "catalog:reference": "node --env-file-if-exists=.env scripts/propose-reference.ts"
   },
   "dependencies": {
     "astro": "^7.4.11",
