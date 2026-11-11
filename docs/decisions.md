@@ -39,3 +39,21 @@ Comparação dos dois PDFs (boletim 37/2026, 06/11/2026), 67 pontos no total:
 - **Padrão observado:** a mesma praia com vários pontos usa o mesmo par de letras e numeração 100, 200, 300 (Farol da Barra `FB 100/200`, Madre de Deus `MD 100/200/300`). **O par de letras não identifica a praia sozinho:** `SSA CO 100` é Corsário e `SSA CO 200` é Patamares; `SSA RV 300` é Buracão, mas `RV 100/200` são Rio Vermelho. Portanto, o código identifica o **ponto**, e o nome da praia deve vir sempre do campo `beach`, nunca do código.
 - **Não confirmado:** que o mesmo código continue apontando para o mesmo local de uma semana para outra. Só existe uma edição em mãos (o site mostra apenas a mais recente) e os dois PDFs são da mesma edição. Isso só se verifica quando houver um segundo boletim lido.
 - **A fazer na leitura automática:** ao gravar um boletim novo, comparar com o anterior da mesma região e avisar quando um código mudar de praia ou de local, ou quando códigos sumirem ou surgirem. Até lá, tratar o código como identificador provisório.
+
+## Fase 1 / sessão 3: regras de negócio (R1–R4, D1–D3)
+
+Funções puras em `src/lib/rules/` (`evaluateBeaches`, `summarize`, `worstStatus`, `currentBulletin`), sem I/O e sem relógio (D5 sai disso: só a chegada de um boletim novo muda o resultado). Testes em `rules.test.ts`, uma ou mais por linha da tabela de estados.
+
+- **Identidade.** Ponto = nome da praia normalizado + `code`. Praia = nome (`beach`) normalizado (sem caixa, acento nem espaços repetidos). Não agrupamos por código: o par de letras não identifica a praia (`SSA CO 100` Corsário, `SSA CO 200` Patamares). O nome exibido é o do último boletim em que a praia apareceu, com a grafia original.
+- **Renomeação: nunca inferida** (princípio 1; a estabilidade do código ainda não foi confirmada). Nome novo = praia nova; o nome antigo some do boletim atual e segue R3 e depois R4(b). Renomeações conhecidas entram numa tabela manual, aprovada por pessoa (`aliases`: nome antigo -> nome atual, aplicada uma vez, sem encadear). O arquivo `data/beach-aliases.json` ainda não existe; as funções já recebem a tabela como parâmetro.
+- **Contagem de N (D3).** Conta os boletins arquivados que saíram depois da última aparição com resultado. Semana não lida não conta. Mais de N (`>`) vira "Sem resultado"; exatamente N ainda é desatualizada. `STALE_BULLETINS_LIMIT = 3` em `config.ts`, sobrescrevível por chamada (`staleLimit`).
+- **Estado por ponto, praia agrega.** A praia é `current` se algum ponto está no boletim atual; senão `stale`, `too-old` ou `never`. "Última aparição" ignora aparições sem informação (`category: null`).
+- **D1.** `worstStatus` considera os pontos que mostram status (atuais e desatualizados): Imprópria > Própria > Sem resultado. Pontos antigos demais ficam de fora.
+- **D2.** `summarize` conta pontos conhecidos; antigos demais contam como "Sem resultado"; praia sem pontos não conta.
+- **`category: null`** existe só no tipo de domínio, para a linha "no boletim atual, sem informação". O parser atual só aceita Própria | Imprópria, então essa linha não ocorre com dados reais.
+
+### Pendências de produto
+
+- **Faixa com pontos parcialmente desatualizados.** Quando só alguns pontos de uma praia saem do boletim, o motor devolve `kind: 'current'` e `stalePoints > 0`. Como exibir a faixa "Boletim desatualizado" (na praia, só no ponto, ou nos dois) e qual data mostrar ainda precisa de decisão de produto/design.
+- **Origem do catálogo de praias** (necessário para "nunca apareceu", R4a). As funções recebem `catalog` como parâmetro, mas a lista (nome e bairro) ainda não existe. A decidir na fase do mapa, junto com as posições aproximadas.
+- **Próxima sessão: alerta de provável renomeação.** Na ingestão, avisar quando um nome de praia some e outro surge no mesmo boletim (por exemplo, com o mesmo código), para uma pessoa decidir se entra em `beach-aliases`. Junta-se ao aviso de mudança de código já previsto acima.
