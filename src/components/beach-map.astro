@@ -342,6 +342,10 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   :global(.marker[data-label='hidden'] .marker__label) {
     display: none;
   }
+  /* O clique vale para o marcador todo (ícone, selo e nome), não para o SVG de dentro. */
+  :global(.marker > *) {
+    pointer-events: none;
+  }
   :global(.marker__badge) {
     box-sizing: border-box;
     display: flex;

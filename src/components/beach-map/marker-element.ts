@@ -65,8 +65,13 @@ export function setMarkerState(
   status: ChipStatus,
   selected: boolean,
 ): void {
-  const badge = el.querySelector('.marker__badge')!;
   const { tone, svg } = BY_STATUS[status];
+  // Sem mudança, não mexe no DOM: trocar o SVG no meio do clique (o foco dispara uma
+  // atualização) fazia o clique no ícone se perder.
+  const key = `${tone}:${selected}`;
+  if (el.dataset.state === key) return;
+  el.dataset.state = key;
+  const badge = el.querySelector('.marker__badge')!;
   // Troca só a variante: as classes do MapLibre (`maplibregl-marker`, âncora) posicionam o marcador.
   el.classList.remove(
     ...[...el.classList].filter((c) => c.startsWith('marker--')),

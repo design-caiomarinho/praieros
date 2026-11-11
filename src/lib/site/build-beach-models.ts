@@ -72,6 +72,11 @@ export interface BuildOptions {
    * `verified: true` e os automáticos que passaram em todas as verificações (`shownInProduction`).
    */
   includeUnverified?: boolean;
+  /**
+   * Nomes do boletim que não são praia (lagoas etc.): ficam fora do mapa, da busca e do resumo.
+   * Os boletins gravados não mudam; é só decisão de exibição.
+   */
+  excluded?: readonly string[];
 }
 
 /** Slug estável derivado do nome do boletim (sem caixa nem acento; hífen no lugar de espaços). */
@@ -90,7 +95,13 @@ export function buildSiteModel(
   catalog: Catalog,
   options: BuildOptions = {},
 ): SiteModel {
-  const { aliases = {}, staleLimit, includeUnverified = false } = options;
+  const {
+    aliases = {},
+    staleLimit,
+    includeUnverified = false,
+    excluded = [],
+  } = options;
+  const hidden = new Set(excluded.map((n) => beachKey(n, aliases)));
   const shownNeighborhood = (b: Catalog['beaches'][number]) =>
     b.neighborhoodVerified || includeUnverified ? b.neighborhood : null;
 
@@ -107,7 +118,8 @@ export function buildSiteModel(
     catalog.beaches.map((b) => [beachKey(b.name, aliases), b]),
   );
 
-  const beaches = evaluation.beaches.map((state): BeachModel => {
+  const shown = evaluation.beaches.filter((b) => !hidden.has(b.key));
+  const beaches = shown.map((state): BeachModel => {
     const entry = entries.get(state.key);
     const coords = new Map(entry?.points.map((p) => [p.code, p]) ?? []);
 
@@ -163,6 +175,6 @@ export function buildSiteModel(
   return {
     current: evaluation.current,
     beaches,
-    summary: summarize(evaluation.beaches),
+    summary: summarize(shown),
   };
 }

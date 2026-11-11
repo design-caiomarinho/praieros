@@ -369,3 +369,36 @@ describe('posições em produção (verificado ou automático, em qualquer níve
     expect(by.P4).toMatchObject({ onMap: false, accuracy: null });
   });
 });
+
+describe('buildSiteModel: nomes que não são praia', () => {
+  const bulletins = [
+    bulletin(1, [
+      pt('P1', 'Ondina', 'Própria'),
+      pt('L1', 'Lagoa de Abaete', 'Imprópria'),
+    ]),
+  ];
+  const cat = catalog([
+    { name: 'Ondina', neighborhood: 'Ondina', points: [{ code: 'P1', ...at }] },
+    {
+      name: 'Lagoa de Abaete',
+      neighborhood: null,
+      points: [{ code: 'L1', ...at }],
+    },
+  ]);
+  it('sem exclusão, a lagoa aparece', () => {
+    const site = buildSiteModel(bulletins, cat);
+    expect(site.beaches.map((b) => b.name)).toContain('Lagoa de Abaete');
+  });
+  it('excluída (sem caixa nem acento): fora das praias e do resumo', () => {
+    const site = buildSiteModel(bulletins, cat, {
+      excluded: ['lagoa de abaete'],
+    });
+    expect(site.beaches.map((b) => b.name)).toEqual(['Ondina']);
+    expect(site.summary).toEqual(
+      buildSiteModel(
+        bulletins.map((b) => ({ ...b, points: [b.points[0]] })),
+        cat,
+      ).summary,
+    );
+  });
+});

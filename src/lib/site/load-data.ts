@@ -9,6 +9,16 @@ import {
   type SiteModel,
 } from './build-beach-models.ts';
 
+/**
+ * Nomes do boletim que não são praia. O Inema os lista, mas o Praieros mostra só praias:
+ * ficam fora do mapa, da busca e do resumo (decisão do produto, docs/decisions.md).
+ */
+export const NOT_BEACHES = [
+  'Santa Maria',
+  'Lagoa de Pituaçu',
+  'Lagoa de Abaete',
+];
+
 const DATA = fileURLToPath(new URL('../../../data/', import.meta.url));
 
 /** Único ponto de I/O da camada de dados: lê os boletins de Salvador e o catálogo. */
@@ -33,5 +43,8 @@ export async function loadSalvadorModel(
   dataDir?: string,
 ): Promise<SiteModel> {
   const { bulletins, catalog } = await loadSalvadorInputs(dataDir);
-  return buildSiteModel(bulletins, catalog, options);
+  return buildSiteModel(bulletins, catalog, {
+    excluded: NOT_BEACHES,
+    ...options,
+  });
 }

@@ -273,7 +273,7 @@ export async function createBeachMap(
             onSelect({ slug: g.slug });
           },
         );
-        g.points.forEach((m, i) => {
+        g.points.forEach((m) => {
           const pin = build(
             m,
             {
@@ -281,11 +281,11 @@ export async function createBeachMap(
               slug: m.slug,
               status: m.status,
               ariaLabel: m.ariaLabel,
-              // O nome aparece no pin 1; nos outros, só ao selecionar, focar ou passar o mouse.
+              // Todos os pins seguem a mesma regra de nome (zoom, seleção, foco ou hover).
               label: m.beachName,
               tag: { text: String(m.number) },
             },
-            i === 0 ? LABEL_MIN_ZOOM : Infinity,
+            LABEL_MIN_ZOOM,
             m.id,
             () => onSelect({ slug: g.slug, pointId: m.id }),
           );
