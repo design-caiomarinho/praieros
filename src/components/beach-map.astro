@@ -29,7 +29,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     <span class="loading__icon">
       <Icon name="spinner" />
     </span>
-    <span class="loading__text">Carregando as praias…</span>
+    <span class="loading__text">Carregando o mapa…</span>
   </div>
 
   <div class="error" id="map-error" hidden>
@@ -88,8 +88,11 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const palette = () => ({
     land: token('--s-color-surface-strong'),
-    water: token('--s-color-surface-accent-subtle'),
-    park: token('--s-color-surface-positive-subtle'),
+    water: token('--s-color-surface-accent-soft'),
+    park: token('--s-color-surface-positive-soft'),
+    sand: token('--s-color-surface-warning-subtle'),
+    block: token('--s-color-surface-emphasis'),
+    road: token('--s-color-surface-default'),
   });
 
   let controller: BeachMapController | null = null;
@@ -266,6 +269,14 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     display: flex;
     flex-direction: column;
     gap: var(--space-stack-2xs);
+  }
+
+  /* Mobile: a atribuição fica no topo do mapa, acima da folha da ficha (que cobre a base). */
+  @media (max-width: 1023.98px) {
+    :global(.maplibregl-ctrl-bottom-left) {
+      top: 0;
+      bottom: auto;
+    }
   }
 
   /* Marcadores (Figma 117:4522). Criados por JS: estilos globais. */

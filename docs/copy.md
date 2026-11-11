@@ -32,7 +32,7 @@
 
 | Onde                  | Texto                                                                                          | Origem                        |
 | --------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------- |
-| Carregando (pílula)   | Carregando as praias…                                                                          | Figma 117:4816                |
+| Carregando (pílula)   | Carregando o mapa…                                                                             | Figma 117:4816                |
 | Erro: título          | Não conseguimos carregar o mapa                                                                | Figma 117:4959                |
 | Erro: corpo           | Tente de novo ou busque uma praia pelo nome.                                                   | Figma 117:4959                |
 | Erro: botão           | Tente novamente                                                                                | Figma 117:4959                |

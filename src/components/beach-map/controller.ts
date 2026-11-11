@@ -3,7 +3,12 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 // MapLibre 6 carrega o worker pelo caminho do próprio arquivo, o que quebra depois do build.
 // O Vite empacota o worker (com o trecho compartilhado) e passamos a URL explícita.
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
-import { boundsOf, SALVADOR_FALLBACK } from '../../lib/map/bounds.ts';
+import {
+  boundsOf,
+  minZoomToFit,
+  SALVADOR_FALLBACK,
+} from '../../lib/map/bounds.ts';
+import { navigationBounds } from '../../lib/map/salvador-bounds.ts';
 import { applyPalette, type MapPalette } from '../../lib/map/palette.ts';
 import type { MarkerData } from '../../lib/site/map-markers.ts';
 import {
@@ -14,8 +19,8 @@ import {
 
 maplibregl.setWorkerUrl(workerUrl);
 
-// Instância pública do OpenFreeMap, estilo claro (docs/decisions.md).
-const STYLE_URL = 'https://tiles.openfreemap.org/styles/positron';
+// Instância pública do OpenFreeMap, estilo Bright (docs/decisions.md).
+const STYLE_URL = 'https://tiles.openfreemap.org/styles/bright';
 const VIEW_PADDING = 64;
 
 export interface BeachMapOptions {
@@ -53,10 +58,20 @@ export async function createBeachMap(
   }
 
   const bounds = boundsOf(markers);
+  // O usuário não sai de Salvador: área fixa (ampliada se algum ponto ficar fora) e zoom mínimo
+  // calculado para essa área caber na tela.
+  const navBounds = navigationBounds(markers);
+  const minZoomFor = () =>
+    minZoomToFit(navBounds, {
+      width: container.clientWidth,
+      height: container.clientHeight,
+    });
   const map = new maplibregl.Map({
     container,
     style,
     attributionControl: false,
+    maxBounds: navBounds,
+    minZoom: minZoomFor(),
     ...(bounds
       ? { bounds, fitBoundsOptions: { padding: VIEW_PADDING, animate: false } }
       : {
@@ -70,6 +85,10 @@ export async function createBeachMap(
     new maplibregl.AttributionControl({ compact: true }),
     'bottom-left',
   );
+
+  // Tela redimensionada (ou painel abrindo): recalcula o zoom mínimo.
+  const resizeObserver = new ResizeObserver(() => map.setMinZoom(minZoomFor()));
+  resizeObserver.observe(container);
 
   const entries = new Map<
     string,
@@ -121,6 +140,9 @@ export async function createBeachMap(
       selectedId = id;
       apply(selectedId, true);
     },
-    destroy: () => map.remove(),
+    destroy: () => {
+      resizeObserver.disconnect();
+      map.remove();
+    },
   };
 }
