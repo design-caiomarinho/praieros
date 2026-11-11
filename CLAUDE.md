@@ -100,4 +100,5 @@ Fase 0 concluída (setup). Fase 1, sessão 1 concluída: `src/lib/inema/fetch-bu
 Fixtures regeneráveis com `npm run fixtures:save` (acessa o site; uso raro).
 Fase 1, sessão 2 concluída: leitura e validação dos PDFs (`ingest-bulletin.ts`), JSON gravado em `data/bulletins/` (`npm run bulletins:build`, só lê `fixtures/`). Código do ponto: único, estabilidade entre semanas ainda não confirmada.
 Fase 1, sessão 3 concluída: R1–R4 e D1–D3 como funções puras em `src/lib/rules/` (identidade, renomeação e pendências em `docs/decisions.md`).
-Próxima: sessão 4 (comparar com o boletim anterior na ingestão: mudança de código, provável renomeação) ou tokens. Termos de uso do site seguem pendentes.
+Fase 1, sessão 4 concluída: workflow diário `.github/workflows/ingest-bulletins.yml` (`npm run bulletins:ingest`), D4 por região; GITHUB_TOKEN não dispara outros workflows (ver `docs/decisions.md`).
+Próxima: sessão 5 (comparar com o boletim anterior: mudança de código, provável renomeação) ou tokens. Termos de uso do site seguem pendentes.

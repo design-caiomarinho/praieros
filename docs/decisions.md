@@ -57,3 +57,13 @@ Funções puras em `src/lib/rules/` (`evaluateBeaches`, `summarize`, `worstStatu
 - **Faixa com pontos parcialmente desatualizados.** Quando só alguns pontos de uma praia saem do boletim, o motor devolve `kind: 'current'` e `stalePoints > 0`. Como exibir a faixa "Boletim desatualizado" (na praia, só no ponto, ou nos dois) e qual data mostrar ainda precisa de decisão de produto/design.
 - **Origem do catálogo de praias** (necessário para "nunca apareceu", R4a). As funções recebem `catalog` como parâmetro, mas a lista (nome e bairro) ainda não existe. A decidir na fase do mapa, junto com as posições aproximadas.
 - **Próxima sessão: alerta de provável renomeação.** Na ingestão, avisar quando um nome de praia some e outro surge no mesmo boletim (por exemplo, com o mesmo código), para uma pessoa decidir se entra em `beach-aliases`. Junta-se ao aviso de mudança de código já previsto acima.
+
+## Fase 1 / sessão 4: ingestão agendada
+
+Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06h em Salvador, e manual) roda `npm run bulletins:ingest` (`scripts/ingest-bulletins.ts`, lógica em `src/lib/inema/ingest-run.ts`).
+
+- **D4 por região, sem tudo-ou-nada.** Cada região é lida, validada e gravada de forma independente (a Baía é só arquivo; falha nela não bloqueia Salvador). O que falhar não é gravado. As regiões válidas são commitadas e o workflow termina com falha (`::error::`) se qualquer região ou a página falhou.
+- **Idempotência.** Mesmo nº/ano/região já gravado e igual = nada a fazer. Só o `sourceUrl` diferente (o Inema pode renomear o arquivo) também conta como igual e o JSON antigo é mantido. Qualquer outro conteúdo diferente = erro, e o arquivo nunca é sobrescrito (decisão humana).
+- **Commit.** Um commit por arquivo novo de `data/bulletins/`: `data: boletim nº X/ANO <região>`, push direto na `main`. Isso pressupõe que a `main` não tem proteção que bloqueie o `GITHUB_TOKEN`.
+- **Commits feitos com `GITHUB_TOKEN` não disparam outros workflows** (regra do GitHub, para evitar laços). Portanto, o push do commit de dados **não** dispara o build/deploy do site. **Relevante para a Fase 5:** o workflow de deploy precisa ser chamado de outra forma, por exemplo `workflow_call`/`workflow_dispatch` encadeado ao final deste mesmo workflow, ou deploy no próprio job, ou um PAT/GitHub App para o push.
+- **Fim de linha.** `.gitattributes` com `* text=auto eol=lf` e `endOfLine: "lf"` explícito no Prettier, para os JSON gravados no Linux do CI serem idênticos aos do Windows.

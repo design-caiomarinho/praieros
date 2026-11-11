@@ -1,0 +1,52 @@
+name: Ingestão de boletins
+
+on:
+  schedule:
+    - cron: '0 9 * * *' # 06h em Salvador (UTC-3)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ingest-bulletins
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+
+      # Não interrompe o job: as regiões válidas precisam ser commitadas (D4 por região).
+      - name: Ler e gravar boletins
+        id: ingest
+        continue-on-error: true
+        run: npm run bulletins:ingest
+
+      - name: Commit dos arquivos novos
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -N data/bulletins
+          files=$(git diff --name-only --diff-filter=A -- data/bulletins)
+          for f in $files; do
+            number=$(jq -r .number "$f")
+            year=$(jq -r .year "$f")
+            region=$(jq -r .region "$f")
+            git add -- "$f"
+            git commit -m "data: boletim nº ${number}/${year} ${region}" -- "$f"
+          done
+          if [ -n "$files" ]; then git push origin HEAD:main; fi
+
+      # Falha visível: o commit acima já guardou o que era válido.
+      - name: Falhar se a ingestão teve erro
+        if: steps.ingest.outcome == 'failure'
+        run: |
+          echo "::error::A ingestão falhou em pelo menos uma região. Veja o passo 'Ler e gravar boletins'."
+          exit 1
