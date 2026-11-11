@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// Página de componentes: só existe no `astro dev`, nunca no build (docs/decisions.md).
+// Páginas e endpoints de desenvolvimento: só existem no `astro dev`, nunca no build (docs/decisions.md).
 /** @type {import('astro').AstroIntegration} */
 const devPages = {
   name: 'dev-pages',
@@ -11,6 +11,14 @@ const devPages = {
         injectRoute({
           pattern: '/dev/components',
           entrypoint: './src/dev/components.astro',
+        });
+        injectRoute({
+          pattern: '/dev/catalog-review',
+          entrypoint: './src/dev/catalog-review.astro',
+        });
+        injectRoute({
+          pattern: '/dev/api/catalog',
+          entrypoint: './src/dev/catalog-api.ts',
         });
       }
     },

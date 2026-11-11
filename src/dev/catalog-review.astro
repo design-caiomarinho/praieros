@@ -1,0 +1,291 @@
+---
+import '../styles/tokens.css';
+import '../styles/fonts.css';
+import { loadSalvadorInputs } from '../lib/site/load-data.ts';
+
+// Revisão do catálogo (só em `astro dev`; registrada em astro.config.mjs, fora do build).
+// Aprovar, ajustar a posição de cada ponto, posicionar praias sem posição e editar o bairro.
+const { bulletins, catalog } = await loadSalvadorInputs();
+const latest = [...bulletins].sort(
+  (a, b) => b.year - a.year || b.number - a.number,
+)[0];
+const locations: Record<string, string> = {};
+for (const p of latest?.points ?? []) locations[p.code] = p.location;
+const dataJson = JSON.stringify({ catalog, locations }).replace(
+  /</g,
+  '\\u003c',
+);
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Revisão do catálogo (dev)</title>
+  </head>
+  <body>
+    <div class="review">
+      <aside class="review__side">
+        <header class="review__head">
+          <h1>Revisão do catálogo</h1>
+          <p id="review-summary" class="note"></p>
+          <label class="filter">
+            Mostrar
+            <select id="review-filter">
+              <option value="all">Todas</option>
+              <option value="unplaced">Sem posição</option>
+              <option value="proposed">Propostas</option>
+              <option value="verified">Verificadas</option>
+            </select>
+          </label>
+          <p id="review-status" class="status" role="status" aria-live="polite">
+            Arraste um pin para ajustar. Cada praia é aprovada individualmente.
+          </p>
+        </header>
+        <ul id="review-list" class="beaches"></ul>
+      </aside>
+      <div id="review-map" class="review__map"></div>
+    </div>
+    <script id="review-data" type="application/json" set:html={dataJson} />
+    <script>
+      import '../dev/catalog-review/client.ts';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  body {
+    margin: 0;
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-body-medium-family);
+    font-size: var(--s-typo-body-medium-size);
+  }
+  .review {
+    display: grid;
+    grid-template-columns: var(--size-panel-width) 1fr;
+    height: 100vh;
+  }
+  .review__side {
+    overflow-y: auto;
+    border-right: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .review__head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-md);
+    background: var(--s-color-surface-default);
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .review__head h1 {
+    margin: 0;
+    font-family: var(--s-typo-heading-medium-family);
+    font-weight: var(--s-typo-heading-medium-weight);
+    font-size: var(--s-typo-heading-medium-size);
+  }
+  .review__map {
+    min-width: 0;
+    background: var(--s-color-surface-accent-soft);
+  }
+  .note {
+    margin: 0;
+    color: var(--s-color-content-secondary);
+    font-size: var(--s-typo-body-small-size);
+  }
+  .status[data-kind='error'] {
+    color: var(--s-color-content-negative);
+    font-weight: var(--s-typo-label-medium-weight);
+  }
+  .status {
+    margin: 0;
+    font-size: var(--s-typo-body-small-size);
+  }
+  .beaches,
+  .points {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .beach {
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .beach--open {
+    background: var(--s-color-surface-strong);
+  }
+  .beach__head {
+    display: grid;
+    gap: var(--space-stack-2xs);
+    width: 100%;
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .beach__head:hover {
+    background: var(--s-color-surface-hover);
+  }
+  .beach__name {
+    font-weight: var(--s-typo-label-medium-weight);
+  }
+  .beach__sub {
+    color: var(--s-color-content-secondary);
+    font-size: var(--s-typo-body-small-size);
+  }
+  .beach__state {
+    font-size: var(--s-typo-body-small-size);
+    font-weight: var(--s-typo-label-medium-weight);
+  }
+  .beach__state--verified {
+    color: var(--s-color-content-positive);
+  }
+  .beach__state--proposed {
+    color: var(--s-color-content-warning);
+  }
+  .beach__state--unplaced {
+    color: var(--s-color-content-negative);
+  }
+  .beach__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    padding: 0 var(--space-inset-md) var(--space-inset-md);
+  }
+  .point {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    margin-bottom: var(--space-stack-xs);
+  }
+  .point__main {
+    display: grid;
+    gap: var(--space-stack-2xs);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    background: var(--s-color-surface-default);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .point--selected .point__main {
+    border-color: var(--s-color-border-accent);
+    border-width: var(--border-width-accent);
+  }
+  .point__meta {
+    color: var(--s-color-content-secondary);
+    font-size: var(--s-typo-body-small-size);
+  }
+  .hood {
+    display: flex;
+    gap: var(--space-gap-xs);
+    align-items: end;
+  }
+  .hood label,
+  .filter {
+    display: grid;
+    gap: var(--space-stack-2xs);
+    flex: 1;
+    font-size: var(--s-typo-body-small-size);
+  }
+  .filter {
+    flex: none;
+  }
+  input,
+  select {
+    padding: var(--space-inset-xs);
+    border: var(--border-width-default) solid var(--s-color-border-strong);
+    background: var(--s-color-surface-default);
+    color: inherit;
+    font: inherit;
+  }
+  .btn {
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border: var(--border-width-default) solid var(--s-color-border-strong);
+    background: var(--s-color-surface-default);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+  .btn--primary {
+    border-color: var(--s-color-border-accent);
+    background: var(--s-color-surface-accent-default);
+    color: var(--s-color-content-on-accent);
+  }
+  .btn:disabled {
+    border-color: var(--s-color-border-disabled);
+    background: var(--s-color-surface-disabled);
+    color: var(--s-color-content-disabled);
+    cursor: not-allowed;
+  }
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible {
+    outline: var(--border-width-accent) solid var(--s-color-border-focus);
+  }
+
+  /* Pins do mapa de revisão (criados por JS). Cor + símbolo (✓ / ?) + número. */
+  .pin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-stack-2xs);
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: grab;
+    font-family: var(--s-typo-label-medium-family);
+    font-weight: var(--s-typo-label-medium-weight);
+    font-size: var(--s-typo-label-medium-size);
+    line-height: 1;
+  }
+  .pin__badge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-inline-xs);
+    box-sizing: border-box;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 var(--space-inset-xs);
+    border: var(--border-width-default) solid;
+    border-radius: var(--radius-full);
+    justify-content: center;
+  }
+  .pin__label {
+    padding: var(--space-inset-2xs) var(--space-inset-xs);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    border-radius: var(--radius-full);
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+    white-space: nowrap;
+  }
+  .pin--proposed .pin__badge {
+    border-color: var(--s-color-border-warning);
+    background: var(--s-color-surface-warning-soft);
+    color: var(--s-color-content-warning);
+  }
+  .pin--verified .pin__badge {
+    border-color: var(--s-color-border-positive);
+    background: var(--s-color-surface-positive-soft);
+    color: var(--s-color-content-positive);
+  }
+  .pin--selected .pin__badge {
+    border-width: var(--border-width-accent);
+    border-color: var(--s-color-border-accent);
+    background: var(--s-color-surface-accent-default);
+    color: var(--s-color-content-on-accent);
+  }
+  .pin:focus-visible {
+    outline: var(--border-width-accent) solid var(--s-color-border-focus);
+  }
+</style>

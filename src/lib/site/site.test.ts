@@ -32,12 +32,13 @@ interface LooseBeach {
 
 /** Monta o catálogo completo a partir de dados mínimos. Ponto com coordenadas completas é verificado, salvo indicação. */
 const catalog = (beaches: LooseBeach[]): Catalog => ({
-  schemaVersion: 3,
+  schemaVersion: 4,
   region: 'salvador',
   beaches: beaches.map((b) => ({
     name: b.name,
     neighborhood: b.neighborhood,
     neighborhoodSource: null,
+    neighborhoodProposals: [],
     neighborhoodVerified: b.neighborhoodVerified ?? b.neighborhood !== null,
     proposalNote: null,
     points: b.points.map((p) => ({
@@ -45,6 +46,7 @@ const catalog = (beaches: LooseBeach[]): Catalog => ({
       lat: p.lat,
       lng: p.lng,
       source: null,
+      proposals: [],
       verified: p.verified ?? (p.lat !== null && p.lng !== null),
     })),
   })),

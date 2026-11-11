@@ -1,5 +1,6 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { migrateCatalog } from '../catalog/review.ts';
 import type { Catalog } from '../catalog/types.ts';
 import type { StoredBulletin } from '../inema/bulletin.ts';
 import {
@@ -20,8 +21,8 @@ export async function loadSalvadorInputs(dataDir = DATA) {
   for (const f of files) {
     bulletins.push(JSON.parse(await readFile(`${dir}${f}`, 'utf8')));
   }
-  const catalog: Catalog = JSON.parse(
-    await readFile(`${dataDir}catalog/salvador.json`, 'utf8'),
+  const catalog: Catalog = migrateCatalog(
+    JSON.parse(await readFile(`${dataDir}catalog/salvador.json`, 'utf8')),
   );
   return { bulletins, catalog };
 }
