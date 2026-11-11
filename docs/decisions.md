@@ -78,7 +78,7 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 
 ### Pendências
 
-- **Unidade do `letter-spacing`.** O Figma entrega `-1` sem unidade. Tratado como **%** (`-0.01em`), pois `-1px` em texto de 14px seria exagerado. Confirmar no Figma.
+- **Unidade do `letter-spacing`: resolvido (2026-11-11).** Confirmado em porcentagem: `-1` = -1% = `-0.01em`, como o gerador já converte.
 - **`heading/large` no retorno do MCP** apontava para o peso de `heading/medium`. No export os dois são `600`; sem efeito.
 - **Pesos:** o `$value` é o nome (`semibold`); o número vem da chave. Se um peso novo surgir, as duas partes precisam bater.
 - **Fonte Switzer:** o token só nomeia a família. Falta definir como carregar (arquivo local ou Fontshare) e a licença. Até lá vale o fallback.
