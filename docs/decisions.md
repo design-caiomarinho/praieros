@@ -303,3 +303,5 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **R3/R4b:** praia que saiu do boletim atual mantém pontos e posições do catálogo (o catálogo nunca remove ponto) e continua como desatualizada, ou "Sem resultado" depois de `STALE_BULLETINS_LIMIT`. Coberto por testes com boletins sintéticos (nunca em `data/bulletins/`).
 - **Dados fora do commit** até o Caio decidir (`data/catalog/*`). O carregamento tolera os arquivos ausentes: sem eles o site mostra só boletim + catálogo.
 - **Busca:** ainda não construída; as referências já estão no modelo (`BeachModel.isReference`) que ela vai consumir.
+- **Referência só se a posição representativa estiver em Salvador** (além de algum vértice dentro do polígono): praia que só encosta na divisa fica de fora (ex.: Praia da Gamboa saiu em 2026-11-11).
+- **Decisões sobre suspeitas (Caio, 2026-11-11):** "Canta Galo" -> "Praia do Cantagalo" em `osm-name-hints.json` (só para a busca; o nome exibido não muda); "Praia da Barra" em `reference-exclude.json`; Praia da Paciência, Prainha da Fonte do Boi e Praia do Paredão ficam como referência.

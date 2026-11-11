@@ -178,6 +178,11 @@ export function pickReferenceBeaches(input: PickInput): PickResult {
       ids: els.map((e) => `${e.type}/${e.id}`),
     };
     const rep = representativePoint(geometry);
+    // A posição representativa também precisa estar em Salvador (uma praia que só passa pela divisa não conta).
+    if (!inBoundary(rep, boundary)) {
+      result.outside.push(name);
+      continue;
+    }
     const first = els[0]!;
     result.references.push({
       name,

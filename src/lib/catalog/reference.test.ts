@@ -80,6 +80,13 @@ describe('pickReferenceBeaches', () => {
     expect(r.outside).toEqual(['Praia Longe']);
   });
 
+  it('praia que só encosta em Salvador (posição representativa fora) não vira referência', () => {
+    // Quase toda a linha fica fora do quadrado; um vértice entra.
+    const r = run([way(1, 'Praia Divisa', [0.05, 0.099], [0.05, 0.5])]);
+    expect(r.references).toEqual([]);
+    expect(r.outside).toEqual(['Praia Divisa']);
+  });
+
   it('ignora o que não é natural=beach e os nomes de reference-exclude.json', () => {
     const r = run(
       [
