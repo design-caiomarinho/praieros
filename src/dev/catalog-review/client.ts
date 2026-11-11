@@ -56,13 +56,18 @@ const METHOD_TEXT: Record<string, string> = {
   manual: 'manual',
   'auto-placed': 'automático',
 };
-const CONFIDENCE_TEXT = { high: 'alta', medium: 'média', low: 'baixa' };
+const CONFIDENCE_TEXT = {
+  high: 'alta',
+  medium: 'média',
+  low: 'baixa',
+  'very-low': 'muito baixa',
+};
 
 function sourceText(s: CatalogSource | null): string {
   if (!s) return 'sem origem';
   if (s.provider === 'manual') return 'manual';
   if (s.provider === 'auto') {
-    return `automático (${s.basis}) · confiança ${CONFIDENCE_TEXT[s.confidence]}`;
+    return `automático (nível ${s.level ?? 'g'}) · confiança ${CONFIDENCE_TEXT[s.confidence]}`;
   }
   return `${METHOD_TEXT[s.method]} · confiança ${CONFIDENCE_TEXT[s.confidence]}`;
 }

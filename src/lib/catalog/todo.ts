@@ -14,7 +14,7 @@ export function buildCatalogTodo(
     '# Catálogo: o que falta preencher ou conferir',
     '',
     'Gerado por `npm run catalog:todo` a partir de `data/catalog/salvador.json` e do boletim mais recente. Não editar à mão.',
-    'Em produção aparecem os pontos `verified: true` e os posicionados automaticamente que passaram em todas as verificações (posição aproximada). Bairros com `neighborhoodVerified: false` e pontos de baixa confiança (sem geometria no OpenStreetMap) aparecem só em desenvolvimento.',
+    'Em produção aparecem todos os pontos com posição: `verified: true` e os posicionados automaticamente (a ficha avisa "Posição aproximada", nos níveis g, a e b, ou "Posição muito aproximada", nos níveis c, d e e). Bairros com `neighborhoodVerified: false` aparecem só em desenvolvimento.',
     'Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automático (`npm run catalog:place`).',
     '',
   ];
@@ -37,10 +37,18 @@ export function buildCatalogTodo(
         items.push(`- [ ] Coordenadas de \`${p.code}\`${why}${suffix}`);
       } else if (!p.verified) {
         // Posição automática que passou em tudo vai para produção como aproximada.
-        if (pointState(p) === 'auto') continue;
+        const state = pointState(p);
+        if (state === 'auto') continue;
+        if (state === 'very-approximate') {
+          const lv = p.source?.method === 'auto-placed' ? p.source.level : '?';
+          items.push(
+            `- [ ] Posição muito aproximada de \`${p.code}\` (nível ${lv})${suffix}`,
+          );
+          continue;
+        }
         const how =
           p.source?.method === 'auto-placed'
-            ? ' (aguardando aprovação, baixa confiança: sem geometria no OSM, só pela descrição)'
+            ? ' (posição automática)'
             : p.source?.method === 'description'
               ? ' (baixa confiança: pela descrição do local)'
               : p.source?.method === 'overpass'

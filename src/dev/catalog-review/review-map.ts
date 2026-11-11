@@ -19,6 +19,7 @@ export const SINGLE_POINT_ZOOM = 17;
 const SYMBOLS = {
   verified: '✓',
   auto: '≈',
+  'very-approximate': '≈!',
   pending: '?',
   proposed: '?',
 } as const;
@@ -33,7 +34,9 @@ export interface ReviewPin {
   lat: number;
   lng: number;
   /** proposed/verified: página de revisão. auto/pending: visão geral (automático; aguardando aprovação). */
-  state: 'proposed' | 'verified' | 'auto' | 'pending';
+  state: 'proposed' | 'verified' | 'auto' | 'very-approximate' | 'pending';
+  /** Texto curto depois do número (visão geral: o nível a–g do posicionamento). */
+  tag?: string;
   ariaLabel: string;
 }
 
@@ -96,7 +99,8 @@ export async function createReviewMap(
         el.innerHTML = `<span class="pin__badge"><span aria-hidden="true">${symbol}</span><span class="pin__num"></span></span>${
           pin.label ? '<span class="pin__label"></span>' : ''
         }`;
-        el.querySelector('.pin__num')!.textContent = String(pin.number);
+        el.querySelector('.pin__num')!.textContent =
+          `${pin.number}${pin.tag ?? ''}`;
         if (pin.label) el.querySelector('.pin__label')!.textContent = pin.label;
         el.addEventListener('click', (ev) => {
           ev.stopPropagation();

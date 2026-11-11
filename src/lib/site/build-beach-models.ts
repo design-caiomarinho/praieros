@@ -1,4 +1,8 @@
-import { shownInProduction } from '../catalog/placement.ts';
+import {
+  accuracyOf,
+  shownInProduction,
+  type Accuracy,
+} from '../catalog/placement.ts';
 import type { Catalog } from '../catalog/types.ts';
 import { evaluateBeaches, summarize } from '../rules/evaluate.ts';
 import { beachKey } from '../rules/group.ts';
@@ -26,7 +30,7 @@ export interface PointModel {
   /** false = fica fora do mapa (sem coordenada). */
   onMap: boolean;
   /** Posição automática (não aprovada à mão): a interface avisa "Posição aproximada". */
-  approximate: boolean;
+  accuracy: Accuracy | null;
 }
 
 /** Faixa a mostrar na ficha. `none` = nenhuma (inclui "Sem resultado"). */
@@ -124,7 +128,7 @@ export function buildSiteModel(
         stale: p?.kind === 'stale',
         position,
         onMap: position !== null,
-        approximate: position !== null && !c?.verified,
+        accuracy: position !== null && c ? accuracyOf(c) : null,
       };
     };
 

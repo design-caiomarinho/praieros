@@ -22,4 +22,4 @@ Layout (não são componentes): `src/layouts/base-layout.astro` e `src/pages/ind
 
 Página de teste (só em `npm run dev`): `/dev/components`.
 
-Sessão 8c: o PointCard ganhou a linha "Posição aproximada" (prop `approximate`, só em pontos posicionados automaticamente), com texto provisório (docs/copy.md). **Pendente de componentizar no Figma**: variação do PointCard com essa linha, junto com a versão final do texto.
+Sessão 8d: o PointCard mostra sempre uma linha de aviso quando a posição é automática (prop `accuracy`): "Posição aproximada" (níveis g, a, b) ou "Posição muito aproximada" (níveis c, d, e), esta em destaque com a cor de aviso. Textos provisórios (docs/copy.md). **Pendente de componentizar no Figma**: as duas variações do PointCard com o aviso (e a versão final dos textos).

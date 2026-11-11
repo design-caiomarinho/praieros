@@ -36,6 +36,7 @@ export function toMarkers(beaches: readonly BeachModel[]): MarkerData[] {
           i + 1,
           status,
           p.stale ? p.status : undefined,
+          p.accuracy,
         ),
       });
     });

@@ -1,10 +1,12 @@
 /**
- * Posiciona automaticamente os pontos do catálogo (docs/decisions.md, sessão 8c). Nunca usa
- * memória nem API do Google: tudo vem do OpenStreetMap.
- *   1. Polígono administrativo de Salvador e geometria das praias (Overpass, uma consulta cada, com cache).
- *   2. Pista da descrição do local no Nominatim, limitado a Salvador; só vale a até 80 m da praia.
- *   3. Sem pista, distribui os pontos ao longo da geometria (mínimo de 40 m entre eles).
- *   4. Sem geometria no OSM: só a descrição, baixa confiança, não vai para produção.
+ * Posiciona automaticamente TODOS os pontos do catálogo (docs/decisions.md, sessões 8c e 8d).
+ * Só OpenStreetMap (Overpass e Nominatim); nunca memória nem Google. Nunca grava `verified`.
+ *   g) geometria da praia no OSM (dentro de Salvador): pista da descrição a ≤80 m, ou distribuído.
+ * Para o que o nível g não posicionou, do mais confiável ao menos (para no primeiro que passa):
+ *   a) referências da descrição   b) nome da praia   c) bairro ou localidade
+ *   d) interpolação pela ordem do boletim ao longo do litoral (só se a ordem for consistente)
+ *   e) último recurso: ponto do litoral mais próximo do centro dos vizinhos
+ * Verificações: dentro do polígono de Salvador; ≤150 m do litoral (a–e); 40 m entre pontos da praia.
  * Nunca altera ponto `verified: true` nem `manual`. Política de uso e cache em scripts/osm-client.ts.
  *
  *   npm run catalog:place            (grava data/catalog/salvador.json e docs/catalog-todo.md)
@@ -16,6 +18,14 @@ import {
   readCatalogFile,
   writeCatalogFile,
 } from '../src/lib/catalog/catalog-file.ts';
+import {
+  beachNameQueries,
+  coastFromElements,
+  coastQuery,
+  localityQueries,
+  planLevels,
+  referenceQueries,
+} from '../src/lib/catalog/levels.ts';
 import { descriptionQuery } from '../src/lib/catalog/propose.ts';
 import {
   applyPlans,
@@ -46,6 +56,7 @@ const points = currentBulletin(bulletins)?.points ?? [];
 const locations = Object.fromEntries(
   points.map((p) => [p.code, p.location ?? undefined]),
 );
+const order = points.map((p) => p.code);
 const prev = await readCatalogFile(CATALOG);
 const hints = await loadNameHints();
 
@@ -54,36 +65,82 @@ const rel = (await overpassRaw<{ elements: GeomElement[] }>(BOUNDARY_QUERY))
   .elements[0];
 if (!rel) throw new Error('Relação de Salvador não encontrada no Overpass.');
 const boundary = boundaryFromRelation(rel);
-console.log(
-  `  ${boundary.outer.length} anéis externos, ${boundary.inner.length} internos`,
-);
 
-console.log('Geometria das praias (Overpass, com cache)…');
+console.log('Geometria das praias e litoral (Overpass, com cache)…');
 const elements = (
   await overpassRaw<{ elements: GeomElement[] }>(geometryQuery())
 ).elements;
-console.log(`  ${elements.length} elementos`);
+const coast = coastFromElements(
+  (await overpassRaw<{ elements: GeomElement[] }>(coastQuery())).elements,
+);
+console.log(
+  `  ${elements.length} elementos de praia; litoral: ${coast.geometry.lines.length} cadeias (principal com ${coast.chain.length} vértices)`,
+);
 
+// Nível g.
 const plans = new Map<string, PointPlan[]>();
 for (const beach of prev.beaches) {
-  const geometry = geometryForBeach(beach.name, elements, hints);
+  const geometry = geometryForBeach(beach.name, elements, hints, boundary);
   const clueResults: Record<string, Awaited<ReturnType<typeof search>>> = {};
   for (const p of beach.points) {
     const query = isLocked(p) ? null : descriptionQuery(locations[p.code]);
-    if (query) clueResults[p.code] = await search(query, true);
+    if (geometry && query) clueResults[p.code] = await search(query, true);
   }
   plans.set(
     beach.name,
     planBeach({ beach, locations, geometry, boundary, clueResults, today }),
   );
-  console.log(
-    `  ${beach.name}: ${geometry ? `geometria ${geometry.ids.join(', ')}` : 'sem geometria no OSM'}`,
-  );
 }
+const afterG = applyPlans(prev, plans);
 
-const next = applyPlans(prev, plans);
-const counts = { verified: 0, auto: 0, pending: 0, unplaced: 0 };
-for (const b of next.beaches) for (const p of b.points) counts[pointState(p)]++;
+// Níveis a–e para o que sobrou: busca todas as consultas necessárias (cache, 1 por segundo).
+const lookup: Record<string, Awaited<ReturnType<typeof search>>> = {};
+for (const b of afterG.beaches) {
+  for (const p of b.points) {
+    if (isLocked(p) || p.lat !== null) continue;
+    const loc = locations[p.code];
+    const queries = [
+      ...referenceQueries(loc),
+      ...beachNameQueries(b.name, hints),
+      ...localityQueries(b.name, loc, hints),
+    ];
+    for (const q of queries) lookup[q] ??= await search(q, true);
+  }
+}
+const levels = planLevels({
+  catalog: afterG,
+  order,
+  locations,
+  hints,
+  boundary,
+  coast,
+  lookup,
+  today,
+});
+const next = applyPlans(afterG, levels.plans);
+
+const o = levels.order;
+console.log(
+  `\nOrdem do boletim x litoral: ${o.used} pontos usados, tau ${o.tau} (${o.consistent ? 'CONSISTENTE' : 'INCONSISTENTE'}, mínimo 0,95), ${o.inversions.length} inversões, sentido ${o.direction > 0 ? 'igual ao da cadeia' : 'inverso ao da cadeia'}`,
+);
+if (o.inversions.length)
+  console.log(
+    '  inversões:',
+    o.inversions.map((p) => p.join(' > ')).join('; '),
+  );
+if (o.excluded.length)
+  console.log('  fora da cadeia (>150 m):', o.excluded.join(', '));
+
+const counts: Record<string, number> = {};
+for (const b of next.beaches) {
+  for (const p of b.points) {
+    const key =
+      p.source?.method === 'auto-placed'
+        ? `nível ${p.source.level ?? 'g'}`
+        : pointState(p);
+    counts[key] = (counts[key] ?? 0) + 1;
+  }
+}
 console.log('\nResumo (pontos):', counts);
 
 if (dry) {

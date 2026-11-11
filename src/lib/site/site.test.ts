@@ -323,19 +323,20 @@ describe('verified (produção x desenvolvimento)', () => {
   });
 });
 
-describe('posições em produção (verificado ou automático que passou em tudo)', () => {
+describe('posições em produção (verificado ou automático, em qualquer nível)', () => {
   const pass = { status: 'pass' as const, meters: null };
-  const fail = { status: 'fail' as const, meters: 120 };
-  const auto = {
+  const auto = (level: 'g' | 'a' | 'b' | 'c' | 'd' | 'e') => ({
     provider: 'auto' as const,
     method: 'auto-placed' as const,
-    basis: 'spread' as const,
-    confidence: 'low' as const,
+    level,
+    basis: 'coast-snap' as const,
+    confidence: 'very-low' as const,
+    reason: 'teste',
     query: null,
-    geometry: ['way/1'],
+    geometry: [],
     osm: null,
     placedAt: '2026-11-12',
-  };
+  });
   const cat = catalog([
     {
       name: 'A',
@@ -344,21 +345,14 @@ describe('posições em produção (verificado ou automático que passou em tudo
         { code: 'P1', ...at, verified: false },
         { code: 'P2', ...at, verified: false },
         { code: 'P3', ...at, verified: true },
-        { code: 'P4', ...at, verified: false },
+        { code: 'P4', lat: null, lng: null },
       ],
     },
   ]);
-  const [p1, p2, , p4] = cat.beaches[0]!.points;
-  p1!.source = auto;
+  const [p1, p2] = cat.beaches[0]!.points;
+  p1!.source = auto('b');
   p1!.checks = { inSalvador: pass, nearBeach: pass, minSpacing: pass };
-  p2!.source = auto;
-  p2!.checks = { inSalvador: pass, nearBeach: fail, minSpacing: pass };
-  p4!.source = { ...auto, basis: 'description-only' };
-  p4!.checks = {
-    inSalvador: pass,
-    nearBeach: { status: 'n/a', meters: null },
-    minSpacing: pass,
-  };
+  p2!.source = auto('e');
   const bs = [
     bulletin(
       1,
@@ -366,17 +360,12 @@ describe('posições em produção (verificado ou automático que passou em tudo
     ),
   ];
 
-  it('em produção: verificado e automático aprovado nas verificações; os demais ficam fora do mapa', () => {
+  it('em produção: todos os pontos com posição (verificado e automático de qualquer nível); só o sem posição fica de fora', () => {
     const points = buildSiteModel(bs, cat).beaches[0]!.points;
     const by = Object.fromEntries(points.map((p) => [p.code, p]));
-    expect(by.P1).toMatchObject({ onMap: true, approximate: true });
-    expect(by.P2).toMatchObject({ onMap: false, approximate: false });
-    expect(by.P3).toMatchObject({ onMap: true, approximate: false });
-    expect(by.P4).toMatchObject({ onMap: false }); // sem geometria no OSM: não vai
-  });
-  it('em desenvolvimento aparecem todos com posição', () => {
-    const points = buildSiteModel(bs, cat, { includeUnverified: true })
-      .beaches[0]!.points;
-    expect(points.every((p) => p.onMap)).toBe(true);
+    expect(by.P1).toMatchObject({ onMap: true, accuracy: 'approximate' });
+    expect(by.P2).toMatchObject({ onMap: true, accuracy: 'very-approximate' });
+    expect(by.P3).toMatchObject({ onMap: true, accuracy: null });
+    expect(by.P4).toMatchObject({ onMap: false, accuracy: null });
   });
 });

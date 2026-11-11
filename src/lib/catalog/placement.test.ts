@@ -17,6 +17,7 @@ import {
   geometryForBeach,
   MAX_DISTANCE_TO_BEACH_M,
   MIN_SPACING_M,
+  accuracyOf,
   planBeach,
   pointState,
   shownInProduction,
@@ -24,7 +25,7 @@ import {
   type PlanInput,
 } from './placement.ts';
 import { validateForWrite } from './review.ts';
-import type { Catalog, CatalogPoint, OsmSource, PointChecks } from './types.ts';
+import type { Catalog, CatalogPoint, OsmSource } from './types.ts';
 
 // Praia reta de leste a oeste na latitude -12,95, com cerca de 1.090 m (1° de longitude ≈ 108,5 km).
 const LAT = -12.95;
@@ -52,12 +53,7 @@ const boundary: Boundary = {
   ],
   inner: [],
 };
-const pass = { status: 'pass' as const, meters: null };
-const allPass: PointChecks = {
-  inSalvador: pass,
-  nearBeach: pass,
-  minSpacing: pass,
-};
+
 const DAY = '2026-11-12';
 
 const point = (
@@ -222,59 +218,55 @@ describe('computeChecks', () => {
   });
 });
 
-describe('shownInProduction e pointState', () => {
-  const auto = (checks: PointChecks | null, over: Partial<CatalogPoint> = {}) =>
+describe('shownInProduction, accuracyOf e pointState', () => {
+  const auto = (
+    level: 'g' | 'a' | 'b' | 'c' | 'd' | 'e',
+    over: Partial<CatalogPoint> = {},
+  ) =>
     point('A', {
       lat: LAT,
       lng: -38.5,
-      checks,
       source: {
         provider: 'auto',
         method: 'auto-placed',
-        basis: 'spread',
+        level,
+        basis: 'geometry-spread',
         confidence: 'low',
+        reason: 'teste',
         query: null,
-        geometry: ['way/1'],
+        geometry: [],
         osm: null,
         placedAt: DAY,
       },
       ...over,
     });
-  it('verificado com posição aparece', () => {
+  it('verificado com posição aparece e não avisa aproximação', () => {
     const p = point('A', { lat: LAT, lng: -38.5, verified: true });
     expect(shownInProduction(p)).toBe(true);
+    expect(accuracyOf(p)).toBeNull();
     expect(pointState(p)).toBe('verified');
   });
-  it('automático com todas as verificações em pass aparece', () => {
-    expect(shownInProduction(auto(allPass))).toBe(true);
-    expect(pointState(auto(allPass))).toBe('auto');
+  it('todo ponto automático com posição aparece, em qualquer nível, sem exceção', () => {
+    for (const level of ['g', 'a', 'b', 'c', 'd', 'e'] as const) {
+      expect(shownInProduction(auto(level))).toBe(true);
+    }
   });
-  it('espaçamento n/a (único ponto da praia) aparece', () => {
-    expect(
-      shownInProduction(
-        auto({ ...allPass, minSpacing: { status: 'n/a', meters: null } }),
-      ),
-    ).toBe(true);
+  it('níveis g, a, b: "aproximada"; níveis c, d, e: "muito aproximada"', () => {
+    for (const level of ['g', 'a', 'b'] as const) {
+      expect(accuracyOf(auto(level))).toBe('approximate');
+      expect(pointState(auto(level))).toBe('auto');
+    }
+    for (const level of ['c', 'd', 'e'] as const) {
+      expect(accuracyOf(auto(level))).toBe('very-approximate');
+      expect(pointState(auto(level))).toBe('very-approximate');
+    }
   });
-  it('geometria n/a (sem geometria no OSM) NÃO aparece e fica aguardando aprovação', () => {
-    const p = auto({ ...allPass, nearBeach: { status: 'n/a', meters: null } });
-    expect(shownInProduction(p)).toBe(false);
-    expect(pointState(p)).toBe('pending');
+  it('automático sem o campo level (dado antigo) conta como g', () => {
+    const p = auto('g');
+    delete (p.source as { level?: string }).level;
+    expect(accuracyOf(p)).toBe('approximate');
   });
-  it('qualquer verificação em fail, ou sem checks, não aparece', () => {
-    expect(
-      shownInProduction(
-        auto({ ...allPass, inSalvador: { status: 'fail', meters: null } }),
-      ),
-    ).toBe(false);
-    expect(
-      shownInProduction(
-        auto({ ...allPass, minSpacing: { status: 'fail', meters: 10 } }),
-      ),
-    ).toBe(false);
-    expect(shownInProduction(auto(null))).toBe(false);
-  });
-  it('proposta do OSM não verificada e sem posição não aparecem', () => {
+  it('sem posição nunca aparece; proposta de outra origem não aprovada não aparece', () => {
     const osm: OsmSource = {
       provider: 'osm',
       method: 'name',
@@ -285,10 +277,11 @@ describe('shownInProduction e pointState', () => {
       displayName: 'x',
       fetchedAt: DAY,
     };
-    expect(
-      shownInProduction(point('A', { lat: LAT, lng: -38.5, source: osm })),
-    ).toBe(false);
+    expect(shownInProduction(point('A'))).toBe(false);
     expect(pointState(point('A'))).toBe('unplaced');
+    const p = point('A', { lat: LAT, lng: -38.5, source: osm });
+    expect(shownInProduction(p)).toBe(false);
+    expect(pointState(p)).toBe('pending');
   });
 });
 
@@ -331,12 +324,15 @@ describe('planBeach com geometria', () => {
     expect(plans[0]).toMatchObject({
       kind: 'placed',
       source: {
-        basis: 'description',
+        basis: 'geometry-description',
         confidence: 'medium',
         method: 'auto-placed',
       },
       checks: { nearBeach: { status: 'pass' } },
     });
+    // vai para a areia: o ponto mais próximo da geometria, não a rua citada (55 m ao lado)
+    const p = plans[0]!;
+    if (p.kind === 'placed') expect(p.lat).toBeCloseTo(LAT, 6);
   });
   it('pista a mais de 80 m da geometria é recusada e o ponto é distribuído na geometria', () => {
     const plans = planBeach(
@@ -349,7 +345,7 @@ describe('planBeach com geometria', () => {
     );
     expect(plans[0]).toMatchObject({
       kind: 'placed',
-      source: { basis: 'spread', confidence: 'low' },
+      source: { basis: 'geometry-spread', confidence: 'low' },
     });
   });
   it('sem pista, distribui os pontos ao longo da praia com pelo menos o espaçamento mínimo', () => {
@@ -383,10 +379,12 @@ describe('planBeach com geometria', () => {
         },
       }),
     );
-    expect(plans[0]).toMatchObject({ source: { basis: 'description' } });
+    expect(plans[0]).toMatchObject({
+      source: { basis: 'geometry-description' },
+    });
     expect(plans[1]).toMatchObject({
       kind: 'placed',
-      source: { basis: 'spread' },
+      source: { basis: 'geometry-spread' },
     });
   });
   it('geometria curta demais para o espaçamento: os que não cabem ficam sem posição, com motivo', () => {
@@ -444,54 +442,85 @@ describe('planBeach com geometria', () => {
   });
 });
 
-describe('planBeach sem geometria no OSM', () => {
-  const noGeo = { geometry: null };
-  it('só pela descrição: posiciona com baixa confiança, geometria n/a, e não vai para produção', () => {
+describe('planBeach sem geometria no OSM (nível g não se aplica)', () => {
+  it('deixa os pontos sem posição aqui, com o motivo do nível g, para os níveis a–e', () => {
     const plans = planBeach(
       input([point('P1')], {
-        ...noGeo,
+        geometry: null,
         locations: { P1: 'Em frente à Barraca Sol Nascente, na orla.' },
-        clueResults: { P1: [clue('Barraca Sol Nascente', LAT, -38.495)] },
-      }),
-    );
-    const p = plans[0]!;
-    expect(p).toMatchObject({
-      kind: 'placed',
-      source: { basis: 'description-only', confidence: 'low' },
-      checks: { nearBeach: { status: 'n/a' }, inSalvador: { status: 'pass' } },
-    });
-    if (p.kind === 'placed') {
-      const point1 = point('P1', {
-        lat: p.lat,
-        lng: p.lng,
-        source: p.source,
-        checks: p.checks,
-      });
-      expect(shownInProduction(point1)).toBe(false);
-      expect(pointState(point1)).toBe('pending');
-    }
-  });
-  it('sem pista aceitável: sem posição, com o motivo', () => {
-    const plans = planBeach(
-      input([point('P1')], {
-        ...noGeo,
-        locations: { P1: 'Próximo à quadra.' },
+        clueResults: {
+          P1: [clue('Barraca Sol Nascente', LAT, -38.495)],
+        },
       }),
     );
     expect(plans[0]).toMatchObject({
       kind: 'unplaced',
-      note: expect.stringContaining('sem geometria'),
+      note: expect.stringContaining('nível g'),
     });
   });
-  it('resultado com nome diferente do citado é recusado', () => {
+  it('geometria fora do polígono de Salvador (caso Penha): o motivo é esse, não "sem espaço"', () => {
+    const outside: Boundary = {
+      outer: [
+        [
+          { lat: 0, lng: 0 },
+          { lat: 0, lng: 1 },
+          { lat: 1, lng: 1 },
+          { lat: 0, lng: 0 },
+        ],
+      ],
+      inner: [],
+    };
+    const plans = planBeach(input([point('P1')], { boundary: outside }));
+    expect(plans[0]).toMatchObject({
+      kind: 'unplaced',
+      note: expect.stringContaining('fora do polígono de Salvador'),
+    });
+  });
+  it('geometria curta demais continua dizendo "sem espaço"', () => {
+    const short: Geometry = {
+      ids: ['way/9'],
+      lines: [
+        {
+          closed: false,
+          pts: [
+            { lat: LAT, lng: -38.5 },
+            { lat: LAT, lng: -38.4997 },
+          ],
+        },
+      ],
+    };
     const plans = planBeach(
-      input([point('P1')], {
-        ...noGeo,
-        locations: { P1: 'Em frente à Barraca Sol Nascente, na orla.' },
-        clueResults: { P1: [clue('Mercado Central', LAT, -38.495)] },
-      }),
+      input([point('P1'), point('P2')], { geometry: short }),
     );
-    expect(plans[0]!.kind).toBe('unplaced');
+    expect(plans.find((p) => p.kind === 'unplaced')).toMatchObject({
+      note: expect.stringContaining('sem espaço'),
+    });
+  });
+});
+
+describe('geometryForBeach com o polígono de Salvador', () => {
+  const way = (id: number, lng: number): GeomElement => ({
+    type: 'way',
+    id,
+    tags: { name: 'Praia da Penha' },
+    geometry: [
+      { lat: LAT, lon: lng },
+      { lat: LAT, lon: lng + 0.001 },
+    ],
+  });
+  it('ignora o homônimo fora de Salvador e fica com o de dentro', () => {
+    const inside = way(1, -38.5); // dentro de `boundary`
+    const outside = way(2, -38.9); // fora (a oeste do polígono)
+    const g = geometryForBeach('Penha', [inside, outside], undefined, boundary);
+    expect(g?.ids).toEqual(['way/1']);
+  });
+  it('só com homônimo fora de Salvador, não há geometria (caso Penha)', () => {
+    expect(
+      geometryForBeach('Penha', [way(2, -38.9)], undefined, boundary),
+    ).toBeNull();
+  });
+  it('sem polígono informado, não filtra (comportamento anterior)', () => {
+    expect(geometryForBeach('Penha', [way(2, -38.9)])?.ids).toEqual(['way/2']);
   });
 });
 

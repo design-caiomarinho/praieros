@@ -1,10 +1,5 @@
 import { osmSearchName, type OsmNameHints } from './osm-hints.ts';
-import {
-  namesMatch,
-  decideDescription,
-  descriptionClause,
-  descriptionQuery,
-} from './propose.ts';
+import { namesMatch, descriptionQuery } from './propose.ts';
 import type { NominatimResult, OverpassElement } from './propose.ts';
 import {
   distanceM,
@@ -12,6 +7,7 @@ import {
   assembleRings,
   inBoundary,
   lengthM,
+  nearestOnGeometry,
   pointAlong,
   spineOf,
   type Boundary,
@@ -92,6 +88,7 @@ export function geometryForBeach(
   beachName: string,
   elements: readonly GeomElement[],
   hints?: OsmNameHints,
+  boundary?: Boundary,
 ): Geometry | null {
   const searchName = osmSearchName(beachName, hints);
   const lines: Line[] = [];
@@ -101,6 +98,13 @@ export function geometryForBeach(
     if (!name || !namesMatch(searchName, name)) continue;
     const l = linesOf(el);
     if (l.length === 0) continue;
+    // Homônimo fora de Salvador (ex.: Penha em Vera Cruz) não é a praia: só entra com algum ponto dentro.
+    if (
+      boundary &&
+      !l.some((line) => line.pts.some((pt) => inBoundary(pt, boundary)))
+    ) {
+      continue;
+    }
     lines.push(...l);
     ids.push(`${el.type}/${el.id}`);
   }
@@ -143,29 +147,37 @@ const hasPos = (p: { lat: number | null; lng: number | null }) =>
   p.lat !== null && p.lng !== null;
 
 /**
- * Entra em produção: aprovado à mão (`verified`) ou posicionado automaticamente com todas as
- * verificações aplicáveis em `pass`. Dentro de Salvador e perto da geometria são obrigatórias
- * (a geometria nunca pode ser `n/a`); o espaçamento só é `n/a` quando o ponto é o único da praia.
+ * Entra em produção: aprovado à mão (`verified`) ou posicionado automaticamente
+ * (`auto-placed`, em qualquer nível), sem exceção. Quanto menos exata a posição, mais claro o
+ * aviso na ficha (`accuracyOf`). Ponto sem coordenadas nunca aparece.
  */
 export function shownInProduction(p: CatalogPoint): boolean {
   if (!hasPos(p)) return false;
-  if (p.verified) return true;
-  if (p.source?.method !== 'auto-placed' || !p.checks) return false;
-  const { inSalvador, nearBeach, minSpacing } = p.checks;
-  return (
-    inSalvador.status === 'pass' &&
-    nearBeach.status === 'pass' &&
-    minSpacing.status !== 'fail'
-  );
+  return p.verified || p.source?.method === 'auto-placed';
 }
 
-export type PointState = 'verified' | 'auto' | 'pending' | 'unplaced';
+/** Grau de aproximação mostrado na ficha. Verificado e manual não avisam. */
+export type Accuracy = 'approximate' | 'very-approximate';
 
-/** Estado para a página de visão geral: verificado, automático (vai para produção), aguardando aprovação ou sem posição. */
+export function accuracyOf(p: CatalogPoint): Accuracy | null {
+  if (p.verified || !hasPos(p) || p.source?.method !== 'auto-placed') {
+    return null;
+  }
+  const level = p.source.level ?? 'g';
+  return level === 'c' || level === 'd' || level === 'e'
+    ? 'very-approximate'
+    : 'approximate';
+}
+
+export type PointState =
+  'verified' | 'auto' | 'very-approximate' | 'pending' | 'unplaced';
+
+/** Estado para a visão geral: verificado, automático, muito aproximado, aguardando (posição de outra origem, não aprovada) ou sem posição. */
 export function pointState(p: CatalogPoint): PointState {
   if (!hasPos(p)) return 'unplaced';
   if (p.verified) return 'verified';
-  return shownInProduction(p) ? 'auto' : 'pending';
+  if (!shownInProduction(p)) return 'pending';
+  return accuracyOf(p) === 'very-approximate' ? 'very-approximate' : 'auto';
 }
 
 export type PointPlan =
@@ -196,10 +208,10 @@ export const isLocked = (p: CatalogPoint) =>
   p.verified || p.source?.method === 'manual';
 
 /**
- * Decide a posição de cada ponto movível da praia. Com geometria: pista da descrição aceita só
- * a até 80 m dela; sem pista aceitável, distribui ao longo da geometria com espaçamento mínimo.
- * Sem geometria: só a descrição (baixa confiança, não vai para produção). Cada posição passa
- * por `computeChecks` e só é mantida se nenhuma verificação falhar.
+ * Nível g: decide a posição de cada ponto movível de uma praia COM geometria no OSM (dentro de
+ * Salvador). Pista da descrição aceita só a até 80 m dela; sem pista aceitável, distribui ao
+ * longo da geometria com espaçamento mínimo. Sem geometria, os pontos ficam sem posição aqui e
+ * seguem para os níveis a–e (`levels.ts`). Cada posição passa por `computeChecks`.
  */
 export function planBeach(input: PlanInput): PointPlan[] {
   const { beach, locations, geometry, boundary, clueResults, today } = input;
@@ -222,14 +234,19 @@ export function planBeach(input: PlanInput): PointPlan[] {
     return true;
   };
   const src = (
-    basis: AutoSource['basis'],
+    basis: 'geometry-description' | 'geometry-spread',
     query: string | null,
     r: NominatimResult | null,
   ): AutoSource => ({
     provider: 'auto',
     method: 'auto-placed',
+    level: 'g',
     basis,
-    confidence: basis === 'description' ? 'medium' : 'low',
+    confidence: basis === 'geometry-description' ? 'medium' : 'low',
+    reason:
+      basis === 'geometry-description'
+        ? 'pista da descrição a até 80 m da geometria da praia'
+        : 'distribuído ao longo da geometria da praia',
     query,
     geometry: geometry?.ids ?? [],
     osm: r
@@ -238,65 +255,38 @@ export function planBeach(input: PlanInput): PointPlan[] {
     placedAt: today,
   });
 
-  const pending: CatalogPoint[] = [];
-  for (const p of movable) {
-    const clause = descriptionClause(locations[p.code]);
-    const query = descriptionQuery(locations[p.code]);
-    const results = clueResults[p.code] ?? [];
-    if (!clause || !query || results.length === 0) {
-      pending.push(p);
-      continue;
-    }
-    if (geometry) {
-      // Pista aceita: dentro de Salvador, a até 80 m da geometria e a 40 m dos pontos já postos.
-      const hit = results.find((r) =>
-        finishable(
-          { lat: Number(r.lat), lng: Number(r.lon) },
-          placed,
-          geometry,
-          boundary,
-        ),
-      );
-      if (
-        hit &&
-        finish(
-          p.code,
-          { lat: Number(hit.lat), lng: Number(hit.lon) },
-          src('description', query, hit),
-        )
-      ) {
-        continue;
-      }
-      pending.push(p);
-    } else {
-      const d = decideDescription(results, query, today, clause);
-      const hit = d.ok
-        ? results.find(
-            (r) =>
-              r.osm_id === d.source.osmId && r.osm_type === d.source.osmType,
-          )
-        : undefined;
-      if (
-        hit &&
-        finish(
-          p.code,
-          { lat: Number(hit.lat), lng: Number(hit.lon) },
-          src('description-only', query, hit),
-        )
-      ) {
-        continue;
-      }
+  if (!geometry) {
+    for (const p of movable) {
       plans.set(p.code, {
         kind: 'unplaced',
-        note: d.ok
-          ? 'a posição pela descrição não passou nas verificações'
-          : `sem geometria no OpenStreetMap e a descrição não bastou (${d.reason})`,
         code: p.code,
+        note: 'nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador',
       });
     }
-  }
+  } else {
+    const pending: CatalogPoint[] = [];
+    for (const p of movable) {
+      const query = descriptionQuery(locations[p.code]);
+      const results = clueResults[p.code] ?? [];
+      // É praia: a pista vai para o ponto mais próximo da geometria da praia (areia), não
+      // fica na rua ou no prédio citado na descrição.
+      const hit = results.find((r) =>
+        finishable(snapToBeach(r, geometry), placed, geometry, boundary),
+      );
+      if (
+        query &&
+        hit &&
+        finish(
+          p.code,
+          snapToBeach(hit, geometry),
+          src('geometry-description', query, hit),
+        )
+      ) {
+        continue;
+      }
+      pending.push(p);
+    }
 
-  if (geometry) {
     const spine = spineOf(geometry);
     const len = spine ? lengthM(spine) : 0;
     // Candidatas: primeiro as posições em partes iguais; se alguma estiver ocupada (pista ou
@@ -317,27 +307,16 @@ export function planBeach(input: PlanInput): PointPlan[] {
       const i = slots.findIndex(
         (s, k) => !used.has(k) && finishable(s, placed, geometry, boundary),
       );
-      if (i >= 0 && finish(p.code, slots[i]!, src('spread', null, null))) {
+      if (
+        i >= 0 &&
+        finish(p.code, slots[i]!, src('geometry-spread', null, null))
+      ) {
         used.add(i);
       } else {
         plans.set(p.code, {
           kind: 'unplaced',
           code: p.code,
-          note: spine
-            ? `sem espaço na geometria da praia (${Math.round(len)} m) respeitando ${MIN_SPACING_M} m entre pontos`
-            : 'geometria da praia sem linhas utilizáveis',
-        });
-      }
-    }
-  } else {
-    for (const p of pending) {
-      if (!plans.has(p.code)) {
-        plans.set(p.code, {
-          kind: 'unplaced',
-          code: p.code,
-          note: locations[p.code]
-            ? 'sem geometria no OpenStreetMap e a descrição do local não cita um nome encontrável'
-            : 'sem geometria no OpenStreetMap e sem descrição do local',
+          note: `nível g: ${whyNoSlot(slots, placed, geometry, boundary, len)}`,
         });
       }
     }
@@ -368,11 +347,38 @@ export function planBeach(input: PlanInput): PointPlan[] {
       return {
         kind: 'unplaced',
         code: p.code,
-        note: 'não passou nas verificações finais',
+        note: 'nível g: não passou nas verificações finais',
       } as PointPlan;
     }
     return { ...plan, checks };
   });
+}
+
+/** Resultado do Nominatim levado ao ponto mais próximo da geometria da praia (se já está a até 80 m dela). */
+function snapToBeach(r: NominatimResult, geometry: Geometry): LatLng {
+  const raw = { lat: Number(r.lat), lng: Number(r.lon) };
+  if (distanceToGeometryM(raw, geometry) === 0) return raw; // já dentro da área da praia
+  const near = nearestOnGeometry(raw, geometry);
+  return near && near.dist <= MAX_DISTANCE_TO_BEACH_M ? near.point : raw;
+}
+
+/** Diz qual verificação realmente impediu todas as candidatas (e não "sem espaço" por padrão). */
+export function whyNoSlot(
+  slots: readonly LatLng[],
+  placed: readonly LatLng[],
+  geometry: Geometry | null,
+  boundary: Boundary,
+  lengthMeters: number,
+): string {
+  if (slots.length === 0) return 'geometria da praia sem linhas utilizáveis';
+  const cs = slots.map((s) => computeChecks(s, placed, geometry, boundary));
+  if (cs.every((c) => c.inSalvador.status === 'fail')) {
+    return 'a geometria da praia está fora do polígono de Salvador';
+  }
+  if (cs.every((c) => c.nearBeach.status === 'fail')) {
+    return `a posição fica a mais de ${MAX_DISTANCE_TO_BEACH_M} m da geometria da praia`;
+  }
+  return `sem espaço na geometria da praia (${Math.round(lengthMeters)} m) respeitando ${MIN_SPACING_M} m entre pontos`;
 }
 
 /** Passaria nas três verificações (usado para escolher entre candidatas sem registrar nada). */

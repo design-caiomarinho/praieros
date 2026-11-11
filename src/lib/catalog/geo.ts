@@ -183,3 +183,115 @@ export function spineOf(g: Geometry): LatLng[] | null {
   }
   return best?.pts ?? null;
 }
+
+const key = (p: LatLng) => `${p.lat},${p.lng}`;
+
+/**
+ * Junta trechos abertos (ways do litoral) pelas pontas em cadeias contínuas. Devolve as cadeias
+ * da mais longa para a mais curta.
+ */
+export function assembleChains(ways: readonly LatLng[][]): LatLng[][] {
+  const pool = ways.filter((w) => w.length >= 2).map((w) => w.slice());
+  const byEnd = new Map<string, number[]>();
+  pool.forEach((w, i) => {
+    for (const p of [w[0]!, w[w.length - 1]!]) {
+      byEnd.set(key(p), [...(byEnd.get(key(p)) ?? []), i]);
+    }
+  });
+  const used = new Set<number>();
+  const chains: LatLng[][] = [];
+  const take = (end: LatLng): number | undefined =>
+    (byEnd.get(key(end)) ?? []).find((i) => !used.has(i));
+  for (let i = 0; i < pool.length; i++) {
+    if (used.has(i)) continue;
+    used.add(i);
+    let chain = pool[i]!;
+    for (;;) {
+      const j = take(chain[chain.length - 1]!);
+      if (j === undefined) break;
+      used.add(j);
+      const w = pool[j]!;
+      chain = chain.concat(
+        key(w[0]!) === key(chain[chain.length - 1]!)
+          ? w.slice(1)
+          : w.slice(0, -1).reverse(),
+      );
+    }
+    for (;;) {
+      const j = take(chain[0]!);
+      if (j === undefined) break;
+      used.add(j);
+      const w = pool[j]!;
+      chain = (
+        key(w[w.length - 1]!) === key(chain[0]!)
+          ? w.slice(0, -1)
+          : w.slice(1).reverse()
+      ).concat(chain);
+    }
+    chains.push(chain);
+  }
+  return chains.sort((a, b) => lengthM(b) - lengthM(a));
+}
+
+export interface Nearest {
+  point: LatLng;
+  /** Metros desde o início da linha até o ponto. */
+  s: number;
+  /** Distância do ponto consultado até `point`, em metros. */
+  dist: number;
+}
+
+/** Ponto mais próximo de `p` sobre a linha, com a posição ao longo dela. */
+export function nearestOnPolyline(p: LatLng, pts: readonly LatLng[]): Nearest {
+  let best: Nearest = { point: pts[0]!, s: 0, dist: Infinity };
+  let acc = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1]!;
+    const b = pts[i]!;
+    const seg = distanceM(a, b);
+    const pa = local(a, p);
+    const pb = local(b, p);
+    const dx = pb.x - pa.x;
+    const dy = pb.y - pa.y;
+    const len2 = dx * dx + dy * dy;
+    const t =
+      len2 === 0
+        ? 0
+        : Math.max(0, Math.min(1, -(pa.x * dx + pa.y * dy) / len2));
+    const dist = Math.hypot(pa.x + t * dx, pa.y + t * dy);
+    if (dist < best.dist) {
+      best = {
+        point: {
+          lat: a.lat + (b.lat - a.lat) * t,
+          lng: a.lng + (b.lng - a.lng) * t,
+        },
+        s: acc + seg * t,
+        dist,
+      };
+    }
+    acc += seg;
+  }
+  return best;
+}
+
+/** Ponto mais próximo de `p` entre todas as linhas da geometria (com o índice da linha). */
+export function nearestOnGeometry(
+  p: LatLng,
+  g: Geometry,
+): (Nearest & { line: number }) | null {
+  let best: (Nearest & { line: number }) | null = null;
+  g.lines.forEach((l, line) => {
+    if (l.pts.length < 2) return;
+    const n = nearestOnPolyline(p, l.pts);
+    if (!best || n.dist < best.dist) best = { ...n, line };
+  });
+  return best;
+}
+
+/** Centro (média simples) de um conjunto de pontos. */
+export function centroid(ps: readonly LatLng[]): LatLng {
+  return {
+    lat: ps.reduce((a, p) => a + p.lat, 0) / ps.length,
+    lng: ps.reduce((a, p) => a + p.lng, 0) / ps.length,
+  };
+}

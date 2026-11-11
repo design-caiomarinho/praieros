@@ -23,11 +23,19 @@ const token = (name: string) =>
 
 const TITLES: Record<PointState, string> = {
   verified: '✓ Verificados (produção)',
-  auto: '≈ Automáticos (produção, posição aproximada)',
+  auto: '≈ Automáticos: níveis g, a, b (produção, "Posição aproximada")',
+  'very-approximate':
+    '≈! Muito aproximados: níveis c, d, e (produção, "Posição muito aproximada")',
   pending: '? Aguardando aprovação (só dev, baixa confiança)',
   unplaced: '! Sem posição (fora do mapa)',
 };
-const ORDER: PointState[] = ['verified', 'auto', 'pending', 'unplaced'];
+const ORDER: PointState[] = [
+  'verified',
+  'auto',
+  'very-approximate',
+  'pending',
+  'unplaced',
+];
 
 interface Row {
   id: string;
@@ -54,7 +62,12 @@ const rows: Row[] = catalog.beaches.flatMap((b) => {
   });
 });
 
-const visible = new Set<PointState>(['verified', 'auto', 'pending']);
+const visible = new Set<PointState>([
+  'verified',
+  'auto',
+  'very-approximate',
+  'pending',
+]);
 let selected: string | null = null;
 let map: Awaited<ReturnType<typeof createReviewMap>> | null = null;
 
@@ -69,7 +82,7 @@ const originText = (p: CatalogPoint) => {
   const s = p.source;
   if (!s) return 'sem origem';
   if (s.provider === 'auto')
-    return `automático (${s.basis}), confiança ${s.confidence === 'medium' ? 'média' : 'baixa'}`;
+    return `nível ${s.level ?? 'g'} (${s.basis}), confiança ${{ medium: 'média', low: 'baixa', 'very-low': 'muito baixa' }[s.confidence]}. ${s.reason}`;
   if (s.provider === 'manual') return 'manual';
   return `proposta do OSM (${s.method})`;
 };
@@ -83,7 +96,11 @@ function pins(): ReviewPin[] {
       label: r.first ? r.beach : null,
       lat: r.point.lat!,
       lng: r.point.lng!,
-      state: r.state as 'verified' | 'auto' | 'pending',
+      state: r.state as Exclude<PointState, 'unplaced'>,
+      tag:
+        r.point.source?.provider === 'auto'
+          ? ` ${r.point.source.level ?? 'g'}`
+          : undefined,
       ariaLabel: `${r.beach}, ponto ${r.number}, ${TITLES[r.state]}`,
     }));
 }
@@ -91,7 +108,7 @@ function pins(): ReviewPin[] {
 function render() {
   const count = (s: PointState) => rows.filter((r) => r.state === s).length;
   $('ov-summary').textContent =
-    `${rows.length} pontos: ${count('verified')} verificados · ${count('auto')} automáticos · ${count('pending')} aguardando aprovação · ${count('unplaced')} sem posição`;
+    `${rows.length} pontos: ${count('verified')} verificados · ${count('auto')} automáticos (g/a/b) · ${count('very-approximate')} muito aproximados (c/d/e) · ${count('pending')} aguardando aprovação · ${count('unplaced')} sem posição`;
   $('ov-list').innerHTML = ORDER.map((s) => {
     const list = rows.filter((r) => r.state === s);
     if (list.length === 0) return '';

@@ -1,3 +1,5 @@
+import type { Accuracy } from '../catalog/placement.ts';
+import { ACCURACY_LABELS } from './accuracy.ts';
 import { STATUS_LABELS, type ChipStatus } from '../rules/status.ts';
 import type { BulletinRef } from '../rules/types.ts';
 import type { BeachModel } from './build-beach-models.ts';
@@ -26,7 +28,7 @@ export interface BeachPanelData {
     location?: string;
     status: ChipStatus;
     /** Posição automática no mapa: mostra "Posição aproximada". */
-    approximate?: boolean;
+    accuracy?: Accuracy | null;
   }[];
   notice?: 'outdated' | 'no-result';
   note?: string;
@@ -81,7 +83,7 @@ export function toPanelData(
       name: `Ponto ${i + 1}`,
       location: p.location ?? undefined,
       status: p.status,
-      approximate: p.approximate,
+      accuracy: p.accuracy,
     })),
     notice: beach.banner === 'outdated' ? 'outdated' : undefined,
   };
@@ -93,6 +95,7 @@ export function markerAriaLabel(
   pointNumber: number,
   status: ChipStatus,
   lastStatus?: ChipStatus,
+  accuracy?: Accuracy | null,
 ): string {
   const parts = [beachName, `Ponto de coleta ${pointNumber}`];
   if (status === 'outdated' && lastStatus && lastStatus !== 'outdated') {
@@ -102,5 +105,6 @@ export function markerAriaLabel(
   } else {
     parts.push(STATUS_LABELS[status]);
   }
+  if (accuracy) parts.push(ACCURACY_LABELS[accuracy]);
   return parts.join(', ');
 }

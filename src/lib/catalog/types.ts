@@ -22,21 +22,36 @@ export interface ManualSource {
   editedAt: string;
 }
 
+/** Nível do posicionamento automático: g = geometria da praia; a–e = níveis de aproximação. */
+export type PlacementLevel = 'g' | 'a' | 'b' | 'c' | 'd' | 'e';
+
 /**
- * Posição achada automaticamente por `npm run catalog:place`: pela pista da descrição do local
- * (`description`), distribuída ao longo da geometria da praia (`spread`) ou só pela descrição,
- * sem geometria no OSM (`description-only`, nunca vai para produção sem aprovação).
+ * Posição achada automaticamente por `npm run catalog:place`. `level` diz quão exata é:
+ * g (geometria da praia no OSM), a (referências da descrição), b (nome da praia), c (bairro ou
+ * localidade), d (interpolação pela ordem do boletim) e e (último recurso, no litoral).
  */
 export interface AutoSource {
   provider: 'auto';
   method: 'auto-placed';
-  basis: 'description' | 'spread' | 'description-only';
-  confidence: 'medium' | 'low';
-  /** Consulta enviada ao Nominatim (só `description` e `description-only`). */
+  /** Ausente em dados antigos = g. */
+  level?: PlacementLevel;
+  basis:
+    | 'geometry-description'
+    | 'geometry-spread'
+    | 'references'
+    | 'beach-name'
+    | 'locality'
+    | 'order-interpolation'
+    | 'coast-snap';
+  /** g: média (pista) ou baixa (distribuído); a e b: baixa; c, d e e: muito baixa. */
+  confidence: 'medium' | 'low' | 'very-low';
+  /** Por que caiu neste nível (inclui o motivo de cada nível anterior que não passou). */
+  reason: string;
+  /** Consultas enviadas ao Nominatim (separadas por " | "). */
   query: string | null;
   /** Elementos do OSM cuja geometria foi usada (ex.: `way/123`). */
   geometry: string[];
-  /** Resultado do Nominatim usado (só `description` e `description-only`). */
+  /** Resultado do Nominatim usado (primeiro, nos níveis a–c). */
   osm: { type: string; id: number; displayName: string } | null;
   /** AAAA-MM-DD do posicionamento. */
   placedAt: string;
@@ -60,6 +75,8 @@ export interface PointChecks {
   inSalvador: Check;
   /** A no máximo 80 m da geometria da praia no OSM (`n/a` se a praia não tem geometria). */
   nearBeach: Check;
+  /** A no máximo 150 m do litoral do OSM (níveis a–e; ausente no nível g). */
+  nearCoast?: Check;
   /** A pelo menos 40 m dos outros pontos da mesma praia (`n/a` se for o único). */
   minSpacing: Check;
 }

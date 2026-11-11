@@ -64,3 +64,9 @@
   background: var(--s-color-surface-warning-soft);
   color: var(--s-color-content-warning);
 }
+.pin--very-approximate .pin__badge {
+  border-style: dashed;
+  border-color: var(--s-color-border-warning);
+  background: var(--s-color-surface-warning-soft);
+  color: var(--s-color-content-warning);
+}

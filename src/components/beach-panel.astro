@@ -15,7 +15,7 @@ export interface PanelPoint {
   location?: string;
   status: ChipStatus;
   /** Posição automática no mapa: mostra "Posição aproximada". */
-  approximate?: boolean;
+  accuracy?: 'approximate' | 'very-approximate' | null;
 }
 
 interface Props {
@@ -86,7 +86,7 @@ const subtitle =
               name={p.name}
               location={p.location}
               status={p.status}
-              approximate={p.approximate}
+              accuracy={p.accuracy}
             />
           ))}
         </div>
