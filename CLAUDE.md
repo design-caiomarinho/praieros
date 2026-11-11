@@ -108,4 +108,5 @@ Fase 2, sessão 1 concluída: `tokens/tokens.json` (do Figma, com aliases) e `sr
 Fase 2, sessão 2 (parcial): tokens do Figma + `tokens/extra.json`; `StatusChip` em `src/components/status-chip.astro`; página `/dev/components` só em dev. Faltam faixas e PointCard (aguardam links).
 Fonte Switzer self-host (`public/fonts/`, `src/styles/fonts.css`); atribuição da licença dispensada por decisão (ver `docs/decisions.md`).
 Nomenclatura em inglês padronizada (status `suitable | unsuitable | outdated | no-result`, arquivos em kebab-case).
+Fase 2, sessão 3: `OutdatedBanner`, `NoResultBanner` e `PointCard` criados (pendentes de componentizar no Figma); valores assumidos em `docs/decisions.md`.
 Próxima: sessão 5 (comparar com o boletim anterior: mudança de código, provável renomeação) ou tokens. Termos de uso do site seguem pendentes.

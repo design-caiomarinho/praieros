@@ -1,8 +1,18 @@
 {
   "radius": {
-    "full": { "$type": "dimension", "$value": 999 }
+    "full": {
+      "$type": "dimension",
+      "$value": 999
+    }
   },
   "border-width": {
-    "default": { "$type": "dimension", "$value": 1 }
+    "default": {
+      "$type": "dimension",
+      "$value": 1
+    },
+    "accent": {
+      "$type": "dimension",
+      "$value": 4
+    }
   }
 }

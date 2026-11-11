@@ -2,6 +2,9 @@
 import '../styles/tokens.css';
 import '../styles/fonts.css';
 import StatusChip from '../components/status-chip.astro';
+import OutdatedBanner from '../components/outdated-banner.astro';
+import NoResultBanner from '../components/no-result-banner.astro';
+import PointCard from '../components/point-card.astro';
 import type { ChipStatus } from '../lib/rules/status.ts';
 
 const statuses: ChipStatus[] = [
@@ -32,6 +35,30 @@ const statuses: ChipStatus[] = [
             </li>
           ))}
         </ul>
+      </section>
+      <section>
+        <h2>OutdatedBanner</h2>
+        <OutdatedBanner />
+      </section>
+      <section>
+        <h2>NoResultBanner</h2>
+        <NoResultBanner />
+      </section>
+      <section>
+        <h2>PointCard</h2>
+        <div class="cards">
+          {statuses.map((status) => (
+            <PointCard
+              name="Ponto 1"
+              location="Av. Sete de Setembro, em frente à Rua Marquês de Leão, junto à escada de acesso à praia."
+              status={status}
+            />
+          ))}
+          <PointCard
+            name="Ponto de coleta com um nome bem longo para testar a quebra de linha"
+            status="suitable"
+          />
+        </div>
       </section>
     </main>
   </body>
@@ -67,6 +94,12 @@ const statuses: ChipStatus[] = [
     display: flex;
     align-items: center;
     gap: var(--space-gap-md);
+  }
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+    max-width: 428px;
   }
   code {
     color: var(--s-color-content-muted);

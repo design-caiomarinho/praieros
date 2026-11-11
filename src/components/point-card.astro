@@ -1,0 +1,75 @@
+---
+import StatusChip from './status-chip.astro';
+import type { ChipStatus } from '../lib/rules/status.ts';
+
+// Cartão de ponto de coleta (Figma, nó 125:3704, estado no-result).
+interface Props {
+  name: string;
+  location?: string;
+  status: ChipStatus;
+}
+
+const { name, location, status } = Astro.props;
+---
+
+<article class={`card card--${status}`}>
+  <div class="body">
+    <div class="header">
+      <h3>{name}</h3>
+      <StatusChip status={status} />
+    </div>
+    {location && <p class="location">{location}</p>}
+  </div>
+</article>
+
+<style>
+  .card {
+    box-sizing: border-box;
+    border-left: var(--border-width-accent) solid;
+  }
+  /* Só no-result vem no Figma; as outras cores seguem os tokens de borda de cada status. */
+  .card--suitable {
+    border-left-color: var(--s-color-border-positive);
+  }
+  .card--unsuitable {
+    border-left-color: var(--s-color-border-negative);
+  }
+  .card--outdated {
+    border-left-color: var(--s-color-border-warning);
+  }
+  .card--no-result {
+    border-left-color: var(--s-color-border-unknown);
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-md);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    border-left: 0;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-gap-xs);
+  }
+  h3 {
+    margin: 0;
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-body-large-family);
+    font-weight: var(--primitives-font-weight-600);
+    font-size: var(--s-typo-body-large-size);
+    line-height: var(--s-typo-body-large-line);
+    letter-spacing: var(--s-typo-body-large-spacing);
+  }
+  .location {
+    margin: 0;
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+</style>

@@ -106,3 +106,10 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Conversão em um único lugar.** `src/lib/rules/status.ts`: `categoryToStatus` (valor do boletim -> enum) e `STATUS_LABELS` (rótulos pt-BR).
 - **Ficou em português, de propósito.** `Category = 'Própria' | 'Imprópria'` (dado do boletim, gravado em `data/bulletins/`, validado no parser); ids de região (`salvador`, `baia-de-todos-os-santos`, nomes próprios que também estão em `data/`); rótulos e aliases do site do Inema; mensagens de erro; comentários e descrições de testes.
 - **Componentes planejados:** `OutdatedBanner`, `NoResultBanner`, `PointCard` (arquivos em kebab-case). Ainda não criados.
+
+## Fase 2 / sessão 3: faixas e PointCard
+
+- **Faixas** (`outdated-banner.astro`, `no-result-banner.astro`): nós `132:8746` e `125:3786`. Fundo `surface/warning/soft` e `surface/unknown/soft`, borda inferior tracejada 1px (`border/warning` e `border/strong`), padding `inset/xs`, texto `caption/small` centralizado (cores `content/warning` e `content/secondary`). O texto pode quebrar em telas estreitas (o Figma usa linha única).
+- **Texto da faixa Sem resultado:** vale o do Figma ("Sem resultado. A praia não consta no boletim ou a análise é antiga."), por decisão de Caio em 2026-11-11, em vez da frase proposta no pedido. Registrado em `docs/copy.md`.
+- **PointCard** (`point-card.astro`, nó `125:3704`): borda lateral de 4px, borda 1px `border/default` nos outros três lados, padding `inset/md`, gap `stack/xs`, nome em `body/large`, descrição em `body/medium` (`content/secondary`), sem raio. Usa o StatusChip.
+- **Valores assumidos (a remover quando existirem no Figma):** `border-width.accent = 4px` em `tokens/extra.json`; cores da borda lateral dos estados `suitable`, `unsuitable` e `outdated` (`border/positive`, `border/negative`, `border/warning`), pois o nó só mostra `no-result` (`border/unknown`); nome do ponto em Semibold 600 e cor `content/primary`, pois o Figma usa Switzer Bold com cor fixa #343e45 (sem variável nem peso 700 nos tokens).
