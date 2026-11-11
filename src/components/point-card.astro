@@ -59,6 +59,9 @@ const accuracyLabel = accuracy ? ACCURACY_LABELS[accuracy] : null;
     cursor: pointer;
   }
   /* Ponto ativo (pin escolhido no mapa). */
+  .card[data-dimmed] {
+    opacity: 0.5;
+  }
   .card[data-active] .body {
     border-color: var(--s-color-border-accent);
     background: var(--s-color-surface-accent-subtle);

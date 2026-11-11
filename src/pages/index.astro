@@ -63,11 +63,15 @@ const panels = site.beaches
 
   function setActivePoint(slug: string | null, pointId: string | null) {
     panel.querySelectorAll<HTMLElement>('[data-point-id]').forEach((card) => {
+      const sameBeach =
+        card.closest('[data-beach]')?.getAttribute('data-beach') === slug;
       const active =
         !!pointId &&
-        card.getAttribute('data-point-id') === pointId &&
-        card.closest('[data-beach]')?.getAttribute('data-beach') === slug;
+        sameBeach &&
+        card.getAttribute('data-point-id') === pointId;
       card.toggleAttribute('data-active', active);
+      // Com um ponto ativo, os outros cartões da praia ficam a 50%.
+      card.toggleAttribute('data-dimmed', !!pointId && sameBeach && !active);
       if (active) card.setAttribute('aria-current', 'true');
       else card.removeAttribute('aria-current');
     });
