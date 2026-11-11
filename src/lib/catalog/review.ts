@@ -4,6 +4,7 @@ import type {
   CatalogPoint,
   ManualSource,
   OsmSource,
+  ProposalSource,
 } from './types.ts';
 import { neighborhoodOf, type NominatimResult } from './propose.ts';
 import { SALVADOR_BOUNDS } from './validate-catalog.ts';
@@ -80,12 +81,11 @@ function update(
 }
 
 /** Guarda a proposta automática que está sendo substituída (sem duplicar). */
-function keepProposal(list: OsmSource[], old: unknown): OsmSource[] {
-  const s = old as OsmSource | null;
-  if (!s || s.provider !== 'osm') return list;
-  const same = (a: OsmSource) =>
-    a.method === s.method && a.osmId === s.osmId && a.fetchedAt === s.fetchedAt;
-  return list.some(same) ? list : [...list, s];
+function keepProposal<T extends ProposalSource>(list: T[], old: unknown): T[] {
+  const s = old as T | null;
+  if (!s || (s.provider !== 'osm' && s.provider !== 'auto')) return list;
+  const key = JSON.stringify(s);
+  return list.some((a) => JSON.stringify(a) === key) ? list : [...list, s];
 }
 
 /** Aprova a praia inteira: pontos e bairro. Exige posição em todos os pontos e bairro preenchido. */
@@ -263,7 +263,11 @@ const inSalvador = (lat: number, lng: number) =>
  * (vazia = pode gravar). Garante: esquema v4, mesmas praias e códigos (a página não cria nem
  * apaga), coordenadas válidas e dentro de Salvador, `verified` coerente e histórico preservado.
  */
-export function validateForWrite(prev: Catalog, next: Catalog): string[] {
+export function validateForWrite(
+  prev: Catalog,
+  next: Catalog,
+  mode: 'review' | 'auto' = 'review',
+): string[] {
   const errors: string[] = [];
   if (next.schemaVersion !== 4) errors.push('schemaVersion deve ser 4.');
   if (next.region !== prev.region) errors.push('A região não pode mudar.');
@@ -306,21 +310,39 @@ export function validateForWrite(prev: Catalog, next: Catalog): string[] {
         errors.push(`${id}: histórico de propostas apagado.`);
       }
       const moved = p.lat !== old.lat || p.lng !== old.lng;
-      if (moved && p.source?.method !== 'manual') {
+      const same = JSON.stringify(p) === JSON.stringify(old);
+      const wasLocked = old.verified || old.source?.method === 'manual';
+      if (mode === 'auto') {
+        // Posicionamento automático: nunca mexe em ponto aprovado ou manual.
+        if (wasLocked && !same) {
+          errors.push(`${id}: ponto aprovado ou manual não pode ser alterado.`);
+        }
+        if (!wasLocked && !same) {
+          if (p.verified) errors.push(`${id}: o automático não aprova.`);
+          const auto = p.source?.method === 'auto-placed';
+          if (hasLat && !auto)
+            errors.push(`${id}: posição automática sem source auto-placed.`);
+          if (!hasLat && p.source !== null)
+            errors.push(`${id}: ponto sem posição com source.`);
+          if (hasLat && !p.checks)
+            errors.push(`${id}: posição automática sem checks.`);
+        }
+      } else if (moved && p.source?.method !== 'manual') {
         errors.push(`${id}: posição alterada sem source manual.`);
       }
-      if (
-        moved &&
-        old.source?.provider === 'osm' &&
-        !p.proposals.some(
-          (x) =>
-            x.method === old.source!.method &&
-            x.osmId === (old.source as OsmSource).osmId,
-        )
-      ) {
-        errors.push(`${id}: proposta original não foi preservada.`);
+      const replaced =
+        old.source !== null &&
+        JSON.stringify(old.source) !== JSON.stringify(p.source);
+      const mustKeep =
+        old.source?.provider === 'osm' ||
+        (old.source?.provider === 'auto' && mode === 'review');
+      if (replaced && mustKeep) {
+        const key = JSON.stringify(old.source);
+        if (!p.proposals.some((x) => JSON.stringify(x) === key)) {
+          errors.push(`${id}: proposta original não foi preservada.`);
+        }
       }
-      if (moved && p.verified && !old.verified) {
+      if (mode === 'review' && moved && p.verified && !old.verified) {
         errors.push(`${id}: mover não pode aprovar.`);
       }
     });

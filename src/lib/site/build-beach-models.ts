@@ -1,3 +1,4 @@
+import { shownInProduction } from '../catalog/placement.ts';
 import type { Catalog } from '../catalog/types.ts';
 import { evaluateBeaches, summarize } from '../rules/evaluate.ts';
 import { beachKey } from '../rules/group.ts';
@@ -24,6 +25,8 @@ export interface PointModel {
   position: { lat: number; lng: number } | null;
   /** false = fica fora do mapa (sem coordenada). */
   onMap: boolean;
+  /** Posição automática (não aprovada à mão): a interface avisa "Posição aproximada". */
+  approximate: boolean;
 }
 
 /** Faixa a mostrar na ficha. `none` = nenhuma (inclui "Sem resultado"). */
@@ -60,9 +63,9 @@ export interface BuildOptions {
   aliases?: BeachAliases;
   staleLimit?: number;
   /**
-   * Mostra posições e bairros do catálogo com `verified: false`. Só para
-   * desenvolvimento (`import.meta.env.DEV`); em produção fica `false` e nada
-   * não verificado aparece.
+   * Mostra posições e bairros do catálogo que ainda não passaram pela regra de produção.
+   * Só para desenvolvimento (`import.meta.env.DEV`). Em produção (`false`) aparecem os pontos
+   * `verified: true` e os automáticos que passaram em todas as verificações (`shownInProduction`).
    */
   includeUnverified?: boolean;
 }
@@ -110,7 +113,7 @@ export function buildSiteModel(
         c &&
         c.lat !== null &&
         c.lng !== null &&
-        (c.verified || includeUnverified)
+        (shownInProduction(c) || includeUnverified)
           ? { lat: c.lat, lng: c.lng }
           : null;
       return {
@@ -121,6 +124,7 @@ export function buildSiteModel(
         stale: p?.kind === 'stale',
         position,
         onMap: position !== null,
+        approximate: position !== null && !c?.verified,
       };
     };
 

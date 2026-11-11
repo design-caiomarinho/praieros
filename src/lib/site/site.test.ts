@@ -322,3 +322,61 @@ describe('verified (produção x desenvolvimento)', () => {
     );
   });
 });
+
+describe('posições em produção (verificado ou automático que passou em tudo)', () => {
+  const pass = { status: 'pass' as const, meters: null };
+  const fail = { status: 'fail' as const, meters: 120 };
+  const auto = {
+    provider: 'auto' as const,
+    method: 'auto-placed' as const,
+    basis: 'spread' as const,
+    confidence: 'low' as const,
+    query: null,
+    geometry: ['way/1'],
+    osm: null,
+    placedAt: '2026-11-12',
+  };
+  const cat = catalog([
+    {
+      name: 'A',
+      neighborhood: 'X',
+      points: [
+        { code: 'P1', ...at, verified: false },
+        { code: 'P2', ...at, verified: false },
+        { code: 'P3', ...at, verified: true },
+        { code: 'P4', ...at, verified: false },
+      ],
+    },
+  ]);
+  const [p1, p2, , p4] = cat.beaches[0]!.points;
+  p1!.source = auto;
+  p1!.checks = { inSalvador: pass, nearBeach: pass, minSpacing: pass };
+  p2!.source = auto;
+  p2!.checks = { inSalvador: pass, nearBeach: fail, minSpacing: pass };
+  p4!.source = { ...auto, basis: 'description-only' };
+  p4!.checks = {
+    inSalvador: pass,
+    nearBeach: { status: 'n/a', meters: null },
+    minSpacing: pass,
+  };
+  const bs = [
+    bulletin(
+      1,
+      ['P1', 'P2', 'P3', 'P4'].map((c) => pt(c, 'A', 'Própria')),
+    ),
+  ];
+
+  it('em produção: verificado e automático aprovado nas verificações; os demais ficam fora do mapa', () => {
+    const points = buildSiteModel(bs, cat).beaches[0]!.points;
+    const by = Object.fromEntries(points.map((p) => [p.code, p]));
+    expect(by.P1).toMatchObject({ onMap: true, approximate: true });
+    expect(by.P2).toMatchObject({ onMap: false, approximate: false });
+    expect(by.P3).toMatchObject({ onMap: true, approximate: false });
+    expect(by.P4).toMatchObject({ onMap: false }); // sem geometria no OSM: não vai
+  });
+  it('em desenvolvimento aparecem todos com posição', () => {
+    const points = buildSiteModel(bs, cat, { includeUnverified: true })
+      .beaches[0]!.points;
+    expect(points.every((p) => p.onMap)).toBe(true);
+  });
+});

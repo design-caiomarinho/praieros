@@ -14,6 +14,8 @@ export interface PanelPoint {
   name: string;
   location?: string;
   status: ChipStatus;
+  /** Posição automática no mapa: mostra "Posição aproximada". */
+  approximate?: boolean;
 }
 
 interface Props {
@@ -80,7 +82,12 @@ const subtitle =
         <h3>Pontos de coleta</h3>
         <div class="cards">
           {points.map((p) => (
-            <PointCard name={p.name} location={p.location} status={p.status} />
+            <PointCard
+              name={p.name}
+              location={p.location}
+              status={p.status}
+              approximate={p.approximate}
+            />
           ))}
         </div>
       </div>

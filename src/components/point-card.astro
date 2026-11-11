@@ -7,9 +7,11 @@ interface Props {
   name: string;
   location?: string;
   status: ChipStatus;
+  /** Posição automática no mapa (copy provisória, pendente de componentizar no Figma). */
+  approximate?: boolean;
 }
 
-const { name, location, status } = Astro.props;
+const { name, location, status, approximate = false } = Astro.props;
 ---
 
 <article class={`card card--${status}`}>
@@ -19,6 +21,7 @@ const { name, location, status } = Astro.props;
       <StatusChip status={status} />
     </div>
     {location && <p class="location">{location}</p>}
+    {approximate && <p class="location">Posição aproximada</p>}
   </div>
 </article>
 

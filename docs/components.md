@@ -21,3 +21,5 @@ Situação no Figma: **Componentizado** ou **Pendente de componentizar** (existe
 Layout (não são componentes): `src/layouts/base-layout.astro` e `src/pages/index.astro`. Pendentes de componentizar (sessão 8a): BeachMap (tela do mapa com os estados carregando e indisponível e a pilha de zoom) e o marcador em sua versão final (símbolos e selecionado).
 
 Página de teste (só em `npm run dev`): `/dev/components`.
+
+Sessão 8c: o PointCard ganhou a linha "Posição aproximada" (prop `approximate`, só em pontos posicionados automaticamente), com texto provisório (docs/copy.md). **Pendente de componentizar no Figma**: variação do PointCard com essa linha, junto com a versão final do texto.

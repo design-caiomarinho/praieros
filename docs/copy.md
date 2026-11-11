@@ -30,13 +30,14 @@
 
 ## Mapa (sessão 8a)
 
-| Onde                        | Texto                                                                                          | Origem                          |
-| --------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------- |
-| Carregando (pílula)         | Carregando o mapa…                                                                             | Figma 117:4816                  |
-| Erro: título                | Não conseguimos carregar o mapa                                                                | Figma 117:4959                  |
-| Erro: corpo                 | Tente de novo ou busque uma praia pelo nome.                                                   | Figma 117:4959                  |
-| Erro: botão                 | Tente novamente                                                                                | Figma 117:4959                  |
-| Zoom + (aria-label)         | Aumentar o zoom                                                                                | Sem texto no Figma (derivado)   |
-| Zoom − (aria-label)         | Diminuir o zoom                                                                                | Sem texto no Figma (derivado)   |
-| Marcador (aria-label)       | Praia, Ponto de coleta N, status (desatualizado: "Boletim desatualizado, último resultado: X") | Derivado                        |
-| Ajustar à tela (aria-label) | Ajustar o mapa à tela                                                                          | Definido por Caio (sessão 8a-2) |
+| Onde                                 | Texto                                                                                          | Origem                                                                                                          |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Carregando (pílula)                  | Carregando o mapa…                                                                             | Figma 117:4816                                                                                                  |
+| Erro: título                         | Não conseguimos carregar o mapa                                                                | Figma 117:4959                                                                                                  |
+| Erro: corpo                          | Tente de novo ou busque uma praia pelo nome.                                                   | Figma 117:4959                                                                                                  |
+| Erro: botão                          | Tente novamente                                                                                | Figma 117:4959                                                                                                  |
+| Zoom + (aria-label)                  | Aumentar o zoom                                                                                | Sem texto no Figma (derivado)                                                                                   |
+| Zoom − (aria-label)                  | Diminuir o zoom                                                                                | Sem texto no Figma (derivado)                                                                                   |
+| Marcador (aria-label)                | Praia, Ponto de coleta N, status (desatualizado: "Boletim desatualizado, último resultado: X") | Derivado                                                                                                        |
+| Ajustar à tela (aria-label)          | Ajustar o mapa à tela                                                                          | Definido por Caio (sessão 8a-2)                                                                                 |
+| Posição aproximada (cartão do ponto) | Posição aproximada                                                                             | Provisório (sessão 8c). Aparece só em pontos posicionados automaticamente. Definir com Caio e conferir no Figma |

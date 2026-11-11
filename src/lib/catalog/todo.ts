@@ -1,4 +1,5 @@
 import type { RulePoint } from '../rules/types.ts';
+import { pointState } from './placement.ts';
 import type { Catalog } from './types.ts';
 
 /** Markdown com o que falta preencher ou conferir no catálogo. Função pura. */
@@ -13,8 +14,8 @@ export function buildCatalogTodo(
     '# Catálogo: o que falta preencher ou conferir',
     '',
     'Gerado por `npm run catalog:todo` a partir de `data/catalog/salvador.json` e do boletim mais recente. Não editar à mão.',
-    'Posições e bairros com `verified: false` são propostas do OpenStreetMap: aparecem só em desenvolvimento. Para publicar, conferir e marcar `verified: true`.',
-    'Ponto sem coordenada fica fora do mapa.',
+    'Em produção aparecem os pontos `verified: true` e os posicionados automaticamente que passaram em todas as verificações (posição aproximada). Bairros com `neighborhoodVerified: false` e pontos de baixa confiança (sem geometria no OpenStreetMap) aparecem só em desenvolvimento.',
+    'Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automático (`npm run catalog:place`).',
     '',
   ];
   let pending = 0;
@@ -32,14 +33,19 @@ export function buildCatalogTodo(
       const where = location.get(p.code);
       const suffix = where ? `: ${where}` : '';
       if (p.lat === null || p.lng === null) {
-        items.push(`- [ ] Coordenadas de \`${p.code}\`${suffix}`);
+        const why = p.placementNote ? ` (motivo: ${p.placementNote})` : '';
+        items.push(`- [ ] Coordenadas de \`${p.code}\`${why}${suffix}`);
       } else if (!p.verified) {
+        // Posição automática que passou em tudo vai para produção como aproximada.
+        if (pointState(p) === 'auto') continue;
         const how =
-          p.source?.method === 'description'
-            ? ' (baixa confiança: pela descrição do local)'
-            : p.source?.method === 'overpass'
-              ? ' (confiança média: lista do OSM)'
-              : '';
+          p.source?.method === 'auto-placed'
+            ? ' (aguardando aprovação, baixa confiança: sem geometria no OSM, só pela descrição)'
+            : p.source?.method === 'description'
+              ? ' (baixa confiança: pela descrição do local)'
+              : p.source?.method === 'overpass'
+                ? ' (confiança média: lista do OSM)'
+                : '';
         items.push(`- [ ] Conferir posição de \`${p.code}\`${how}${suffix}`);
       }
     }

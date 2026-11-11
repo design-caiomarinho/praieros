@@ -23,7 +23,8 @@
     "catalog:validate": "node scripts/catalog.ts validate",
     "catalog:todo": "node scripts/catalog.ts todo",
     "catalog:propose": "node --env-file-if-exists=.env scripts/propose-catalog.ts",
-    "tokens:build": "node scripts/build-tokens.ts"
+    "tokens:build": "node scripts/build-tokens.ts",
+    "catalog:place": "node --env-file-if-exists=.env scripts/place-catalog.ts"
   },
   "dependencies": {
     "astro": "^7.4.11",

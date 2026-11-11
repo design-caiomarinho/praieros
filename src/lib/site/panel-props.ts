@@ -21,7 +21,13 @@ export interface BeachPanelData {
   name: string;
   neighborhood: string;
   bulletin: { number: string; date: string; pdfUrl: string };
-  points: { name: string; location?: string; status: ChipStatus }[];
+  points: {
+    name: string;
+    location?: string;
+    status: ChipStatus;
+    /** Posição automática no mapa: mostra "Posição aproximada". */
+    approximate?: boolean;
+  }[];
   notice?: 'outdated' | 'no-result';
   note?: string;
 }
@@ -75,6 +81,7 @@ export function toPanelData(
       name: `Ponto ${i + 1}`,
       location: p.location ?? undefined,
       status: p.status,
+      approximate: p.approximate,
     })),
     notice: beach.banner === 'outdated' ? 'outdated' : undefined,
   };

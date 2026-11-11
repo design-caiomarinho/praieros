@@ -62,7 +62,9 @@ describe('writeCatalogFile', () => {
       source: { method: 'manual' },
     });
     expect(await readdir(dir)).toEqual(['salvador.json']);
-    expect(await readFile(file, 'utf8')).toBe(serializeCatalog(saved));
+    expect(JSON.parse(await readFile(file, 'utf8'))).toEqual(
+      JSON.parse(serializeCatalog(saved)),
+    );
   });
 
   it('não grava nada quando a validação recusa', async () => {

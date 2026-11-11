@@ -22,7 +22,47 @@ export interface ManualSource {
   editedAt: string;
 }
 
-export type CatalogSource = OsmSource | ManualSource;
+/**
+ * Posição achada automaticamente por `npm run catalog:place`: pela pista da descrição do local
+ * (`description`), distribuída ao longo da geometria da praia (`spread`) ou só pela descrição,
+ * sem geometria no OSM (`description-only`, nunca vai para produção sem aprovação).
+ */
+export interface AutoSource {
+  provider: 'auto';
+  method: 'auto-placed';
+  basis: 'description' | 'spread' | 'description-only';
+  confidence: 'medium' | 'low';
+  /** Consulta enviada ao Nominatim (só `description` e `description-only`). */
+  query: string | null;
+  /** Elementos do OSM cuja geometria foi usada (ex.: `way/123`). */
+  geometry: string[];
+  /** Resultado do Nominatim usado (só `description` e `description-only`). */
+  osm: { type: string; id: number; displayName: string } | null;
+  /** AAAA-MM-DD do posicionamento. */
+  placedAt: string;
+}
+
+export type CatalogSource = OsmSource | ManualSource | AutoSource;
+
+/** Propostas guardadas quando uma edição substitui a posição. */
+export type ProposalSource = OsmSource | AutoSource;
+
+export type CheckStatus = 'pass' | 'fail' | 'n/a';
+export interface Check {
+  status: CheckStatus;
+  /** Distância medida em metros, quando houver. */
+  meters: number | null;
+}
+
+/** Verificações automáticas de um ponto posicionado (todas obrigatórias onde se aplicam). */
+export interface PointChecks {
+  /** Dentro do polígono administrativo de Salvador. */
+  inSalvador: Check;
+  /** A no máximo 80 m da geometria da praia no OSM (`n/a` se a praia não tem geometria). */
+  nearBeach: Check;
+  /** A pelo menos 40 m dos outros pontos da mesma praia (`n/a` se for o único). */
+  minSpacing: Check;
+}
 
 /**
  * Ponto de coleta no catálogo. `lat`/`lng` null = sem posição (fica fora do mapa).
@@ -34,7 +74,11 @@ export interface CatalogPoint {
   lng: number | null;
   source: CatalogSource | null;
   /** Propostas automáticas substituídas por uma edição manual (só cresce, nunca é apagado). */
-  proposals: OsmSource[];
+  proposals: ProposalSource[];
+  /** Resultado das verificações do posicionamento automático. */
+  checks?: PointChecks | null;
+  /** Por que o posicionamento automático não deu posição (vai para docs/catalog-todo.md). */
+  placementNote?: string | null;
   verified: boolean;
 }
 

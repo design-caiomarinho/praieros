@@ -19,6 +19,7 @@ const point = (over: Partial<PointModel> = {}): PointModel => ({
   stale: false,
   position: { lat: -13, lng: -38.5 },
   onMap: true,
+  approximate: false,
   ...over,
 });
 

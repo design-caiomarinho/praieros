@@ -11,8 +11,7 @@
  *
  *   npm run catalog:propose
  */
-import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import {
   overpassQuery,
@@ -20,70 +19,13 @@ import {
   type NominatimResult,
   type OverpassElement,
 } from '../src/lib/catalog/propose.ts';
-import { SALVADOR_BOUNDS } from '../src/lib/catalog/validate-catalog.ts';
+import { cached, headers, search } from './osm-client.ts';
 import { currentBulletin } from '../src/lib/rules/evaluate.ts';
 import { loadSalvadorInputs } from '../src/lib/site/load-data.ts';
 
 const CATALOG = fileURLToPath(
   new URL('../data/catalog/salvador.json', import.meta.url),
 );
-const CACHE = new URL('../data/catalog/.cache/', import.meta.url);
-const contact = process.env.CATALOG_CONTACT?.trim();
-const USER_AGENT = contact
-  ? `praieros-catalog/0.1 (contato: ${contact})`
-  : 'praieros-catalog/0.1';
-const MIN_INTERVAL_MS = 1100;
-let lastRequest = 0;
-
-/** Lê do cache ou consulta a rede (respeitando 1 requisição por segundo) e guarda. */
-async function cached<T>(key: string, request: () => Promise<Response>) {
-  const file = new URL(
-    `${createHash('sha1').update(key).digest('hex')}.json`,
-    CACHE,
-  );
-  try {
-    return JSON.parse(await readFile(file, 'utf8')) as T;
-  } catch {
-    // sem cache: consulta a rede
-  }
-  const wait = lastRequest + MIN_INTERVAL_MS - Date.now();
-  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
-  lastRequest = Date.now();
-  let res = await request();
-  // Servidores públicos às vezes respondem 502/503/504 quando ocupados: até 2 novas tentativas, com pausa.
-  for (
-    let retry = 0;
-    retry < 2 && [502, 503, 504].includes(res.status);
-    retry++
-  ) {
-    await new Promise((r) => setTimeout(r, 30_000));
-    lastRequest = Date.now();
-    res = await request();
-  }
-  if (!res.ok)
-    throw new Error(`${new URL(res.url).host} respondeu ${res.status}`);
-  const data = (await res.json()) as T;
-  await mkdir(CACHE, { recursive: true });
-  await writeFile(file, JSON.stringify(data), 'utf8');
-  return data;
-}
-
-const headers = { 'User-Agent': USER_AGENT };
-
-function search(query: string) {
-  const [south, north] = SALVADOR_BOUNDS.lat;
-  const [west, east] = SALVADOR_BOUNDS.lng;
-  const url = new URL('https://nominatim.openstreetmap.org/search');
-  url.search = new URLSearchParams({
-    q: query,
-    format: 'jsonv2',
-    addressdetails: '1',
-    limit: '10',
-    countrycodes: 'br',
-    viewbox: `${west},${north},${east},${south}`,
-  }).toString();
-  return cached<NominatimResult[]>(url.href, () => fetch(url, { headers }));
-}
 
 async function reverse(lat: number, lng: number) {
   const url = new URL('https://nominatim.openstreetmap.org/reverse');

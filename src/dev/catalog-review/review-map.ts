@@ -1,5 +1,6 @@
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import './pins.css';
 // Mesmo ajuste do mapa do site: o Vite empacota o worker e passamos a URL explícita.
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import { boundsOf, SALVADOR_FALLBACK } from '../../lib/map/bounds.ts';
@@ -15,6 +16,13 @@ const MIN_DRAG_PX = 3;
 /** Zoom de um ponto único ou de pontos muito próximos: mostra a faixa de areia e as ruas vizinhas. */
 export const SINGLE_POINT_ZOOM = 17;
 
+const SYMBOLS = {
+  verified: '✓',
+  auto: '≈',
+  pending: '?',
+  proposed: '?',
+} as const;
+
 export interface ReviewPin {
   /** `praia|código`. */
   id: string;
@@ -24,13 +32,16 @@ export interface ReviewPin {
   label: string | null;
   lat: number;
   lng: number;
-  state: 'proposed' | 'verified';
+  /** proposed/verified: página de revisão. auto/pending: visão geral (automático; aguardando aprovação). */
+  state: 'proposed' | 'verified' | 'auto' | 'pending';
   ariaLabel: string;
 }
 
 export interface ReviewMapOptions {
   container: HTMLElement;
   palette: MapPalette;
+  /** false = só visualização (visão geral). */
+  draggable?: boolean;
   onPinSelect(id: string): void;
   onPinMove(id: string, lat: number, lng: number): void;
   onMapClick(lat: number, lng: number): void;
@@ -81,7 +92,7 @@ export async function createReviewMap(
         el.dataset.pinId = pin.id;
         el.setAttribute('aria-label', pin.ariaLabel);
         // Cor + símbolo + número: o estado nunca vai só na cor.
-        const symbol = pin.state === 'verified' ? '✓' : '?';
+        const symbol = SYMBOLS[pin.state];
         el.innerHTML = `<span class="pin__badge"><span aria-hidden="true">${symbol}</span><span class="pin__num"></span></span>${
           pin.label ? '<span class="pin__label"></span>' : ''
         }`;
@@ -95,7 +106,7 @@ export async function createReviewMap(
           element: el,
           anchor: 'top',
           offset: [0, -12],
-          draggable: true,
+          draggable: opts.draggable ?? true,
         })
           .setLngLat([pin.lng, pin.lat])
           .addTo(map);

@@ -1,0 +1,142 @@
+---
+import '../styles/tokens.css';
+import '../styles/fonts.css';
+import { loadSalvadorInputs } from '../lib/site/load-data.ts';
+
+// Visão geral do catálogo (só em `astro dev`; registrada em astro.config.mjs, fora do build).
+// Todos os pontos num único mapa, por estado, para conferência visual rápida.
+const { bulletins, catalog } = await loadSalvadorInputs();
+const latest = [...bulletins].sort(
+  (a, b) => b.year - a.year || b.number - a.number,
+)[0];
+const locations: Record<string, string> = {};
+for (const p of latest?.points ?? []) locations[p.code] = p.location;
+const dataJson = JSON.stringify({ catalog, locations }).replace(
+  /</g,
+  '\\u003c',
+);
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Visão geral do catálogo (dev)</title>
+  </head>
+  <body>
+    <div class="ov">
+      <aside class="ov__side">
+        <header class="ov__head">
+          <h1>Visão geral do catálogo</h1>
+          <p id="ov-summary" class="ov__note"></p>
+          <fieldset class="ov__filters">
+            <legend class="ov__note">Mostrar no mapa</legend>
+            <label>
+              <input type="checkbox" data-state="verified" checked /> ✓
+              Verificado
+            </label>
+            <label>
+              <input type="checkbox" data-state="auto" checked /> ≈ Automático
+              (vai para produção, aproximado)
+            </label>
+            <label>
+              <input type="checkbox" data-state="pending" checked /> ?
+              Aguardando aprovação (baixa confiança, só dev)
+            </label>
+          </fieldset>
+        </header>
+        <div id="ov-list"></div>
+      </aside>
+      <div id="ov-map" class="ov__map"></div>
+    </div>
+    <script id="ov-data" type="application/json" set:html={dataJson} />
+    <script>
+      import '../dev/catalog-overview/client.ts';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  body {
+    margin: 0;
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-body-medium-family);
+    font-size: var(--s-typo-body-medium-size);
+  }
+  .ov {
+    display: grid;
+    grid-template-columns: var(--size-panel-width) 1fr;
+    height: 100vh;
+  }
+  .ov__side {
+    overflow-y: auto;
+    border-right: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .ov__head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-md);
+    background: var(--s-color-surface-default);
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .ov__head h1 {
+    margin: 0;
+    font-family: var(--s-typo-heading-medium-family);
+    font-weight: var(--s-typo-heading-medium-weight);
+    font-size: var(--s-typo-heading-medium-size);
+  }
+  .ov__map {
+    min-width: 0;
+    background: var(--s-color-surface-accent-soft);
+  }
+  .ov__note {
+    margin: 0;
+    color: var(--s-color-content-secondary);
+    font-size: var(--s-typo-body-small-size);
+  }
+  .ov__filters {
+    display: grid;
+    gap: var(--space-stack-2xs);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: var(--s-typo-body-small-size);
+  }
+  .ov__group {
+    margin: 0;
+    padding: var(--space-inset-xs) var(--space-inset-md);
+    background: var(--s-color-surface-strong);
+    font-weight: var(--s-typo-label-medium-weight);
+  }
+  .ov__item {
+    display: grid;
+    gap: var(--space-stack-2xs);
+    width: 100%;
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    border: 0;
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .ov__item:hover {
+    background: var(--s-color-surface-hover);
+  }
+  .ov__item[aria-pressed='true'] {
+    border-left: var(--border-width-accent) solid var(--s-color-border-accent);
+  }
+  .ov__item:focus-visible {
+    outline: var(--border-width-accent) solid var(--s-color-border-focus);
+  }
+</style>
