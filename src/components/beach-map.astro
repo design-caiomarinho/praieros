@@ -320,7 +320,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   :global(.marker[hidden]) {
     display: none;
   }
-  /* Selo ao lado do ícone: quantidade, divergência ("1/2") ou número do pin. */
+  /* Selo ao lado do ícone: quantidade, total de pontos (com borda de alerta se divergem) ou número do pin. */
   :global(.marker__tag) {
     box-sizing: border-box;
     position: absolute;
@@ -338,7 +338,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     color: var(--s-color-content-primary);
     white-space: nowrap;
   }
-  /* Divergência: borda de alerta mais grossa, além do texto "1/2". */
+  /* Divergência: borda de alerta mais grossa, o texto continua sendo o total. */
   :global(.marker__tag[data-divergent]) {
     border: var(--border-width-accent) solid var(--s-color-border-warning);
   }

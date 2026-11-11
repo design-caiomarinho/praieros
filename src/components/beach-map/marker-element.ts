@@ -68,7 +68,11 @@ export function setMarkerState(
 ): void {
   const badge = el.querySelector('.marker__badge')!;
   const { tone, svg } = BY_STATUS[status];
-  el.className = `marker marker--${selected ? 'selected' : tone}`;
+  // Troca só a variante: as classes do MapLibre (`maplibregl-marker`, âncora) posicionam o marcador.
+  el.classList.remove(
+    ...[...el.classList].filter((c) => c.startsWith('marker--')),
+  );
+  el.classList.add('marker', `marker--${selected ? 'selected' : tone}`);
   el.setAttribute('aria-pressed', String(selected));
   badge.innerHTML = selected ? selectedSvg : svg;
 }

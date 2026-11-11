@@ -23,8 +23,9 @@ export function worstStatus(statuses: readonly Status[]): Status {
 export interface GroupBadge {
   /** Pior status (define cor e símbolo do marcador). */
   status: Status;
-  /** "2" (todos iguais) ou "1/2" (divergência: 1 de 2 no pior status). */
+  /** Sempre o total de pontos ("2"), com ou sem divergência. */
   text: string;
+  /** Status diferentes entre os pontos: o selo ganha borda de alerta (o texto não muda). */
   divergent: boolean;
 }
 
@@ -32,13 +33,8 @@ export interface GroupBadge {
 export function groupBadge(statuses: readonly Status[]): GroupBadge {
   const status = worstStatus(statuses);
   const total = statuses.length;
-  const worstCount = statuses.filter((s) => s === status).length;
-  const divergent = worstCount !== total;
-  return {
-    status,
-    text: divergent ? `${worstCount}/${total}` : String(total),
-    divergent,
-  };
+  const divergent = statuses.some((s) => s !== status);
+  return { status, text: String(total), divergent };
 }
 
 const COUNT_LABELS: Record<Status, [string, string]> = {

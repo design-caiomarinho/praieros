@@ -46,15 +46,15 @@ describe('groupBadge', () => {
       '3',
     );
   });
-  it('status diferentes: divergência "pior/total"', () => {
+  it('status diferentes: mesmo texto (total), só marca a divergência', () => {
     expect(groupBadge(['unsuitable', 'suitable'])).toEqual({
       status: 'unsuitable',
-      text: '1/2',
+      text: '2',
       divergent: true,
     });
     expect(groupBadge(['suitable', 'no-result', 'no-result'])).toEqual({
       status: 'no-result',
-      text: '2/3',
+      text: '3',
       divergent: true,
     });
   });
