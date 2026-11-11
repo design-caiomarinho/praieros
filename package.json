@@ -19,7 +19,8 @@
     "format:check": "prettier --check .",
     "fixtures:save": "node scripts/save-fixtures.ts",
     "bulletins:build": "node scripts/build-bulletins.ts",
-    "bulletins:ingest": "node scripts/ingest-bulletins.ts"
+    "bulletins:ingest": "node scripts/ingest-bulletins.ts",
+    "tokens:build": "node scripts/build-tokens.ts"
   },
   "dependencies": {
     "astro": "^7.4.11",

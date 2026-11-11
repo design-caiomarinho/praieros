@@ -67,3 +67,20 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Commit.** Um commit por arquivo novo de `data/bulletins/`: `data: boletim nº X/ANO <região>`, push direto na `main`. Isso pressupõe que a `main` não tem proteção que bloqueie o `GITHUB_TOKEN`.
 - **Commits feitos com `GITHUB_TOKEN` não disparam outros workflows** (regra do GitHub, para evitar laços). Portanto, o push do commit de dados **não** dispara o build/deploy do site. **Relevante para a Fase 5:** o workflow de deploy precisa ser chamado de outra forma, por exemplo `workflow_call`/`workflow_dispatch` encadeado ao final deste mesmo workflow, ou deploy no próprio job, ou um PAT/GitHub App para o push.
 - **Fim de linha.** `.gitattributes` com `* text=auto eol=lf` e `endOfLine: "lf"` explícito no Prettier, para os JSON gravados no Linux do CI serem idênticos aos do Windows.
+
+## Fase 2 / sessão 1: tokens do Figma
+
+- **Origem.** Arquivo Figma `l6SlSnIIqQOXbsQdOVliPN`, nó `14:3001`. Uma única chamada `get_variable_defs` (70 entradas) foi usada só para conferência: devolve valores já resolvidos, sem aliases, e só o que o nó usa. O `tokens/tokens.json` gravado é o export completo das variáveis (formato DTCG, com aliases `{grupo.nome}`) fornecido por Caio, e bate com a chamada. **A partir daqui a fonte é `tokens/tokens.json`; o Figma não é mais consultado para tokens.**
+- **Grupos.** `primitives` (cores neutral, brand, red, green, amber e variantes alpha; fontes, pesos, tamanhos, line-height, letter-spacing; espaçamento), `s-color` (surface, border, content, shadow), `s-typo` (heading, body, label, caption) e `space` (inset, gap, stack, inline).
+- **Geração.** `npm run tokens:build` roda `scripts/build-tokens.ts` (função pura em `src/lib/tokens/to-css.ts`, com teste) e escreve `src/styles/tokens.css`. Nome da variável = caminho com hífens (`--s-color-surface-default`). Aliases viram `var(--...)`; o erro é explícito se um alias não tiver destino. O CSS é commitado e está no `.prettierignore`; nunca editar à mão.
+- **Conversões de literais.** Tamanho e espaçamento em `px`; line-height sem unidade; peso pelo número da chave (`weight.600` -> `600`); família com espaço inicial aparado e fallback `system-ui, sans-serif`.
+- **Status.** Própria = `positive`, Imprópria = `negative`, Sem resultado = `unknown`, Boletim desatualizado = `warning`. É uma leitura dos nomes; confirmar no design ao montar os componentes.
+
+### Pendências
+
+- **Unidade do `letter-spacing`.** O Figma entrega `-1` sem unidade. Tratado como **%** (`-0.01em`), pois `-1px` em texto de 14px seria exagerado. Confirmar no Figma.
+- **`heading/large` no retorno do MCP** apontava para o peso de `heading/medium`. No export os dois são `600`; sem efeito.
+- **Pesos:** o `$value` é o nome (`semibold`); o número vem da chave. Se um peso novo surgir, as duas partes precisam bater.
+- **Fonte Switzer:** o token só nomeia a família. Falta definir como carregar (arquivo local ou Fontshare) e a licença. Até lá vale o fallback.
+- **Ausentes no Figma:** raio de borda, espessura de borda, sombras como valor (só há cores `shadow`), breakpoints, z-index, modo escuro. Se as telas precisarem, adicionar ao Figma e reexportar.
+- `primitives.font.size.28/32/56` e `spacing.20` existem mas nenhum token semântico os usa ainda.
