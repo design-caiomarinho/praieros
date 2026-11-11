@@ -7,7 +7,7 @@ Idioma do produto: pt-BR. Código, commits e nomes técnicos: inglês.
 
 1. **Nunca inventar, corrigir ou "suavizar" um resultado.** O status exibido é exatamente o do boletim. Na dúvida, não exibir.
 2. **Toda ficha mostra fonte e data do boletim** ("Boletim nº X · dd/mm/aaaa" + "Fonte: Inema").
-3. **Status nunca é transmitido só por cor.** Sempre cor + símbolo + texto.
+3. **Status nunca é transmitido só por cor:** sempre cor + texto. Em elementos sem texto (como os marcadores do mapa) usar também um símbolo.
 4. Dado de saúde: se a leitura do PDF falhar ou gerar dúvida, manter o último boletim válido e avisar. Nunca publicar dado lido com incerteza.
 
 ## Fonte de dados
@@ -93,6 +93,7 @@ Tokens de design: `tokens/tokens.json` (fonte única). Não usar valores soltos 
 - Verificar o que foi feito rodando teste/lint/build antes de dizer que terminou.
 - Commits pequenos e frequentes, mensagem no formato `tipo: resumo` (feat, fix, test, docs, refactor).
 - Ao fim de cada fatia: atualizar a seção **Estado atual** abaixo (máx. 5 linhas).
+- **Componentes sem nó no Figma** (alguns não foram componentizados de propósito; catálogo em `docs/components.md`). Ao precisar de um: PARE e peça o link do nó ou da tela onde ele aparece. Leia só esse nó (uma chamada), sem screenshots de telas inteiras. Derive a aparência dessa tela usando apenas tokens; se faltar um valor, pergunte, não invente. Registre-o em `docs/components.md` como "Pendente de componentizar". Ao fim de cada sessão, liste os componentes novos "Pendentes de componentizar" para eu criá-los no Figma; depois da minha confirmação, mude a situação para "Componentizado" e a origem para o novo nó.
 - Rotinas de manutenção (git pull antes de começar, ingestão, falhas do workflow): `docs/maintenance.md`.
 
 ## Estado atual
@@ -103,4 +104,5 @@ Fase 1, sessão 2 concluída: leitura e validação dos PDFs (`ingest-bulletin.t
 Fase 1, sessão 3 concluída: R1–R4 e D1–D3 como funções puras em `src/lib/rules/` (identidade, renomeação e pendências em `docs/decisions.md`).
 Fase 1, sessão 4 concluída: workflow diário `.github/workflows/ingest-bulletins.yml` (`npm run bulletins:ingest`), D4 por região; GITHUB_TOKEN não dispara outros workflows (ver `docs/decisions.md`).
 Fase 2, sessão 1 concluída: `tokens/tokens.json` (do Figma, com aliases) e `src/styles/tokens.css` gerado por `npm run tokens:build`; pendências em `docs/decisions.md`.
+Fase 2, sessão 2 (parcial): tokens do Figma + `tokens/extra.json`; `StatusChip` em `src/components/`; página `/dev/components` só em dev. Faltam faixas e PointCard (aguardam links).
 Próxima: sessão 5 (comparar com o boletim anterior: mudança de código, provável renomeação) ou tokens. Termos de uso do site seguem pendentes.
