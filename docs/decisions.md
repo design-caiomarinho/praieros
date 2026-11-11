@@ -118,7 +118,7 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 
 - **Nós:** Button `123:2668`, ButtonIcon `117:4609`, InputText `117:5370`. Só tokens, nenhum valor novo. Alturas (56, 48 e 40) e anel de foco derivados com `calc()` dos tokens (`2 x inset + 24`; anel de 1px a 4px da borda), pois não há token de tamanho.
 - **Ícones:** os nós usam só dois glifos, busca (20 e 24 px) e info (24 px); as cores por estado viraram `currentColor`. Salvos uma vez em `src/icons/` e embutidos inline por `icon.astro`. Fechar e compartilhar não aparecem nesses nós: não foram criados, e o campo de busca não tem botão de limpar (o Figma não mostra). Os botões do Figma usam a busca como ícone reservado; o ícone real de cada uso sai nas telas.
-- **Foco:** o anel (`border/focus`) aparece só por teclado (`:focus-visible`). Nos botões o clique do mouse não ativa o anel. No campo de texto o navegador trata todo foco como `:focus-visible`, inclusive por clique; separar exigiria JS.
+- **Foco:** o anel (`border/focus`) aparece só por teclado (`:focus-visible`). Nos botões o clique do mouse não ativa o anel. No campo de texto o navegador trata todo foco como `:focus-visible`, inclusive por clique; por isso `input-text.astro` tem um script mínimo que marca `data-ring` só quando o foco chegou por Tab. No clique, o campo muda só as bordas (fundo e `border/accent`).
 - **Estado "enabled" do Figma** (secondary e ghost: fundo `accent/subtle`, borda `border/accent`) virou `selected` + `aria-pressed`. Primary não tem esse estado.
 - **Button secondary desabilitado** usa `surface/hover` como cor da borda, como no Figma.
 - **InputText** ocupa 100% do contêiner (o Figma usa 428px fixos).

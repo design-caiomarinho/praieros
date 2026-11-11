@@ -97,8 +97,8 @@ const {
     background: var(--s-color-surface-default);
     border-color: var(--s-color-border-accent);
   }
-  /* anel de foco: só navegação por teclado (:focus-visible) */
-  .field:has(.field__input:focus-visible),
+  /* anel de foco: só quando o foco chegou por Tab (data-ring, ver script) */
+  .field[data-ring],
   .field[data-state='focus'] {
     outline: var(--border-width-default) solid var(--s-color-border-focus);
     outline-offset: calc(
@@ -120,3 +120,41 @@ const {
     color: var(--s-color-content-disabled);
   }
 </style>
+
+<script>
+  // Em campo de texto o navegador mostra :focus-visible também no clique.
+  // Aqui o anel de foco só aparece se o foco chegou por Tab; no clique, só as bordas.
+  let viaTab = false;
+  document.addEventListener(
+    'keydown',
+    (e) => {
+      if (e.key === 'Tab') viaTab = true;
+    },
+    true,
+  );
+  document.addEventListener(
+    'pointerdown',
+    () => {
+      viaTab = false;
+      document
+        .querySelectorAll('.field[data-ring]')
+        .forEach((f) => f.removeAttribute('data-ring'));
+    },
+    true,
+  );
+  document.addEventListener(
+    'focusin',
+    (e) => {
+      const field = (e.target as HTMLElement).closest('.field');
+      if (field && viaTab) field.setAttribute('data-ring', '');
+    },
+    true,
+  );
+  document.addEventListener(
+    'focusout',
+    (e) => {
+      (e.target as HTMLElement).closest('.field')?.removeAttribute('data-ring');
+    },
+    true,
+  );
+</script>
