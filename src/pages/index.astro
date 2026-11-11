@@ -69,11 +69,8 @@ const panels = site.beaches
         !!pointId &&
         sameBeach &&
         card.getAttribute('data-point-id') === pointId;
-      card.toggleAttribute('data-active', active);
-      // Com um ponto ativo, os outros cartões da praia ficam a 50%.
+      // Com um pin escolhido, os outros cartões da praia ficam a 50% (só visual).
       card.toggleAttribute('data-dimmed', !!pointId && sameBeach && !active);
-      if (active) card.setAttribute('aria-current', 'true');
-      else card.removeAttribute('aria-current');
     });
   }
 
@@ -127,28 +124,9 @@ const panels = site.beaches
     if (!panel.hidden) close();
   });
 
-  // Cartão do ponto: destaca o pin correspondente (e vice-versa, acima).
-  function selectCard(card: Element | null) {
-    const pointId = card?.getAttribute('data-point-id');
-    const slug = card?.closest('[data-beach]')?.getAttribute('data-beach');
-    if (!pointId || !slug) return;
-    setActivePoint(slug, pointId);
-    map.dispatchEvent(
-      new CustomEvent('marker-set', { detail: { slug, pointId } }),
-    );
-  }
+  // Os cartões dos pontos são só visualização: quem escolhe o ponto é o pin no mapa.
   panel.addEventListener('click', (e) => {
-    const target = e.target as Element;
-    if (target.closest('[data-panel-close]')) close();
-    else selectCard(target.closest('[data-point-id]'));
-  });
-  panel.addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    const card = (e.target as Element).closest('[data-point-id]');
-    if (card && e.target === card) {
-      e.preventDefault();
-      selectCard(card);
-    }
+    if ((e.target as Element).closest('[data-panel-close]')) close();
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !panel.hidden) close();

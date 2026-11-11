@@ -5,7 +5,7 @@ import { ACCURACY_LABELS } from '../lib/site/accuracy.ts';
 
 // Cartão de ponto de coleta (Figma, nó 125:3704, estado no-result).
 interface Props {
-  /** Id do ponto no mapa: o cartão fica clicável e liga ao pin numerado. */
+  /** Id do ponto no mapa: só para esmaecer os cartões quando outro pin está escolhido. */
   pointId?: string;
   name: string;
   location?: string;
@@ -18,11 +18,7 @@ const { pointId, name, location, status, accuracy = null } = Astro.props;
 const accuracyLabel = accuracy ? ACCURACY_LABELS[accuracy] : null;
 ---
 
-<article
-  class={`card card--${status}`}
-  data-point-id={pointId}
-  tabindex={pointId ? 0 : undefined}
->
+<article class={`card card--${status}`} data-point-id={pointId}>
   <div class="body">
     <div class="header">
       <h3>{name}</h3>
@@ -55,16 +51,9 @@ const accuracyLabel = accuracy ? ACCURACY_LABELS[accuracy] : null;
   .card--no-result {
     border-left-color: var(--s-color-border-unknown);
   }
-  .card[data-point-id] {
-    cursor: pointer;
-  }
-  /* Ponto ativo (pin escolhido no mapa). */
+  /* Só visualização: com um pin escolhido no mapa, os outros pontos ficam a 50%. */
   .card[data-dimmed] {
     opacity: 0.5;
-  }
-  .card[data-active] .body {
-    border-color: var(--s-color-border-accent);
-    background: var(--s-color-surface-accent-subtle);
   }
   .body {
     display: flex;
