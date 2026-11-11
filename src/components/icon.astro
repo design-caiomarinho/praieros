@@ -1,0 +1,42 @@
+---
+// SVGs salvos do Figma em src/icons/ (uma vez). Inline, cor via currentColor.
+const files = import.meta.glob<string>('../icons/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+export type IconName = 'search' | 'info';
+export type IconSize = 20 | 24;
+
+interface Props {
+  name: IconName;
+  size?: IconSize;
+  /** Só quando o ícone é o único conteúdo do controle. Sem label = decorativo (aria-hidden). */
+  label?: string;
+}
+
+const { name, size = 24, label } = Astro.props;
+const svg = files[`../icons/${name}-${size}.svg`];
+if (!svg) {
+  throw new Error(`Ícone inexistente: ${name}-${size}`);
+}
+---
+
+<span
+  class="icon"
+  aria-hidden={label ? undefined : 'true'}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  set:html={svg}
+/>
+
+<style>
+  .icon {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+  .icon :global(svg) {
+    display: block;
+  }
+</style>

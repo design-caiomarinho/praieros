@@ -5,7 +5,32 @@ import StatusChip from '../components/status-chip.astro';
 import OutdatedBanner from '../components/outdated-banner.astro';
 import NoResultBanner from '../components/no-result-banner.astro';
 import PointCard from '../components/point-card.astro';
+import Button from '../components/button.astro';
+import ButtonIcon from '../components/button-icon.astro';
+import InputText from '../components/input-text.astro';
+import Icon from '../components/icon.astro';
 import type { ChipStatus } from '../lib/rules/status.ts';
+
+const buttonVariants = ['primary', 'secondary', 'ghost'] as const;
+const buttonSizes = ['medium', 'small'] as const;
+const iconVariants = ['filled', 'outlined', 'ghost'] as const;
+const iconSizes = ['medium', 'xsmall'] as const;
+// "Ligado" só existe no Figma para secundário e ghost.
+const buttonStates = [
+  { name: 'padrão', props: {} },
+  { name: 'hover', props: { state: 'hover' as const } },
+  { name: 'foco', props: { state: 'focus' as const } },
+  { name: 'desabilitado', props: { disabled: true } },
+];
+const inputStates = [
+  { name: 'padrão', props: {} },
+  { name: 'hover', props: { state: 'hover' as const } },
+  { name: 'foco', props: { state: 'focus' as const } },
+  { name: 'digitando', props: { state: 'typing' as const, value: 'Praia' } },
+  { name: 'preenchido', props: { value: 'Praia' } },
+  { name: 'desabilitado', props: { disabled: true, value: 'Praia' } },
+  { name: 'sem ícone', props: { showIcon: false } },
+];
 
 const statuses: ChipStatus[] = [
   'suitable',
@@ -60,6 +85,90 @@ const statuses: ChipStatus[] = [
           />
         </div>
       </section>
+      <section>
+        <h2>Icon</h2>
+        <div class="row">
+          <Icon name="search" size={20} /> <code>search 20</code>
+          <Icon name="search" size={24} /> <code>search 24</code>
+          <Icon name="info" size={24} /> <code>info 24</code>
+        </div>
+      </section>
+      <section>
+        <h2>Button</h2>
+        {buttonVariants.map((variant) =>
+          buttonSizes.map((size) => (
+            <div class="group">
+              <h3>
+                {variant} · {size}
+              </h3>
+              <div class="row">
+                {buttonStates.map((s) => (
+                  <Button
+                    variant={variant}
+                    size={size}
+                    iconLeft="search"
+                    {...s.props}
+                  >
+                    {s.name}
+                  </Button>
+                ))}
+                {variant !== 'primary' && (
+                  <Button
+                    variant={variant}
+                    size={size}
+                    iconLeft="search"
+                    selected
+                  >
+                    ligado
+                  </Button>
+                )}
+                <Button variant={variant} size={size} iconRight="search">
+                  ícone à direita
+                </Button>
+                <Button variant={variant} size={size}>
+                  sem ícone
+                </Button>
+                <Button variant={variant} size={size} href="#">
+                  link
+                </Button>
+              </div>
+            </div>
+          )),
+        )}
+      </section>
+      <section>
+        <h2>ButtonIcon</h2>
+        {iconVariants.map((variant) =>
+          iconSizes.map((size) => (
+            <div class="group">
+              <h3>
+                {variant} · {size}
+              </h3>
+              <div class="row">
+                {buttonStates.map((s) => (
+                  <ButtonIcon
+                    label={`Sobre (${s.name})`}
+                    variant={variant}
+                    size={size}
+                    {...s.props}
+                  />
+                ))}
+              </div>
+            </div>
+          )),
+        )}
+      </section>
+      <section>
+        <h2>InputText</h2>
+        <div class="fields">
+          {inputStates.map((s) => (
+            <div>
+              <code>{s.name}</code>
+              <InputText label="Buscar praia" {...s.props} />
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
   </body>
 </html>
@@ -103,5 +212,30 @@ const statuses: ChipStatus[] = [
   }
   code {
     color: var(--s-color-content-muted);
+  }
+  h3 {
+    margin: 0;
+    font-size: var(--s-typo-body-medium-size);
+    font-weight: var(--s-typo-label-medium-weight);
+  }
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap-md);
+    padding-block: var(--space-inset-md);
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-gap-lg);
+    padding: var(--space-inset-xs);
+  }
+  .fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap-lg);
+    max-width: 428px;
+    padding: var(--space-inset-xs);
   }
 </style>

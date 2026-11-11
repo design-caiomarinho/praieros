@@ -113,3 +113,13 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Texto da faixa Sem resultado:** vale o do Figma ("Sem resultado. A praia não consta no boletim ou a análise é antiga."), por decisão de Caio em 2026-11-11, em vez da frase proposta no pedido. Registrado em `docs/copy.md`.
 - **PointCard** (`point-card.astro`, nó `125:3704`): borda lateral de 4px, borda 1px `border/default` nos outros três lados, padding `inset/md`, gap `stack/xs`, nome em `body/large`, descrição em `body/medium` (`content/secondary`), sem raio. Usa o StatusChip.
 - **Valores assumidos (a remover quando existirem no Figma):** `border-width.accent = 4px` em `tokens/extra.json`; cores da borda lateral dos estados `suitable`, `unsuitable` e `outdated` (`border/positive`, `border/negative`, `border/warning`), pois o nó só mostra `no-result` (`border/unknown`); nome do ponto em Semibold 600 e cor `content/primary`, pois o Figma usa Switzer Bold com cor fixa #343e45 (sem variável nem peso 700 nos tokens).
+
+## Fase 2 / sessão 4: Button, ButtonIcon, InputText, Icon
+
+- **Nós:** Button `123:2668`, ButtonIcon `117:4609`, InputText `117:5370`. Só tokens, nenhum valor novo. Alturas (56, 48 e 40) e anel de foco derivados com `calc()` dos tokens (`2 x inset + 24`; anel de 1px a 4px da borda), pois não há token de tamanho.
+- **Ícones:** os nós usam só dois glifos, busca (20 e 24 px) e info (24 px); as cores por estado viraram `currentColor`. Salvos uma vez em `src/icons/` e embutidos inline por `icon.astro`. Fechar e compartilhar não aparecem nesses nós: não foram criados, e o campo de busca não tem botão de limpar (o Figma não mostra). Os botões do Figma usam a busca como ícone reservado; o ícone real de cada uso sai nas telas.
+- **Foco:** o anel (`border/focus`) aparece só por teclado (`:focus-visible`). Nos botões o clique do mouse não ativa o anel. No campo de texto o navegador trata todo foco como `:focus-visible`, inclusive por clique; separar exigiria JS.
+- **Estado "enabled" do Figma** (secondary e ghost: fundo `accent/subtle`, borda `border/accent`) virou `selected` + `aria-pressed`. Primary não tem esse estado.
+- **Button secondary desabilitado** usa `surface/hover` como cor da borda, como no Figma.
+- **InputText** ocupa 100% do contêiner (o Figma usa 428px fixos).
+- **Vitrine:** a prop `state` (hover, focus, typing) existe só para mostrar os estados em `/dev/components`.

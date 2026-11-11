@@ -1,0 +1,117 @@
+---
+import Icon from './icon.astro';
+import type { IconName } from './icon.astro';
+
+interface Props {
+  /** Nome acessível (aria-label do ícone): obrigatório, o botão não tem texto. */
+  label: string;
+  icon?: IconName;
+  variant?: 'filled' | 'outlined' | 'ghost';
+  size?: 'medium' | 'xsmall';
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+  /** Só para a vitrine (/dev/components): força o visual de hover/foco. */
+  state?: 'hover' | 'focus';
+}
+
+const {
+  label,
+  icon = 'info',
+  variant = 'filled',
+  size = 'medium',
+  href,
+  type = 'button',
+  disabled = false,
+  state,
+} = Astro.props;
+
+const asLink = href !== undefined && !disabled;
+const Tag = asLink ? 'a' : 'button';
+const attrs = asLink ? { href } : { type, disabled };
+---
+
+<Tag
+  class={`btn-icon btn-icon--${variant} btn-icon--${size}`}
+  data-state={state}
+  {...attrs}
+>
+  <Icon name={icon} size={24} label={label} />
+</Tag>
+
+<style>
+  .btn-icon {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: var(--border-width-default) solid transparent;
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  /* 56 e 40 = 24 (ícone) + 2 x inset, sem token próprio. */
+  .btn-icon--medium {
+    padding: var(--space-inset-md);
+    width: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+    height: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+  }
+  .btn-icon--xsmall {
+    padding: var(--space-inset-xs);
+    width: calc(var(--space-inset-xs) * 2 + var(--primitives-spacing-24));
+    height: calc(var(--space-inset-xs) * 2 + var(--primitives-spacing-24));
+  }
+
+  .btn-icon:focus-visible,
+  .btn-icon[data-state='focus'] {
+    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline-offset: calc(
+      var(--primitives-spacing-4) - var(--border-width-default)
+    );
+  }
+
+  .btn-icon--filled {
+    background: var(--s-color-surface-accent-default);
+    color: var(--s-color-content-on-accent);
+  }
+  .btn-icon--filled:hover:not(:disabled),
+  .btn-icon--filled[data-state='hover'],
+  .btn-icon--filled:focus-visible,
+  .btn-icon--filled[data-state='focus'] {
+    background: var(--s-color-surface-accent-hover);
+  }
+
+  .btn-icon--outlined,
+  .btn-icon--ghost {
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+  }
+  .btn-icon--outlined {
+    border-color: var(--s-color-border-default);
+  }
+  .btn-icon--outlined:hover:not(:disabled),
+  .btn-icon--outlined[data-state='hover'],
+  .btn-icon--outlined:focus-visible,
+  .btn-icon--outlined[data-state='focus'],
+  .btn-icon--ghost:hover:not(:disabled),
+  .btn-icon--ghost[data-state='hover'],
+  .btn-icon--ghost:focus-visible,
+  .btn-icon--ghost[data-state='focus'] {
+    background: var(--s-color-surface-hover);
+  }
+
+  .btn-icon:disabled {
+    cursor: not-allowed;
+    color: var(--s-color-content-disabled);
+  }
+  .btn-icon--filled:disabled {
+    background: var(--s-color-surface-disabled);
+  }
+  .btn-icon--outlined:disabled {
+    background: transparent;
+    border-color: var(--s-color-border-disabled);
+  }
+  .btn-icon--ghost:disabled {
+    background: transparent;
+  }
+</style>

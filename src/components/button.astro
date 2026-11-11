@@ -1,0 +1,151 @@
+---
+import Icon from './icon.astro';
+import type { IconName } from './icon.astro';
+
+interface Props {
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'medium' | 'small';
+  /** Com href (e sem disabled) vira link. */
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+  /** Estado "enabled" do Figma (secundário/ghost): ligado, com aria-pressed. */
+  selected?: boolean;
+  iconLeft?: IconName;
+  iconRight?: IconName;
+  /** Só para a vitrine (/dev/components): força o visual de hover/foco. */
+  state?: 'hover' | 'focus';
+}
+
+const {
+  variant = 'primary',
+  size = 'medium',
+  href,
+  type = 'button',
+  disabled = false,
+  selected,
+  iconLeft,
+  iconRight,
+  state,
+} = Astro.props;
+
+const asLink = href !== undefined && !disabled;
+const Tag = asLink ? 'a' : 'button';
+const attrs = asLink
+  ? { href }
+  : {
+      type,
+      disabled,
+      'aria-pressed': selected,
+    };
+---
+
+<Tag
+  class={`btn btn--${variant} btn--${size}`}
+  data-state={state}
+  data-selected={selected ? '' : undefined}
+  {...attrs}
+>
+  {iconLeft && <Icon name={iconLeft} size={20} />}
+  <span>
+    <slot />
+  </span>
+  {iconRight && <Icon name={iconRight} size={20} />}
+</Tag>
+
+<style>
+  .btn {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-gap-xs);
+    border: var(--border-width-default) solid transparent;
+    background: transparent;
+    font-family: var(--s-typo-label-medium-family);
+    font-weight: var(--s-typo-label-medium-weight);
+    font-size: var(--s-typo-label-medium-size);
+    line-height: var(--s-typo-label-medium-line);
+    letter-spacing: var(--s-typo-label-medium-spacing);
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  /* Alturas do Figma (56 e 48) = 2 x inset + 24, sem token próprio. */
+  .btn--medium {
+    padding: var(--space-inset-md);
+    height: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+  }
+  .btn--small {
+    padding: var(--space-inset-sm);
+    height: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
+  }
+
+  /* Foco visível: anel de 1px a 4px da borda externa do Figma. */
+  .btn:focus-visible,
+  .btn[data-state='focus'] {
+    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline-offset: calc(
+      var(--primitives-spacing-4) - var(--border-width-default)
+    );
+  }
+  .btn--secondary:focus-visible,
+  .btn--secondary[data-state='focus'] {
+    outline-offset: var(--primitives-spacing-4);
+  }
+
+  /* primary */
+  .btn--primary {
+    background: var(--s-color-surface-accent-default);
+    color: var(--s-color-content-on-accent);
+  }
+  .btn--primary:hover:not(:disabled),
+  .btn--primary[data-state='hover'],
+  .btn--primary:focus-visible,
+  .btn--primary[data-state='focus'] {
+    background: var(--s-color-surface-accent-hover);
+  }
+
+  /* secondary e ghost */
+  .btn--secondary,
+  .btn--ghost {
+    color: var(--s-color-content-secondary);
+  }
+  .btn--secondary {
+    background: var(--s-color-surface-default);
+    border-color: var(--s-color-border-default);
+  }
+  .btn--secondary:hover:not(:disabled),
+  .btn--secondary[data-state='hover'],
+  .btn--secondary:focus-visible,
+  .btn--secondary[data-state='focus'],
+  .btn--ghost:hover:not(:disabled),
+  .btn--ghost[data-state='hover'],
+  .btn--ghost:focus-visible,
+  .btn--ghost[data-state='focus'] {
+    background: var(--s-color-surface-hover);
+  }
+  .btn--secondary[data-selected],
+  .btn--ghost[data-selected] {
+    background: var(--s-color-surface-accent-subtle);
+    border-color: var(--s-color-border-accent);
+    color: var(--s-color-content-accent);
+  }
+
+  /* desabilitado (vem por último para vencer hover e selecionado) */
+  .btn:disabled {
+    cursor: not-allowed;
+    color: var(--s-color-content-disabled);
+  }
+  .btn--primary:disabled {
+    background: var(--s-color-surface-disabled);
+  }
+  .btn--secondary:disabled {
+    background: transparent;
+    border-color: var(--s-color-surface-hover);
+  }
+  .btn--ghost:disabled {
+    background: transparent;
+    border-color: transparent;
+  }
+</style>
