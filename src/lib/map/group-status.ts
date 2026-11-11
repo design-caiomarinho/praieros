@@ -25,16 +25,13 @@ export interface GroupBadge {
   status: Status;
   /** Sempre o total de pontos ("2"), com ou sem divergência. */
   text: string;
-  /** Status diferentes entre os pontos: o selo ganha borda de alerta (o texto não muda). */
-  divergent: boolean;
 }
 
 /** Selo ao lado do marcador agrupado. */
 export function groupBadge(statuses: readonly Status[]): GroupBadge {
   const status = worstStatus(statuses);
   const total = statuses.length;
-  const divergent = statuses.some((s) => s !== status);
-  return { status, text: String(total), divergent };
+  return { status, text: String(total) };
 }
 
 const COUNT_LABELS: Record<Status, [string, string]> = {

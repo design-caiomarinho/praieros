@@ -320,7 +320,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   :global(.marker[hidden]) {
     display: none;
   }
-  /* Selo ao lado do ícone: quantidade, total de pontos (com borda de alerta se divergem) ou número do pin. */
+  /* Selo ao lado do ícone: total de pontos da praia ou número do pin. */
   :global(.marker__tag) {
     box-sizing: border-box;
     position: absolute;
@@ -337,10 +337,6 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     background: var(--s-color-surface-default);
     color: var(--s-color-content-primary);
     white-space: nowrap;
-  }
-  /* Divergência: só a cor da borda muda (alerta); o texto continua sendo o total. */
-  :global(.marker__tag[data-divergent]) {
-    border-color: var(--s-color-border-warning);
   }
   /* Zoom afastado: some só o texto do nome (sem animação). */
   :global(.marker[data-label='hidden'] .marker__label) {

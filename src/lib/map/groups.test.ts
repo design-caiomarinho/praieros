@@ -40,22 +40,19 @@ describe('groupBadge', () => {
     expect(groupBadge(['suitable', 'suitable'])).toEqual({
       status: 'suitable',
       text: '2',
-      divergent: false,
     });
     expect(groupBadge(['unsuitable', 'unsuitable', 'unsuitable']).text).toBe(
       '3',
     );
   });
-  it('status diferentes: mesmo texto (total), só marca a divergência', () => {
+  it('status diferentes: o selo é igual (total), sem marcar divergência', () => {
     expect(groupBadge(['unsuitable', 'suitable'])).toEqual({
       status: 'unsuitable',
       text: '2',
-      divergent: true,
     });
     expect(groupBadge(['suitable', 'no-result', 'no-result'])).toEqual({
       status: 'no-result',
       text: '3',
-      divergent: true,
     });
   });
 });

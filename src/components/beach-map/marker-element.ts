@@ -22,8 +22,8 @@ export interface MarkerView {
   ariaLabel: string;
   /** Nome da praia (texto visível); null = sem texto. */
   label: string | null;
-  /** Selo ao lado do ícone: quantidade ("2"), divergência ("1/2") ou número do pin ("1"). */
-  tag: { text: string; divergent: boolean } | null;
+  /** Selo redondo ao lado do ícone: total de pontos ("2") ou número do pin ("1"). */
+  tag: { text: string } | null;
 }
 
 /** Botão acessível do marcador (Figma 117:4522). Estilos em `beach-map.astro` (globais). */
@@ -46,7 +46,6 @@ export function createMarkerElement(view: MarkerView): HTMLButtonElement {
     tag.className = 'marker__tag';
     tag.setAttribute('aria-hidden', 'true');
     tag.textContent = view.tag.text;
-    if (view.tag.divergent) tag.dataset.divergent = '';
     el.append(tag);
   }
   if (view.label) {

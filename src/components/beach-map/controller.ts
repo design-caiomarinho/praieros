@@ -256,7 +256,7 @@ export async function createBeachMap(
               g.points.some((p) => p.status === 'outdated'),
             ),
             label: g.beachName,
-            tag: { text: badge.text, divergent: badge.divergent },
+            tag: { text: badge.text },
           },
           LABEL_MIN_ZOOM,
           undefined,
@@ -283,7 +283,7 @@ export async function createBeachMap(
               ariaLabel: m.ariaLabel,
               // O nome aparece no pin 1; nos outros, só ao selecionar, focar ou passar o mouse.
               label: m.beachName,
-              tag: { text: String(m.number), divergent: false },
+              tag: { text: String(m.number) },
             },
             i === 0 ? LABEL_MIN_ZOOM : Infinity,
             m.id,
