@@ -95,6 +95,7 @@ Tokens de design: `tokens/tokens.json` (fonte única). Não usar valores soltos 
 - Commits pequenos e frequentes, mensagem no formato `tipo: resumo` (feat, fix, test, docs, refactor).
 - Ao fim de cada fatia: atualizar a seção **Estado atual** abaixo (máx. 5 linhas).
 - **Componentes sem nó no Figma** (alguns não foram componentizados de propósito; catálogo em `docs/components.md`). Ao precisar de um: PARE e peça o link do nó ou da tela onde ele aparece. Leia só esse nó (uma chamada), sem screenshots de telas inteiras. Derive a aparência dessa tela usando apenas tokens; se faltar um valor, pergunte, não invente. Registre-o em `docs/components.md` como "Pendente de componentizar". Ao fim de cada sessão, liste os componentes novos "Pendentes de componentizar" para eu criá-los no Figma; depois da minha confirmação, mude a situação para "Componentizado" e a origem para o novo nó.
+- Motion: ver docs/motion.md. Não implementar animações antes da fase indicada e não inventar valores.
 - Rotinas de manutenção (git pull antes de começar, ingestão, falhas do workflow): `docs/maintenance.md`.
 
 ## Estado atual

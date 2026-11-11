@@ -123,3 +123,8 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Button secondary desabilitado** usa `surface/hover` como cor da borda, como no Figma.
 - **InputText** ocupa 100% do contêiner (o Figma usa 428px fixos).
 - **Vitrine:** a prop `state` (hover, focus, typing) existe só para mostrar os estados em `/dev/components`.
+
+## Motion
+
+- **Decisão:** o movimento é definido pelo designer no Figma (variáveis de duração e curva + quadro de especificação). O Claude Code só implementa o que estiver escrito lá, sem inventar valores.
+- **Quando:** tokens e transições de fluxo depois da Fase 3 (fluxos); microinterações de componentes na Fase 4 (acabamento). Antes disso, nenhuma animação. Plano em `docs/motion.md`.
