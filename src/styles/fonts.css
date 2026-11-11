@@ -1,0 +1,23 @@
+/* Switzer (ITF Free Font License), self-host. Só os pesos que tokens/tokens.json referencia:
+   400 (body), 500 (caption), 600 (heading, label). O fallback vem de tokens.css. */
+@font-face {
+  font-family: 'Switzer';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Switzer-Regular.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Switzer';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Switzer-Medium.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Switzer';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Switzer-Semibold.otf') format('opentype');
+}

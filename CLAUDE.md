@@ -105,4 +105,5 @@ Fase 1, sessão 3 concluída: R1–R4 e D1–D3 como funções puras em `src/lib
 Fase 1, sessão 4 concluída: workflow diário `.github/workflows/ingest-bulletins.yml` (`npm run bulletins:ingest`), D4 por região; GITHUB_TOKEN não dispara outros workflows (ver `docs/decisions.md`).
 Fase 2, sessão 1 concluída: `tokens/tokens.json` (do Figma, com aliases) e `src/styles/tokens.css` gerado por `npm run tokens:build`; pendências em `docs/decisions.md`.
 Fase 2, sessão 2 (parcial): tokens do Figma + `tokens/extra.json`; `StatusChip` em `src/components/`; página `/dev/components` só em dev. Faltam faixas e PointCard (aguardam links).
+Fonte Switzer self-host (`public/fonts/`, `src/styles/fonts.css`); atribuição da licença dispensada por decisão (ver `docs/decisions.md`).
 Próxima: sessão 5 (comparar com o boletim anterior: mudança de código, provável renomeação) ou tokens. Termos de uso do site seguem pendentes.

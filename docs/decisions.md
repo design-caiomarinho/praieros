@@ -81,7 +81,6 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Unidade do `letter-spacing`: resolvido (2026-11-11).** Confirmado em porcentagem: `-1` = -1% = `-0.01em`, como o gerador já converte.
 - **`heading/large` no retorno do MCP** apontava para o peso de `heading/medium`. No export os dois são `600`; sem efeito.
 - **Pesos:** o `$value` é o nome (`semibold`); o número vem da chave. Se um peso novo surgir, as duas partes precisam bater.
-- **Fonte Switzer:** o token só nomeia a família. Falta definir como carregar (arquivo local ou Fontshare) e a licença. Até lá vale o fallback.
 - **Ausentes no Figma:** raio de borda, espessura de borda, sombras como valor (só há cores `shadow`), breakpoints, z-index, modo escuro. Se as telas precisarem, adicionar ao Figma e reexportar.
 - `primitives.font.size.28/32/56` e `spacing.20` existem mas nenhum token semântico os usa ainda.
 
@@ -91,4 +90,11 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **StatusChip sem símbolo, por decisão do design.** Segue o nó `37:626`: cor + texto (o princípio 3 do `CLAUDE.md` foi ajustado: elementos sem texto, como os marcadores do mapa, usam também símbolo). Os ícones (check, minus, "!", "?") ficam para os marcadores do mapa; não há `Icon.astro` nem SVGs no repositório por enquanto.
 - **Estilo do chip.** Altura 24px, padding `inset/2xs` x `inset/xs`, pílula, borda 1px; "Sem resultado" tracejado, fundo `unknown/soft`, borda `border/strong`, texto `content/secondary` (como no Figma). Tipografia `label/medium`.
 - **Página de componentes só em dev.** `src/dev/components.astro` é registrada por uma integração em `astro.config.mjs` (`injectRoute` só quando o comando é `dev`): fica em `/dev/components` no `npm run dev` e não entra no `npm run build` (verificado: `dist/` não tem `dev/`). Fica fora de `src/pages` de propósito, e por isso difere do caminho citado no pedido original.
-- **Fonte Switzer** ainda não é carregada (pendência da sessão anterior); a página usa o fallback.
+
+## Fonte Switzer (self-host)
+
+- **Licença (2026-11-11).** Caio leu a ITF Free Font License (https://www.fontshare.com/licenses/itf-ffl) e confirmou uso comercial e uso em site.
+- **Atribuição: decidido não incluir.** O metadado da própria fonte (campo de licença, versão 1.200) diz: "You agree to identify the ITF fonts by name and credit the ITF's ownership of the trademarks and copyrights in any design or production credits." Foi avisado em 2026-11-11 e Caio decidiu seguir sem linha de crédito no site. Risco registrado: a cláusula fala de "design or production credits"; se o site passar a ter página de créditos, ou a licença for relida de outra forma, incluir "Tipografia: Switzer, © Indian Type Foundry" (copy em `docs/copy.md`).
+- **Arquivos.** `public/fonts/`: `Switzer-Regular.otf` (400), `Switzer-Medium.otf` (500), `Switzer-Semibold.otf` (600), só os pesos que o `tokens.json` referencia. Os outros 15 (Thin, Light, Bold, Black, itálicos etc.) foram removidos, pois tudo em `public/` iria para o site.
+- **Formato: `.otf` (CFF) direto, sem converter para woff2.** Cada arquivo tem 35–48 KB. Verificado: versão 1.200, pesos internos 400/500/600, cobertura dos caracteres do português (acentos, ç, aspas e travessões, reticências, º, ª). Otimização futura possível: converter para woff2 (exigiria ferramenta nova, a registrar aqui).
+- **`@font-face`** em `src/styles/fonts.css`, `font-display: swap`, família `Switzer`; o fallback `system-ui, sans-serif` vem de `tokens.css`. Por ora é importado só na página de dev; quando existir um layout base, importar lá.
