@@ -1,0 +1,43 @@
+---
+import '../styles/tokens.css';
+import '../styles/fonts.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+  }
+</style>

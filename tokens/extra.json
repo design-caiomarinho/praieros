@@ -14,5 +14,11 @@
       "$type": "dimension",
       "$value": 4
     }
+  },
+  "size": {
+    "panel-width": {
+      "$type": "dimension",
+      "$value": 428
+    }
   }
 }

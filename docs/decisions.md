@@ -140,6 +140,15 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Chip do boletim:** pílula com borda `border/default`, texto `label/medium` em `content/secondary` (neutro, para não ser confundido com o chip de status). Links "Como ler e fonte" e "Boletim original": `content/accent`, sublinhados, `body/medium` Semibold; o segundo abre em nova aba com ícone de link externo. "Ver detalhes" é Button primário (link) e "Compartilhar praia" é secundário com ícone; ambos na vertical, largura total.
 - **Dados fictícios** só em `src/dev/components.astro` (vitrine, 428px e 375px).
 
+## Fase 3 / sessão 6: esqueleto da tela inicial
+
+- **Layout:** nó `115:4277` (Início / Desktop): cabeçalho de 56px e mapa ocupando o resto da altura. O Figma não mostra o painel aberto; o conteúdo da tela (badges, botões do mapa) é só exemplo e não foi copiado.
+- **Estrutura:** `base-layout.astro` (lang pt-BR, viewport, título, descrição, tokens e fontes, reset mínimo) e `index.astro` (`AppHeader` + mapa neutro `role="region"` "Mapa das praias" + `<aside>` da ficha). Altura `100dvh`. Mapa em `surface/strong` como bloco neutro.
+- **Largura do painel:** o `beach-panel.astro` não definia largura (só 100%; os 428px estavam nos quadros da vitrine). Por decisão de Caio, 428px (a do cartão do Figma) viraram o token `size.panel-width` em `tokens/extra.json` (`--size-panel-width`). É a fonte única: `beach-panel` (desktop), `index.astro` e a vitrine usam a variável. A remover de `extra.json` se o Figma definir a largura do painel.
+- **Breakpoint:** 1024px (decisão de Caio): acima, painel lateral à direita; abaixo, folha inferior. Com o painel de 428px, 768px deixaria pouco espaço para o mapa. Fica como literal na media query (CSS não aceita variável ali).
+- **Painel oculto:** `<aside hidden>` sem conteúdo (some também para leitores de tela). Abrir, fechar e foco ficam para a sessão da ficha. Mobile: contêiner absoluto na base, largura total, `max-height` 100% do palco com rolagem; sem alça, raio, animação ou gesto (motion só depois da Fase 3).
+- **Textos (título e descrição da página):** registrados em `docs/copy.md`.
+
 ## Motion
 
 - **Decisão:** o movimento é definido pelo designer no Figma (variáveis de duração e curva + quadro de especificação). O Claude Code só implementa o que estiver escrito lá, sem inventar valores.

@@ -241,4 +241,6 @@
 
   --border-width-default: 1px;
   --border-width-accent: 4px;
+
+  --size-panel-width: 428px;
 }

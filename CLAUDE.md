@@ -113,4 +113,5 @@ Nomenclatura em inglês padronizada (status `suitable | unsuitable | outdated | 
 Fase 2, sessão 3: `OutdatedBanner`, `NoResultBanner` e `PointCard` criados (pendentes de componentizar no Figma); valores assumidos em `docs/decisions.md`.
 Fase 2, sessão 4: `Button`, `ButtonIcon`, `InputText` e `Icon` (SVGs em `src/icons/`) com todos os estados do Figma, foco só por teclado; vitrine em `/dev/components`.
 Fase 2, sessão 5: `AppHeader` e `BeachPanel` (genérico, por props; desktop e mobile) em `/dev/components`; ícones compartilhar, fechar e link externo.
-Próxima: sessão 6 (comparar com o boletim anterior: mudança de código, provável renomeação) ou tokens. Termos de uso do site seguem pendentes.
+Fase 3, sessão 6: esqueleto da tela inicial (`base-layout`, `index.astro`: cabeçalho, mapa neutro, `<aside>` oculto; breakpoint 1024px; token `size.panel-width`). Sem mapa nem dados.
+Próxima: mapa (provedor de tiles pendente) ou ficha aberta no painel. Termos de uso do site seguem pendentes.

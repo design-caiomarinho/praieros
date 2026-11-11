@@ -16,4 +16,6 @@ Situação no Figma: **Componentizado** ou **Pendente de componentizar** (existe
 | BeachPanel     | `layout`: desktop (painel lateral), mobile (folha inferior); faixa `outdated` ou `no-result` opcional; com ou sem cartões de ponto (qualquer estado da tabela do CLAUDE.md)                       | Nenhum (derivado; tela da ficha é só exemplo)                | Pendente de componentizar | `src/components/beach-panel.astro`                |
 | BulletinChip   | única ("Boletim nº X · dd/mm/aaaa"); vive dentro do BeachPanel                                                                                                                                    | Nenhum (derivado)                                            | Pendente de componentizar | `src/components/beach-panel.astro`                |
 
+Layout (não são componentes): `src/layouts/base-layout.astro` e `src/pages/index.astro`. Sem novos pendentes de componentizar nesta sessão.
+
 Página de teste (só em `npm run dev`): `/dev/components`.

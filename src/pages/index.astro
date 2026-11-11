@@ -1,16 +1,59 @@
 ---
+import BaseLayout from '../layouts/base-layout.astro';
+import AppHeader from '../components/app-header.astro';
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
-  </head>
-  <body>
-    <h1>Astro</h1>
-  </body>
-</html>
+<BaseLayout
+  title="Praieros · Balneabilidade das praias de Salvador"
+  description="Boletim de balneabilidade do Inema para as praias de Salvador (BA), apresentado de forma clara. Site independente, sem vínculo com o Inema."
+>
+  <div class="app">
+    <AppHeader />
+    <div class="stage">
+      <div class="map" role="region" aria-label="Mapa das praias"></div>
+      <!-- Região da ficha: escondida por padrão e sem conteúdo (abre na sessão da ficha). -->
+      <aside
+        class="panel"
+        id="panel"
+        aria-label="Ficha da praia"
+        hidden
+      ></aside>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+  }
+  .stage {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+  .map {
+    flex: 1;
+    min-width: 0;
+    background: var(--s-color-surface-strong);
+  }
+  /* Mobile: folha inferior (só o contêiner). */
+  .panel {
+    position: absolute;
+    inset: auto 0 0;
+    max-height: 100%;
+    overflow-y: auto;
+    background: var(--s-color-surface-default);
+  }
+  /* Desktop: painel lateral à direita, com a largura do BeachPanel. */
+  @media (min-width: 1024px) {
+    .panel {
+      position: static;
+      flex-shrink: 0;
+      width: var(--size-panel-width);
+      max-height: none;
+    }
+  }
+</style>
