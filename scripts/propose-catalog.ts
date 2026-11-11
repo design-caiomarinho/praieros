@@ -19,7 +19,7 @@ import {
   type NominatimResult,
   type OverpassElement,
 } from '../src/lib/catalog/propose.ts';
-import { cached, headers, search } from './osm-client.ts';
+import { cached, headers, loadNameHints, search } from './osm-client.ts';
 import { currentBulletin } from '../src/lib/rules/evaluate.ts';
 import { loadSalvadorInputs } from '../src/lib/site/load-data.ts';
 
@@ -63,7 +63,13 @@ const locations = new Map(
   (currentBulletin(bulletins)?.points ?? []).map((p) => [p.code, p.location]),
 );
 const today = new Date().toISOString().slice(0, 10);
-const deps = { search, overpass, reverse, today };
+const deps = {
+  search,
+  overpass,
+  reverse,
+  today,
+  hints: await loadNameHints(),
+};
 let proposed = 0;
 let discarded = 0;
 

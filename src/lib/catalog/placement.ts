@@ -1,3 +1,4 @@
+import { osmSearchName, type OsmNameHints } from './osm-hints.ts';
 import {
   namesMatch,
   decideDescription,
@@ -90,12 +91,14 @@ export function linesOf(el: GeomElement): Line[] {
 export function geometryForBeach(
   beachName: string,
   elements: readonly GeomElement[],
+  hints?: OsmNameHints,
 ): Geometry | null {
+  const searchName = osmSearchName(beachName, hints);
   const lines: Line[] = [];
   const ids: string[] = [];
   for (const el of elements) {
     const name = el.tags?.name;
-    if (!name || !namesMatch(beachName, name)) continue;
+    if (!name || !namesMatch(searchName, name)) continue;
     const l = linesOf(el);
     if (l.length === 0) continue;
     lines.push(...l);

@@ -32,7 +32,7 @@ import {
 import { buildCatalogTodo } from '../src/lib/catalog/todo.ts';
 import { currentBulletin } from '../src/lib/rules/evaluate.ts';
 import { loadSalvadorInputs } from '../src/lib/site/load-data.ts';
-import { overpassRaw, search } from './osm-client.ts';
+import { loadNameHints, overpassRaw, search } from './osm-client.ts';
 
 const CATALOG = fileURLToPath(
   new URL('../data/catalog/salvador.json', import.meta.url),
@@ -47,6 +47,7 @@ const locations = Object.fromEntries(
   points.map((p) => [p.code, p.location ?? undefined]),
 );
 const prev = await readCatalogFile(CATALOG);
+const hints = await loadNameHints();
 
 console.log('Polígono de Salvador (Overpass, com cache)…');
 const rel = (await overpassRaw<{ elements: GeomElement[] }>(BOUNDARY_QUERY))
@@ -65,7 +66,7 @@ console.log(`  ${elements.length} elementos`);
 
 const plans = new Map<string, PointPlan[]>();
 for (const beach of prev.beaches) {
-  const geometry = geometryForBeach(beach.name, elements);
+  const geometry = geometryForBeach(beach.name, elements, hints);
   const clueResults: Record<string, Awaited<ReturnType<typeof search>>> = {};
   for (const p of beach.points) {
     const query = isLocked(p) ? null : descriptionQuery(locations[p.code]);

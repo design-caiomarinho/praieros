@@ -1,4 +1,5 @@
 import { normalizeBeachName } from '../rules/group.ts';
+import { osmSearchName, type OsmNameHints } from './osm-hints.ts';
 import type { OsmSource } from './types.ts';
 import { SALVADOR_BOUNDS } from './validate-catalog.ts';
 
@@ -291,6 +292,8 @@ export interface ProposalDeps {
   overpass(): Promise<OverpassElement[]>;
   reverse(lat: number, lng: number): Promise<NominatimResult | null>;
   today: string;
+  /** Nome do boletim -> nome no OSM, só para a busca (`osm-name-hints.json`). */
+  hints?: OsmNameHints;
 }
 
 export interface ProposedPoint {
@@ -321,6 +324,8 @@ export async function resolveBeach(
   deps: ProposalDeps,
 ): Promise<Resolution> {
   const { today } = deps;
+  // O nome do boletim não muda; só a busca usa o nome do OSM, quando há dica.
+  const searchName = osmSearchName(name, deps.hints);
   const apply = (d: Extract<Decision, { ok: true }>): Resolution => ({
     points: points.map((p) => ({
       code: p.code,
@@ -337,15 +342,20 @@ export async function resolveBeach(
 
   // Etapa 1: variações do nome.
   const r1: string[] = [];
-  for (const query of queriesFor(name)) {
-    const d = decideCandidate(await deps.search(query), query, today, name);
+  for (const query of queriesFor(searchName)) {
+    const d = decideCandidate(
+      await deps.search(query),
+      query,
+      today,
+      searchName,
+    );
     if (d.ok) return apply(d);
     r1.push(d.reason);
   }
   reasons.push(`nome: ${uniq(r1)}`);
 
   // Etapa 2: lista do Overpass.
-  const d2 = matchOverpass(await deps.overpass(), name, today);
+  const d2 = matchOverpass(await deps.overpass(), searchName, today);
   if (d2.ok) {
     const rev = await deps.reverse(d2.lat, d2.lng);
     return apply({ ...d2, neighborhood: rev ? neighborhoodOf(rev) : null });

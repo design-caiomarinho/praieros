@@ -6,6 +6,7 @@
  */
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import type { OsmNameHints } from '../src/lib/catalog/osm-hints.ts';
 import type { NominatimResult } from '../src/lib/catalog/propose.ts';
 import { SALVADOR_BOUNDS } from '../src/lib/catalog/validate-catalog.ts';
 
@@ -82,4 +83,18 @@ export function overpassRaw<T>(query: string) {
       body: new URLSearchParams({ data: query }),
     }),
   );
+}
+
+/** Dicas de nome do boletim para o OSM (só para a busca). Vazio se o arquivo não existir. */
+export async function loadNameHints(): Promise<OsmNameHints> {
+  try {
+    return JSON.parse(
+      await readFile(
+        new URL('../data/catalog/osm-name-hints.json', import.meta.url),
+        'utf8',
+      ),
+    ) as OsmNameHints;
+  } catch {
+    return {};
+  }
 }

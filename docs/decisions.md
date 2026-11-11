@@ -236,6 +236,21 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Visão geral** (`/dev/catalog-overview`, só em dev, como as outras páginas `/dev`): todos os pontos num mapa, por estado — ✓ verificado, ≈ automático (produção, aproximado), ? aguardando aprovação (só dev) — e a lista dos sem posição com o motivo. Cor + símbolo + número. Reaproveita o mapa e o CSS dos pins da página de revisão (`src/dev/catalog-review/`).
 - **"Posição aproximada" na interface.** Até aqui a interface não tinha esse aviso. Entrou como uma linha de texto no cartão do ponto (`PointCard`, prop `approximate`) só para pontos não aprovados à mão. Texto **provisório**, registrado em `docs/copy.md`; o `PointCard` segue pendente de componentizar no Figma (ver `docs/components.md`).
 
+## Dicas de nome para o OpenStreetMap (`osm-name-hints.json`)
+
+- **O que é.** `data/catalog/osm-name-hints.json` mapeia o nome do **boletim** para o nome usado no **OpenStreetMap**, só para a **busca** da praia (hoje: Placafor → Placaford, Stella Mares → Stella Maris). Função pura `osmSearchName` (`src/lib/catalog/osm-hints.ts`): compara sem caixa nem acento, não encadeia, e sem dica devolve o nome do boletim. Usada em `scripts/place-catalog.ts` (`geometryForBeach`) e em `scripts/propose-catalog.ts` (`resolveBeach`: consultas do Nominatim, `decideCandidate` e `matchOverpass`).
+- **O nome exibido continua o do boletim** (princípio 1): o catálogo, a interface e as regras nunca veem o nome do OSM. A dica só entra no ponto onde o nome vira consulta.
+- **Diferença para `beach-aliases.json`** (renomeação entre boletins, ainda não criado):
+
+|                       | `osm-name-hints.json`                                | `beach-aliases.json`                                             |
+| --------------------- | ---------------------------------------------------- | ---------------------------------------------------------------- |
+| Pergunta que responde | "Como o OSM chama esta praia?"                       | "Esta praia do boletim antigo é a mesma do boletim novo?"        |
+| Afeta o nome exibido? | Não                                                  | Sim: o nome antigo passa a valer como o atual nas regras (R2–R4) |
+| Usada em              | busca no OSM (propostas e posicionamento automático) | avaliação dos boletins                                           |
+| Onde fica             | `data/catalog/`                                      | `data/`                                                          |
+
+Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra.
+
 ## Motion
 
 - **Decisão:** o movimento é definido pelo designer no Figma (variáveis de duração e curva + quadro de especificação). O Claude Code só implementa o que estiver escrito lá, sem inventar valores.
