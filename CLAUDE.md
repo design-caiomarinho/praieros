@@ -93,6 +93,7 @@ Tokens de design: `tokens/tokens.json` (fonte única). Não usar valores soltos 
 - Verificar o que foi feito rodando teste/lint/build antes de dizer que terminou.
 - Commits pequenos e frequentes, mensagem no formato `tipo: resumo` (feat, fix, test, docs, refactor).
 - Ao fim de cada fatia: atualizar a seção **Estado atual** abaixo (máx. 5 linhas).
+- Rotinas de manutenção (git pull antes de começar, ingestão, falhas do workflow): `docs/maintenance.md`.
 
 ## Estado atual
 
