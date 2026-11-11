@@ -1,0 +1,362 @@
+---
+import Button from './button.astro';
+import ButtonIcon from './button-icon.astro';
+import Icon from './icon.astro';
+import type { MarkerData } from '../lib/site/map-markers.ts';
+
+// Mapa das praias (MapLibre) com os estados carregando e indisponível e os controles de zoom.
+// Só estrutura e interação do mapa: o painel da ficha fica na página, que conversa com este
+// componente por eventos (`marker-select` sai daqui; `marker-set` entra).
+// Textos de carregando e erro: Figma 117:4816 e 117:4959 (docs/copy.md).
+interface Props {
+  markers: MarkerData[];
+}
+
+const { markers } = Astro.props;
+// "<" escapado para o JSON não fechar o <script> por engano.
+const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
+---
+
+<div class="map-root" id="beach-map">
+  <div
+    class="canvas"
+    id="map-canvas"
+    role="region"
+    aria-label="Mapa das praias"
+  ></div>
+
+  <div class="loading" id="map-loading" role="status">
+    <span class="loading__icon">
+      <Icon name="spinner" />
+    </span>
+    <span class="loading__text">Carregando as praias…</span>
+  </div>
+
+  <div class="error" id="map-error" hidden>
+    <div class="error__box">
+      <span class="error__icon">
+        <Icon name="warning" />
+      </span>
+      <div class="error__content">
+        <div class="error__texts">
+          <h2>Não conseguimos carregar o mapa</h2>
+          <p>Tente de novo ou busque uma praia pelo nome.</p>
+        </div>
+        <div class="error__action" id="map-retry">
+          <Button variant="primary" size="small">
+            Tente novamente
+          </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zoom" id="map-zoom">
+    <div data-zoom="in">
+      <ButtonIcon variant="outlined" icon="plus" label="Aumentar o zoom" />
+    </div>
+    <div data-zoom="out">
+      <ButtonIcon variant="outlined" icon="minus" label="Diminuir o zoom" />
+    </div>
+  </div>
+
+  <script
+    type="application/json"
+    id="map-markers"
+    set:html={markersJson}
+    is:inline
+  ></script>
+</div>
+
+<script>
+  import {
+    createBeachMap,
+    type BeachMapController,
+  } from './beach-map/controller.ts';
+  import type { MarkerData } from '../lib/site/map-markers.ts';
+
+  const root = document.getElementById('beach-map')!;
+  const canvas = document.getElementById('map-canvas')!;
+  const loading = document.getElementById('map-loading')!;
+  const errorBox = document.getElementById('map-error')!;
+  const zoom = document.getElementById('map-zoom')!;
+  const markers: MarkerData[] = JSON.parse(
+    document.getElementById('map-markers')!.textContent ?? '[]',
+  );
+
+  const token = (name: string) =>
+    getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const palette = () => ({
+    land: token('--s-color-surface-strong'),
+    water: token('--s-color-surface-accent-subtle'),
+    park: token('--s-color-surface-positive-subtle'),
+  });
+
+  let controller: BeachMapController | null = null;
+  let selectedId: string | null = null;
+
+  function show(state: 'loading' | 'ready' | 'error') {
+    loading.hidden = state !== 'loading';
+    errorBox.hidden = state !== 'error';
+    zoom.hidden = state === 'error';
+  }
+
+  async function start() {
+    controller?.destroy();
+    controller = null;
+    canvas.replaceChildren();
+    // Cria o controlador antes do estado, para o retry não deixar mapas pendurados.
+    controller = await createBeachMap({
+      container: canvas,
+      markers,
+      palette: palette(),
+      onSelect: (id) => {
+        const m = markers.find((x) => x.id === id);
+        if (m)
+          root.dispatchEvent(
+            new CustomEvent('marker-select', {
+              bubbles: true,
+              detail: { id, slug: m.slug },
+            }),
+          );
+      },
+      onState: (s) => {
+        show(s);
+        if (s === 'error') {
+          controller?.destroy();
+          controller = null;
+        }
+      },
+    });
+    if (controller && selectedId) controller.select(selectedId);
+  }
+
+  root.addEventListener('marker-set', (e) => {
+    selectedId = (e as CustomEvent<{ id: string | null }>).detail.id;
+    controller?.select(selectedId);
+  });
+  zoom.addEventListener('click', (e) => {
+    const kind = (e.target as Element)
+      .closest<HTMLElement>('[data-zoom]')
+      ?.getAttribute('data-zoom');
+    if (kind === 'in') controller?.zoomIn();
+    if (kind === 'out') controller?.zoomOut();
+  });
+  document.getElementById('map-retry')!.addEventListener('click', () => {
+    void start();
+  });
+
+  void start();
+</script>
+
+<style>
+  .map-root {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    background: var(--s-color-surface-strong);
+    overflow: clip;
+    /* Contexto próprio: a ficha (folha inferior) fica acima dos controles do MapLibre. */
+    isolation: isolate;
+  }
+  .canvas {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Carregando (Figma 117:4900): pílula no topo, centralizada. */
+  .loading {
+    position: absolute;
+    top: var(--space-inset-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    background: var(--s-color-surface-default);
+  }
+  .loading[hidden],
+  .error[hidden],
+  .zoom[hidden] {
+    display: none;
+  }
+  .loading__icon {
+    display: flex;
+    padding: var(--space-inset-md);
+    background: var(--s-color-surface-accent-default);
+    color: var(--s-color-content-on-accent);
+  }
+  .loading__text {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    border-left: 0;
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+    white-space: nowrap;
+  }
+
+  /* Indisponível (Figma 117:5012): bloco centralizado sobre o fundo neutro. */
+  .error {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--s-color-surface-strong);
+  }
+  .error__box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-gap-xl);
+  }
+  .error__icon {
+    display: flex;
+    padding: var(--space-inset-sm);
+    background: var(--s-color-surface-accent-subtle);
+    color: var(--s-color-content-accent);
+  }
+  .error__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-lg);
+    width: 230px;
+  }
+  .error__texts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-gap-md);
+    text-align: center;
+  }
+  .error__texts h2 {
+    margin: 0;
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-heading-large-family);
+    font-weight: var(--s-typo-heading-large-weight);
+    font-size: var(--s-typo-heading-large-size);
+    line-height: var(--s-typo-heading-large-line);
+    letter-spacing: var(--s-typo-heading-large-spacing);
+  }
+  .error__texts p {
+    margin: 0;
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  .error__action :global(.btn) {
+    width: 100%;
+  }
+
+  /* Zoom (Figma 117:4828): pilha no canto inferior direito. */
+  .zoom {
+    position: absolute;
+    right: var(--space-inset-lg);
+    bottom: var(--space-inset-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-2xs);
+  }
+
+  /* Marcadores (Figma 117:4522). Criados por JS: estilos globais. */
+  :global(.marker) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-stack-xs);
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: var(--s-typo-label-medium-family);
+    font-weight: var(--s-typo-label-medium-weight);
+    font-size: var(--s-typo-label-medium-size);
+    line-height: 1;
+  }
+  :global(.marker__badge) {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: var(--space-inset-2xs);
+    border: var(--border-width-default) solid;
+    border-radius: var(--radius-full);
+    overflow: clip;
+  }
+  :global(.marker__label) {
+    box-sizing: border-box;
+    padding: var(--space-inset-2xs) var(--space-inset-xs);
+    border: var(--border-width-default) solid;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+    text-align: center;
+  }
+  :global(.marker:focus-visible) {
+    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline-offset: var(--space-inset-2xs);
+  }
+  :global(.marker--positive .marker__badge) {
+    background: var(--s-color-surface-positive-default);
+    border-color: var(--s-color-border-positive);
+    color: var(--s-color-content-positive);
+  }
+  :global(.marker--positive .marker__label) {
+    background: var(--s-color-surface-positive-translucid);
+    border-color: var(--s-color-border-positive);
+    color: var(--s-color-content-positive);
+  }
+  :global(.marker--negative .marker__badge) {
+    background: var(--s-color-surface-negative-default);
+    border-color: var(--s-color-border-negative);
+    color: var(--s-color-content-negative);
+  }
+  :global(.marker--negative .marker__label) {
+    background: var(--s-color-surface-negative-translucid);
+    border-color: var(--s-color-border-negative);
+    color: var(--s-color-content-negative);
+  }
+  :global(.marker--warning .marker__badge) {
+    background: var(--s-color-surface-warning-default);
+    border-color: var(--s-color-border-warning);
+    color: var(--s-color-content-warning);
+  }
+  :global(.marker--warning .marker__label) {
+    background: var(--s-color-surface-warning-translucid);
+    border-color: var(--s-color-border-warning);
+    color: var(--s-color-content-warning);
+  }
+  :global(.marker--unknown .marker__badge) {
+    background: var(--s-color-surface-unknown-default);
+    border-color: var(--s-color-border-unknown);
+    color: var(--s-color-content-unknown);
+  }
+  :global(.marker--unknown .marker__label) {
+    background: var(--s-color-surface-unknown-translucid);
+    border: var(--border-width-default) dashed var(--s-color-border-unknown);
+    color: var(--s-color-content-unknown);
+  }
+  /* Selecionado: pino azul, sem círculo. */
+  :global(.marker--selected .marker__badge) {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--s-color-surface-accent-default);
+  }
+  :global(.marker--selected .marker__label) {
+    background: var(--s-color-surface-accent-translucid);
+    border-color: var(--s-color-border-accent);
+    color: var(--s-color-content-accent);
+  }
+</style>

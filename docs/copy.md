@@ -27,3 +27,15 @@
 | Descrição    | Boletim de balneabilidade do Inema para as praias de Salvador (BA), apresentado de forma clara. Site independente, sem vínculo com o Inema. |
 | Região mapa  | Mapa das praias (aria-label)                                                                                                                |
 | Região ficha | Ficha da praia (aria-label)                                                                                                                 |
+
+## Mapa (sessão 8a)
+
+| Onde                  | Texto                                                                                          | Origem                        |
+| --------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------- |
+| Carregando (pílula)   | Carregando as praias…                                                                          | Figma 117:4816                |
+| Erro: título          | Não conseguimos carregar o mapa                                                                | Figma 117:4959                |
+| Erro: corpo           | Tente de novo ou busque uma praia pelo nome.                                                   | Figma 117:4959                |
+| Erro: botão           | Tente novamente                                                                                | Figma 117:4959                |
+| Zoom + (aria-label)   | Aumentar o zoom                                                                                | Sem texto no Figma (derivado) |
+| Zoom − (aria-label)   | Diminuir o zoom                                                                                | Sem texto no Figma (derivado) |
+| Marcador (aria-label) | Praia, Ponto de coleta N, status (desatualizado: "Boletim desatualizado, último resultado: X") | Derivado                      |

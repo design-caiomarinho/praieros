@@ -58,12 +58,14 @@ const subtitle =
         <h2>{name}</h2>
         <p class="subtitle">{subtitle}</p>
       </div>
-      <ButtonIcon
-        variant="ghost"
-        size="xsmall"
-        icon="close"
-        label="Fechar ficha da praia"
-      />
+      <div class="close" data-panel-close>
+        <ButtonIcon
+          variant="ghost"
+          size="xsmall"
+          icon="close"
+          label="Fechar ficha da praia"
+        />
+      </div>
     </div>
 
     <div class="bulletin">
@@ -127,6 +129,9 @@ const subtitle =
     flex-direction: column;
     gap: var(--space-stack-md);
     padding: var(--space-inset-lg);
+  }
+  .close {
+    display: contents;
   }
   .top {
     display: flex;

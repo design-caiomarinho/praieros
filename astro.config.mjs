@@ -18,4 +18,10 @@ const devPages = {
 };
 
 // https://astro.build/config
-export default defineConfig({ integrations: [devPages] });
+export default defineConfig({
+  integrations: [devPages],
+  vite: {
+    // MapLibre 6 acha o worker pelo próprio caminho; o pré-empacotamento do Vite o quebra.
+    optimizeDeps: { exclude: ['maplibre-gl'] },
+  },
+});

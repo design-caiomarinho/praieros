@@ -1,0 +1,44 @@
+import type { ChipStatus } from '../rules/status.ts';
+import type { BeachModel } from './build-beach-models.ts';
+import { markerAriaLabel } from './panel-props.ts';
+
+/** Um marcador por ponto de coleta (R5). Dados serializáveis para o cliente. */
+export interface MarkerData {
+  id: string;
+  slug: string;
+  beachName: string;
+  lat: number;
+  lng: number;
+  /** `outdated` quando o ponto é de um boletim antigo (símbolo "!"). */
+  status: ChipStatus;
+  ariaLabel: string;
+}
+
+/** Só pontos com posição (`onMap`); `verified` já foi tratado em `buildSiteModel`. */
+export function toMarkers(beaches: readonly BeachModel[]): MarkerData[] {
+  const markers: MarkerData[] = [];
+  for (const beach of beaches) {
+    beach.points.forEach((p, i) => {
+      if (!p.onMap || !p.position) return;
+      // Praia antiga demais ou nunca vista não mostra status antigo (R4).
+      const hidden = beach.kind === 'never' || beach.kind === 'too-old';
+      const shown = hidden ? 'no-result' : p.status;
+      const status: ChipStatus = p.stale && !hidden ? 'outdated' : shown;
+      markers.push({
+        id: `${beach.slug}:${p.code}`,
+        slug: beach.slug,
+        beachName: beach.name,
+        lat: p.position.lat,
+        lng: p.position.lng,
+        status,
+        ariaLabel: markerAriaLabel(
+          beach.name,
+          i + 1,
+          status,
+          p.stale ? p.status : undefined,
+        ),
+      });
+    });
+  }
+  return markers;
+}

@@ -1,6 +1,33 @@
 ---
 import BaseLayout from '../layouts/base-layout.astro';
 import AppHeader from '../components/app-header.astro';
+import BeachMap from '../components/beach-map.astro';
+import BeachPanel from '../components/beach-panel.astro';
+import { loadSalvadorInputs } from '../lib/site/load-data.ts';
+import { buildSiteModel } from '../lib/site/build-beach-models.ts';
+import { toMarkers } from '../lib/site/map-markers.ts';
+import { bulletinNumber, toPanelData } from '../lib/site/panel-props.ts';
+
+// Pontos com verified: false só aparecem em desenvolvimento; em produção, nenhum.
+const { bulletins, catalog } = await loadSalvadorInputs();
+const site = buildSiteModel(bulletins, catalog, {
+  includeUnverified: import.meta.env.DEV,
+});
+
+const markers = toMarkers(site.beaches);
+const pdfUrls = new Map(
+  bulletins.flatMap((b) =>
+    b.sourceUrl ? [[bulletinNumber(b), b.sourceUrl] as const] : [],
+  ),
+);
+// Uma ficha por praia que tem ao menos um marcador (as outras não têm como ser abertas ainda).
+const slugsOnMap = new Set(markers.map((m) => m.slug));
+const panels = site.beaches
+  .filter((b) => slugsOnMap.has(b.slug))
+  .flatMap((beach) => {
+    const data = toPanelData(beach, site.current, pdfUrls);
+    return data ? [{ slug: beach.slug, data }] : [];
+  });
 ---
 
 <BaseLayout
@@ -9,18 +36,74 @@ import AppHeader from '../components/app-header.astro';
 >
   <div class="app">
     <AppHeader />
-    <div class="stage">
-      <div class="map" role="region" aria-label="Mapa das praias"></div>
-      <!-- Região da ficha: escondida por padrão e sem conteúdo (abre na sessão da ficha). -->
-      <aside
-        class="panel"
-        id="panel"
-        aria-label="Ficha da praia"
-        hidden
-      ></aside>
+    <div class="stage" id="stage">
+      <BeachMap markers={markers} />
+      <!-- Ficha: escondida até um marcador ser escolhido. Desktop e mobile são o mesmo
+           conteúdo; o CSS mostra só uma versão. -->
+      <aside class="panel" id="panel" aria-label="Ficha da praia" hidden>
+        {panels.map(({ slug, data }) => (
+          <div data-beach={slug} hidden>
+            <div class="layout-desktop">
+              <BeachPanel {...data} layout="desktop" />
+            </div>
+            <div class="layout-mobile">
+              <BeachPanel {...data} layout="mobile" />
+            </div>
+          </div>
+        ))}
+      </aside>
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  const map = document.getElementById('beach-map')!;
+  const panel = document.getElementById('panel')!;
+  let lastMarker: string | null = null;
+
+  function close() {
+    panel.hidden = true;
+    panel.querySelectorAll('[data-beach]').forEach((el) => {
+      (el as HTMLElement).hidden = true;
+    });
+    map.dispatchEvent(new CustomEvent('marker-set', { detail: { id: null } }));
+    // Devolve o foco ao marcador de onde a ficha foi aberta.
+    if (lastMarker) {
+      document
+        .querySelector<HTMLElement>(
+          `[data-marker-id="${CSS.escape(lastMarker)}"]`,
+        )
+        ?.focus();
+    }
+    lastMarker = null;
+  }
+
+  map.addEventListener('marker-select', (e) => {
+    const { id, slug } = (e as CustomEvent<{ id: string; slug: string }>)
+      .detail;
+    lastMarker = id;
+    panel.querySelectorAll('[data-beach]').forEach((el) => {
+      (el as HTMLElement).hidden = el.getAttribute('data-beach') !== slug;
+    });
+    panel.hidden = false;
+    map.dispatchEvent(new CustomEvent('marker-set', { detail: { id } }));
+    // Foco na ficha visível (teclado e leitor de tela).
+    [
+      ...panel.querySelectorAll<HTMLElement>(
+        `[data-beach="${CSS.escape(slug)}"] [data-panel-close] button`,
+      ),
+    ]
+      .find((b) => b.offsetParent !== null)
+      ?.focus();
+  });
+
+  panel.addEventListener('click', (e) => {
+    if ((e.target as Element).closest('[data-panel-close]')) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !panel.hidden) close();
+  });
+</script>
 
 <style>
   .app {
@@ -34,18 +117,16 @@ import AppHeader from '../components/app-header.astro';
     flex: 1;
     min-height: 0;
   }
-  .map {
-    flex: 1;
-    min-width: 0;
-    background: var(--s-color-surface-strong);
-  }
-  /* Mobile: folha inferior (só o contêiner). */
+  /* Mobile: folha inferior sobre o mapa. */
   .panel {
     position: absolute;
     inset: auto 0 0;
     max-height: 100%;
     overflow-y: auto;
     background: var(--s-color-surface-default);
+  }
+  .layout-desktop {
+    display: none;
   }
   /* Desktop: painel lateral à direita, com a largura do BeachPanel. */
   @media (min-width: 1024px) {
@@ -54,6 +135,12 @@ import AppHeader from '../components/app-header.astro';
       flex-shrink: 0;
       width: var(--size-panel-width);
       max-height: none;
+    }
+    .layout-desktop {
+      display: block;
+    }
+    .layout-mobile {
+      display: none;
     }
   }
 </style>

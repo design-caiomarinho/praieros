@@ -6,7 +6,16 @@ const files = import.meta.glob<string>('../icons/*.svg', {
   eager: true,
 });
 
-export type IconName = 'search' | 'info' | 'share' | 'close' | 'external';
+export type IconName =
+  | 'search'
+  | 'info'
+  | 'share'
+  | 'close'
+  | 'external'
+  | 'plus'
+  | 'minus'
+  | 'spinner'
+  | 'warning';
 export type IconSize = 20 | 24;
 
 interface Props {
