@@ -115,4 +115,5 @@ Fase 2, sessão 4: `Button`, `ButtonIcon`, `InputText` e `Icon` (SVGs em `src/ic
 Fase 2, sessão 5: `AppHeader` e `BeachPanel` (genérico, por props; desktop e mobile) em `/dev/components`; ícones compartilhar, fechar e link externo.
 Fase 3, sessão 6: esqueleto da tela inicial (`base-layout`, `index.astro`: cabeçalho, mapa neutro, `<aside>` oculto; breakpoint 1024px; token `size.panel-width`). Sem mapa nem dados.
 Fase 3, sessão 7: catálogo `data/catalog/salvador.json` (proposta do OpenStreetMap, `verified: false` só em dev; `npm run catalog:propose|validate|todo`) e camada de dados `src/lib/site/` (`buildSiteModel`). Pendências em `docs/catalog-todo.md`: conferir posições e bairros e preencher os descartes.
+Fase 3, sessão 7b: propostas em 3 etapas (nome → Overpass → descrição) com `method`/`confidence` e critério "um candidato coerente" (nome compatível); 17 de 31 praias com proposta, 14 descartadas (motivos em `docs/catalog-todo.md`).
 Próxima: mapa (provedor de tiles pendente) ou ficha aberta no painel. Termos de uso do site seguem pendentes.

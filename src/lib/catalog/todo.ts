@@ -34,7 +34,13 @@ export function buildCatalogTodo(
       if (p.lat === null || p.lng === null) {
         items.push(`- [ ] Coordenadas de \`${p.code}\`${suffix}`);
       } else if (!p.verified) {
-        items.push(`- [ ] Conferir posição de \`${p.code}\`${suffix}`);
+        const how =
+          p.source?.method === 'description'
+            ? ' (baixa confiança: pela descrição do local)'
+            : p.source?.method === 'overpass'
+              ? ' (confiança média: lista do OSM)'
+              : '';
+        items.push(`- [ ] Conferir posição de \`${p.code}\`${how}${suffix}`);
       }
     }
     if (items.length === 0) continue;

@@ -1,6 +1,10 @@
 /** De onde veio um dado do catálogo (proposta automática do OpenStreetMap). */
 export interface OsmSource {
   provider: 'osm';
+  /** Como a posição foi obtida: nome da praia (Nominatim), lista do Overpass ou descrição do local. */
+  method: 'name' | 'overpass' | 'description';
+  /** Confiança da proposta: name = high, overpass = medium, description = low. */
+  confidence: 'high' | 'medium' | 'low';
   /** Consulta enviada ao Nominatim. */
   query: string;
   osmType: string;
@@ -34,7 +38,7 @@ export interface CatalogEntry {
 }
 
 export interface Catalog {
-  schemaVersion: 2;
+  schemaVersion: 3;
   region: 'salvador';
   beaches: CatalogEntry[];
 }

@@ -162,6 +162,17 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Resumo (D2):** conta os pontos que já constaram em algum boletim. Ponto do catálogo que nunca constou não entra na contagem (o boletim não o menciona). A rever se o resumo do desktop pedir outra coisa.
 - **Catálogo de praias e bairro:** a ordem dos pontos é por código. `neighborhood` das praias descartadas segue `null` até alguém preencher.
 
+## Fase 3 / sessão 7b: segunda rodada de propostas
+
+- **Esquema v3:** `source` ganha `method` (`name` | `overpass` | `description`) e `confidence` (`high` | `medium` | `low`). Tudo continua `verified: false`; nenhum script grava `verified: true`.
+- **Etapas, na ordem, parando na primeira que aceitar** (`resolveBeach`, em `src/lib/catalog/propose.ts`; a rede é injetada, então a decisão é testável): (1) Nominatim com variações do nome ("X", "Praia do/da/de X", nome sem "Praia"), sempre "…, Salvador, Bahia"; (2) lista única do Overpass; (3) descrição do local, só se 1 e 2 falharem, ponto a ponto.
+- **Regra mantida e reforçada: exatamente um candidato coerente.** "Coerente" agora também exige nome compatível: o nome do boletim precisa estar contido no nome do OSM como palavras inteiras seguidas, ignorando caixa, acento, artigos e "Praia" (o contrário não vale: "Praia da Barra" não é o "Farol da Barra"). Isso vale já na etapa 1: a rodada anterior aceitava qualquer praia única achada pela busca. Com a regra, Roma e Rio Vermelho (antes aceitas) foram descartadas porque o OSM devolveu praias de outro nome. Ficou de fora também "Farol de Itapuã" (o OSM devolvia "Praia de Pedra do Sal").
+- **Overpass inclui lagoas e marina:** a consulta lista `natural=beach`, `natural=water` (lagoas) e `leisure=marina` com nome na caixa de Salvador, **porque o boletim lista lagoas (Lagoa de Pituaçu, Lagoa de Abaeté) e uma marina (Marina Contorno)**, que não são praias no OSM. Consulta única, em cache. Bairro vem de um `reverse` do Nominatim no ponto aceito (`null` se não vier). Confiança média.
+- **Descrição do local (etapa 3):** usa o trecho antes da primeira vírgula, sem a abertura ("Em frente à…"). Só vale se citar um nome próprio (palavra com maiúscula depois da primeira) e se o nome do resultado contiver o trecho citado; senão descarta. Isso barrou "quadra de esportes" (genérica) e "Jazz na Avenida" (nome diferente), que a primeira versão aceitou por acaso. Confiança baixa, `verified: false`, marcada no todo como "baixa confiança". Nesta rodada nenhuma posição saiu por essa etapa.
+- **Reprocessamento:** o script só toca pontos sem posição e nunca entradas verificadas. Nesta rodada as propostas anteriores (todas não verificadas) foram zeradas e refeitas com o critério novo.
+- **Overpass ocupado:** o servidor público respondeu 502 em tentativas seguidas; o script repete até 2 vezes com pausa de 30 s, e o resultado fica em cache. Os 15–17 `proposalNote` do catálogo trazem o motivo de cada etapa.
+- **Atribuição OSM** segue como na sessão 7.
+
 ## Motion
 
 - **Decisão:** o movimento é definido pelo designer no Figma (variáveis de duração e curva + quadro de especificação). O Claude Code só implementa o que estiver escrito lá, sem inventar valores.

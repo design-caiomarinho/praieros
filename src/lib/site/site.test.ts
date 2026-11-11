@@ -32,7 +32,7 @@ interface LooseBeach {
 
 /** Monta o catálogo completo a partir de dados mínimos. Ponto com coordenadas completas é verificado, salvo indicação. */
 const catalog = (beaches: LooseBeach[]): Catalog => ({
-  schemaVersion: 2,
+  schemaVersion: 3,
   region: 'salvador',
   beaches: beaches.map((b) => ({
     name: b.name,

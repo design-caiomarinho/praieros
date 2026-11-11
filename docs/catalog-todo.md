@@ -21,25 +21,25 @@ Ponto sem coordenada fica fora do mapa.
 
 ## Penha
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: mais de uma candidata (2); descrição (SSA PE 100): não encontrada
 - [ ] Bairro
 - [ ] Coordenadas de `SSA PE 100`: Em frente à barraca do Valença.
 
 ## Bogari
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA BO 100): não encontrada
 - [ ] Bairro
 - [ ] Coordenadas de `SSA BO 100`: Em frente ao Colégio da PM (antigo Colégio João Florêncio Gomes).
 
 ## Bonfim
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA BO 200): sem nome próprio na descrição
 - [ ] Bairro
 - [ ] Coordenadas de `SSA BO 200`: Ao lado da quadra de esportes, em frente à rampa de acesso à praia.
 
 ## Pedra Furada
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA FU 100): não encontrada
 - [ ] Bairro
 - [ ] Coordenadas de `SSA FU 100`: Atrás do Hospital Sagrada Familia, em frente à ladeira que dá acesso à praia.
 
@@ -50,36 +50,36 @@ Ponto sem coordenada fica fora do mapa.
 
 ## Roma
 
-- [ ] Conferir bairro (proposta: Roma)
-- [ ] Conferir posição de `SSA RO 100`: Rua Prof. Roberto Correia, junto à descida de acesso à praia, fundo do Hospital São Jorge.
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / a praia achada tem outro nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA RO 100): não encontrada
+- [ ] Bairro
+- [ ] Coordenadas de `SSA RO 100`: Rua Prof. Roberto Correia, junto à descida de acesso à praia, fundo do Hospital São Jorge.
 
 ## Canta Galo
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA CG 100): não encontrada
 - [ ] Bairro
 - [ ] Coordenadas de `SSA CG 100`: Atrás das antigas instalações da FIB, Rua Agrário Menezes. Junto à rede coletora de esgotos do Bahia Azul.
 
 ## Marina Contorno
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA MC 100): nenhum resultado com o nome citado
 - [ ] Bairro
 - [ ] Coordenadas de `SSA MC 100`: Na Av. Contorno, entre a Marina e o Restaurante do Amado.
 
 ## Porto da Barra
 
-- [ ] Proposta descartada: não encontrada
-- [ ] Bairro
-- [ ] Coordenadas de `SSA PB 100`: Av. Sete de Setembro, em frente à Rua César Zama, junto à escada de acesso a praia.
+- [ ] Conferir bairro (proposta: Barra)
+- [ ] Conferir posição de `SSA PB 100`: Av. Sete de Setembro, em frente à Rua César Zama, junto à escada de acesso a praia.
 
 ## Santa Maria
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA SM 100): não encontrada
 - [ ] Bairro
 - [ ] Coordenadas de `SSA SM 100`: Em frente ao Mar Azul hotel, limítrofe ao Hospital Espanhol, em frente à escada de acesso à praia.
 
 ## Farol da Barra
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA FB 100, SSA FB 200): sem nome próprio na descrição / não encontrada
 - [ ] Bairro
 - [ ] Coordenadas de `SSA FB 100`: Em frente às escadas de acesso à praia, na Rua Dias d'Ávila.
 - [ ] Coordenadas de `SSA FB 200`: Próximo ao Barra Vento e escada de acesso à praia, em frente à Av. Oceânica.
@@ -92,9 +92,10 @@ Ponto sem coordenada fica fora do mapa.
 
 ## Rio Vermelho
 
-- [ ] Conferir bairro (proposta: Rio Vemelho)
-- [ ] Conferir posição de `SSA RV 100`: Em frente à Rua Bartolomeu de Gusmão. próximo à escada de acesso à praia, ao lado da Rua Morro da Paciência.
-- [ ] Conferir posição de `SSA RV 200`: Próximo à escada de acesso à praia, em frente à igreja Nossa Senhora de Santana.
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / a praia achada tem outro nome; overpass: nenhuma correspondência de nome; descrição (SSA RV 100, SSA RV 200): não encontrada / sem nome próprio na descrição
+- [ ] Bairro
+- [ ] Coordenadas de `SSA RV 100`: Em frente à Rua Bartolomeu de Gusmão. próximo à escada de acesso à praia, ao lado da Rua Morro da Paciência.
+- [ ] Coordenadas de `SSA RV 200`: Próximo à escada de acesso à praia, em frente à igreja Nossa Senhora de Santana.
 
 ## Buracão
 
@@ -120,9 +121,8 @@ Ponto sem coordenada fica fora do mapa.
 
 ## Boca do Rio
 
-- [ ] Proposta descartada: o OSM não traz uma praia com esse nome
-- [ ] Bairro
-- [ ] Coordenadas de `SSA BR 100`: Em frente ao posto Salva Vidas.
+- [ ] Conferir bairro (proposta: Boca do Rio)
+- [ ] Conferir posição de `SSA BR 100`: Em frente ao posto Salva Vidas.
 
 ## Corsário
 
@@ -136,7 +136,7 @@ Ponto sem coordenada fica fora do mapa.
 
 ## Lagoa de Pituaçu
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA LP 100): sem nome próprio na descrição
 - [ ] Bairro
 - [ ] Coordenadas de `SSA LP 100`: Em frente à entrada do estacionamento do parque.
 
@@ -147,7 +147,7 @@ Ponto sem coordenada fica fora do mapa.
 
 ## Placafor
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA PF 100): não encontrada
 - [ ] Bairro
 - [ ] Coordenadas de `SSA PF 100`: Em frente ao posto Salva Vidas.
 
@@ -159,19 +159,18 @@ Ponto sem coordenada fica fora do mapa.
 
 ## Lagoa de Abaete
 
-- [ ] Proposta descartada: não encontrada
-- [ ] Bairro
-- [ ] Coordenadas de `SSA LA 100`: Em frente à placa de fundação do parque.
+- [ ] Conferir bairro (proposta: Itapuã)
+- [ ] Conferir posição de `SSA LA 100` (confiança média: lista do OSM): Em frente à placa de fundação do parque.
 
 ## Farol de Itapuã
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / a praia achada tem outro nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA FI 100): não encontrada
 - [ ] Bairro
 - [ ] Coordenadas de `SSA FI 100`: Em frente à Rua da Música (Rua K).
 
 ## Stella Mares
 
-- [ ] Proposta descartada: não encontrada
+- [ ] Proposta descartada: nome: não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA ST 100): não encontrada
 - [ ] Bairro
 - [ ] Coordenadas de `SSA ST 100`: Em frente ao Hotel Grande Stella Maris.
 
