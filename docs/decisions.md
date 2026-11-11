@@ -147,6 +147,7 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Largura do painel:** o `beach-panel.astro` não definia largura (só 100%; os 428px estavam nos quadros da vitrine). Por decisão de Caio, 428px (a do cartão do Figma) viraram o token `size.panel-width` em `tokens/extra.json` (`--size-panel-width`). É a fonte única: `beach-panel` (desktop), `index.astro` e a vitrine usam a variável. A remover de `extra.json` se o Figma definir a largura do painel.
 - **Breakpoint:** 1024px (decisão de Caio): acima, painel lateral à direita; abaixo, folha inferior. Com o painel de 428px, 768px deixaria pouco espaço para o mapa. Fica como literal na media query (CSS não aceita variável ali).
 - **Painel oculto:** `<aside hidden>` sem conteúdo (some também para leitores de tela). Abrir, fechar e foco ficam para a sessão da ficha. Mobile: contêiner absoluto na base, largura total, `max-height` 100% do palco com rolagem; sem alça, raio, animação ou gesto (motion só depois da Fase 3).
+- **Cabeçalho no mobile:** abaixo de 1024px o inset esquerdo do `AppHeader` é `inset/md` (16px), em vez de `inset/lg` (24px) do desktop (decisão de Caio).
 - **Textos (título e descrição da página):** registrados em `docs/copy.md`.
 
 ## Motion

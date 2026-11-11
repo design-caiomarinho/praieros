@@ -45,6 +45,12 @@ const { homeHref = '/', infoHref = '/fonte' } = Astro.props;
     border-bottom: var(--border-width-default) solid
       var(--s-color-border-default);
   }
+  /* Mobile (abaixo do breakpoint de 1024px da página): inset md (16px). */
+  @media (max-width: 1023px) {
+    .header {
+      padding-left: var(--space-inset-md);
+    }
+  }
   .logo {
     display: inline-flex;
     align-items: center;
