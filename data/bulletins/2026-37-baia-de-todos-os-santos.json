@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "region": "baia-de-todos-os-santos",
+  "number": 37,
+  "year": 2026,
+  "issuedAt": "2026-11-06",
+  "costa": "Baía de Todos os Santos",
+  "observations": [
+    "Evitar contato com a água do mar em locais com manchas de coloração suspeita.",
+    "Evite banho de praia em tempo chuvoso, as águas podem estar contaminadas, por arraste de diversos detritos carreados das ruas através das",
+    "galerias pluviais, podendo causar doenças.",
+    "É desaconselhável ainda o banho próximo à saída de esgotos, desembocadura dos rios urbanos, córregos e canais de drenagem."
+  ],
+  "points": [
+    {
+      "code": "BTS MD 100",
+      "beach": "Madre de Deus",
+      "location": "Em frente à Igreja.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS MD 200",
+      "beach": "Madre de Deus",
+      "location": "Em frente à Câmara Municipal de Madre de Deus.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS MD 300",
+      "beach": "Madre de Deus",
+      "location": "Sob a ponte em Madre de Deus.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS JP 100",
+      "beach": "Bom Jesus dos Pobres",
+      "location": "Em frente à barraca de praia Joia Rara.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS CB 100",
+      "beach": "Cabuçu",
+      "location": "Em frente às barracas da Rua do Porto.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS IM 100",
+      "beach": "Itapema",
+      "location": "Em frente à Vivenda das Rosas.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS NS 100",
+      "beach": "Nossa Senhora",
+      "location": "Entre as escadarias, em frente ao convento.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS PE 100",
+      "beach": "Pedras Altas",
+      "location": "Em frente às barracas de praia.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS SL 100",
+      "beach": "Salinas",
+      "location": "Proximo ao píer, em frente ao Hotel de Salinas.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS CS 100",
+      "beach": "Conceição de Salinas",
+      "location": "Em frente à rampa de acesso à praia.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS CA 100",
+      "beach": "Cairu de Salinas",
+      "location": "Em frente às casas de nativos.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS EC 100",
+      "beach": "Encarnação",
+      "location": "Em frente à Colônia de Pescadores.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS MT 100",
+      "beach": "Mutá",
+      "location": "Em frente à Ponte de Mutá, no lado esquerdo.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS CC 100",
+      "beach": "Cações",
+      "location": "Proximo à Escola Ruy Barbosa e à Igreja Nossa Senhora Coração de Jesus.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS CP 100",
+      "beach": "Cacha Prego",
+      "location": "Em frente à Praça de Caixa Prego.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS BQ 100",
+      "beach": "Berlinque",
+      "location": "Em frente à Igreja Nossa Senhora da Conceição.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS AR 100",
+      "beach": "Aratuba",
+      "location": "Em frente à Barraca Maré Cheia, acesso pela rua principal do povoado.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS BT 100",
+      "beach": "Barra de Tairú",
+      "location": "Em frente ao Bar e Restaurante Rio do Mar.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS BG 100",
+      "beach": "Barra Grande BTS",
+      "location": "Ao lado do Cais de Barra Grande.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS CÇ 100",
+      "beach": "Conceição",
+      "location": "Em frente à Igreja Nossa Senhora da Conceição.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS BP 100",
+      "beach": "Barra do Pote",
+      "location": "Em frente à Barraca Veleiro",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS CR 100",
+      "beach": "Coroa",
+      "location": "Em frente à Capela Nossa Senhora de Vera Cruz.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS BL 100",
+      "beach": "Barra do Gil",
+      "location": "Em frente às barracas de praia.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS PH 100",
+      "beach": "Penha BTS",
+      "location": "Em frente ao Restaurante Farol da Penha.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS MG 100",
+      "beach": "Mar Grande",
+      "location": "Em frente à Praça principal, ao lado do Banco do Brasil.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS IP 100",
+      "beach": "Itaparica",
+      "location": "Em frente ao Forte de São Lourenço.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS PA 100",
+      "beach": "Ponta de Areia",
+      "location": "Em frente ao Restaurante/Barraca Port. Munícipio de Itaparica.",
+      "category": "Própria"
+    },
+    {
+      "code": "BTS AM 100",
+      "beach": "Amoreiras",
+      "location": "Em frente à Pousada de Amoreiras, próximo ao píer.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "BTS GM 100",
+      "beach": "Gameleira",
+      "location": "Em frente à Cruz da Gameleira.",
+      "category": "Imprópria"
+    }
+  ],
+  "sourceUrl": "https://www.ba.gov.br/inema/sites/site-inema/files/2026-11/Balneabilidade_BTS_06_NOV.pdf"
+}

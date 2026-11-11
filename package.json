@@ -17,11 +17,13 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "fixtures:save": "node scripts/save-fixtures.ts"
+    "fixtures:save": "node scripts/save-fixtures.ts",
+    "bulletins:build": "node scripts/build-bulletins.ts"
   },
   "dependencies": {
     "astro": "^7.4.11",
-    "cheerio": "^1.2.0"
+    "cheerio": "^1.2.0",
+    "unpdf": "^2.1.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",

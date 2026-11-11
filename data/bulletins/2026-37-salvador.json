@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "region": "salvador",
+  "number": 37,
+  "year": 2026,
+  "issuedAt": "2026-11-06",
+  "costa": "Litoral de Salvador",
+  "observations": [
+    "A Praia de São Tomé de Paripe – área sob investigação ambiental devido à ocorrência de alteração nas características da água. Recomenda-se",
+    "evitar o acesso e o contato com a água no local até a conclusão das avaliações",
+    "Evitar contato com a água do mar em locais com manchas de coloração suspeita.",
+    "Evite banho de praia em tempo chuvoso, as águas podem estar contaminadas, por arraste de diversos detritos carreados das ruas através das",
+    "galerias pluviais, podendo causar doenças.",
+    "É desaconselhável ainda o banho próximo à saída de esgotos, desembocadura dos rios urbanos, córregos e canais de drenagem."
+  ],
+  "points": [
+    {
+      "code": "SSA IN 100",
+      "beach": "São Tomé de Paripe",
+      "location": "Em frente à casa Vila Maria, ao lado da rampa de acesso à praia.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA PR 200",
+      "beach": "Tubarão",
+      "location": "Em frente ao conjunto habitacional abandonado, próximo à antiga fabrica de cimento.",
+      "category": "Própria"
+    },
+    {
+      "code": "SSA PR 100",
+      "beach": "Periperi",
+      "location": "Na saída de acesso à praia, após travessia da via férrea.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA PE 100",
+      "beach": "Penha",
+      "location": "Em frente à barraca do Valença.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA BO 100",
+      "beach": "Bogari",
+      "location": "Em frente ao Colégio da PM (antigo Colégio João Florêncio Gomes).",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA BO 200",
+      "beach": "Bonfim",
+      "location": "Ao lado da quadra de esportes, em frente à rampa de acesso à praia.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA FU 100",
+      "beach": "Pedra Furada",
+      "location": "Atrás do Hospital Sagrada Familia, em frente à ladeira que dá acesso à praia.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA BV 100",
+      "beach": "Boa Viagem",
+      "location": "Ao lado do forte Monte Serrat, em frente ao muro lateral da Fundação Luís Eduardo Magalhães, junto à rampa de acesso à praia.",
+      "category": "Própria"
+    },
+    {
+      "code": "SSA RO 100",
+      "beach": "Roma",
+      "location": "Rua Prof. Roberto Correia, junto à descida de acesso à praia, fundo do Hospital São Jorge.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA CG 100",
+      "beach": "Canta Galo",
+      "location": "Atrás das antigas instalações da FIB, Rua Agrário Menezes. Junto à rede coletora de esgotos do Bahia Azul.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA MC 100",
+      "beach": "Marina Contorno",
+      "location": "Na Av. Contorno, entre a Marina e o Restaurante do Amado.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA PB 100",
+      "beach": "Porto da Barra",
+      "location": "Av. Sete de Setembro, em frente à Rua César Zama, junto à escada de acesso a praia.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA SM 100",
+      "beach": "Santa Maria",
+      "location": "Em frente ao Mar Azul hotel, limítrofe ao Hospital Espanhol, em frente à escada de acesso à praia.",
+      "category": "Própria"
+    },
+    {
+      "code": "SSA FB 100",
+      "beach": "Farol da Barra",
+      "location": "Em frente às escadas de acesso à praia, na Rua Dias d'Ávila.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA FB 200",
+      "beach": "Farol da Barra",
+      "location": "Próximo ao Barra Vento e escada de acesso à praia, em frente à Av. Oceânica.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA ON 100",
+      "beach": "Ondina",
+      "location": "Próximo à escada de acesso à praia, em frente à Rua Milton Santos, ao posto BR e o Hotel Bahia Sol.",
+      "category": "Própria"
+    },
+    {
+      "code": "SSA ON 200",
+      "beach": "Ondina",
+      "location": "Próximo ao Morro da Sereia, em frente ao Ed. Maria José.",
+      "category": "Própria"
+    },
+    {
+      "code": "SSA RV 100",
+      "beach": "Rio Vermelho",
+      "location": "Em frente à Rua Bartolomeu de Gusmão. próximo à escada de acesso à praia, ao lado da Rua Morro da Paciência.",
+      "category": "Própria"
+    },
+    {
+      "code": "SSA RV 200",
+      "beach": "Rio Vermelho",
+      "location": "Próximo à escada de acesso à praia, em frente à igreja Nossa Senhora de Santana.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA RV 300",
+      "beach": "Buracão",
+      "location": "Em frente às escadarias de acesso à praia.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA AM 100",
+      "beach": "Amaralina",
+      "location": "No fundo da Escola Cupertino de Lacerda, em frente ao painel do artista plástico Bel Borba.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA AM 200",
+      "beach": "Amaralina",
+      "location": "Em frente à rua do Balneário, ao Edifício Atlântico e à Praça do Budião.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA PI 100",
+      "beach": "Pituba",
+      "location": "Em frente à escada de acesso à praia, em frente à Portinox e a Rua Paraíba.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA PI 200",
+      "beach": "Pituba",
+      "location": "Próximo à rampa de acesso à praia, em frente ao Ed. Atlântico Empresarial e à Rua Paraná. Atrás da praça (antigo clube Português).",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA AR 200",
+      "beach": "Armação",
+      "location": "Em frente ao Hotel Alah Mar e a Rua João Mendes da Costa.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA BR 100",
+      "beach": "Boca do Rio",
+      "location": "Em frente ao posto Salva Vidas.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA CO 100",
+      "beach": "Corsário",
+      "location": "Em frente ao posto Salva Vidas.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA CO 200",
+      "beach": "Patamares",
+      "location": "Em frente ao posto Salva Vidas Patamares. Próximo ao Coliseu do Forró e Caranguejo de Sergipe.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA LP 100",
+      "beach": "Lagoa de Pituaçu",
+      "location": "Em frente à entrada do estacionamento do parque.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA PA 100",
+      "beach": "Piatã",
+      "location": "Em frente ao posto Salva Vidas, próximo ao Clube Costa Verde.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA PF 100",
+      "beach": "Placafor",
+      "location": "Em frente ao posto Salva Vidas.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA IT 100",
+      "beach": "Itapuã",
+      "location": "Próximo à escada de acesso à praia, em frente à Rua Sargento Waldir Xavier.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA IT 200",
+      "beach": "Itapuã",
+      "location": "Em frente à Sereia de Itapuã.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA LA 100",
+      "beach": "Lagoa de Abaete",
+      "location": "Em frente à placa de fundação do parque.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA FI 100",
+      "beach": "Farol de Itapuã",
+      "location": "Em frente à Rua da Música (Rua K).",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA ST 100",
+      "beach": "Stella Mares",
+      "location": "Em frente ao Hotel Grande Stella Maris.",
+      "category": "Própria"
+    },
+    {
+      "code": "SSA FL 100",
+      "beach": "Flamengo",
+      "location": "Em frente à barraca Doce Vida.",
+      "category": "Imprópria"
+    },
+    {
+      "code": "SSA FL 200",
+      "beach": "Flamengo",
+      "location": "Em frente à barraca da Pipa, próximo ao Módulo Policial.",
+      "category": "Própria"
+    }
+  ],
+  "sourceUrl": "https://www.ba.gov.br/inema/sites/site-inema/files/2026-11/Balneabilidade_Salvador_06_NOV.pdf"
+}

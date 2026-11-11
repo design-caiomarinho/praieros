@@ -13,7 +13,7 @@ Idioma do produto: pt-BR. Código, commits e nomes técnicos: inglês.
 ## Fonte de dados
 
 - Página oficial: https://www.ba.gov.br/inema/iniciativas/qualidade-das-praias (atualizada semanalmente; **mostra só o boletim mais recente, sem arquivo de edições anteriores**).
-- Um PDF por região. **Escopo:** "SALVADOR" e "BAÍA DE TODOS-OS-SANTOS" (ambos contêm praias de Salvador).
+- Um PDF por região. **Escopo de exibição:** só o litoral de Salvador (PDF "SALVADOR"). O PDF "BAÍA DE TODOS-OS-SANTOS" é lido e arquivado por inteiro, mas não é exibido (no boletim 37/2026 nenhum ponto dele é de Salvador; ver `docs/decisions.md`).
 - **Os nomes dos arquivos não seguem padrão.** Nunca montar a URL: abrir a página e localizar o link pelo **rótulo** da região.
 - O PDF tem texto extraível (não é imagem). Cada ponto traz código (ex.: `SSA IN 100`), local da coleta e categoria (Própria | Imprópria). As colunas são inferidas pela ordem do texto: **validar a leitura** (campos obrigatórios, nº de pontos, categoria reconhecida) antes de gravar. Confirmar na Fase 1 que o código do ponto é um identificador estável entre boletins.
 - **Histórico é nosso:** cada boletim lido válido é salvo em `data/bulletins/` (JSON versionado no Git). R3 depende de comparar com o anterior. Se a leitura falhar, não sobrescrever (D4).
@@ -98,4 +98,5 @@ Tokens de design: `tokens/tokens.json` (fonte única). Não usar valores soltos 
 
 Fase 0 concluída (setup). Fase 1, sessão 1 concluída: `src/lib/inema/fetch-bulletins.ts` acha os links por rótulo e baixa os PDFs sem lançar exceção; fixtures salvas em `fixtures/` (boletim de 06/11/2026).
 Fixtures regeneráveis com `npm run fixtures:save` (acessa o site; uso raro).
-Próxima: Fase 1, sessão 2 (leitura do texto do PDF e validação). Termos de uso do site seguem pendentes.
+Fase 1, sessão 2 concluída: leitura e validação dos PDFs (`ingest-bulletin.ts`), JSON gravado em `data/bulletins/` (`npm run bulletins:build`, só lê `fixtures/`). Código do ponto: único, estabilidade entre semanas ainda não confirmada.
+Próxima: sessão 3 (comparar com o boletim anterior, aviso de mudança de código) ou tokens. Termos de uso do site seguem pendentes.
