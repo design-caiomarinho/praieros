@@ -61,6 +61,8 @@ const panels = site.beaches
   const map = document.getElementById('beach-map')!;
   const panel = document.getElementById('panel')!;
   let lastSlug: string | null = null;
+  // Marcador clicado por último: continua marcado no mapa depois de fechar a ficha.
+  let marked = false;
 
   function setActivePoint(slug: string | null, pointId: string | null) {
     panel.querySelectorAll<HTMLElement>('[data-point-id]').forEach((card) => {
@@ -80,21 +82,28 @@ const panels = site.beaches
     panel.querySelectorAll('[data-beach]').forEach((el) => {
       (el as HTMLElement).hidden = true;
     });
+    // Fechar a ficha mantém o marcador clicado marcado no mapa (o usuário não perde a
+    // referência). Devolve o foco a ele.
+    if (lastSlug) {
+      const visible = [
+        ...document.querySelectorAll<HTMLElement>(
+          `[data-beach-marker="${CSS.escape(lastSlug)}"]`,
+        ),
+      ].filter((m) => m.offsetParent !== null);
+      (
+        visible.find((m) => m.dataset.state?.endsWith(':true')) ?? visible[0]
+      )?.focus();
+    }
+  }
+
+  /** Tira a marca do mapa (a ficha já está fechada). */
+  function clearMark() {
+    marked = false;
+    lastSlug = null;
     setActivePoint(null, null);
     map.dispatchEvent(
       new CustomEvent('marker-set', { detail: { slug: null, pointId: null } }),
     );
-    // Devolve o foco ao marcador da praia (o grupo pode ter fechado ou virado pins).
-    if (lastSlug) {
-      [
-        ...document.querySelectorAll<HTMLElement>(
-          `[data-beach-marker="${CSS.escape(lastSlug)}"]`,
-        ),
-      ]
-        .find((m) => m.offsetParent !== null)
-        ?.focus();
-    }
-    lastSlug = null;
   }
 
   map.addEventListener('marker-select', (e) => {
@@ -103,6 +112,7 @@ const panels = site.beaches
     ).detail;
     const sameBeach = !panel.hidden && lastSlug === slug;
     lastSlug = slug;
+    marked = true;
     panel.querySelectorAll('[data-beach]').forEach((el) => {
       (el as HTMLElement).hidden = el.getAttribute('data-beach') !== slug;
     });
@@ -122,7 +132,9 @@ const panels = site.beaches
       ?.focus();
   });
   map.addEventListener('map-clear', () => {
+    // Clique no mapa vazio: primeiro fecha a ficha; com ela fechada, tira a marca.
     if (!panel.hidden) close();
+    else if (marked) clearMark();
   });
 
   // Os cartões dos pontos são só visualização: quem escolhe o ponto é o pin no mapa.
@@ -130,7 +142,9 @@ const panels = site.beaches
     if ((e.target as Element).closest('[data-panel-close]')) close();
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !panel.hidden) close();
+    if (e.key !== 'Escape') return;
+    if (!panel.hidden) close();
+    else if (marked) clearMark();
   });
 </script>
 
