@@ -1,0 +1,72 @@
+---
+import '../styles/tokens.css';
+import StatusChip from '../components/StatusChip.astro';
+
+const statuses = [
+  'propria',
+  'impropria',
+  'desatualizado',
+  'sem-resultado',
+] as const;
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <title>Componentes (dev)</title>
+  </head>
+  <body>
+    <main>
+      <h1>Componentes</h1>
+      <section>
+        <h2>StatusChip</h2>
+        <ul>
+          {statuses.map((status) => (
+            <li>
+              <StatusChip status={status} />
+              <code>{status}</code>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-body-medium-family);
+    font-size: var(--s-typo-body-medium-size);
+  }
+  main {
+    padding: var(--space-inset-lg);
+  }
+  h1 {
+    font-size: var(--s-typo-heading-large-size);
+    font-weight: var(--s-typo-heading-large-weight);
+  }
+  h2 {
+    font-size: var(--s-typo-heading-medium-size);
+    font-weight: var(--s-typo-heading-medium-weight);
+  }
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-md);
+  }
+  code {
+    color: var(--s-color-content-muted);
+  }
+</style>

@@ -6,3 +6,4 @@ data/bulletins/
 fixtures/
 CLAUDE.md
 src/styles/tokens.css
+.claude/launch.json

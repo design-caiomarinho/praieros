@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { tokensToCss } from './to-css.ts';
+import { mergeTrees, tokensToCss } from './to-css.ts';
 
 describe('tokensToCss', () => {
   it('resolve aliases como var() e dá unidade aos literais', () => {
@@ -42,5 +42,18 @@ describe('tokensToCss', () => {
     expect(css).toContain(
       '--s-color-surface-negative-default: var(--primitives-color-red-400);',
     );
+  });
+
+  it('junta extra.json ao tokens.json e dá px a dimension', () => {
+    const merged = mergeTrees(
+      { a: { b: { $type: 'color', $value: '#fff' } } },
+      { radius: { full: { $type: 'dimension', $value: 999 } } },
+    );
+    expect(tokensToCss(merged)).toContain('--radius-full: 999px;');
+  });
+
+  it('falha quando extra.json repete um token', () => {
+    const tok = { $type: 'color', $value: '#fff' };
+    expect(() => mergeTrees({ a: tok }, { a: tok })).toThrow('Token duplicado');
   });
 });

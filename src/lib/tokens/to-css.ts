@@ -16,6 +16,23 @@ function isToken(node: TokenNode | TokenTree): node is TokenNode {
   return '$value' in node;
 }
 
+export function mergeTrees(
+  base: TokenTree,
+  extra: TokenTree,
+  path: string[] = [],
+): TokenTree {
+  const out: TokenTree = { ...base };
+  for (const [key, node] of Object.entries(extra)) {
+    const here = [...path, key].join('.');
+    const existing = out[key];
+    if (existing === undefined) out[key] = node;
+    else if (isToken(existing) || isToken(node))
+      throw new Error(`Token duplicado em extra.json: ${here}`);
+    else out[key] = mergeTrees(existing, node, [...path, key]);
+  }
+  return out;
+}
+
 export function flatten(tree: TokenTree, path: string[] = []): FlatToken[] {
   const out: FlatToken[] = [];
   for (const [key, node] of Object.entries(tree)) {
@@ -34,6 +51,7 @@ function literal(token: FlatToken): string {
   const [group, kind, sub] = token.path;
   const { value } = token;
   if (token.type === 'color') return String(value);
+  if (token.type === 'dimension') return `${value}px`;
   if (group === 'primitives' && kind === 'spacing') return `${value}px`;
   if (group === 'primitives' && kind === 'font') {
     if (sub === 'size') return `${value}px`;

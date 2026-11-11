@@ -1,0 +1,58 @@
+---
+type Status = 'propria' | 'impropria' | 'desatualizado' | 'sem-resultado';
+
+interface Props {
+  status: Status;
+}
+
+// Cor + texto (princípio 3). Sem símbolo, como no Figma (nó 37:626).
+const config = {
+  propria: { label: 'Própria' },
+  impropria: { label: 'Imprópria' },
+  desatualizado: { label: 'Desatualizado' },
+  'sem-resultado': { label: 'Sem resultado' },
+} as const;
+
+const { status } = Astro.props;
+const { label } = config[status];
+---
+
+<span class={`chip chip--${status}`}>{label}</span>
+
+<style>
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    height: var(--primitives-spacing-24);
+    padding: var(--space-inset-2xs) var(--space-inset-xs);
+    border: var(--border-width-default) solid;
+    border-radius: var(--radius-full);
+    font-family: var(--s-typo-label-medium-family);
+    font-weight: var(--s-typo-label-medium-weight);
+    font-size: var(--s-typo-label-medium-size);
+    line-height: var(--s-typo-label-medium-line);
+    letter-spacing: var(--s-typo-label-medium-spacing);
+    white-space: nowrap;
+  }
+  .chip--propria {
+    background: var(--s-color-surface-positive-soft);
+    border-color: var(--s-color-border-positive);
+    color: var(--s-color-content-positive);
+  }
+  .chip--impropria {
+    background: var(--s-color-surface-negative-soft);
+    border-color: var(--s-color-border-negative);
+    color: var(--s-color-content-negative);
+  }
+  .chip--desatualizado {
+    background: var(--s-color-surface-warning-soft);
+    border-color: var(--s-color-border-warning);
+    color: var(--s-color-content-warning);
+  }
+  .chip--sem-resultado {
+    background: var(--s-color-surface-unknown-soft);
+    border-color: var(--s-color-border-strong);
+    border-style: dashed;
+    color: var(--s-color-content-secondary);
+  }
+</style>

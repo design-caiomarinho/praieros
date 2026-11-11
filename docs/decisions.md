@@ -84,3 +84,11 @@ Workflow `.github/workflows/ingest-bulletins.yml` (diário, `0 9 * * *` UTC = 06
 - **Fonte Switzer:** o token só nomeia a família. Falta definir como carregar (arquivo local ou Fontshare) e a licença. Até lá vale o fallback.
 - **Ausentes no Figma:** raio de borda, espessura de borda, sombras como valor (só há cores `shadow`), breakpoints, z-index, modo escuro. Se as telas precisarem, adicionar ao Figma e reexportar.
 - `primitives.font.size.28/32/56` e `spacing.20` existem mas nenhum token semântico os usa ainda.
+
+## Fase 2 / sessão 2: StatusChip
+
+- **Valores assumidos (a remover quando existirem no Figma).** `radius.full = 999px` e `border-width.default = 1px` ficam em `tokens/extra.json`, que `npm run tokens:build` junta ao `tokens.json` (erro se uma chave se repetir). Arquivo separado para um novo export do Figma não apagá-los. O Figma usa esses valores soltos no chip (`37:626`); não são variáveis lá.
+- **StatusChip sem símbolo, por decisão do design.** Segue o nó `37:626`: cor + texto (o princípio 3 do `CLAUDE.md` foi ajustado: elementos sem texto, como os marcadores do mapa, usam também símbolo). Os ícones (check, minus, "!", "?") ficam para os marcadores do mapa; não há `Icon.astro` nem SVGs no repositório por enquanto.
+- **Estilo do chip.** Altura 24px, padding `inset/2xs` x `inset/xs`, pílula, borda 1px; "Sem resultado" tracejado, fundo `unknown/soft`, borda `border/strong`, texto `content/secondary` (como no Figma). Tipografia `label/medium`.
+- **Página de componentes só em dev.** `src/dev/components.astro` é registrada por uma integração em `astro.config.mjs` (`injectRoute` só quando o comando é `dev`): fica em `/dev/components` no `npm run dev` e não entra no `npm run build` (verificado: `dist/` não tem `dev/`). Fica fora de `src/pages` de propósito, e por isso difere do caminho citado no pedido original.
+- **Fonte Switzer** ainda não é carregada (pendência da sessão anterior); a página usa o fallback.

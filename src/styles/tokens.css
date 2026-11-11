@@ -236,4 +236,8 @@
   --space-inline-xl: var(--primitives-spacing-24);
   --space-inline-2xl: var(--primitives-spacing-32);
   --space-inline-3xl: var(--primitives-spacing-40);
+
+  --radius-full: 999px;
+
+  --border-width-default: 1px;
 }
