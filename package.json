@@ -20,6 +20,9 @@
     "fixtures:save": "node scripts/save-fixtures.ts",
     "bulletins:build": "node scripts/build-bulletins.ts",
     "bulletins:ingest": "node scripts/ingest-bulletins.ts",
+    "catalog:validate": "node scripts/catalog.ts validate",
+    "catalog:todo": "node scripts/catalog.ts todo",
+    "catalog:propose": "node --env-file-if-exists=.env scripts/propose-catalog.ts",
     "tokens:build": "node scripts/build-tokens.ts"
   },
   "dependencies": {

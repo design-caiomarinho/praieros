@@ -21,3 +21,6 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 .idea/
+
+# cache bruto das consultas ao OpenStreetMap
+data/catalog/.cache/

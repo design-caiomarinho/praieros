@@ -1,0 +1,817 @@
+{
+  "schemaVersion": 2,
+  "region": "salvador",
+  "beaches": [
+    {
+      "name": "São Tomé de Paripe",
+      "neighborhood": "São Tomé de Paripe",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de São Tomé de Paripe, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 1157704956,
+        "displayName": "Praia de São Tome de Paripe, São Tomé de Paripe, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA IN 100",
+          "lat": -12.8190938,
+          "lng": -38.4863297,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de São Tomé de Paripe, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 1157704956,
+            "displayName": "Praia de São Tome de Paripe, São Tomé de Paripe, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Tubarão",
+      "neighborhood": "Vila São Tomé de Paripe",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Tubarão, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 110457980,
+        "displayName": "Praia de Tubarão, Vila São Tomé de Paripe, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA PR 200",
+          "lat": -12.8346042,
+          "lng": -38.4780383,
+          "source": {
+            "provider": "osm",
+            "query": "Tubarão, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 110457980,
+            "displayName": "Praia de Tubarão, Vila São Tomé de Paripe, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Periperi",
+      "neighborhood": "Praia Grande",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de Periperi, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 556031674,
+        "displayName": "Praia de Periperi, Praia Grande, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA PR 100",
+          "lat": -12.8723066,
+          "lng": -38.4783578,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Periperi, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 556031674,
+            "displayName": "Praia de Periperi, Praia Grande, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Penha",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA PE 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Bogari",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA BO 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Bonfim",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA BO 200",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Pedra Furada",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA FU 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Boa Viagem",
+      "neighborhood": "Boa Viagem",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de Boa Viagem, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 257336398,
+        "displayName": "Praia de Boa Viagem, Boa Viagem, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA BV 100",
+          "lat": -12.9322085,
+          "lng": -38.5138384,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Boa Viagem, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 257336398,
+            "displayName": "Praia de Boa Viagem, Boa Viagem, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Roma",
+      "neighborhood": "Roma",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de Roma, Salvador, Bahia",
+        "osmType": "relation",
+        "osmId": 8457817,
+        "displayName": "Praia do Paredão, Largo de Roma, Roma, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA RO 100",
+          "lat": -12.9370897,
+          "lng": -38.5079208,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Roma, Salvador, Bahia",
+            "osmType": "relation",
+            "osmId": 8457817,
+            "displayName": "Praia do Paredão, Largo de Roma, Roma, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Canta Galo",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA CG 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Marina Contorno",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA MC 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Porto da Barra",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA PB 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Santa Maria",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA SM 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Farol da Barra",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA FB 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        },
+        {
+          "code": "SSA FB 200",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Ondina",
+      "neighborhood": "Ondina",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de Ondina, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 402060335,
+        "displayName": "Praia de Ondina, Ondina, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA ON 100",
+          "lat": -13.0112384,
+          "lng": -38.5115147,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Ondina, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 402060335,
+            "displayName": "Praia de Ondina, Ondina, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        },
+        {
+          "code": "SSA ON 200",
+          "lat": -13.0112384,
+          "lng": -38.5115147,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Ondina, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 402060335,
+            "displayName": "Praia de Ondina, Ondina, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Rio Vermelho",
+      "neighborhood": "Rio Vemelho",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de Rio Vermelho, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 243832489,
+        "displayName": "Praia de Santana, Rio Vemelho, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA RV 100",
+          "lat": -13.0119164,
+          "lng": -38.4921111,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Rio Vermelho, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 243832489,
+            "displayName": "Praia de Santana, Rio Vemelho, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        },
+        {
+          "code": "SSA RV 200",
+          "lat": -13.0119164,
+          "lng": -38.4921111,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Rio Vermelho, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 243832489,
+            "displayName": "Praia de Santana, Rio Vemelho, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Buracão",
+      "neighborhood": "Rio Vemelho",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Buracão, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 138964086,
+        "displayName": "Praia do Buracão, Rio Vemelho, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA RV 300",
+          "lat": -13.015012,
+          "lng": -38.4833065,
+          "source": {
+            "provider": "osm",
+            "query": "Buracão, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 138964086,
+            "displayName": "Praia do Buracão, Rio Vemelho, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Amaralina",
+      "neighborhood": "Amaralina",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de Amaralina, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 474606741,
+        "displayName": "Praia de Amaralina, Amaralina, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA AM 100",
+          "lat": -13.0146453,
+          "lng": -38.4776485,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Amaralina, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 474606741,
+            "displayName": "Praia de Amaralina, Amaralina, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        },
+        {
+          "code": "SSA AM 200",
+          "lat": -13.0146453,
+          "lng": -38.4776485,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Amaralina, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 474606741,
+            "displayName": "Praia de Amaralina, Amaralina, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Pituba",
+      "neighborhood": "Pituba",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de Pituba, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 474606742,
+        "displayName": "Praia da Pituba, Pituba, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA PI 100",
+          "lat": -13.0108377,
+          "lng": -38.4652844,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Pituba, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 474606742,
+            "displayName": "Praia da Pituba, Pituba, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        },
+        {
+          "code": "SSA PI 200",
+          "lat": -13.0108377,
+          "lng": -38.4652844,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Pituba, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 474606742,
+            "displayName": "Praia da Pituba, Pituba, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Armação",
+      "neighborhood": "Jardim Armação",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Armação, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 271022069,
+        "displayName": "Praia de Armação, Jardim Armação, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA AR 200",
+          "lat": -12.9902792,
+          "lng": -38.4367692,
+          "source": {
+            "provider": "osm",
+            "query": "Armação, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 271022069,
+            "displayName": "Praia de Armação, Jardim Armação, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Boca do Rio",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "o OSM não traz uma praia com esse nome",
+      "points": [
+        {
+          "code": "SSA BR 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Corsário",
+      "neighborhood": "Pituaçu",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Corsário, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 481145377,
+        "displayName": "Praia do Corsário, Pituaçu, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA CO 100",
+          "lat": -12.9699071,
+          "lng": -38.4083741,
+          "source": {
+            "provider": "osm",
+            "query": "Corsário, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 481145377,
+            "displayName": "Praia do Corsário, Pituaçu, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Patamares",
+      "neighborhood": "Pituaçu",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de Patamares, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 481145376,
+        "displayName": "Praia de Patamares, Pituaçu, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA CO 200",
+          "lat": -12.964879,
+          "lng": -38.4019549,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Patamares, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 481145376,
+            "displayName": "Praia de Patamares, Pituaçu, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Lagoa de Pituaçu",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA LP 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Piatã",
+      "neighborhood": "Piatã",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de Piatã, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 287652993,
+        "displayName": "Praia de Piatã, Piatã, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA PA 100",
+          "lat": -12.9551749,
+          "lng": -38.3839401,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Piatã, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 287652993,
+            "displayName": "Praia de Piatã, Piatã, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Placafor",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA PF 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Itapuã",
+      "neighborhood": "Itapuã",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Praia de Itapuã, Salvador, Bahia",
+        "osmType": "way",
+        "osmId": 481143447,
+        "displayName": "Praia de Itapuã, Itapuã, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA IT 100",
+          "lat": -12.9535083,
+          "lng": -38.3612107,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Itapuã, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 481143447,
+            "displayName": "Praia de Itapuã, Itapuã, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        },
+        {
+          "code": "SSA IT 200",
+          "lat": -12.9535083,
+          "lng": -38.3612107,
+          "source": {
+            "provider": "osm",
+            "query": "Praia de Itapuã, Salvador, Bahia",
+            "osmType": "way",
+            "osmId": 481143447,
+            "displayName": "Praia de Itapuã, Itapuã, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Lagoa de Abaete",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA LA 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Farol de Itapuã",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA FI 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Stella Mares",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodVerified": false,
+      "proposalNote": "não encontrada",
+      "points": [
+        {
+          "code": "SSA ST 100",
+          "lat": null,
+          "lng": null,
+          "source": null,
+          "verified": false
+        }
+      ]
+    },
+    {
+      "name": "Flamengo",
+      "neighborhood": "Stella Maris",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "query": "Flamengo, Salvador, Bahia",
+        "osmType": "relation",
+        "osmId": 20617871,
+        "displayName": "Praia do Flamengo, Stella Maris, Salvador, Bahia, Região Nordeste, Brasil",
+        "fetchedAt": "2026-11-11"
+      },
+      "neighborhoodVerified": false,
+      "proposalNote": null,
+      "points": [
+        {
+          "code": "SSA FL 100",
+          "lat": -12.9288115,
+          "lng": -38.3179773,
+          "source": {
+            "provider": "osm",
+            "query": "Flamengo, Salvador, Bahia",
+            "osmType": "relation",
+            "osmId": 20617871,
+            "displayName": "Praia do Flamengo, Stella Maris, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        },
+        {
+          "code": "SSA FL 200",
+          "lat": -12.9288115,
+          "lng": -38.3179773,
+          "source": {
+            "provider": "osm",
+            "query": "Flamengo, Salvador, Bahia",
+            "osmType": "relation",
+            "osmId": 20617871,
+            "displayName": "Praia do Flamengo, Stella Maris, Salvador, Bahia, Região Nordeste, Brasil",
+            "fetchedAt": "2026-11-11"
+          },
+          "verified": false
+        }
+      ]
+    }
+  ]
+}

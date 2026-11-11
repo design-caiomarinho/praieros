@@ -114,4 +114,5 @@ Fase 2, sessão 3: `OutdatedBanner`, `NoResultBanner` e `PointCard` criados (pen
 Fase 2, sessão 4: `Button`, `ButtonIcon`, `InputText` e `Icon` (SVGs em `src/icons/`) com todos os estados do Figma, foco só por teclado; vitrine em `/dev/components`.
 Fase 2, sessão 5: `AppHeader` e `BeachPanel` (genérico, por props; desktop e mobile) em `/dev/components`; ícones compartilhar, fechar e link externo.
 Fase 3, sessão 6: esqueleto da tela inicial (`base-layout`, `index.astro`: cabeçalho, mapa neutro, `<aside>` oculto; breakpoint 1024px; token `size.panel-width`). Sem mapa nem dados.
+Fase 3, sessão 7: catálogo `data/catalog/salvador.json` (proposta do OpenStreetMap, `verified: false` só em dev; `npm run catalog:propose|validate|todo`) e camada de dados `src/lib/site/` (`buildSiteModel`). Pendências em `docs/catalog-todo.md`: conferir posições e bairros e preencher os descartes.
 Próxima: mapa (provedor de tiles pendente) ou ficha aberta no painel. Termos de uso do site seguem pendentes.
