@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "region": "salvador",
   "beaches": [
     {
@@ -20,21 +20,51 @@
       "points": [
         {
           "code": "SSA IN 100",
-          "lat": -12.8190938,
-          "lng": -38.4863297,
+          "lat": -12.819085666932864,
+          "lng": -38.48652178588561,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de São Tomé de Paripe, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 1157704956,
-            "displayName": "Praia de São Tome de Paripe, São Tomé de Paripe, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/1157704956"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de São Tomé de Paripe, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 1157704956,
+              "displayName": "Praia de São Tome de Paripe, São Tomé de Paripe, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Tubarão",
@@ -54,21 +84,51 @@
       "points": [
         {
           "code": "SSA PR 200",
-          "lat": -12.8346042,
-          "lng": -38.4780383,
+          "lat": -12.833905546090485,
+          "lng": -38.47861699350118,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Tubarão, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 110457980,
-            "displayName": "Praia de Tubarão, Vila São Tomé de Paripe, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/110457980"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Tubarão, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 110457980,
+              "displayName": "Praia de Tubarão, Vila São Tomé de Paripe, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Periperi",
@@ -88,21 +148,51 @@
       "points": [
         {
           "code": "SSA PR 100",
-          "lat": -12.8723066,
-          "lng": -38.4783578,
+          "lat": -12.872044226023593,
+          "lng": -38.47823601369112,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de Periperi, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 556031674,
-            "displayName": "Praia de Periperi, Praia Grande, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/556031674"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de Periperi, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 556031674,
+              "displayName": "Praia de Periperi, Praia Grande, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Penha",
@@ -113,12 +203,40 @@
       "points": [
         {
           "code": "SSA PE 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.909046057588284,
+          "lng": -38.494135494120805,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/609050471"],
+            "osm": null,
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Bogari",
@@ -129,12 +247,44 @@
       "points": [
         {
           "code": "SSA BO 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.915359070626454,
+          "lng": -38.49905251755469,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "d",
+            "basis": "order-interpolation",
+            "confidence": "very-low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → a: nenhuma referência da descrição encontrada em Salvador → b: o nome da praia não deu resultado em Salvador → c: nenhuma localidade encontrada em Salvador → nível d: entre SSA PE 100 e SSA FU 100, pela ordem do boletim, ao longo do litoral",
+            "query": null,
+            "geometry": [],
+            "osm": null,
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Bonfim",
@@ -145,12 +295,44 @@
       "points": [
         {
           "code": "SSA BO 200",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.9215372734864,
+          "lng": -38.50605516594425,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "d",
+            "basis": "order-interpolation",
+            "confidence": "very-low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → a: a descrição não traz referência geocodificável → b: a 411 m do litoral (máximo 150 m) → c: nenhuma localidade encontrada em Salvador → nível d: entre SSA PE 100 e SSA FU 100, pela ordem do boletim, ao longo do litoral",
+            "query": null,
+            "geometry": [],
+            "osm": null,
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Pedra Furada",
@@ -161,12 +343,48 @@
       "points": [
         {
           "code": "SSA FU 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.924264750735228,
+          "lng": -38.51392780829315,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "b",
+            "basis": "beach-name",
+            "confidence": "low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → a: a 295 m do litoral (máximo 150 m) → nível b: nome da praia (Pedra Furada); ajustado 73 m até a linha da costa",
+            "query": "Pedra Furada, Salvador, Bahia",
+            "geometry": [],
+            "osm": {
+              "type": "relation",
+              "id": 8457833,
+              "displayName": "Pedra Furada, Monte Serrat, Salvador, Bahia, Região Nordeste, Brasil"
+            },
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Boa Viagem",
@@ -186,21 +404,55 @@
       "points": [
         {
           "code": "SSA BV 100",
-          "lat": -12.9322085,
-          "lng": -38.5138384,
+          "lat": -12.9302076,
+          "lng": -38.5173526,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de Boa Viagem, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 257336398,
-            "displayName": "Praia de Boa Viagem, Boa Viagem, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-description",
+            "confidence": "medium",
+            "reason": "pista da descrição a até 80 m da geometria da praia",
+            "query": "forte Monte Serrat, Salvador, Bahia",
+            "geometry": ["way/257336398"],
+            "osm": {
+              "type": "relation",
+              "id": 18077162,
+              "displayName": "Forte de Monte Serrat, Praça das APA's, Monte Serrat, Salvador, Bahia, Região Nordeste, 40425-060, Brasil"
+            },
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de Boa Viagem, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 257336398,
+              "displayName": "Praia de Boa Viagem, Boa Viagem, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Roma",
@@ -211,12 +463,44 @@
       "points": [
         {
           "code": "SSA RO 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.93596660765679,
+          "lng": -38.509152422885094,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "d",
+            "basis": "order-interpolation",
+            "confidence": "very-low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → a: nenhuma referência da descrição encontrada em Salvador → b: a 486 m do litoral (máximo 150 m) → c: nenhuma localidade encontrada em Salvador → nível d: entre SSA BV 100 e SSA CG 100, pela ordem do boletim, ao longo do litoral",
+            "query": null,
+            "geometry": [],
+            "osm": null,
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Canta Galo",
@@ -227,12 +511,48 @@
       "points": [
         {
           "code": "SSA CG 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.943671011060637,
+          "lng": -38.50337448398459,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "b",
+            "basis": "beach-name",
+            "confidence": "low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → a: a 441 m do litoral (máximo 150 m) → nível b: nome da praia (Rua do Canta Galo); ajustado 82 m até a linha da costa",
+            "query": "Canta Galo, Salvador, Bahia",
+            "geometry": [],
+            "osm": {
+              "type": "way",
+              "id": 391131807,
+              "displayName": "Rua do Canta Galo, Calçada, Salvador, Bahia, Região Nordeste, 40455-260, Brasil"
+            },
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Marina Contorno",
@@ -243,12 +563,44 @@
       "points": [
         {
           "code": "SSA MC 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.974996856700958,
+          "lng": -38.51635161011767,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "d",
+            "basis": "order-interpolation",
+            "confidence": "very-low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → a: as referências discordam (1453 m entre si, máximo 300 m) → b: o nome da praia não deu resultado em Salvador → c: nenhuma localidade encontrada em Salvador → nível d: entre SSA CG 100 e SSA PB 100, pela ordem do boletim, ao longo do litoral",
+            "query": null,
+            "geometry": [],
+            "osm": null,
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Porto da Barra",
@@ -268,21 +620,55 @@
       "points": [
         {
           "code": "SSA PB 100",
-          "lat": -13.003167,
-          "lng": -38.5328509,
+          "lat": -13.003887720971681,
+          "lng": -38.53296014373601,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia do Porto da Barra, Salvador, Bahia",
-            "osmType": "relation",
-            "osmId": 8455912,
-            "displayName": "Praia do Porto da Barra, Barra, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-description",
+            "confidence": "medium",
+            "reason": "pista da descrição a até 80 m da geometria da praia",
+            "query": "Av. Sete de Setembro, Salvador, Bahia",
+            "geometry": ["relation/8455912"],
+            "osm": {
+              "type": "way",
+              "id": 30968025,
+              "displayName": "Avenida Sete de Setembro, Barra, Salvador, Bahia, Região Nordeste, 40140-040, Brasil"
+            },
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia do Porto da Barra, Salvador, Bahia",
+              "osmType": "relation",
+              "osmId": 8455912,
+              "displayName": "Praia do Porto da Barra, Barra, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Santa Maria",
@@ -293,12 +679,48 @@
       "points": [
         {
           "code": "SSA SM 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -13.003514461141721,
+          "lng": -38.53299312524098,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "b",
+            "basis": "beach-name",
+            "confidence": "low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → a: nenhuma referência da descrição encontrada em Salvador → nível b: nome da praia (Santa Maria); ajustado 42 m até a linha da costa",
+            "query": "Santa Maria, Salvador, Bahia",
+            "geometry": [],
+            "osm": {
+              "type": "node",
+              "id": 4614095735,
+              "displayName": "Santa Maria, Avenida Sete de Setembro, Barra, Salvador, Bahia, Região Nordeste, 40140-040, Brasil"
+            },
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Farol da Barra",
@@ -309,19 +731,90 @@
       "points": [
         {
           "code": "SSA FB 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -13.0102118,
+          "lng": -38.5306777,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "a",
+            "basis": "references",
+            "confidence": "low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → nível a: 1 referência(s) da descrição (Rua Dias d'Ávila); ajustado 115 m até a linha da costa",
+            "query": "Rua Dias d'Ávila, Salvador, Bahia",
+            "geometry": [],
+            "osm": {
+              "type": "way",
+              "id": 48201458,
+              "displayName": "Rua Dias D'Avila, Barra, Salvador, Bahia, Região Nordeste, 40140-130, Brasil"
+            },
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 677.2
+            }
+          },
+          "placementNote": null
         },
         {
           "code": "SSA FB 200",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -13.0102553,
+          "lng": -38.5244275,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "a",
+            "basis": "references",
+            "confidence": "low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → nível a: 1 referência(s) da descrição (Av. Oceânica); ajustado 55 m até a linha da costa",
+            "query": "Av. Oceânica, Salvador, Bahia",
+            "geometry": [],
+            "osm": {
+              "type": "way",
+              "id": 1459568218,
+              "displayName": "Av. Oceânica, Barra, Salvador, Bahia, Região Nordeste, 40140-470, Brasil"
+            },
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 677.2
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Ondina",
@@ -341,37 +834,96 @@
       "points": [
         {
           "code": "SSA ON 100",
-          "lat": -13.0112384,
-          "lng": -38.5115147,
+          "lat": -13.010977868758468,
+          "lng": -38.50972943520375,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de Ondina, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 402060335,
-            "displayName": "Praia de Ondina, Ondina, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/402060335"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de Ondina, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 402060335,
+              "displayName": "Praia de Ondina, Ondina, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 179.2
+            }
+          },
+          "placementNote": null
         },
         {
           "code": "SSA ON 200",
-          "lat": -13.0112384,
-          "lng": -38.5115147,
+          "lat": -13.011734415532944,
+          "lng": -38.51119026823297,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de Ondina, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 402060335,
-            "displayName": "Praia de Ondina, Ondina, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/402060335"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de Ondina, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 402060335,
+              "displayName": "Praia de Ondina, Ondina, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 179.2
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Rio Vermelho",
@@ -382,19 +934,86 @@
       "points": [
         {
           "code": "SSA RV 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -13.011570888564343,
+          "lng": -38.49774311359183,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "a",
+            "basis": "references",
+            "confidence": "low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → nível a: 1 referência(s) da descrição (Rua Morro da Paciência); ajustado 135 m até a linha da costa",
+            "query": "Rua Morro da Paciência, Salvador, Bahia",
+            "geometry": [],
+            "osm": {
+              "type": "way",
+              "id": 86996327,
+              "displayName": "Rua Morro da Paciência, Vila Matos, Rio Vemelho, Salvador, Bahia, Região Nordeste, 41950-080, Brasil"
+            },
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 891.3
+            }
+          },
+          "placementNote": null
         },
         {
           "code": "SSA RV 200",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -13.014007521879453,
+          "lng": -38.48990587490886,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "d",
+            "basis": "order-interpolation",
+            "confidence": "very-low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → a: nenhuma referência da descrição encontrada em Salvador → b: o nome da praia não deu resultado em Salvador → c: nenhuma localidade encontrada em Salvador → nível d: entre SSA RV 100 e SSA RV 300, pela ordem do boletim, ao longo do litoral",
+            "query": null,
+            "geometry": [],
+            "osm": null,
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 891.3
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Buracão",
@@ -414,21 +1033,51 @@
       "points": [
         {
           "code": "SSA RV 300",
-          "lat": -13.015012,
-          "lng": -38.4833065,
+          "lat": -13.015156652839108,
+          "lng": -38.48295950342074,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Buracão, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 138964086,
-            "displayName": "Praia do Buracão, Rio Vemelho, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/138964086"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Buracão, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 138964086,
+              "displayName": "Praia do Buracão, Rio Vemelho, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Amaralina",
@@ -448,37 +1097,100 @@
       "points": [
         {
           "code": "SSA AM 100",
-          "lat": -13.0146453,
-          "lng": -38.4776485,
+          "lat": -13.013942477210634,
+          "lng": -38.47531651291617,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de Amaralina, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 474606741,
-            "displayName": "Praia de Amaralina, Amaralina, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/474606741"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de Amaralina, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 474606741,
+              "displayName": "Praia de Amaralina, Amaralina, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 437.7
+            }
+          },
+          "placementNote": null
         },
         {
           "code": "SSA AM 200",
-          "lat": -13.0146453,
-          "lng": -38.4776485,
+          "lat": -13.014400910722662,
+          "lng": -38.471303896153096,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de Amaralina, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 474606741,
-            "displayName": "Praia de Amaralina, Amaralina, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-description",
+            "confidence": "medium",
+            "reason": "pista da descrição a até 80 m da geometria da praia",
+            "query": "rua do Balneário, Salvador, Bahia",
+            "geometry": ["way/474606741"],
+            "osm": {
+              "type": "way",
+              "id": 884200599,
+              "displayName": "Rua do Balneário, Amaralina, Salvador, Bahia, Região Nordeste, 41900-020, Brasil"
+            },
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de Amaralina, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 474606741,
+              "displayName": "Praia de Amaralina, Amaralina, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 437.7
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Pituba",
@@ -498,37 +1210,96 @@
       "points": [
         {
           "code": "SSA PI 100",
-          "lat": -13.0108377,
-          "lng": -38.4652844,
+          "lat": -13.01281405684689,
+          "lng": -38.467545256427286,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia da Pituba, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 474606742,
-            "displayName": "Praia da Pituba, Pituba, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/474606742"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia da Pituba, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 474606742,
+              "displayName": "Praia da Pituba, Pituba, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 774
+            }
+          },
+          "placementNote": null
         },
         {
           "code": "SSA PI 200",
-          "lat": -13.0108377,
-          "lng": -38.4652844,
+          "lat": -13.009190921722368,
+          "lng": -38.46144500817704,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia da Pituba, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 474606742,
-            "displayName": "Praia da Pituba, Pituba, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/474606742"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia da Pituba, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 474606742,
+              "displayName": "Praia da Pituba, Pituba, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 774
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Armação",
@@ -548,21 +1319,51 @@
       "points": [
         {
           "code": "SSA AR 200",
-          "lat": -12.9902792,
-          "lng": -38.4367692,
+          "lat": -12.991176799581527,
+          "lng": -38.43710633260088,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Armação, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 271022069,
-            "displayName": "Praia de Armação, Jardim Armação, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/271022069"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Armação, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 271022069,
+              "displayName": "Praia de Armação, Jardim Armação, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Boca do Rio",
@@ -582,21 +1383,51 @@
       "points": [
         {
           "code": "SSA BR 100",
-          "lat": -12.9822192,
-          "lng": -38.4284291,
+          "lat": -12.981425532956901,
+          "lng": -38.42790695197485,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia do Boca do Rio, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 405114769,
-            "displayName": "Praia da Boca do Rio, Boca do Rio, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/405114769"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia do Boca do Rio, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 405114769,
+              "displayName": "Praia da Boca do Rio, Boca do Rio, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Corsário",
@@ -616,21 +1447,51 @@
       "points": [
         {
           "code": "SSA CO 100",
-          "lat": -12.9699071,
-          "lng": -38.4083741,
+          "lat": -12.970573611129659,
+          "lng": -38.40895033519856,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Corsário, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 481145377,
-            "displayName": "Praia do Corsário, Pituaçu, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/481145377"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Corsário, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 481145377,
+              "displayName": "Praia do Corsário, Pituaçu, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Patamares",
@@ -650,21 +1511,51 @@
       "points": [
         {
           "code": "SSA CO 200",
-          "lat": -12.964879,
-          "lng": -38.4019549,
+          "lat": -12.964842400860414,
+          "lng": -38.40221686932534,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de Patamares, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 481145376,
-            "displayName": "Praia de Patamares, Pituaçu, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/481145376"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de Patamares, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 481145376,
+              "displayName": "Praia de Patamares, Pituaçu, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Lagoa de Pituaçu",
@@ -675,12 +1566,40 @@
       "points": [
         {
           "code": "SSA LP 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.960022447421913,
+          "lng": -38.423009425977135,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/53912746"],
+            "osm": null,
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Piatã",
@@ -700,21 +1619,51 @@
       "points": [
         {
           "code": "SSA PA 100",
-          "lat": -12.9551749,
-          "lng": -38.3839401,
+          "lat": -12.95513478308672,
+          "lng": -38.38279847679333,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de Piatã, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 287652993,
-            "displayName": "Praia de Piatã, Piatã, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/287652993"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de Piatã, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 287652993,
+              "displayName": "Praia de Piatã, Piatã, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Placafor",
@@ -725,12 +1674,40 @@
       "points": [
         {
           "code": "SSA PF 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.952399302229107,
+          "lng": -38.374843216391184,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/481143135"],
+            "osm": null,
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Itapuã",
@@ -750,37 +1727,100 @@
       "points": [
         {
           "code": "SSA IT 100",
-          "lat": -12.9535083,
-          "lng": -38.3612107,
+          "lat": -12.952440650918689,
+          "lng": -38.36201961099934,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de Itapuã, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 481143447,
-            "displayName": "Praia de Itapuã, Itapuã, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/481143447"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de Itapuã, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 481143447,
+              "displayName": "Praia de Itapuã, Itapuã, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 646
+            }
+          },
+          "placementNote": null
         },
         {
           "code": "SSA IT 200",
-          "lat": -12.9535083,
-          "lng": -38.3612107,
+          "lat": -12.95062058316004,
+          "lng": -38.367680996700464,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Praia de Itapuã, Salvador, Bahia",
-            "osmType": "way",
-            "osmId": 481143447,
-            "displayName": "Praia de Itapuã, Itapuã, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-description",
+            "confidence": "medium",
+            "reason": "pista da descrição a até 80 m da geometria da praia",
+            "query": "Sereia de Itapuã, Salvador, Bahia",
+            "geometry": ["way/481143447"],
+            "osm": {
+              "type": "node",
+              "id": 5416162471,
+              "displayName": "Monumento Sereia de Itapuã, Rua Engenheiro Aristides Milton, Itapuã, Salvador, Bahia, Região Nordeste, 41610-011, Brasil"
+            },
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Praia de Itapuã, Salvador, Bahia",
+              "osmType": "way",
+              "osmId": 481143447,
+              "displayName": "Praia de Itapuã, Itapuã, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 646
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Lagoa de Abaete",
@@ -800,21 +1840,51 @@
       "points": [
         {
           "code": "SSA LA 100",
-          "lat": -12.9437542,
-          "lng": -38.3579561,
+          "lat": -12.945796064379802,
+          "lng": -38.35649537794848,
           "source": {
-            "provider": "osm",
-            "method": "overpass",
-            "confidence": "medium",
-            "query": "overpass: natural=beach|water, leisure=marina",
-            "osmType": "way",
-            "osmId": 76613809,
-            "displayName": "Lagoa do Abaeté",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/76613809"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "overpass",
+              "confidence": "medium",
+              "query": "overpass: natural=beach|water, leisure=marina",
+              "osmType": "way",
+              "osmId": 76613809,
+              "displayName": "Lagoa do Abaeté",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Farol de Itapuã",
@@ -825,12 +1895,48 @@
       "points": [
         {
           "code": "SSA FI 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.957221439490066,
+          "lng": -38.35369018517481,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "b",
+            "basis": "beach-name",
+            "confidence": "low",
+            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → a: a 170 m do litoral (máximo 150 m) → nível b: nome da praia (Farol de Itapuã); ajustado 14 m até a linha da costa",
+            "query": "Farol de Itapuã, Salvador, Bahia",
+            "geometry": [],
+            "osm": {
+              "type": "node",
+              "id": 575752550,
+              "displayName": "Farol de Itapuã, Rua Farol de Itapuã, Itapuã, Salvador, Bahia, Região Nordeste, 41620-090, Brasil"
+            },
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "n/a",
+              "meters": null
+            },
+            "nearCoast": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Stella Mares",
@@ -841,12 +1947,40 @@
       "points": [
         {
           "code": "SSA ST 100",
-          "lat": null,
-          "lng": null,
-          "source": null,
-          "verified": false
+          "lat": -12.940601141848711,
+          "lng": -38.331071608411534,
+          "source": {
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["relation/20617868"],
+            "osm": null,
+            "placedAt": "2026-11-11"
+          },
+          "verified": false,
+          "proposals": [],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "n/a",
+              "meters": null
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     },
     {
       "name": "Flamengo",
@@ -866,37 +2000,100 @@
       "points": [
         {
           "code": "SSA FL 100",
-          "lat": -12.9288115,
-          "lng": -38.3179773,
+          "lat": -12.929337198016814,
+          "lng": -38.31891852578722,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Flamengo, Salvador, Bahia",
-            "osmType": "relation",
-            "osmId": 20617871,
-            "displayName": "Praia do Flamengo, Stella Maris, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-spread",
+            "confidence": "low",
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["relation/20617871"],
+            "osm": null,
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Flamengo, Salvador, Bahia",
+              "osmType": "relation",
+              "osmId": 20617871,
+              "displayName": "Praia do Flamengo, Stella Maris, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 936
+            }
+          },
+          "placementNote": null
         },
         {
           "code": "SSA FL 200",
-          "lat": -12.9288115,
-          "lng": -38.3179773,
+          "lat": -12.922573837137133,
+          "lng": -38.31377620941413,
           "source": {
-            "provider": "osm",
-            "method": "name",
-            "confidence": "high",
-            "query": "Flamengo, Salvador, Bahia",
-            "osmType": "relation",
-            "osmId": 20617871,
-            "displayName": "Praia do Flamengo, Stella Maris, Salvador, Bahia, Região Nordeste, Brasil",
-            "fetchedAt": "2026-11-11"
+            "provider": "auto",
+            "method": "auto-placed",
+            "level": "g",
+            "basis": "geometry-description",
+            "confidence": "medium",
+            "reason": "pista da descrição a até 80 m da geometria da praia",
+            "query": "barraca da Pipa, Salvador, Bahia",
+            "geometry": ["relation/20617871"],
+            "osm": {
+              "type": "way",
+              "id": 1351186250,
+              "displayName": "Barraca da Pipa, Stella Maris, Salvador, Bahia, Região Nordeste, Brasil"
+            },
+            "placedAt": "2026-11-11"
           },
-          "verified": false
+          "verified": false,
+          "proposals": [
+            {
+              "provider": "osm",
+              "method": "name",
+              "confidence": "high",
+              "query": "Flamengo, Salvador, Bahia",
+              "osmType": "relation",
+              "osmId": 20617871,
+              "displayName": "Praia do Flamengo, Stella Maris, Salvador, Bahia, Região Nordeste, Brasil",
+              "fetchedAt": "2026-11-11"
+            }
+          ],
+          "checks": {
+            "inSalvador": {
+              "status": "pass",
+              "meters": null
+            },
+            "nearBeach": {
+              "status": "pass",
+              "meters": 0
+            },
+            "minSpacing": {
+              "status": "pass",
+              "meters": 936
+            }
+          },
+          "placementNote": null
         }
-      ]
+      ],
+      "neighborhoodProposals": []
     }
   ]
 }
