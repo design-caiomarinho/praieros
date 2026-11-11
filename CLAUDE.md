@@ -96,5 +96,6 @@ Tokens de design: `tokens/tokens.json` (fonte única). Não usar valores soltos 
 
 ## Estado atual
 
-Fase 0 concluída: projeto Astro + TypeScript, Vitest, ESLint, Prettier, pastas e docs criados. Nenhuma funcionalidade implementada.
-Próxima: Fase 1 (tokens e teste de leitura do PDF). Remover `tests/smoke.test.ts` ao criar o primeiro teste real.
+Fase 0 concluída (setup). Fase 1, sessão 1 concluída: `src/lib/inema/fetch-bulletins.ts` acha os links por rótulo e baixa os PDFs sem lançar exceção; fixtures salvas em `fixtures/` (boletim de 06/11/2026).
+Fixtures regeneráveis com `npm run fixtures:save` (acessa o site; uso raro).
+Próxima: Fase 1, sessão 2 (leitura do texto do PDF e validação). Termos de uso do site seguem pendentes.

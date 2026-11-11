@@ -1,0 +1,10 @@
+User-agent: AdsBot-Google
+Allow: /
+Disallow: /assets/json/serverinfo.json
+
+User-agent: Googlebot
+Allow: /
+Disallow: /assets/json/serverinfo.json
+
+User-agent: *
+Disallow: /assets/json/serverinfo.json

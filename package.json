@@ -16,14 +16,17 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "fixtures:save": "node scripts/save-fixtures.ts"
   },
   "dependencies": {
-    "astro": "^7.4.11"
+    "astro": "^7.4.11",
+    "cheerio": "^1.2.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
     "@eslint/js": "^10.0.1",
+    "@types/node": "^24.19.2",
     "eslint": "^10.14.0",
     "eslint-plugin-astro": "^3.2.1",
     "prettier": "^3.10.0",
