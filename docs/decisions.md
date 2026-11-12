@@ -402,3 +402,14 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Resumo do boletim (desktop):** sai do escopo; não será feito.
 - **Compartilhar praia e Compartilhar site:** ficam **pendentes, para depois**. Os botões existentes (ficha, Classificação, cabeçalho) continuam sem ação. A **R6** (link compartilhado abre sempre o estado atual; prévia com status + data do boletim do momento do envio) permanece válida para quando forem feitos.
 - **Próxima etapa:** refinar o mobile (folha inferior, busca mobile, Classificação e Fonte e como ler no mobile) e depois o motion (`docs/motion.md`).
+
+## Sessão 17: home mobile (nós 117:4916, 117:4762, 117:5022)
+
+- **Auditoria:** cabeçalho, marcadores, estado de erro e fundo já batiam com o Figma. Ajustado só o mapa abaixo de 1024px (desktop intacto).
+- **Zoom e pílula "Carregando o mapa…":** a 16px (`space-inset-md`) das bordas, como no Figma (antes 24px). A pílula tem largura útil (`100% − 2 × 16px`): o Figma usa 370px fixos em tela de 390px, sem token; usamos o token mais próximo da margem. O texto ocupa o resto da pílula.
+- **Áreas seguras:** o zoom usa `max(16px, env(safe-area-inset-*))` (entalhes e barra do sistema). Não definido no Figma; derivado.
+- **Alvos de toque:** os botões de 56px já passam de 44px; nada a mudar.
+- **Rótulo cortado na borda / rotação:** o mapa tem `overflow: clip` e `maxBounds`; em paisagem o layout continua o mesmo abaixo de 1024px. Sem tratamento extra.
+- **Atribuição:** continua no topo do mapa no mobile (sessão 8a-2).
+- **Nomes dos marcadores:** o Figma mostra sempre; mantemos a regra de zoom ≥ 13 (decisão anterior, evita sobreposição).
+- **Fora do escopo desta sessão:** folha inferior, busca mobile, Classificação e Fonte no mobile (os frames não cobrem).

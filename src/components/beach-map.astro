@@ -334,6 +334,20 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
       top: 0;
       bottom: auto;
     }
+    /* Figma 117:4762 / 117:4916: zoom e pílula a 16px das bordas; pílula na largura útil. */
+    .zoom {
+      right: max(var(--space-inset-md), env(safe-area-inset-right));
+      bottom: max(var(--space-inset-md), env(safe-area-inset-bottom));
+    }
+    .loading {
+      top: var(--space-inset-md);
+      box-sizing: border-box;
+      width: calc(100% - var(--space-inset-md) * 2);
+    }
+    .loading__text {
+      flex: 1;
+      min-width: 0;
+    }
   }
 
   /* Marcadores (Figma 117:4522). Criados por JS: estilos globais. */

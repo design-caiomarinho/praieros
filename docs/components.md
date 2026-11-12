@@ -44,3 +44,5 @@ Ficha desktop (sessão 11): **pendentes de componentizar no Figma**: (1) aviso d
 6. Ficha sem cartões de ponto, para praia de referência (sessão 10).
 7. SourcePanel (nó `126:4345`, o painel como um todo).
 8. BeachMap (carregando, erro, zoom) e BeachPanel como um todo (sem nó próprio).
+
+- Sessão 17 (home mobile): nenhum componente novo; só ajuste de posição em BeachMap (já listado acima como pendente de componentizar).
