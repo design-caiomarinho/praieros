@@ -394,6 +394,11 @@ const sourceBulletin = site.current
     height: 60%;
     z-index: 3;
   }
+  /* Sem resultado: a folha se ajusta ao conteúdo (mensagem e botão sem rolar). */
+  .search-slot :global(.search:has(.empty:not([hidden]))) {
+    height: auto;
+    max-height: 100%;
+  }
   /* A faixa no topo do mapa só existe no desktop (no mobile fica dentro da folha). */
   .map-banner {
     display: none;

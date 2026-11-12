@@ -49,6 +49,7 @@ const neighborhoods = suggestNeighborhoods(results);
             />
           </div>
           <h2 data-title>Buscar</h2>
+          <span class="sk sk--title" aria-hidden="true"></span>
         </div>
         <div class="close" data-search-close>
           <ButtonIcon
@@ -68,9 +69,23 @@ const neighborhoods = suggestNeighborhoods(results);
     <div class="field" data-field>
       <InputText label="Buscar praia" name="q" />
     </div>
+    <span class="sk sk--field" aria-hidden="true"></span>
   </header>
 
   <div class="body">
+    <!-- Esqueleto (Figma de Caio): só enquanto o mapa carrega; sem animação por enquanto. -->
+    <div class="sk-body" aria-hidden="true">
+      <span class="sk sk--label"></span>
+      <div class="sk-grid">
+        <span class="sk sk--hood"></span>
+        <span class="sk sk--hood"></span>
+        <span class="sk sk--hood"></span>
+        <span class="sk sk--hood"></span>
+        <span class="sk sk--hood"></span>
+        <span class="sk sk--hood"></span>
+        <span class="sk sk--hood"></span>
+      </div>
+    </div>
     <div class="found" data-found hidden>
       <p class="count" aria-hidden="true">
         <strong data-count-n></strong>
@@ -78,7 +93,7 @@ const neighborhoods = suggestNeighborhoods(results);
       </p>
       <ul class="results" data-results aria-label="Resultados da busca">
         {results.map((r) => {
-          // Praia sem ponto de coleta (informação desconhecida) mostra "0 ponto de coleta", como
+          // Praia sem ponto de coleta (informação desconhecida) mostra "Nenhum ponto de coleta", como
           // no concept da busca.
           const meta = [r.neighborhood, pointsLabel(r.pointCount)]
             .filter(Boolean)
@@ -484,6 +499,54 @@ const neighborhoods = suggestNeighborhoods(results);
     }
   }
 
+  /* Esqueleto de carregamento (Figma de Caio): blocos na cor surface/strong no lugar do título,
+     do chip, do campo e dos bairros, enquanto o mapa carrega (escolher uma praia depende dele).
+     O botão de fechar fica. Estático: o brilho/pulso é motion e espera a fase de motion. */
+  .sk,
+  .sk-body {
+    display: none;
+  }
+  .search[data-loading] .sk {
+    display: block;
+    background: var(--s-color-surface-strong);
+  }
+  .search[data-loading] .sk-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+  }
+  .search[data-loading] h2,
+  .search[data-loading] .bulletin-chip,
+  .search[data-loading] .field,
+  .search[data-loading] .body > :not(.sk-body) {
+    display: none;
+  }
+  .sk--title {
+    width: calc(var(--primitives-spacing-48) * 3);
+    height: var(--primitives-spacing-24);
+  }
+  .search[data-loading] .head-top::after {
+    content: '';
+    width: 55%;
+    height: var(--primitives-spacing-24);
+    background: var(--s-color-surface-strong);
+  }
+  .sk--field {
+    height: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+  }
+  .sk--label {
+    width: 10%;
+    height: var(--primitives-spacing-16);
+  }
+  .sk-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-gap-xs);
+  }
+  .sk--hood {
+    height: var(--primitives-spacing-40);
+  }
+
   .sr-only {
     position: absolute;
     width: 1px;
@@ -532,6 +595,22 @@ const neighborhoods = suggestNeighborhoods(results);
     }
 
     // Os bairros ficam sempre visíveis (Figma 117:6342): só os resultados e o vazio mudam.
+    // Esqueleto enquanto o mapa carrega (escolher uma praia depende dele). No erro do mapa o
+    // painel volta ao normal. Acompanha o aviso "Carregando o mapa…" do próprio mapa.
+    const mapLoading = document.getElementById('map-loading');
+    function syncLoading() {
+      const on = !!mapLoading && !mapLoading.hidden;
+      root.toggleAttribute('data-loading', on);
+      root.setAttribute('aria-busy', String(on));
+    }
+    if (mapLoading) {
+      new MutationObserver(syncLoading).observe(mapLoading, {
+        attributes: true,
+        attributeFilter: ['hidden'],
+      });
+    }
+    syncLoading();
+
     const back = root.querySelector<HTMLElement>('[data-search-back]')!;
     const field = root.querySelector<HTMLElement>('[data-field]')!;
     const title = root.querySelector<HTMLElement>('[data-title]')!;
