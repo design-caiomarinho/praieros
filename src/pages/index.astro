@@ -148,8 +148,10 @@ const sourceBulletin = site.current
   import { halfwayTime } from '../lib/map/cubic-bezier.ts';
   import { cssTimeMs } from '../lib/map/css-time.ts';
   import { initSidebarShell } from '../lib/site/sidebar-shell.ts';
+  import { initSidebarSheet } from '../lib/site/sidebar-sheet.ts';
 
   initSidebarShell();
+  initSidebarSheet();
   const map = document.getElementById('beach-map')!;
   const panel = document.getElementById('panel')!;
   let lastSlug: string | null = null;
@@ -523,6 +525,13 @@ const sourceBulletin = site.current
       z-index: 3;
       overflow: clip;
       pointer-events: none;
+      /* Rolando o conteúdo a folha cresce até a tela toda; de volta ao topo, volta (sidebar-sheet.ts).
+         Mesmo tempo e curva da camada azul do sidebar. */
+      transition: height var(--motion-duration-panel-surface)
+        var(--motion-easing-panel);
+    }
+    .sidebar[data-expanded] {
+      height: 100%;
     }
     .sidebar[data-active] {
       display: block;
@@ -555,6 +564,7 @@ const sourceBulletin = site.current
       transition-delay: var(--motion-delay-panel);
     }
     @media (prefers-reduced-motion: reduce) {
+      .sidebar,
       .sidebar::before,
       .sidebar[data-open]::before,
       .sidebar__viewport,

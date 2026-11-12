@@ -609,3 +609,9 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 
 - **Pin ao fechar depois dos detalhes:** fechar a Classificação (X) encerra tudo e o pin volta ao normal; o clique no terreno sempre desmarca (mesmo sem `marked`). Fechar a ficha comum (X) continua mantendo o pin marcado, como já decidido.
 - **Compartilhar desativado por enquanto:** o botão de ícone do cabeçalho e os botões "Compartilhar praia" (ficha e Classificação) ficam `disabled` (visual de desabilitado dos componentes) até a R6 ser implementada.
+
+### Sessão 24d: folha inferior que cresce ao rolar (mobile)
+
+- **Interação (pedido de Caio):** a folha começa com 60% do palco, como hoje. Rolando o conteúdo (se houver o que rolar), ela cresce para cima até a tela toda do palco (mais espaço de leitura, mapa em segundo plano); voltando ao topo (a até 24 px), volta aos 60%. Vale para ficha, Classificação, Fonte e busca.
+- **Como:** `src/lib/site/sidebar-sheet.ts` liga `data-expanded` no `#sidebar`; a altura (60% → 100%) é transição CSS com o tempo e a curva da camada azul (`duration-panel-surface`, curva do painel). Cresce com rolagem > 8 px para baixo, roda ou arrasto para cima; recolhe só por gesto do usuário (roda para cima, arrasto para baixo ou rolagem para cima recente) perto do topo, para um conteúdo que passa a caber inteiro (scrollTop zera sozinho) não fechar a folha. Fechar o sidebar ou trocar de painel volta ao tamanho inicial.
+- **Câmera:** não acompanha o crescimento (o mapa fica secundário); o enquadramento segue o de 60%.
