@@ -92,6 +92,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     type BeachMapController,
   } from './beach-map/controller.ts';
   import type { MarkerData } from '../lib/site/map-markers.ts';
+  import { parseCubicBezier } from '../lib/map/cubic-bezier.ts';
 
   const root = document.getElementById('beach-map')!;
   const canvas = document.getElementById('map-canvas')!;
@@ -112,6 +113,28 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     block: token('--s-color-surface-emphasis'),
     road: token('--s-color-surface-default'),
   });
+
+  // Desktop: a busca sobrepõe o mapa pela direita. Enquanto aberta, a câmera usa só a área
+  // visível à esquerda (largura do painel = o que cobre).
+  const desktop = window.matchMedia('(min-width: 1024px)');
+  const coveredRight = () => {
+    const s = document.getElementById('search');
+    return desktop.matches && s && !s.hidden && s.hasAttribute('data-open')
+      ? s.offsetWidth
+      : 0;
+  };
+  // A busca abre: leva a praia selecionada para a área visível, no ritmo do painel.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const reveal = () => {
+    const css = getComputedStyle(document.documentElement);
+    const ms = (name: string) => parseFloat(css.getPropertyValue(name)) || 0;
+    controller?.revealSelected({
+      duration: reduceMotion.matches ? 0 : ms('--motion-duration-panel'),
+      delay: reduceMotion.matches ? 0 : ms('--motion-delay-panel'),
+      easing: parseCubicBezier(css.getPropertyValue('--motion-easing-panel')),
+    });
+  };
+  document.addEventListener('search-open', reveal);
 
   let controller: BeachMapController | null = null;
   let selectedSlug: string | null = null;
@@ -141,6 +164,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
       onClear: () => {
         root.dispatchEvent(new CustomEvent('map-clear', { bubbles: true }));
       },
+      getCoveredRight: coveredRight,
       onState: (s) => {
         show(s);
         if (s === 'error') {

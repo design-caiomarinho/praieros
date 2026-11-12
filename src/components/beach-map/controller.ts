@@ -50,6 +50,18 @@ export interface BeachMapOptions {
 }
 
 export interface BeachMapController {
+  /**
+   * Largura (px) da parte direita do mapa coberta por um painel que sobrepõe (a busca no
+   * desktop). Lida a cada movimento de câmera: o enquadramento usa só a área visível à esquerda.
+   */
+  getCoveredRight?(): number;
+}
+
+/** Animação do reenquadramento ao abrir a busca (tokens de motion, lidos por quem chama). */
+export interface RevealMotion {
+  duration: number;
+  delay: number;
+  easing: (t: number) => number;
   zoomIn(): void;
   zoomOut(): void;
   /** Reenquadra todos os pontos, respeitando o limite de Salvador (mesma visão inicial). */
@@ -66,6 +78,11 @@ export interface BeachMapController {
   /** Para testes e depuração. */
   getMap(): maplibregl.Map;
   destroy(): void;
+  /**
+   * Com a busca abrindo por cima: se a praia selecionada ficar escondida, leva-a para a área
+   * visível (mesma duração e curva do painel). Não mexe se ela já aparece.
+   */
+  revealSelected(motion: RevealMotion): void;
 }
 
 // Uma entrada por marcador na tela. Praia de 1 ponto: `single`. Praia de 2+ pontos: marcador
@@ -100,6 +117,16 @@ export async function createBeachMap(
   try {
     const res = await fetch(STYLE_URL);
     if (!res.ok) throw new Error(String(res.status));
+  const coveredRight = () => opts.getCoveredRight?.() ?? 0;
+  /** Folga do enquadramento; à direita soma o que o painel sobreposto cobre. */
+  const pad = () => ({
+    top: VIEW_PADDING,
+    left: VIEW_PADDING,
+    bottom: VIEW_PADDING,
+    right: VIEW_PADDING + coveredRight(),
+  });
+  /** Centro da área visível = centro do mapa menos metade do que está coberto. */
+  const shift = (): [number, number] => [-coveredRight() / 2, 0];
     style = applyPalette(await res.json(), palette);
   } catch {
     onState('error');
@@ -300,7 +327,7 @@ export async function createBeachMap(
             // em pins numerados. A ficha NÃO abre; ela abre ao clicar num pin.
             expandedSlug = g.slug;
             map.fitBounds(boundsOf(g.points)!, {
-              padding: VIEW_PADDING,
+              padding: pad(),
               maxZoom: GROUP_FIT_MAX_ZOOM,
               animate: false,
             });
@@ -343,6 +370,7 @@ export async function createBeachMap(
     }
     onClear();
   });
+              offset: shift(),
   map.once('idle', () => {
     ready = true;
     onState('ready');
@@ -353,8 +381,7 @@ export async function createBeachMap(
     zoomIn: () => map.zoomIn({ duration: 0 }),
     zoomOut: () => map.zoomOut({ duration: 0 }),
     fit() {
-      if (bounds)
-        map.fitBounds(bounds, { padding: VIEW_PADDING, animate: false });
+      if (bounds) map.fitBounds(bounds, { padding: pad(), animate: false });
       else
         map.jumpTo({
           center: [SALVADOR_FALLBACK.lng, SALVADOR_FALLBACK.lat],
@@ -377,7 +404,7 @@ export async function createBeachMap(
       }
       expandedSlug = slug;
       map.fitBounds(boundsOf(entry.points)!, {
-        padding: VIEW_PADDING,
+        padding: pad(),
         maxZoom: GROUP_FIT_MAX_ZOOM,
         animate: false,
       });
@@ -391,9 +418,7 @@ export async function createBeachMap(
       if (!bounds) return; // nenhuma praia do grupo está no mapa: não mexe na câmera
       map.fitBounds(bounds, {
         padding: {
-          top: VIEW_PADDING,
-          left: VIEW_PADDING,
-          right: VIEW_PADDING,
+          ...pad(),
           bottom: VIEW_PADDING + coveredBottom,
         },
         maxZoom: GROUP_FIT_MAX_ZOOM,
@@ -413,3 +438,26 @@ export async function createBeachMap(
     },
   };
 }
+          offset: shift(),
+    revealSelected({ duration, delay, easing }) {
+      const entry = beaches.find((b) => b.slug === selectedSlug);
+      if (!entry) return;
+      const m =
+        entry.points.find((p) => p.id === selectedPointId) ?? entry.points[0];
+      if (!m) return;
+      window.setTimeout(() => {
+        // Medido depois do atraso (a ficha pode ter saído e o mapa alargado). Se a busca já
+        // fechou nesse meio tempo, ou a praia já aparece, não há o que revelar.
+        const covered = coveredRight();
+        if (covered <= 0) return;
+        const x = map.project([m.lng, m.lat]).x;
+        const edge = VIEW_PADDING / 2;
+        if (x >= edge && x <= container.clientWidth - covered - edge) return;
+        map.easeTo({
+          center: [m.lng, m.lat],
+          offset: shift(),
+          duration,
+          easing,
+        });
+      }, delay);
+    },

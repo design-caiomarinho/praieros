@@ -472,6 +472,21 @@ const sourceBulletin = site.current
       flex: 1 0 auto;
       flex-direction: column;
     }
+    /* Botões de zoom e ajustar: acompanham a coluna da busca (que sobrepõe o mapa), com 16px
+       entre eles e a borda do painel. Mesmos tempos e curva da coluna (ver search-panel). */
+    .stage :global(.zoom) {
+      transition: right var(--motion-duration-panel-surface)
+        var(--motion-easing-panel);
+    }
+    .stage:has(.search-slot .search[data-open]) :global(.zoom) {
+      right: calc(var(--size-panel-width) + var(--space-stack-md));
+      transition-delay: var(--motion-delay-panel-surface);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .stage :global(.zoom) {
+        transition: none;
+      }
+    }
     .layout-desktop > :global(section) {
       flex: 1 0 auto;
     }

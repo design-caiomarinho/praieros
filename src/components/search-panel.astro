@@ -230,14 +230,17 @@ const neighborhoods = suggestNeighborhoods(results);
     .search[data-open] {
       transform: none;
     }
-    /* A coluna da busca cresce da direita (4px → 477px) junto com a camada azul, e o mapa
-       acompanha o espaço (o contêiner do mapa é observado e o canvas redimensiona a cada quadro).
-       A camada azul preenche a coluna; o painel (477px, ancorado à direita) desliza por cima,
-       com atraso, recortado pela coluna. */
+    /* A coluna da busca cresce da direita (4px → 477px) junto com a camada azul e SOBREPÕE o
+       mapa (fora do fluxo: o mapa não muda de tamanho; a câmera e os botões de zoom é que
+       respeitam a área visível, ver beach-map e index). A camada azul preenche a coluna; o
+       painel (477px, ancorado à direita) desliza por cima, com atraso, recortado pela coluna. */
     :global(.search-slot:has(.search:not([hidden]))) {
-      position: relative;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
       display: block;
-      flex-shrink: 0;
       width: var(--border-width-accent);
       overflow: hidden;
       /* `clip` não rola: o foco no campo não desloca o painel dentro da coluna. */
