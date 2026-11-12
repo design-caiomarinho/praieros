@@ -56,6 +56,11 @@ export interface BeachMapController {
   fit(): void;
   /** Enquadra a praia como no clique no marcador (abrir a ficha é com quem chama). */
   focusBeach(slug: string): void;
+  /**
+   * Enquadra todas as praias dadas (ex.: as de um bairro) para mostrar de onde se trata.
+   * `coveredBottom` = altura (px) do painel que cobre a parte de baixo do mapa (folha mobile).
+   */
+  fitBeaches(slugs: readonly string[], coveredBottom?: number): void;
   /** Seleciona a praia (e, se o grupo estiver aberto, um ponto). Praia selecionada fica aberta em qualquer zoom. */
   select(slug: string | null, pointId?: string | null): void;
   /** Para testes e depuração. */
@@ -367,6 +372,24 @@ export async function createBeachMap(
       expandedSlug = slug;
       map.fitBounds(boundsOf(entry.points)!, {
         padding: VIEW_PADDING,
+        maxZoom: GROUP_FIT_MAX_ZOOM,
+        animate: false,
+      });
+      update();
+    },
+    fitBeaches(slugs, coveredBottom = 0) {
+      const points = beaches
+        .filter((b) => slugs.includes(b.slug))
+        .flatMap((b) => b.points);
+      const bounds = boundsOf(points);
+      if (!bounds) return; // nenhuma praia do grupo está no mapa: não mexe na câmera
+      map.fitBounds(bounds, {
+        padding: {
+          top: VIEW_PADDING,
+          left: VIEW_PADDING,
+          right: VIEW_PADDING,
+          bottom: VIEW_PADDING + coveredBottom,
+        },
         maxZoom: GROUP_FIT_MAX_ZOOM,
         animate: false,
       });

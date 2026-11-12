@@ -457,3 +457,9 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 
 - **Degradê de rolagem removido** de todos os painéis (busca, ficha, Fonte, Classificação): apagados `scroll-fade.css`, `scroll-fade.ts` e o teste, e o atributo `data-scroll-fade`. Substitui a seção "Degradê de rolagem no rodapé" acima (e a pendência de motion dele).
 - **Botão de busca com a busca aberta:** aparência de desabilitado (Figma 126:4529 e print de Caio): superfície padrão e ícone em `content/disabled`, sem hover. Com o painel aberto o botão não faz nada (`aria-disabled="true"`, mantém `aria-expanded`): fecha-se pelo "x" do painel ou Esc. Vale para qualquer botão preenchido que abre um painel (`controls`).
+
+## Sessão 19d: bairro enquadra o mapa (Caio)
+
+- **A cada clique em um bairro da busca**, o mapa enquadra (`fitBounds`, sem animação) todas as praias que a lista do bairro mostra, para o usuário ver de onde se trata. Evento `map-fit` (`slugs`) da busca para o mapa; `fitBeaches` no controlador. Mesmo padding de 64px e zoom máximo de enquadramento de grupo (`GROUP_FIT_MAX_ZOOM`). Se nenhuma dessas praias estiver no mapa, a câmera não mexe.
+- **Mobile:** a folha da busca cobre a parte de baixo do mapa; o enquadramento soma a altura coberta ao padding de baixo, para as praias ficarem na parte visível, acima da folha. No desktop o mapa já encolhe ao lado do painel.
+- A seta de voltar (sair da vista do bairro) não reenquadra o mapa; escolher uma praia da lista segue como antes (enquadra a praia).

@@ -734,6 +734,14 @@ const neighborhoods = suggestNeighborhoods(results);
         hoodName = hood.dataset.hood!;
         hoodPicked = true;
         render();
+        // Mostra no mapa de onde se trata: enquadra as praias do bairro (a cada clique).
+        document.getElementById('beach-map')?.dispatchEvent(
+          new CustomEvent('map-fit', {
+            detail: {
+              slugs: items.filter((i) => !i.li.hidden).map((i) => i.slug),
+            },
+          }),
+        );
         // O campo sai da vista: o foco vai para a seta de voltar.
         back.querySelector<HTMLElement>('button')?.focus();
         return;

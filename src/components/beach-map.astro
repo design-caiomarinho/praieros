@@ -171,6 +171,19 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     const { slug } = (e as CustomEvent<{ slug: string }>).detail;
     controller?.focusBeach(slug);
   });
+  // Bairro escolhido na busca: enquadra as praias dele. No mobile a folha da busca cobre a parte
+  // de baixo do mapa, então o enquadramento ganha essa folga embaixo.
+  root.addEventListener('map-fit', (e) => {
+    const { slugs } = (e as CustomEvent<{ slugs: string[] }>).detail;
+    const sheet = document.getElementById('search');
+    const m = root.getBoundingClientRect();
+    const s = sheet && !sheet.hidden ? sheet.getBoundingClientRect() : null;
+    const covered =
+      s && s.width >= m.width - 1 && s.top > m.top
+        ? Math.max(0, m.bottom - s.top)
+        : 0;
+    controller?.fitBeaches(slugs, covered);
+  });
   root.addEventListener('marker-set', (e) => {
     const d = (
       e as CustomEvent<{ slug: string | null; pointId?: string | null }>
