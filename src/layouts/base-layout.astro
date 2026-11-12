@@ -32,6 +32,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   *::after {
     box-sizing: border-box;
   }
+  /* Sem "puxar para atualizar" nem efeito de rebote: os gestos de arrastar (folha, mapa) são do app. */
+  html,
+  body {
+    overscroll-behavior: none;
+  }
   body {
     margin: 0;
     background: var(--s-color-surface-default);

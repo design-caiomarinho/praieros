@@ -545,6 +545,21 @@ const sourceBulletin = site.current
       :global(:is(.panel, .search, .source-slot)) {
       overflow-y: hidden;
     }
+    /* Áreas de gesto: o navegador não pode tratar o arrastar como rolagem da página nem como
+       "puxar para atualizar". Na origem a folha inteira é área de gesto (o conteúdo não rola); com a
+       folha inteira, só a alça (a zona do título é tratada em sidebar-sheet.ts) e a rolagem do
+       conteúdo não passa para a página. */
+    .sidebar:not([data-expanded]) .sidebar__viewport,
+    .sidebar:not([data-expanded]) .sidebar__viewport :global(*) {
+      touch-action: none;
+    }
+    .sidebar__viewport :global(:is(.panel, .search, .source-slot)) {
+      overscroll-behavior: contain;
+    }
+    .sidebar[data-moving] .sidebar__viewport,
+    .sidebar[data-moving] .sidebar__viewport :global(*) {
+      touch-action: none;
+    }
     /* Alça (drag handle) no topo da folha: faixa de toque de 24 px com a barra de 32×4 px. */
     .sidebar__viewport :global(.sidebar__handle) {
       position: absolute;
@@ -552,6 +567,7 @@ const sourceBulletin = site.current
       top: 0;
       left: 0;
       right: 0;
+      touch-action: none;
       display: flex;
       align-items: flex-start;
       justify-content: center;
