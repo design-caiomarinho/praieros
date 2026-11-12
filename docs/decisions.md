@@ -395,4 +395,4 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Glossário:** o título do 4º termo está como "Imprópria" no Figma (126:7534), mas o texto descreve "Sem resultado"; exibimos **Sem resultado** (provável erro de camada). Decisão do Caio.
 - **Boletim:** "nº 36 / 29/10/2026" é exemplo; número (formato `37/2026`, como na ficha), data e PDF vêm do boletim atual. Sem boletim atual: a linha fica "Inema, Boletim de Balneabilidade." e o botão some.
 - **Créditos do mapa:** uma linha, sem prosa, com os links das licenças, em nova aba (com "(abre em nova aba)" só para leitor de tela). Provisória: não está no design. Sem link para a página oficial do Inema (o design só traz "Boletim original"). Decisão do Caio.
-- **Tokens:** o negrito dos rótulos ("Fonte:" etc.) é Bold no Figma; os tokens só têm 400/500/600, usamos 600 (o maior). Créditos do mapa em `caption-small`.
+- **Tokens:** o negrito dos rótulos ("Fonte:" etc.) é Bold no Figma; os tokens só têm 400/500/600, usamos 600 (o maior). Créditos do mapa no mesmo texto dos demais itens (`body-medium`), com sublinhado nos links.
