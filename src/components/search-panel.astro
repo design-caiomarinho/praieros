@@ -325,16 +325,19 @@ const neighborhoods = suggestNeighborhoods(results);
     text-align: left;
     cursor: pointer;
   }
+  /* Mesmo padrão do botão secundário (outlined), como os bairros: hover e foco trocam a
+     superfície; foco (teclado) ganha o anel. */
   .result:hover:not([aria-disabled='true']),
   .result:focus-visible {
-    border-color: var(--s-color-border-accent);
+    background: var(--s-color-surface-hover);
   }
   .result:focus-visible {
     outline: var(--border-width-default) solid var(--s-color-border-focus);
     outline-offset: var(--primitives-spacing-4);
   }
-  /* Desabilitado (sem marcador no mapa): só borda e texto mudam; a superfície não muda. */
+  /* Desabilitado (sem marcador no mapa): igual ao botão secundário desabilitado. */
   .result[aria-disabled='true'] {
+    background: transparent;
     border-color: var(--s-color-surface-hover);
     color: var(--s-color-content-disabled);
     cursor: not-allowed;
