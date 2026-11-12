@@ -33,6 +33,8 @@ interface Props {
   note?: string;
   /** Mostra o aviso de chuva (decidido por `shouldShowRainNotice`). */
   rainNotice?: boolean;
+  /** Nº de pontos de coleta da praia para o subtítulo (padrão: `points.length`). */
+  pointCount?: number;
   layout?: 'desktop' | 'mobile';
   detailsHref?: string;
   sourceHref?: string;
@@ -46,17 +48,17 @@ const {
   notice,
   note,
   rainNotice = false,
+  pointCount = points.length,
   layout = 'desktop',
   detailsHref = '#',
   sourceHref = '/fonte',
 } = Astro.props;
 
-const subtitle = [
-  neighborhood,
-  points.length > 0 ? pointsLabel(points.length) : null,
-]
+const subtitle = [neighborhood, pointCount > 0 ? pointsLabel(pointCount) : null]
   .filter(Boolean)
   .join(' · ');
+// Figma 125:3674: sem resultado, a ficha mostra o estado vazio no lugar dos pontos e das ações.
+const noResult = notice === 'no-result';
 ---
 
 <section
@@ -84,7 +86,9 @@ const subtitle = [
     </div>
     <div class="bulletin">
       <span class="bulletin-chip">
-        Boletim nº {bulletin.number} · emitido em {bulletin.date}
+        {noResult
+          ? 'Boletim não encontrado'
+          : `Boletim nº ${bulletin.number} · emitido em ${bulletin.date}`}
       </span>
       {note && <p class="note">{note}</p>}
     </div>
@@ -92,7 +96,18 @@ const subtitle = [
 
   <div class="body">
     <div class="main">
-      {points.length > 0 && (
+      {noResult && (
+        <div class="empty">
+          <div class="empty-icon">
+            <Icon name="warning" size={24} />
+          </div>
+          <div class="empty-text">
+            <p class="empty-title">Sem resultado</p>
+            <p class="empty-body">Não há resultado do Inema para esta praia.</p>
+          </div>
+        </div>
+      )}
+      {!noResult && points.length > 0 && (
         <div class="points">
           <h3>Pontos de coleta</h3>
           <div class="cards">
@@ -115,12 +130,14 @@ const subtitle = [
         </div>
       )}
 
-      <div class="buttons">
-        <Button variant="primary" href={detailsHref}>
-          Ver detalhes
-        </Button>
-        <Button variant="secondary">Compartilhar praia</Button>
-      </div>
+      {!noResult && (
+        <div class="buttons">
+          <Button variant="primary" href={detailsHref}>
+            Ver detalhes
+          </Button>
+          <Button variant="secondary">Compartilhar praia</Button>
+        </div>
+      )}
     </div>
 
     <div class="foot">
@@ -249,6 +266,51 @@ const subtitle = [
     display: flex;
     flex-direction: column;
     gap: var(--space-stack-md);
+  }
+  /* Estado vazio (Figma 173:2510): centralizado no espaço entre o cabeçalho e os links. */
+  .main:has(.empty) {
+    flex: 1;
+    justify-content: center;
+  }
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-gap-xl);
+  }
+  .empty-icon {
+    display: flex;
+    padding: var(--space-inset-sm);
+    background: var(--s-color-surface-accent-subtle);
+    color: var(--s-color-content-accent);
+  }
+  .empty-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-gap-md);
+    width: 230px;
+    text-align: center;
+  }
+  .empty-title,
+  .empty-body {
+    margin: 0;
+  }
+  .empty-title {
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-heading-large-family);
+    font-weight: var(--s-typo-heading-large-weight);
+    font-size: var(--s-typo-heading-large-size);
+    line-height: var(--s-typo-heading-large-line);
+    letter-spacing: var(--s-typo-heading-large-spacing);
+  }
+  .empty-body {
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
   }
   .points {
     display: flex;

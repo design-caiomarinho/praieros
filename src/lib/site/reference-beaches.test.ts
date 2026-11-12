@@ -69,9 +69,10 @@ describe('praia de referência no modelo do site', () => {
     expect(ref.referenceBulletin?.number).toBe(2);
   });
 
-  it('a ficha diz que não consta no boletim e não tem pontos de coleta', () => {
+  it('a ficha é "sem resultado", sem nota e sem pontos de coleta', () => {
     const panel = toPanelData(ref, site.current, new Map())!;
-    expect(panel.note).toBe('Esta praia não consta no boletim nº 2/2026.');
+    expect(panel.note).toBeUndefined();
+    expect(panel.pointCount).toBe(0);
     expect(panel.notice).toBe('no-result');
     expect(panel.points).toEqual([]);
     expect(panel.bulletin.date).toBe('02/01/2026');

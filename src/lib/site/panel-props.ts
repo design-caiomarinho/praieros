@@ -34,6 +34,8 @@ export interface BeachPanelData {
     /** Posição automática no mapa: mostra "Posição aproximada". */
     accuracy?: Accuracy | null;
   }[];
+  /** Nº de pontos de coleta da praia para o subtítulo (a ficha sem resultado não lista os pontos). */
+  pointCount?: number;
   notice?: 'outdated' | 'no-result';
   note?: string;
   /** Aviso de chuva (texto do design): ver `shouldShowRainNotice`. */
@@ -63,19 +65,21 @@ export function toPanelData(
     },
   };
 
-  // R4: sem status exibível. Mostra só a nota (a data do boletim é a do atual).
+  // R4: sem status exibível. Figma 125:3674: a ficha mostra "Boletim não encontrado" e o
+  // estado vazio; a nota "não consta no boletim nº X" deixou de ser exibida (a faixa já diz).
   if (beach.kind === 'never' || beach.kind === 'reference') {
     return {
       ...base,
       points: [],
+      pointCount: beach.points.length,
       notice: 'no-result',
-      note: `Esta praia não consta no boletim nº ${number}.`,
     };
   }
   if (beach.kind === 'too-old') {
     return {
       ...base,
       points: [],
+      pointCount: beach.points.length,
       notice: 'no-result',
       note: beach.lastAnalysisDate
         ? `A última análise foi em ${formatDate(beach.lastAnalysisDate)}, antiga demais para mostrar.`

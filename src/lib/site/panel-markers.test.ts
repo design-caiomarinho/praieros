@@ -92,7 +92,8 @@ describe('toPanelData (estados da ficha)', () => {
     )!;
     expect(d.notice).toBe('no-result');
     expect(d.points).toEqual([]);
-    expect(d.note).toBe('Esta praia não consta no boletim nº 37/2026.');
+    // Figma 125:3674: sem nota; a ficha mostra "Boletim não encontrado".
+    expect(d.note).toBeUndefined();
     expect(d.bulletin.date).toBe('06/11/2026');
   });
 

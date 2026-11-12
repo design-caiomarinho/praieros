@@ -2,10 +2,10 @@
 
 ## Faixas de topo
 
-| Componente     | Texto                                                               | Origem                                                                      |
-| -------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| OutdatedBanner | Boletim desatualizado. A situação pode ter mudado.                  | Figma, nó `132:8746`                                                        |
-| NoResultBanner | Sem resultado. A praia não consta no boletim ou a análise é antiga. | Figma, nó `125:3786` (decisão de Caio em 2026-11-11: vale o texto do Figma) |
+| Componente     | Texto                                              | Origem                                                                                                   |
+| -------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| OutdatedBanner | Boletim desatualizado. A situação pode ter mudado. | Figma, nó `132:8746`                                                                                     |
+| NoResultBanner | Sem resultado. A praia não consta no boletim.      | Figma, nó `125:3786`, texto atualizado pelo nó `125:3674` (2026-11-12); vale também para "antiga demais" |
 
 ## Cabeçalho e ficha (sessão 5)
 
@@ -57,3 +57,12 @@
 | Botões da ficha | Ver detalhes · Compartilhar praia · Como ler e fonte · Boletim original | Figma 123:2440 |
 
 Sessão 11: "Posição aproximada" e "Posição muito aproximada" (linhas acima) **não são mais exibidas** no cartão do ponto (decisão do Caio; o Figma não tem). O chip do boletim passou a "Boletim nº X · emitido em dd/mm/aaaa" (Figma 123:2445).
+
+## Ficha sem resultado (Figma 125:3674, 2026-11-12)
+
+| Onde                                     | Texto                                      | Observação                                                              |
+| ---------------------------------------- | ------------------------------------------ | ----------------------------------------------------------------------- |
+| Chip do boletim                          | Boletim não encontrado                     | Substitui "Boletim nº X · emitido em dd/mm/aaaa" na ficha sem resultado |
+| Estado vazio, título                     | Sem resultado                              |                                                                         |
+| Estado vazio, texto                      | Não há resultado do Inema para esta praia. |                                                                         |
+| Nota "Esta praia não consta no boletim…" | Não exibida mais                           | A faixa já diz. Fica só a nota de "antiga demais" (R4b)                 |

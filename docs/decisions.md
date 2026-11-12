@@ -331,3 +331,13 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Bairro (2026-11-11):** a ficha nunca mostra "Salvador" no lugar do bairro; sem bairro conhecido, o subtítulo mostra só "N ponto(s) de coleta". Os bairros que faltavam (14 do catálogo e as 16 praias de referência) foram preenchidos por consulta inversa do OpenStreetMap (`npm run catalog:neighborhoods`, Nominatim, só OSM), **sem conferência**: ficam `neighborhoodVerified: false` no catálogo e, nas referências, só aparecem em desenvolvimento (como o bairro não conferido do catálogo). Em produção, bairro não conferido não aparece. **Conferir na página `/dev/catalog-review`**: o OSM traz grafias erradas ("Rio Vemelho" por Rio Vermelho) e bairros duvidosos (Praia de Inema -> "Quilombo do Alto do Tororó", Praia do Alvejado -> "Rio Sena", Bonfim/Pedra Furada/Marina Contorno). Rodar o script de novo não altera bairros já preenchidos; `catalog:reference` regrava as referências e perde os bairros (rodar o script depois).
 
 - **Botões de zoom do mapa (2026-11-12):** + , − e ajustar à tela usam `ButtonIcon` `outlined` tamanho `xsmall` (40 px), em vez de `medium` (56 px). Só muda o tamanho; o `label` e o comportamento são os mesmos.
+
+### Ficha "Sem resultado" (Figma 125:3674, 2026-11-12)
+
+- **Corpo:** estado vazio centralizado (ícone de alerta, "Sem resultado", "Não há resultado do Inema para esta praia."). Saem os botões "Ver detalhes" e "Compartilhar praia" nesse estado (props e lógica continuam).
+- **Exceção ao princípio 2 (data do boletim):** o chip vira "Boletim não encontrado", sem número nem data. A fonte continua no rodapé. Decisão de Caio.
+- **Nota "Esta praia não consta no boletim nº X." deixa de ser exibida** (nunca apareceu e referência).
+- **Variação derivada (R4b, antiga demais):** mantém "A última análise foi em dd/mm/aaaa, antiga demais para mostrar." (tabela de estados do CLAUDE.md). A faixa do topo usa o texto do Figma nos dois casos.
+- **Subtítulo:** usa o nº real de pontos da praia (`pointCount`); com 0 pontos mostra só o bairro, ou nada. Nunca "0 pontos".
+- **Navbar:** divisor de 1px antes de todos os botões, inclusive o primeiro (como no Figma).
+- **Botões de zoom:** o Figma 125:3687 mostra 56 px; mantido o 40 px (xsmall) da decisão de 2026-11-12, por ser mais recente. Pendente de confirmação.
