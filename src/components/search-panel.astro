@@ -240,6 +240,8 @@ const neighborhoods = suggestNeighborhoods(results);
       flex-shrink: 0;
       width: var(--border-width-accent);
       overflow: hidden;
+      /* `clip` não rola: o foco no campo não desloca o painel dentro da coluna. */
+      overflow: clip;
       background: var(--s-color-surface-accent-default);
       transition: width var(--motion-duration-panel-surface)
         var(--motion-easing-panel);
