@@ -36,7 +36,7 @@ Tabela a preencher quando o motion for implementado:
 | Os três acima                                                        | Fechar       | Inverso: o painel sai primeiro (atraso 0) e a camada azul depois (atraso 100 ms); linha volta com atraso 1078 ms; `.search` some ao fim de 1500 ms | mesmas durações        | mesma curva da entrada (`easing-panel`, `easing-header-line`; sem espelhar) | Some na hora           |
 | Folha de busca (mobile, derivado)                                    | Abrir/fechar | `translateY(100% → 0)`, sem camada azul                                                                                                            | como o painel          | `easing-panel`                                                              | Sem transição          |
 
-> **Tempos atuais (sessão 25):** painel, camada azul e câmera 800 ms; banner e faixa de carregamento 800 ms; linha do cabeçalho 223 ms (atrasos 162 e 575 ms). Os números abaixo são os originais do Figma; valem os tokens.
+> **Tempos atuais (sessão 25):** painel, camada azul e câmera 1000 ms (a altura da folha mobile ao arrastar, 800 ms: token `sheet-drag`); banner e faixa de carregamento 800 ms; linha do cabeçalho 223 ms (atrasos 162 e 575 ms). Os números abaixo são os originais do Figma; valem os tokens.
 
 Tokens (`tokens/extra.json`, `--motion-*`): `duration-{panel,panel-surface,header-line,hover,dissolve,pin-label,pin-hover}`, `delay-{panel,panel-surface,panel-surface-close,header-line,header-line-close}`, `easing-{panel,header-line,hover,dissolve,pin-label,pin-hover}`. Valores do Figma 187:3839; derivações em `docs/decisions.md`.
 

@@ -71,9 +71,7 @@ export function initSidebarSheet(): void {
     shell!.setAttribute('data-moving', '');
     syncTop();
     const ms = cssTimeMs(
-      getComputedStyle(shell!).getPropertyValue(
-        '--motion-duration-panel-surface',
-      ),
+      getComputedStyle(shell!).getPropertyValue('--motion-duration-sheet-drag'),
     );
     settleTimer = window.setTimeout(settle, ms + 100);
   }
