@@ -67,7 +67,6 @@ const neighborhoods = suggestNeighborhoods(results);
       <ul class="results" data-results aria-label="Resultados da busca">
         {results.map((r) => {
           const meta = [
-            STATUS_LABELS[r.status],
             r.neighborhood,
             r.pointCount > 0 ? pointsLabel(r.pointCount) : null,
           ]
@@ -91,6 +90,7 @@ const neighborhoods = suggestNeighborhoods(results);
                   <span class="name">{r.name}</span>
                   <span class="meta">
                     <span class={`dot dot--${r.status}`} aria-hidden="true" />
+                    <span class="sr-only">{STATUS_LABELS[r.status]}</span>
                     <span class="sub">{meta}</span>
                   </span>
                   {improper && <span class="sub">{improper}</span>}
