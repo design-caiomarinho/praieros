@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "region": "salvador",
+  "beaches": [
+    {
+      "name": "Praia da Paciência",
+      "osmType": "way",
+      "osmId": 243832488,
+      "lat": -13.011314123353797,
+      "lng": -38.497019196361066,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia da Preguiça",
+      "osmType": "way",
+      "osmId": 456698656,
+      "lat": -12.978779338938576,
+      "lng": -38.5177365878596,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia da Ribeira",
+      "osmType": "way",
+      "osmId": 456698258,
+      "lat": -12.911034910917346,
+      "lng": -38.49784220294175,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia da Sereia",
+      "osmType": "way",
+      "osmId": 178328950,
+      "lat": -13.011333251744983,
+      "lng": -38.50400875901295,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia de Inema",
+      "osmType": "way",
+      "osmId": 1159066795,
+      "lat": -12.811750548534272,
+      "lng": -38.49165958555633,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia de Ipitanga",
+      "osmType": "relation",
+      "osmId": 20617876,
+      "lat": -12.911371521770599,
+      "lng": -38.30499516478397,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia de Jaguaribe",
+      "osmType": "relation",
+      "osmId": 3814743,
+      "lat": -12.957297846922947,
+      "lng": -38.389566701738524,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia de Pedra do Sal",
+      "osmType": "relation",
+      "osmId": 20617870,
+      "lat": -12.952897212433825,
+      "lng": -38.34712675113649,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia de Santana",
+      "osmType": "way",
+      "osmId": 243832489,
+      "lat": -13.011778887204448,
+      "lng": -38.49251169537807,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia Do Alvejado",
+      "osmType": "relation",
+      "osmId": 8458216,
+      "lat": -12.900316379564956,
+      "lng": -38.49112715634157,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia do Paredão",
+      "osmType": "relation",
+      "osmId": 8457817,
+      "lat": -12.937544831702356,
+      "lng": -38.50759900761565,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia dos Artistas",
+      "osmType": "way",
+      "osmId": 405114767,
+      "lat": -12.975927712082953,
+      "lng": -38.41787791968652,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia Jardim de Alah",
+      "osmType": "way",
+      "osmId": 276784352,
+      "lat": -12.998040796332095,
+      "lng": -38.4433419648862,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Praia Terceira Ponte",
+      "osmType": "way",
+      "osmId": 287652945,
+      "lat": -12.960958797411877,
+      "lng": -38.39631472148164,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Prainha da Fonte do Boi",
+      "osmType": "way",
+      "osmId": 327395639,
+      "lat": -13.0157081,
+      "lng": -38.485199,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    },
+    {
+      "name": "Prainha do Solar do União",
+      "osmType": "way",
+      "osmId": 609043813,
+      "lat": -12.981316685941778,
+      "lng": -38.519883861050445,
+      "source": "osm",
+      "fetchedAt": "2026-11-12"
+    }
+  ]
+}

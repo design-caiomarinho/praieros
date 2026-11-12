@@ -463,8 +463,8 @@
       "points": [
         {
           "code": "SSA RO 100",
-          "lat": -12.93596660765679,
-          "lng": -38.509152422885094,
+          "lat": -12.935723354055723,
+          "lng": -38.509362073458426,
           "source": {
             "provider": "auto",
             "method": "auto-placed",
@@ -511,22 +511,18 @@
       "points": [
         {
           "code": "SSA CG 100",
-          "lat": -12.943671011060637,
-          "lng": -38.50337448398459,
+          "lat": -12.943116929999471,
+          "lng": -38.50369299404121,
           "source": {
             "provider": "auto",
             "method": "auto-placed",
-            "level": "b",
-            "basis": "beach-name",
+            "level": "g",
+            "basis": "geometry-spread",
             "confidence": "low",
-            "reason": "nível g: nenhum elemento do OSM com o nome da praia dentro de Salvador → a: a 441 m do litoral (máximo 150 m) → nível b: nome da praia (Rua do Canta Galo); ajustado 82 m até a linha da costa",
-            "query": "Canta Galo, Salvador, Bahia",
-            "geometry": [],
-            "osm": {
-              "type": "way",
-              "id": 391131807,
-              "displayName": "Rua do Canta Galo, Calçada, Salvador, Bahia, Região Nordeste, 40455-260, Brasil"
-            },
+            "reason": "distribuído ao longo da geometria da praia",
+            "query": null,
+            "geometry": ["way/259992312"],
+            "osm": null,
             "placedAt": "2026-11-11"
           },
           "verified": false,
@@ -537,10 +533,6 @@
               "meters": null
             },
             "nearBeach": {
-              "status": "n/a",
-              "meters": null
-            },
-            "nearCoast": {
               "status": "pass",
               "meters": 0
             },
@@ -563,8 +555,8 @@
       "points": [
         {
           "code": "SSA MC 100",
-          "lat": -12.974996856700958,
-          "lng": -38.51635161011767,
+          "lat": -12.974916048688653,
+          "lng": -38.51626862383368,
           "source": {
             "provider": "auto",
             "method": "auto-placed",
