@@ -127,4 +127,5 @@ Fase 3, sessão 11: painel lateral fiel ao Figma 123:2440 (aviso de chuva por re
 Fase 3, sessão 12: busca desktop (`search-panel`, `src/lib/search/` com testes): sugestões por bairro do catálogo, resultados com D1, sem resultado provisório; "Perto de você" e mobile pendentes (ver `docs/decisions.md`).
 Fase 3, sessão 13: bairro automático por polígono do OSM (`npm run catalog:neighborhoods`, níveis g/a/b, nunca grava `verified`); aparece em produção, com a tabela de nomes aprovada `data/catalog/neighborhood-names.json` (ver `docs/decisions.md`).
 Fase 3, sessão 14: painel Classificação (desktop, só Própria; Imprópria pendente de texto), aberto por "Ver detalhes" na ficha. Ver `docs/decisions.md`.
+Fase 3, sessão 15: painel Fonte e como ler (desktop, `source-panel.astro`, aberto pelo cabeçalho e pela ficha, créditos do mapa provisórios). Ver `docs/decisions.md`.
 Próxima: folha inferior (mobile) e busca mobile. Pendentes: ler os Termos do OpenFreeMap antes de publicar; termos de uso do site do Inema.

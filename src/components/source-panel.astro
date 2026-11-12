@@ -1,0 +1,293 @@
+---
+import Button from './button.astro';
+import ButtonIcon from './button-icon.astro';
+
+// Painel "Fonte e como ler" (Figma 126:4364, desktop). Só apresentação: número, data e PDF
+// vêm do boletim atual do modelo. Voltar e fechar são ligados em index.astro.
+interface Props {
+  /** Boletim atual; `null` se o modelo não tem nenhum (a linha de fonte fica sem número). */
+  bulletin: { number: string; date: string; pdfUrl?: string } | null;
+}
+
+const { bulletin } = Astro.props;
+
+// Glossário (Figma 126:5121). O quarto termo está como "Imprópria" no Figma (erro de camada);
+// exibimos "Sem resultado" (ver docs/decisions.md).
+const glossary = [
+  {
+    term: 'Balneabilidade',
+    text: 'Condição da água para banho, medida pela quantidade de bactérias de origem fecal.',
+  },
+  {
+    term: 'Própria',
+    text: 'A água estava dentro do limite para banho no dia da coleta.',
+  },
+  {
+    term: 'Imprópria',
+    text: 'A água passou do limite no dia da coleta. Evite o banho.',
+  },
+  {
+    term: 'Sem resultado',
+    text: 'O boletim não traz análise para este ponto. Não dá para dizer se a água está própria ou imprópria.',
+  },
+];
+
+// Linha de créditos do mapa (não está no design; provisória, ver docs/copy.md).
+const mapCredits = [
+  {
+    text: '© OpenStreetMap contributors',
+    href: 'https://www.openstreetmap.org/copyright',
+  },
+  { text: '© OpenMapTiles', href: 'https://openmaptiles.org' },
+  { text: 'OpenFreeMap', href: 'https://openfreemap.org' },
+];
+---
+
+<section class="panel" aria-label="Fonte e como ler" tabindex="-1">
+  <header class="head">
+    <div class="top">
+      <div class="title">
+        <div class="back" data-source-back>
+          <ButtonIcon
+            variant="ghost"
+            size="xsmall"
+            icon="arrow-left"
+            label="Voltar"
+          />
+        </div>
+        <h2>Fonte e como ler</h2>
+      </div>
+      <div class="close" data-source-close>
+        <ButtonIcon
+          variant="ghost"
+          size="xsmall"
+          icon="close"
+          label="Fechar fonte e como ler"
+        />
+      </div>
+    </div>
+    <p class="intro">
+      Um jeito mais claro de ler o boletim de balneabilidade das praias de
+      Salvador. Aqui você entende os termos do boletim e de onde vêm as
+      informações.
+    </p>
+    <p class="independent">
+      O Praieros é independente. Não é um canal oficial e não tem vínculo com o
+      Inema. Para consultar o documento original, use o link do boletim.
+    </p>
+  </header>
+
+  <div class="section">
+    <h3>Glossário</h3>
+    <dl class="glossary">
+      {glossary.map(({ term, text }) => (
+        <div class="entry">
+          <dt>{term}</dt>
+          <dd>{text}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+
+  <div class="section">
+    <h3>Fontes e limites</h3>
+    <div class="limits">
+      <p>
+        <strong>Fonte: </strong>
+        {bulletin
+          ? `Inema, Boletim de Balneabilidade nº ${bulletin.number}, emitido em ${bulletin.date}.`
+          : 'Inema, Boletim de Balneabilidade.'}
+      </p>
+      <p>
+        <strong>Posições no mapa: </strong>aproximadas. Os pontos de coleta
+        podem estar em outro lugar da praia.
+      </p>
+      <p>
+        <strong>Data da coleta: </strong>nem todo boletim informa a data da
+        coleta. Quando falta, mostramos só a data de emissão.
+      </p>
+      <p>
+        <strong>Atualização: </strong>o Praieros pode demorar a refletir um
+        boletim novo. Confira sempre a data de emissão.
+      </p>
+      <p class="map-credit">
+        Mapa:{' '}
+        {mapCredits.map(({ text, href }, i) => (
+          <Fragment>
+            {i > 0 && ' · '}
+            <a href={href} target="_blank" rel="noopener noreferrer">
+              {text}
+              <span class="sr-only"> (abre em nova aba)</span>
+            </a>
+          </Fragment>
+        ))}
+      </p>
+    </div>
+    {bulletin?.pdfUrl && (
+      <div class="original">
+        <Button
+          variant="secondary"
+          href={bulletin.pdfUrl}
+          target="_blank"
+          spread
+          iconRight="external"
+        >
+          Boletim original
+        </Button>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .panel {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: var(--size-panel-width);
+    max-width: 100%;
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+    border-left: var(--border-width-default) solid var(--s-color-border-default);
+  }
+  /* Recebe o foco ao abrir (sem anel: não é um controle). */
+  .panel:focus {
+    outline: none;
+  }
+  /* Cabeçalho (Figma 126:4365): padding 24, borda inferior. */
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-lg);
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-gap-md);
+  }
+  .title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+    min-width: 0;
+  }
+  .back,
+  .close {
+    display: contents;
+  }
+  h2 {
+    margin: 0;
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-heading-large-family);
+    font-weight: var(--s-typo-heading-large-weight);
+    font-size: var(--s-typo-heading-large-size);
+    line-height: var(--s-typo-heading-large-line);
+    letter-spacing: var(--s-typo-heading-large-spacing);
+  }
+  .intro,
+  .independent,
+  dd {
+    margin: 0;
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  /* Caixa "independente" (Figma 126:5090): fundo forte, borda, padding 16. */
+  .independent {
+    margin-top: var(--space-stack-xs);
+    padding: var(--space-inset-md);
+    background: var(--s-color-surface-strong);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+  }
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap-md);
+    padding: var(--space-inset-lg);
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  h3 {
+    margin: 0;
+    color: var(--s-color-content-muted);
+    font-family: var(--s-typo-body-small-family);
+    font-weight: var(--s-typo-body-small-weight);
+    font-size: var(--s-typo-body-small-size);
+    line-height: var(--s-typo-body-small-line);
+    letter-spacing: var(--s-typo-body-small-spacing);
+  }
+  .glossary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap-md);
+    margin: 0;
+  }
+  .entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-2xs);
+  }
+  dt {
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-body-large-family);
+    font-weight: var(--s-typo-body-large-weight);
+    font-size: var(--s-typo-body-large-size);
+    line-height: var(--s-typo-body-large-line);
+    letter-spacing: var(--s-typo-body-large-spacing);
+  }
+  .limits {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+  }
+  .limits p {
+    margin: 0;
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  /* Negrito do Figma (Bold) não existe nos tokens: usa o maior peso, 600 (ver docs/decisions.md). */
+  strong {
+    font-weight: var(--primitives-font-weight-600);
+  }
+  .limits .map-credit {
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-caption-small-family);
+    font-weight: var(--s-typo-caption-small-weight);
+    font-size: var(--s-typo-caption-small-size);
+    line-height: var(--s-typo-caption-small-line);
+    letter-spacing: var(--s-typo-caption-small-spacing);
+  }
+  .map-credit a {
+    color: inherit;
+    text-decoration: underline;
+  }
+  .map-credit a:hover {
+    color: var(--s-color-content-primary);
+  }
+  .map-credit a:focus-visible {
+    outline: var(--border-width-default) solid var(--s-color-content-primary);
+    outline-offset: var(--space-stack-2xs);
+  }
+  .original > :global(*) {
+    width: 100%;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

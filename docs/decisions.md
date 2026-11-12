@@ -387,3 +387,12 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Links:** "Boletim original" = PDF do boletim da praia (do modelo). "Ver resolução" = https://www.ana.gov.br/portalpnqa/Publicacao/Resolu%C3%A7%C3%A3o_Conama_274_Balneabilidade.pdf, **provisória: a URL canônica ainda será confirmada**.
 - **Ícone:** `arrow-left` (24 px) salvo do Figma (nó 125:4153). Valores visuais todos de tokens; nenhum token novo.
 - **Compartilhar praia:** botão presente como no design, ainda sem ação (como o da ficha).
+
+## Sessão 15: Fonte e como ler (Figma 126:4345)
+
+- **Tela:** só desktop (o design não cobre mobile; fica para a sessão da folha inferior). Painel dentro de `index.astro` (`source-panel.astro`), sem rota `/fonte`. Os links "Fonte e como ler" (cabeçalho) e "Como ler e fonte" (ficha) apontam para `#fonte`; no desktop abrem o painel no lugar da ficha/busca; no mobile ainda não fazem nada.
+- **Navegação:** voltar e Esc devolvem a ficha que estava aberta (ou fecham, se não havia); fechar encerra a ficha também. O foco volta a quem abriu. Escolher marcador ou abrir a busca tira a Fonte do lugar.
+- **Glossário:** o título do 4º termo está como "Imprópria" no Figma (126:7534), mas o texto descreve "Sem resultado"; exibimos **Sem resultado** (provável erro de camada). Decisão do Caio.
+- **Boletim:** "nº 36 / 29/10/2026" é exemplo; número (formato `37/2026`, como na ficha), data e PDF vêm do boletim atual. Sem boletim atual: a linha fica "Inema, Boletim de Balneabilidade." e o botão some.
+- **Créditos do mapa:** uma linha, sem prosa, com os links das licenças, em nova aba (com "(abre em nova aba)" só para leitor de tela). Provisória: não está no design. Sem link para a página oficial do Inema (o design só traz "Boletim original"). Decisão do Caio.
+- **Tokens:** o negrito dos rótulos ("Fonte:" etc.) é Bold no Figma; os tokens só têm 400/500/600, usamos 600 (o maior). Créditos do mapa em `caption-small`.

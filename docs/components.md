@@ -20,6 +20,7 @@ Situação no Figma: **Componentizado** ou **Pendente de componentizar** (existe
 | SearchPanel         | desktop (`mobile` reservado, não implementado): inicial (bairros), resultados, sem resultado de busca (provisório)                                                                                                                                                           | Nó `117:5075` (só o estado inicial)                          | Pendente de componentizar | `src/components/search-panel.astro`                                         |
 | SearchResultItem    | nome, bairro · pontos, "N de M pontos impróprios" (D1), chip de status, "Boletim desatualizado"; hover, foco (só teclado)                                                                                                                                                    | Sem nó (derivado por lógica, pedido de Caio)                 | Pendente de componentizar | `src/components/search-panel.astro`                                         |
 | ClassificationPanel | desktop; Própria (único texto no design); Imprópria pendente (sem oferta); `Ver detalhes` no BeachPanel abre, voltar e fechar                                                                                                                                                | Nó `125:3895` (tela Classificação / Desktop)                 | Pendente de componentizar | `src/components/classification-panel.astro`                                 |
+| SourcePanel         | desktop; Fonte e como ler (glossário, fontes e limites, créditos do mapa, Boletim original); aberto pelo botão de informação do cabeçalho e por Como ler e fonte na ficha; voltar, fechar e Esc                                                                              | Nó `126:4345` (tela Como ler e fonte / Desktop)              | Pendente de componentizar | `src/components/source-panel.astro`                                         |
 
 Layout (não são componentes): `src/layouts/base-layout.astro` e `src/pages/index.astro`. Pendentes de componentizar (sessão 8a): BeachMap (tela do mapa com os estados carregando e indisponível e a pilha de zoom) e o marcador em sua versão final (símbolos e selecionado).
 
@@ -41,4 +42,5 @@ Ficha desktop (sessão 11): **pendentes de componentizar no Figma**: (1) aviso d
 4. Faixa Desatualizado / Sem resultado **no topo do mapa** (desktop): hoje é o mesmo `OutdatedBanner` / `NoResultBanner` (`132:8746`, `125:3786`) posicionado sobre o mapa, fora do painel.
 5. Marcador agrupado, selo com o total, pin numerado e cartão a 50% (sessão 9).
 6. Ficha sem cartões de ponto, para praia de referência (sessão 10).
-7. BeachMap (carregando, erro, zoom) e BeachPanel como um todo (sem nó próprio).
+7. SourcePanel (nó `126:4345`, o painel como um todo).
+8. BeachMap (carregando, erro, zoom) e BeachPanel como um todo (sem nó próprio).

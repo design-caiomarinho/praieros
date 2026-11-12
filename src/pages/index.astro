@@ -5,6 +5,7 @@ import BeachMap from '../components/beach-map.astro';
 import BeachPanel from '../components/beach-panel.astro';
 import SearchPanel from '../components/search-panel.astro';
 import ClassificationPanel from '../components/classification-panel.astro';
+import SourcePanel from '../components/source-panel.astro';
 import { classificationFor } from '../lib/site/classification.ts';
 import { toSearchResults } from '../lib/search/search.ts';
 import OutdatedBanner from '../components/outdated-banner.astro';
@@ -57,6 +58,12 @@ const currentBulletin = site.current
   ? {
       number: bulletinNumber(site.current),
       date: formatDate(site.current.issuedAt),
+    }
+  : null;
+const sourceBulletin = site.current
+  ? {
+      ...currentBulletin!,
+      pdfUrl: pdfUrls.get(bulletinNumber(site.current)),
     }
   : null;
 ---
@@ -116,6 +123,10 @@ const currentBulletin = site.current
           results={searchResults}
           bulletin={currentBulletin}
         />
+      </div>
+      <!-- Fonte e como ler: só desktop; ocupa o lugar da ficha/busca enquanto está aberta. -->
+      <div class="source-slot" id="source-slot" hidden>
+        <SourcePanel bulletin={sourceBulletin} />
       </div>
     </div>
   </div>
@@ -216,6 +227,7 @@ const currentBulletin = site.current
   });
   map.addEventListener('map-clear', () => {
     // Clique no mapa vazio: primeiro fecha a ficha; com ela fechada, tira a marca.
+    if (!document.getElementById('source-slot')!.hidden) return;
     if (!panel.hidden) close();
     else if (marked) clearMark();
   });
@@ -262,8 +274,74 @@ const currentBulletin = site.current
       focusVisible('[data-open-classification] button');
     }
   });
+
+  // Fonte e como ler (desktop): ocupa o lugar da ficha/busca; voltar devolve a ficha que estava
+  // aberta, fechar encerra tudo. O foco volta a quem abriu.
+  const sourceSlot = document.getElementById('source-slot')!;
+  const desktop = window.matchMedia('(min-width: 1024px)');
+  let sourceOpener: HTMLElement | null = null;
+  let panelBeforeSource = false;
+
+  function openSource(opener: HTMLElement) {
+    // A busca sai (nunca dois painéis ao mesmo tempo).
+    const search = document.getElementById('search');
+    if (search && !search.hidden) {
+      search.querySelector<HTMLElement>('[data-search-close] button')?.click();
+    }
+    if (sourceSlot.hidden) {
+      sourceOpener = opener;
+      panelBeforeSource = !panel.hidden;
+      panel.hidden = true;
+      syncBanner(null);
+      sourceSlot.hidden = false;
+    }
+    sourceSlot.querySelector<HTMLElement>('section')?.focus();
+  }
+
+  function closeSource(backToBeach: boolean) {
+    if (sourceSlot.hidden) return;
+    sourceSlot.hidden = true;
+    const hadBeach = panelBeforeSource && !!lastSlug;
+    panelBeforeSource = false;
+    if (backToBeach && hadBeach) {
+      panel.hidden = false;
+      syncBanner(lastSlug);
+    } else if (hadBeach) {
+      close(); // fechar: encerra a ficha também (foco no marcador)
+      return;
+    }
+    const fallback = document.querySelector<HTMLElement>('a[href="#fonte"]');
+    const target =
+      sourceOpener && sourceOpener.offsetParent !== null
+        ? sourceOpener
+        : fallback;
+    target?.focus();
+  }
+
+  document.addEventListener('click', (e) => {
+    const link = (e.target as Element).closest<HTMLElement>('a[href="#fonte"]');
+    if (!link || !desktop.matches) return;
+    e.preventDefault();
+    openSource(link);
+  });
+  sourceSlot.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    if (target.closest('[data-source-back]')) closeSource(true);
+    else if (target.closest('[data-source-close]')) closeSource(false);
+  });
+  // Escolher um marcador ou abrir a busca tira a Fonte do lugar.
+  map.addEventListener('marker-select', () => {
+    sourceSlot.hidden = true;
+    panelBeforeSource = false;
+  });
+  document.addEventListener('search-open', () => {
+    sourceSlot.hidden = true;
+    panelBeforeSource = false;
+  });
+
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
+    if (!sourceSlot.hidden) return closeSource(true);
     if (!panel.hidden) close();
     else if (marked) clearMark();
   });
@@ -363,5 +441,21 @@ const currentBulletin = site.current
   }
   .layout-classification {
     display: none;
+  }
+  /* Fonte e como ler: só desktop, à direita como a ficha. */
+  .source-slot {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .source-slot:not([hidden]) {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      width: var(--size-panel-width);
+      overflow-y: auto;
+    }
+    .source-slot :global(section) {
+      flex: 1 0 auto;
+    }
   }
 </style>
