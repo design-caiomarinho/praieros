@@ -19,6 +19,10 @@
     "panel-width": {
       "$type": "dimension",
       "$value": 428
+    },
+    "search-panel-width": {
+      "$type": "dimension",
+      "$value": 477
     }
   }
 }

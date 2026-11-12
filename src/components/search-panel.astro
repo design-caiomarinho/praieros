@@ -5,6 +5,7 @@ import InputText from './input-text.astro';
 import StatusChip from './status-chip.astro';
 import { pointsLabel } from '../lib/format/points-label.ts';
 import { STATUS_LABELS } from '../lib/rules/status.ts';
+import { abbreviateLabel } from '../lib/search/abbreviate.ts';
 import {
   improperSummary,
   suggestNeighborhoods,
@@ -63,7 +64,14 @@ const neighborhoods = suggestNeighborhoods(results);
           {neighborhoods.map((hood) => (
             <div class="hood" data-hood={hood}>
               <Button variant="secondary" size="small">
-                {hood}
+                {abbreviateLabel(hood) === hood ? (
+                  hood
+                ) : (
+                  <>
+                    <span aria-hidden="true">{abbreviateLabel(hood)}</span>
+                    <span class="sr-only">{hood}</span>
+                  </>
+                )}
               </Button>
             </div>
           ))}
@@ -139,7 +147,7 @@ const neighborhoods = suggestNeighborhoods(results);
     outline: none;
   }
   .search--desktop {
-    width: var(--size-panel-width);
+    width: var(--size-search-panel-width);
     max-width: 100%;
     border-left: var(--border-width-default) solid var(--s-color-border-default);
   }
@@ -229,10 +237,6 @@ const neighborhoods = suggestNeighborhoods(results);
   .hood > :global(*) {
     flex: 1;
     min-width: 0;
-  }
-  /* Figma 125:3132: sem ícone o botão fica com 40px (padding + texto), não os 48px do small. */
-  .hood :global(.btn--small) {
-    height: auto;
   }
 
   /* Resultados: item derivado (nome, bairro · pontos, D1, chip). */
@@ -401,6 +405,9 @@ const neighborhoods = suggestNeighborhoods(results);
       document.dispatchEvent(new CustomEvent('search-open'));
       input.focus();
     }
+
+    // Um marcador do mapa abriu a ficha: a busca sai (nunca dois painéis ao mesmo tempo).
+    document.addEventListener('marker-select', () => setOpen(false));
 
     function close() {
       setOpen(false);

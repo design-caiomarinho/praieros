@@ -110,6 +110,16 @@ const attrs = asLink
     background: var(--s-color-surface-hover);
   }
 
+  /* Botão que abre um painel, com o painel aberto: visual ghost (Figma 126:4529). */
+  .btn-icon--filled[aria-expanded='true'] {
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+  }
+  .btn-icon--filled[aria-expanded='true']:hover,
+  .btn-icon--filled[aria-expanded='true']:focus-visible {
+    background: var(--s-color-surface-hover);
+  }
+
   .btn-icon:disabled {
     cursor: not-allowed;
     color: var(--s-color-content-disabled);
