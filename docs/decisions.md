@@ -572,3 +572,5 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - Na ficha com vários pontos, o cartão do pin escolhido fica a 50% e sem hover (cursor padrão): não há o que escolher nele. Os outros ficam a 100%, com hover animado (300 ms, tokens de hover; opacidade e fundo). Antes era o contrário (os outros a 80%). Interpretação da frase de Caio: "quem tiver selecionado" = o ponto escolhido.
 
 - (Sessão 23j, Caio) Clique no terreno do mapa com a busca aberta também a fecha, como os outros painéis (evento `search-outside`; saída animada).
+
+- (Sessão 23j, correção de Caio) Cartão do ponto escolhido: sem opacidade reduzida (todos a 100%); a borda cinza vira a borda do status (token de cada um, 300 ms), sem hover e sem clique (`data-current`, `pointer-events: none`). Substitui o item "50% e sem hover" acima.

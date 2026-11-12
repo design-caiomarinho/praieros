@@ -71,25 +71,30 @@ const Tag = pointId ? 'button' : 'article';
   .card--no-result {
     border-left-color: var(--s-color-border-unknown);
   }
-  /* O ponto escolhido (pin ativo no mapa) fica a 50% e sem hover: não há o que escolher nele.
-     Os outros pontos ficam a 100%, com o hover de sempre (pedido de Caio). */
-  .card {
-    transition: opacity var(--motion-duration-hover) var(--motion-easing-hover);
-  }
+  /* O ponto escolhido (pin ativo no mapa): a borda cinza dá lugar à borda da cor do status, sem
+     hover e sem clique (pedido de Caio). Os outros seguem com o hover de sempre. */
   .body {
-    transition: background-color var(--motion-duration-hover)
-      var(--motion-easing-hover);
+    transition:
+      background-color var(--motion-duration-hover) var(--motion-easing-hover),
+      border-color var(--motion-duration-hover) var(--motion-easing-hover);
   }
-  .card[data-dimmed] {
-    opacity: 0.5;
+  .card[data-current] {
     cursor: default;
+    pointer-events: none;
   }
-  button.card[data-dimmed]:hover .body,
-  button.card[data-dimmed]:focus-visible .body {
-    background: none;
+  .card--suitable[data-current] .body {
+    border-color: var(--s-color-border-positive);
+  }
+  .card--unsuitable[data-current] .body {
+    border-color: var(--s-color-border-negative);
+  }
+  .card--outdated[data-current] .body {
+    border-color: var(--s-color-border-warning);
+  }
+  .card--no-result[data-current] .body {
+    border-color: var(--s-color-border-unknown);
   }
   @media (prefers-reduced-motion: reduce) {
-    .card,
     .body {
       transition: none;
     }

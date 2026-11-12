@@ -162,8 +162,9 @@ const sourceBulletin = site.current
         !!pointId &&
         sameBeach &&
         card.getAttribute('data-point-id') === pointId;
-      // O cartão do pin escolhido fica a 50% e sem hover (só visual); os outros seguem normais.
-      card.toggleAttribute('data-dimmed', active);
+      // O cartão do pin escolhido ganha a borda da cor do status e deixa de responder (sem hover
+      // nem clique); os outros seguem normais.
+      card.toggleAttribute('data-current', active);
       // Cartão = botão que escolhe o pin: marca qual está escolhido (leitor de tela).
       card.setAttribute('aria-pressed', String(active));
     });
@@ -303,6 +304,8 @@ const sourceBulletin = site.current
   panel.addEventListener('click', (e) => {
     const target = e.target as Element;
     const card = target.closest<HTMLElement>('[data-point-id]');
+    // O cartão do ponto já escolhido não faz nada.
+    if (card?.hasAttribute('data-current')) return;
     if (target.closest('[data-panel-close]')) close();
     else if (target.closest('[data-panel-back]')) {
       // Volta à busca como estava (texto, bairro e lista); a ficha sai.
