@@ -212,6 +212,7 @@ const sourceBulletin = site.current
           );
         }
         el.hidden = false;
+        void el.offsetWidth; // fixa a largura de partida antes de o sidebar abrir (transição)
       } else if (el.hidden) {
         el.removeAttribute('data-leaving');
       } else if (next || reduceMotion.matches) {
@@ -695,8 +696,20 @@ const sourceBulletin = site.current
     .search-slot :global(.search) {
       width: auto;
     }
+    /* A faixa acompanha a largura do painel durante o movimento (mesmos tempos e curva da camada
+       azul do sidebar), em vez de pular para a largura final. */
     .map-banner:not([hidden]) {
+      transition: right var(--motion-duration-panel-surface)
+        var(--motion-easing-panel) var(--motion-delay-panel-surface-close);
+    }
+    .stage:has(.sidebar[data-open]) .map-banner:not([hidden]) {
       right: var(--size-panel-width);
+      transition-delay: var(--motion-delay-panel-surface);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .map-banner:not([hidden]) {
+        transition: none;
+      }
     }
     /* Botões de zoom e ajustar: acompanham a coluna da busca (que sobrepõe o mapa), com 16px
        entre eles e a borda do painel. Mesmos tempos e curva da coluna (ver search-panel). */

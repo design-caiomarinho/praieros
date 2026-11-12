@@ -582,3 +582,4 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Dissolve da troca de conteúdo:** 300 → 150 ms (`duration-dissolve`), e passa a valer também para os estados da busca (sugestões, resultados, sem resultado, vista de bairro).
 - **Zoom +/−:** suave, com o tempo e a curva da câmera (1500 ms, curva do painel).
 - **Camada azul na faixa de aviso (sessão 23m):** como a do sidebar, atrás da faixa, com a mesma animação (cor `surface-accent-default`). Entra 100 ms à frente da faixa branca (300 − 200 ms, como no painel) e, na saída, vai embora 100 ms depois (atraso de saída da camada).
+- **Largura da faixa (sessão 23n, desktop):** a faixa acompanha a largura do painel durante o movimento (transição de `right` com os tempos e a curva da camada azul do sidebar), em vez de pular para a largura final.
