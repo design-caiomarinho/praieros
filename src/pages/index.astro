@@ -225,9 +225,7 @@ const sourceBulletin = site.current
         el.setAttribute('data-leaving', '');
         const ms =
           cssTimeMs(
-            getComputedStyle(el).getPropertyValue(
-              '--motion-duration-banner',
-            ),
+            getComputedStyle(el).getPropertyValue('--motion-duration-banner'),
           ) || 1000;
         el.dataset.timer = String(
           window.setTimeout(() => {
@@ -537,11 +535,14 @@ const sourceBulletin = site.current
     .sidebar[data-expanded] {
       height: 100%;
     }
-    /* Enquanto a folha se move (sobe ou desce) a rolagem do conteúdo fica travada (data-moving,
-       sidebar-sheet.ts); fora disso a rolagem é a normal. */
+    /* Sem rolagem interna na posição de origem nem enquanto a folha se move: o conteúdo só rola com a
+       folha na tela toda e já fixada (data-expanded sem data-moving, sidebar-sheet.ts). */
+    .sidebar:not([data-expanded])
+      .sidebar__viewport
+      :global(:is(.panel, .search, .source-slot)),
     .sidebar[data-moving]
       .sidebar__viewport
-      :is(.panel, .search, .source-slot) {
+      :global(:is(.panel, .search, .source-slot)) {
       overflow-y: hidden;
     }
     /* Alça (drag handle) no topo da folha: faixa de toque de 24 px com a barra de 32×4 px. */

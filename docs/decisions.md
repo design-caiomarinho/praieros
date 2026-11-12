@@ -632,3 +632,5 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - Limiares são constantes em `sidebar-sheet.ts` (`INTENT`, `DISMISS_BELOW`); valores assumidos, ajustáveis.
 
 Correção (25b): ao fechar soltando muito abaixo, a folha fecha na altura em que foi solta (a altura não anima de volta aos 60%, o que embolava com a saída). O tamanho inicial volta quando o sidebar sai de cena.
+
+Regra (25b): sem rolagem interna na posição de origem (60%) nem durante a animação, em todos os painéis (ficha, busca, Classificação, Fonte). O conteúdo só rola com a folha na tela toda e já fixada; voltando à origem, o conteúdo volta ao topo. (O seletor usa `:global`, pois os painéis são de outros componentes.)

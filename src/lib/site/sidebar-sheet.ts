@@ -65,6 +65,10 @@ export function initSidebarSheet(): void {
     );
     settleTimer = window.setTimeout(settle, ms + 100);
   }
+  /** De volta à origem, o conteúdo volta ao topo (sem rolagem interna lá). */
+  function resetScroll() {
+    panes.forEach((p) => (p.scrollTop = 0));
+  }
   function label() {
     handle.setAttribute('aria-expanded', String(expanded));
     handle.setAttribute(
@@ -76,6 +80,7 @@ export function initSidebarSheet(): void {
     if (value === expanded) return;
     expanded = value;
     shell!.toggleAttribute('data-expanded', value);
+    if (!value) resetScroll();
     lockUntilSettled();
     label();
   }
@@ -172,6 +177,7 @@ export function initSidebarSheet(): void {
     shell!.style.height = '';
     expanded = target === 'expanded';
     shell!.toggleAttribute('data-expanded', expanded);
+    if (!expanded) resetScroll();
     label();
     lockUntilSettled();
   }
