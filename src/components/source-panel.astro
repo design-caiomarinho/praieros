@@ -91,51 +91,53 @@ const mapCredits = [
 
   <div class="section">
     <h3>Fontes e limites</h3>
-    <div class="limits">
-      <p>
-        <strong>Fonte: </strong>
-        {bulletin
-          ? `Inema, Boletim de Balneabilidade nº ${bulletin.number}, emitido em ${bulletin.date}.`
-          : 'Inema, Boletim de Balneabilidade.'}
-      </p>
-      <p>
-        <strong>Posições no mapa: </strong>aproximadas. Os pontos de coleta
-        podem estar em outro lugar da praia.
-      </p>
-      <p>
-        <strong>Data da coleta: </strong>nem todo boletim informa a data da
-        coleta. Quando falta, mostramos só a data de emissão.
-      </p>
-      <p>
-        <strong>Atualização: </strong>o Praieros pode demorar a refletir um
-        boletim novo. Confira sempre a data de emissão.
-      </p>
-      <p class="map-credit">
-        Mapa:{' '}
-        {mapCredits.map(({ text, href }, i) => (
-          <Fragment>
-            {i > 0 && ' · '}
-            <a href={href} target="_blank" rel="noopener noreferrer">
-              {text}
-              <span class="sr-only"> (abre em nova aba)</span>
-            </a>
-          </Fragment>
-        ))}
-      </p>
-    </div>
-    {bulletin?.pdfUrl && (
-      <div class="original">
-        <Button
-          variant="secondary"
-          href={bulletin.pdfUrl}
-          target="_blank"
-          spread
-          iconRight="external"
-        >
-          Boletim original
-        </Button>
+    <div class="stack">
+      <div class="limits">
+        <p>
+          <strong>Fonte: </strong>
+          {bulletin
+            ? `Inema, Boletim de Balneabilidade nº ${bulletin.number}, emitido em ${bulletin.date}.`
+            : 'Inema, Boletim de Balneabilidade.'}
+        </p>
+        <p>
+          <strong>Posições no mapa: </strong>aproximadas. Os pontos de coleta
+          podem estar em outro lugar da praia.
+        </p>
+        <p>
+          <strong>Data da coleta: </strong>nem todo boletim informa a data da
+          coleta. Quando falta, mostramos só a data de emissão.
+        </p>
+        <p>
+          <strong>Atualização: </strong>o Praieros pode demorar a refletir um
+          boletim novo. Confira sempre a data de emissão.
+        </p>
+        <p class="map-credit">
+          <strong>Mapa: </strong>
+          {mapCredits.map(({ text, href }, i) => (
+            <Fragment>
+              {i > 0 && ' · '}
+              <a href={href} target="_blank" rel="noopener noreferrer">
+                {text}
+                <span class="sr-only"> (abre em nova aba)</span>
+              </a>
+            </Fragment>
+          ))}
+        </p>
       </div>
-    )}
+      {bulletin?.pdfUrl && (
+        <div class="original">
+          <Button
+            variant="secondary"
+            href={bulletin.pdfUrl}
+            target="_blank"
+            spread
+            iconRight="external"
+          >
+            Boletim original
+          </Button>
+        </div>
+      )}
+    </div>
   </div>
 </section>
 
@@ -242,6 +244,12 @@ const mapCredits = [
     line-height: var(--s-typo-body-large-line);
     letter-spacing: var(--s-typo-body-large-spacing);
   }
+  /* Texto + botão: 32px entre eles (Figma 126:5146, stack xl). */
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xl);
+  }
   .limits {
     display: flex;
     flex-direction: column;
@@ -271,6 +279,11 @@ const mapCredits = [
   }
   .original > :global(*) {
     width: 100%;
+  }
+  /* O texto só para leitor de tela é absoluto: sem um ancestral posicionado ele escapa do
+     scroll do painel e cria rolagem na página. */
+  .panel {
+    position: relative;
   }
   .sr-only {
     position: absolute;
