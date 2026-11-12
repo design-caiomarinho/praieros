@@ -33,7 +33,6 @@ const neighborhoods = suggestNeighborhoods(results);
   class={`search search--${layout}`}
   aria-label="Buscar praia"
   tabindex="-1"
-  data-scroll-fade
   hidden
 >
   <header class="head">
@@ -678,6 +677,7 @@ const neighborhoods = suggestNeighborhoods(results);
     function setOpen(open: boolean) {
       root.hidden = !open;
       trigger?.setAttribute('aria-expanded', String(open));
+      trigger?.setAttribute('aria-disabled', String(open));
     }
 
     function open() {
@@ -708,7 +708,11 @@ const neighborhoods = suggestNeighborhoods(results);
       );
     }
 
-    trigger?.addEventListener('click', () => (root.hidden ? open() : close()));
+    // Com a busca aberta o botão tem aparência de desabilitado e não faz nada: fecha-se pelo
+    // "x" do painel (ou Esc).
+    trigger?.addEventListener('click', () => {
+      if (root.hidden) open();
+    });
     input.addEventListener('input', () => {
       hoodPicked = false;
       render();

@@ -110,14 +110,17 @@ const attrs = asLink
     background: var(--s-color-surface-hover);
   }
 
-  /* Botão que abre um painel, com o painel aberto: visual ghost (Figma 126:4529). */
+  /* Botão que abre um painel, com o painel aberto: aparência de desabilitado (Figma 126:4529;
+     pedido de Caio): superfície padrão e ícone na cor desabilitada, sem hover. O fechamento
+     é pelo botão de fechar do painel. */
   .btn-icon--filled[aria-expanded='true'] {
     background: var(--s-color-surface-default);
-    color: var(--s-color-content-primary);
+    color: var(--s-color-content-disabled);
+    cursor: default;
   }
   .btn-icon--filled[aria-expanded='true']:hover,
   .btn-icon--filled[aria-expanded='true']:focus-visible {
-    background: var(--s-color-surface-hover);
+    background: var(--s-color-surface-default);
   }
 
   .btn-icon:disabled {

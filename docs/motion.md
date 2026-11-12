@@ -32,4 +32,3 @@ Tabela a preencher quando o motion for implementado:
 ### Pendente de motion
 
 - **Brilho/pulso do skeleton da busca** (sessão 19): os blocos já existem, estáticos; falta duração, curva e movimento reduzido do Figma.
-- **Degradê de rolagem (sessão 18)**: aparecer e sumir com suavidade (fade de opacidade). Hoje liga e desliga direto; falta duração e curva do Figma, e comportamento com movimento reduzido.
