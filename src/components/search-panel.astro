@@ -524,6 +524,9 @@ const neighborhoods = suggestNeighborhoods(results);
     // Teclado virtual: no mobile, escolher um bairro não o abre (a lista fica toda visível).
     const mobile = window.matchMedia('(max-width: 1023px)');
 
+    // Bairro escolhido pelo botão: a seção "Bairros" sai e ficam só as praias encontradas.
+    let hoodPicked = false;
+
     function render() {
       syncHoods();
       const searching = queryTokens(input.value).length > 0;
@@ -544,7 +547,7 @@ const neighborhoods = suggestNeighborhoods(results);
       empty.hidden = hits.length > 0;
       emptyQ.textContent = input.value.trim();
       // Sem resultado: só o aviso (Figma); com resultados, os bairros ficam abaixo.
-      if (hoods) hoods.hidden = hits.length === 0;
+      if (hoods) hoods.hidden = hits.length === 0 || hoodPicked;
       const one = hits.length === 1;
       countN.textContent = `${hits.length} ${one ? 'praia' : 'praias'}`;
       countRest.textContent = ` ${one ? 'encontrada' : 'encontradas'}`;
@@ -561,6 +564,7 @@ const neighborhoods = suggestNeighborhoods(results);
 
     function open() {
       input.value = '';
+      hoodPicked = false;
       render();
       setOpen(true);
       document.dispatchEvent(new CustomEvent('search-open'));
@@ -587,13 +591,17 @@ const neighborhoods = suggestNeighborhoods(results);
     }
 
     trigger?.addEventListener('click', () => (root.hidden ? open() : close()));
-    input.addEventListener('input', render);
+    input.addEventListener('input', () => {
+      hoodPicked = false;
+      render();
+    });
 
     root.addEventListener('click', (e) => {
       const target = e.target as Element;
       if (target.closest('[data-search-close]')) return close();
       if (target.closest('[data-search-retry]')) {
         input.value = '';
+        hoodPicked = false;
         render();
         input.focus();
         return;
@@ -601,6 +609,7 @@ const neighborhoods = suggestNeighborhoods(results);
       const hood = target.closest<HTMLElement>('.hood');
       if (hood) {
         input.value = hood.dataset.hood!;
+        hoodPicked = true;
         render();
         if (!mobile.matches) input.focus();
         return;
