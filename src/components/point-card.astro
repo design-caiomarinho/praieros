@@ -2,9 +2,10 @@
 import StatusChip from './status-chip.astro';
 import type { ChipStatus } from '../lib/rules/status.ts';
 
-// Cartão de ponto de coleta (Figma, nó 125:3704, estado no-result).
+// Cartão de ponto de coleta (Figma, nó 125:3704, estado no-result). Com `pointId` é clicável (um
+// botão): escolhe o pin do ponto no mapa; hover e foco seguem o padrão dos itens da busca.
 interface Props {
-  /** Id do ponto no mapa: só para esmaecer os cartões quando outro pin está escolhido. */
+  /** Id do ponto no mapa: liga o cartão ao pin (clique escolhe o pin; outros esmaecem). */
   pointId?: string;
   name: string;
   location?: string;
@@ -14,22 +15,48 @@ interface Props {
 }
 
 const { pointId, name, location, status } = Astro.props;
+const Tag = pointId ? 'button' : 'article';
 ---
 
-<article class={`card card--${status}`} data-point-id={pointId}>
-  <div class="body">
-    <div class="header">
-      <h3>{name}</h3>
+<Tag
+  class={`card card--${status}`}
+  data-point-id={pointId}
+  type={pointId ? 'button' : undefined}
+>
+  <span class="body">
+    <span class="header">
+      <span class="name">{name}</span>
       <StatusChip status={status} />
-    </div>
-    {location && <p class="location">{location}</p>}
-  </div>
-</article>
+    </span>
+    {location && <span class="location">{location}</span>}
+  </span>
+</Tag>
 
 <style>
   .card {
     box-sizing: border-box;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
     border-left: var(--border-width-accent) solid;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+  }
+  button.card {
+    cursor: pointer;
+  }
+  /* Hover e foco (teclado) como os itens da busca: superfície de hover; foco com anel. */
+  button.card:hover .body,
+  button.card:focus-visible .body {
+    background: var(--s-color-surface-hover);
+  }
+  button.card:focus-visible {
+    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline-offset: var(--primitives-spacing-4);
   }
   /* Só no-result vem no Figma; as outras cores seguem os tokens de borda de cada status. */
   .card--suitable {
@@ -44,7 +71,7 @@ const { pointId, name, location, status } = Astro.props;
   .card--no-result {
     border-left-color: var(--s-color-border-unknown);
   }
-  /* Só visualização: com um pin escolhido no mapa, os outros pontos ficam a 50%. */
+  /* Com um pin escolhido no mapa, os outros pontos ficam a 50%. */
   .card[data-dimmed] {
     opacity: 0.5;
   }
@@ -62,7 +89,7 @@ const { pointId, name, location, status } = Astro.props;
     justify-content: space-between;
     gap: var(--space-gap-xs);
   }
-  h3 {
+  .name {
     margin: 0;
     color: var(--s-color-content-primary);
     font-family: var(--s-typo-body-large-family);
@@ -72,6 +99,7 @@ const { pointId, name, location, status } = Astro.props;
     letter-spacing: var(--s-typo-body-large-spacing);
   }
   .location {
+    display: block;
     margin: 0;
     color: var(--s-color-content-secondary);
     font-family: var(--s-typo-body-medium-family);

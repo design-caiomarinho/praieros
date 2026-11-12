@@ -629,9 +629,6 @@ const neighborhoods = suggestNeighborhoods(results);
         button.setAttribute('aria-pressed', String(on));
       });
     }
-    // Teclado virtual: no mobile, escolher um bairro não o abre (a lista fica toda visível).
-    const mobile = window.matchMedia('(max-width: 1023px)');
-
     // Bairro escolhido pelo botão: a seção "Bairros" sai e ficam só as praias encontradas.
     let hoodPicked = false;
 

@@ -1,7 +1,5 @@
 ---
 import PointCard from './point-card.astro';
-import OutdatedBanner from './outdated-banner.astro';
-import NoResultBanner from './no-result-banner.astro';
 import Button from './button.astro';
 import ButtonIcon from './button-icon.astro';
 import Icon from './icon.astro';
@@ -67,9 +65,7 @@ const noResult = notice === 'no-result';
   aria-label={`Ficha: ${name}`}
   tabindex="-1"
 >
-  {/* Desktop: a faixa fica no topo do mapa (index.astro), fora do painel. */}
-  {layout === 'mobile' && notice === 'outdated' && <OutdatedBanner />}
-  {layout === 'mobile' && notice === 'no-result' && <NoResultBanner />}
+  {/* A faixa de aviso fica no topo do mapa (index.astro), fora do painel, no desktop e no mobile. */}
   <header class="head">
     <div class="titles">
       <div class="top">
@@ -370,6 +366,26 @@ const noResult = notice === 'no-result';
     font-size: var(--s-typo-body-medium-size);
     line-height: var(--s-typo-body-medium-line);
     letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  /* Mobile, folha inferior (Figma 125:3471): padding 16 lateral e 24 vertical no cabeçalho e no
+     corpo; 16 entre título + subtítulo e o chip; alvo de toque do fechar de 44px. */
+  .panel--mobile .head {
+    gap: var(--space-stack-md);
+    padding: var(--space-inset-lg) var(--space-inset-md);
+  }
+  .panel--mobile .body {
+    padding: var(--space-inset-lg) var(--space-inset-md);
+    padding-bottom: calc(
+      var(--space-inset-lg) + env(safe-area-inset-bottom, 0px)
+    );
+  }
+  .panel--mobile .close :global(.btn-icon) {
+    position: relative;
+  }
+  .panel--mobile .close :global(.btn-icon)::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--primitives-spacing-4) / -2);
   }
   .credit {
     margin: 0;
