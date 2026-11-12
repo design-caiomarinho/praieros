@@ -214,7 +214,9 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   }
   .canvas {
     position: absolute;
-    inset: 0;
+    /* Passa da borda direita (o contêiner corta, overflow: clip): em telas com escala de pixels
+       fracionária sobrava uma fresta do fundo (cor do mar) entre o mapa e a borda do painel. */
+    inset: 0 calc(var(--primitives-spacing-4) * -1) 0 0;
     /* Escondido até o primeiro desenho: mostra o fundo do mar, não o terreno sem tiles. */
     opacity: 0;
   }
