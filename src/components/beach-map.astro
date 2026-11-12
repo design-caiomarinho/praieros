@@ -425,18 +425,50 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     color: var(--s-color-content-primary);
     white-space: nowrap;
   }
-  /* Zoom afastado: some só o texto do nome (sem animação). */
-  :global(.marker[data-label='hidden'] .marker__label) {
-    display: none;
-  }
-  /* Nome só como dica (hover/foco/seleção em zoom afastado): flutua sob o ícone, fora da
-     área de clique, para não cobrir os pins vizinhos. */
-  :global(.marker[data-label='peek'] .marker__label) {
+  /* Nome (Figma 204:7892): fica sob o ícone, fora do fluxo (o marcador mede só o ícone, sem
+     aumentar a área de clique sobre os vizinhos). Aparece com opacidade 0 → 1 e a distância ao
+     ícone 0 → 8px (token de espaço), na curva e no tempo do Figma; o movimento contrário usa a
+     mesma curva e o mesmo tempo. Escondido: invisível, sem clique. */
+  :global(.marker__label) {
     position: absolute;
     top: 100%;
     left: 50%;
-    margin-top: var(--space-stack-xs);
+    margin-top: 0;
     transform: translateX(-50%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity var(--motion-duration-pin-label) var(--motion-easing-pin-label),
+      margin-top var(--motion-duration-pin-label) var(--motion-easing-pin-label),
+      visibility 0s linear var(--motion-duration-pin-label);
+  }
+  :global(.marker[data-label='shown'] .marker__label),
+  :global(.marker[data-label='peek'] .marker__label) {
+    margin-top: var(--space-stack-xs);
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  /* Nome fixo (com espaço): o clique no nome também vale para o marcador. Como dica (peek) não:
+     não cobre pins vizinhos. */
+  :global(.marker[data-label='shown'] .marker__label) {
+    pointer-events: auto;
+  }
+  /* Hover (com ou sem o nome visível) e foco do teclado: o ícone cresce (Figma 204:7892). */
+  :global(.marker__badge) {
+    transition: transform var(--motion-duration-pin-hover)
+      var(--motion-easing-pin-hover);
+  }
+  :global(.marker:hover .marker__badge),
+  :global(.marker:focus-visible .marker__badge) {
+    transform: scale(var(--motion-scale-pin-hover));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.marker__label),
+    :global(.marker__badge) {
+      transition: none;
+    }
   }
   /* O clique vale para o marcador todo (ícone, selo e nome), não para o SVG de dentro. */
   :global(.marker > *) {

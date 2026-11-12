@@ -36,6 +36,14 @@
       "dissolve": {
         "$type": "duration",
         "$value": 300
+      },
+      "pin-label": {
+        "$type": "duration",
+        "$value": 1000
+      },
+      "pin-hover": {
+        "$type": "duration",
+        "$value": 500
       }
     },
     "delay": {
@@ -76,6 +84,20 @@
       "dissolve": {
         "$type": "cubicBezier",
         "$value": "0.42, 0, 0.58, 1"
+      },
+      "pin-label": {
+        "$type": "cubicBezier",
+        "$value": "0.175, 0.885, 0.32, 0.99"
+      },
+      "pin-hover": {
+        "$type": "cubicBezier",
+        "$value": "0.17, 0.88, 0.32, 0.99"
+      }
+    },
+    "scale": {
+      "pin-hover": {
+        "$type": "number",
+        "$value": 1.15
       }
     }
   },

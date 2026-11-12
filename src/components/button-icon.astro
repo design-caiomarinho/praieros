@@ -129,6 +129,14 @@ const attrs = asLink
     color: var(--s-color-content-disabled);
     cursor: default;
   }
+  .btn-icon--ghost[data-engaged] {
+    color: var(--s-color-content-disabled);
+    cursor: default;
+  }
+  .btn-icon--ghost[data-engaged]:hover,
+  .btn-icon--ghost[data-engaged]:focus-visible {
+    background: var(--s-color-surface-default);
+  }
   .btn-icon--filled[data-engaged]:hover,
   .btn-icon--filled[data-engaged]:focus-visible {
     background: var(--s-color-surface-default);

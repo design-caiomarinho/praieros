@@ -55,6 +55,7 @@ function literal(token: FlatToken): string {
   // Motion (tokens/extra.json): duração e atraso em ms; curva como cubic-bezier(...).
   if (token.type === 'duration') return `${value}ms`;
   if (token.type === 'cubicBezier') return `cubic-bezier(${value})`;
+  if (group === 'motion' && kind === 'scale') return String(value); // escala (sem unidade)
   if (group === 'primitives' && kind === 'spacing') return `${value}px`;
   if (group === 'primitives' && kind === 'font') {
     if (sub === 'size') return `${value}px`;

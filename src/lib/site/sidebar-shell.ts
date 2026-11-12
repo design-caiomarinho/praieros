@@ -6,7 +6,12 @@
 //  - com o sidebar já aberto, trocar de conteúdo não fecha nem reabre: o conteúdo que saiu vira um
 //    "fantasma" (clone) que dissolve por cima do novo. Ao fechar, o fantasma fica parado até o
 //    fim da saída, para o painel não deslizar vazio.
+// O botão de informação do cabeçalho (Fonte e como ler) fica com a aparência de desabilitado
+// (`data-engaged`) como o de busca: liga quando o painel está a 50% em cena e desliga também a
+// 50% na saída; trocando de painel com o sidebar aberto, na hora.
 // No mobile (folhas inferiores) não faz nada.
+
+import { halfwayTime } from '../map/cubic-bezier.ts';
 
 const PANE_IDS = ['search', 'panel', 'source-slot'];
 
@@ -21,6 +26,31 @@ export function initSidebarShell(): void {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const ms = (name: string) =>
     parseFloat(getComputedStyle(shell).getPropertyValue(name)) || 0;
+
+  const infoButton = document.querySelector<HTMLElement>(
+    'header a[href="#fonte"]',
+  );
+  let engageTimer: number | undefined;
+  let engagedTarget = false;
+  /** Liga/desliga a aparência de desabilitado do botão de Fonte, no tempo do painel. */
+  function engageInfo(on: boolean, wasOpen: boolean, swapping: boolean) {
+    if (on === engagedTarget || !infoButton) return;
+    engagedTarget = on;
+    window.clearTimeout(engageTimer);
+    const apply = () => infoButton.toggleAttribute('data-engaged', on);
+    const half = halfwayTime(
+      getComputedStyle(shell!).getPropertyValue('--motion-easing-panel'),
+    );
+    const after = on
+      ? wasOpen
+        ? 0
+        : ms('--motion-delay-panel') + half * ms('--motion-duration-panel')
+      : swapping
+        ? 0
+        : half * ms('--motion-duration-panel');
+    if (after <= 0 || reduce.matches) apply();
+    else engageTimer = window.setTimeout(apply, after);
+  }
 
   let closeTimer: number | undefined;
   let prevKey: string | null = null;
@@ -102,6 +132,11 @@ export function initSidebarShell(): void {
       snap.el.scrollTop = snap.scroll;
       if (pane) leave(snap.el); // trocou de conteúdo: dissolve; sem painel: fica até fechar
     }
+    engageInfo(
+      pane?.id === 'source-slot',
+      shell!.hasAttribute('data-open'),
+      !!pane,
+    );
     if (pane) {
       // Um fantasma parado de uma saída interrompida também dissolve.
       ghosts!

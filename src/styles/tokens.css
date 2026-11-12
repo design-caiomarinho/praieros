@@ -247,6 +247,8 @@
   --motion-duration-header-line: 418ms;
   --motion-duration-hover: 300ms;
   --motion-duration-dissolve: 300ms;
+  --motion-duration-pin-label: 1000ms;
+  --motion-duration-pin-hover: 500ms;
   --motion-delay-panel: 300ms;
   --motion-delay-panel-surface: 200ms;
   --motion-delay-header-line: 304ms;
@@ -256,6 +258,9 @@
   --motion-easing-header-line: cubic-bezier(0.64, 0.05, 0.35, 1);
   --motion-easing-hover: cubic-bezier(0.42, 0, 0.58, 1);
   --motion-easing-dissolve: cubic-bezier(0.42, 0, 0.58, 1);
+  --motion-easing-pin-label: cubic-bezier(0.175, 0.885, 0.32, 0.99);
+  --motion-easing-pin-hover: cubic-bezier(0.17, 0.88, 0.32, 0.99);
+  --motion-scale-pin-hover: 1.15;
 
   --size-panel-width: 477px;
 }
