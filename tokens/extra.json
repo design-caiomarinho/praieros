@@ -19,15 +19,19 @@
     "duration": {
       "panel": {
         "$type": "duration",
-        "$value": 1500
+        "$value": 800
       },
       "panel-surface": {
         "$type": "duration",
-        "$value": 1500
+        "$value": 800
+      },
+      "banner": {
+        "$type": "duration",
+        "$value": 800
       },
       "header-line": {
         "$type": "duration",
-        "$value": 418
+        "$value": 223
       },
       "hover": {
         "$type": "duration",
@@ -65,11 +69,11 @@
       },
       "header-line": {
         "$type": "duration",
-        "$value": 304
+        "$value": 162
       },
       "header-line-close": {
         "$type": "duration",
-        "$value": 1078
+        "$value": 575
       },
       "panel-surface-close": {
         "$type": "duration",

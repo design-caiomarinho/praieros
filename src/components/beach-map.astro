@@ -193,7 +193,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
           loading.hidden = true;
           loading.removeAttribute('data-leaving');
         },
-        cssTimeMs(token('--motion-duration-pin-label')),
+        cssTimeMs(token('--motion-duration-banner')),
       );
     }, finish);
   }
@@ -333,7 +333,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   }
   /* Saída: sobe além do topo (-200%) com a curva e o tempo da saída da faixa de aviso. */
   .loadbar[data-leaving] .loadbar__fill {
-    animation: loadbar-out var(--motion-duration-pin-label)
+    animation: loadbar-out var(--motion-duration-banner)
       var(--motion-easing-pin-label) both;
   }
   @keyframes loadbar-out {

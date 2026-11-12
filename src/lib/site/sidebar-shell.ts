@@ -128,7 +128,7 @@ export function initSidebarShell(): void {
             getComputedStyle(shell!).getPropertyValue(
               '--motion-easing-pin-label',
             ),
-          ) * ms('--motion-duration-pin-label'),
+          ) * ms('--motion-duration-banner'),
         );
       return;
     }

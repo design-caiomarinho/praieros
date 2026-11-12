@@ -242,9 +242,10 @@
   --border-width-default: 1px;
   --border-width-accent: 4px;
 
-  --motion-duration-panel: 1500ms;
-  --motion-duration-panel-surface: 1500ms;
-  --motion-duration-header-line: 418ms;
+  --motion-duration-panel: 800ms;
+  --motion-duration-panel-surface: 800ms;
+  --motion-duration-banner: 800ms;
+  --motion-duration-header-line: 223ms;
   --motion-duration-hover: 300ms;
   --motion-duration-dissolve: 150ms;
   --motion-duration-pin-label: 1000ms;
@@ -253,8 +254,8 @@
   --motion-duration-pin-hover: 500ms;
   --motion-delay-panel: 300ms;
   --motion-delay-panel-surface: 200ms;
-  --motion-delay-header-line: 304ms;
-  --motion-delay-header-line-close: 1078ms;
+  --motion-delay-header-line: 162ms;
+  --motion-delay-header-line-close: 575ms;
   --motion-delay-panel-surface-close: 100ms;
   --motion-easing-panel: cubic-bezier(0.175, 0.885, 0.32, 0.99);
   --motion-easing-header-line: cubic-bezier(0.64, 0.05, 0.35, 1);
