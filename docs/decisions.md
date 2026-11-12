@@ -338,7 +338,7 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Exceção ao princípio 2 (data do boletim):** o chip vira "Boletim não encontrado", sem número nem data. A fonte continua no rodapé. Decisão de Caio.
 - **Nota "Esta praia não consta no boletim nº X." deixa de ser exibida** (nunca apareceu e referência).
 - **Variação derivada (R4b, antiga demais):** mantém "A última análise foi em dd/mm/aaaa, antiga demais para mostrar." (tabela de estados do CLAUDE.md). A faixa do topo usa o texto do Figma nos dois casos.
-- **Subtítulo:** usa o nº real de pontos da praia (`pointCount`); com 0 pontos mostra só o bairro, ou nada. Nunca "0 pontos".
+- **Subtítulo:** usa o nº real de pontos da praia (`pointCount`); com 0 pontos mostra "Sem ponto de coleta" (decisão de Caio, sessão 20b; antes omitia). Nunca "0 pontos".
 - **Navbar:** divisor de 1px antes de todos os botões, inclusive o primeiro (como no Figma).
 - **Botões de zoom:** o Figma 125:3687 mostra 56 px; mantido o 40 px (xsmall) da decisão de 2026-11-12, por ser mais recente. Pendente de confirmação.
 
@@ -444,7 +444,7 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - Área segura de baixo e alvo de toque de 44px do fechar seguem como na sessão 18. Fechar volta ao mapa (sem ficha por baixo).
 - **Item de resultado segue o botão secundário (outlined), como os bairros (pedido de Caio; substitui a linha azul no hover):** hover e foco trocam a superfície para `surface/hover`; foco (teclado) ganha o anel; desabilitado fica transparente com a borda `surface/hover` e texto desabilitado. A borda não muda para azul.
 - **Sem resultado de busca: inset vertical de 40px (pedido de Caio):** `padding-block: var(--space-inset-2xl)` (40px) no bloco da mensagem, em cima e embaixo (além do padding do corpo).
-- **"0 ponto de coleta" na busca (pedido de Caio, como no concept; substitui a omissão):** o item de resultado de uma praia sem ponto de coleta (referência, informação desconhecida) mostra "Bairro · 0 ponto de coleta" com o ponto cinza e o texto "Sem resultado" para leitor de tela. `pointsLabel` usa o singular para 0 e 1 ("0 ponto", "1 ponto") e o plural a partir de 2, seguindo o concept. A ficha (Figma 125:3674) continua sem a contagem quando não há ponto.
+- **"0 ponto de coleta" na busca (pedido de Caio, como no concept; substitui a omissão):** o item de resultado de uma praia sem ponto de coleta (referência, informação desconhecida) mostra "Bairro · 0 ponto de coleta" com o ponto cinza e o texto "Sem resultado" para leitor de tela. `pointsLabel` usa o singular para 0 e 1 ("0 ponto", "1 ponto") e o plural a partir de 2, seguindo o concept. A ficha também mostra "Sem ponto de coleta" no subtítulo (pedido de Caio, sessão 20b), em vez de omitir.
 
 ## Sessão 19b: "Nenhum ponto", altura sem resultado e skeleton (Caio)
 
@@ -470,3 +470,4 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Faixa de aviso (Desatualizado / Sem resultado) agora fica no topo do mapa também no mobile** (como no desktop, abaixo do cabeçalho do site), não mais dentro da folha. Com a folha por cima, o mapa continua visível acima dela.
 - **Cartões de ponto clicáveis (pedido de Caio):** o cartão vira um botão: hover e foco (teclado) como os itens da busca (superfície `surface/hover`, foco com anel); clicar **escolhe o pin daquele ponto no mapa** (mesmo evento do clique no pin) e os outros cartões ficam a 50% (como antes). `aria-pressed` marca o escolhido. Clicar no pin continua esmaecendo os cartões. Valia no desktop e no mobile. Dentro do botão só há elementos em linha (o nome do ponto deixou de ser um `h3`).
 - **Fora do que foi feito (pendente):** (1) botão "Ver detalhes" na ficha mobile: o Figma tem, mas a Classificação no mobile ainda não existe; (2) "Compartilhar praia" segue sem ação; (3) skeleton da ficha: a ficha só abre depois do mapa pronto e os dados são estáticos, então ele nunca apareceria; fica para quando houver um carregamento real. O Figma escreve "1 pontos de coleta" no subtítulo; mantido "1 ponto de coleta" (singular correto).
+- **Ficha de praia com informação desconhecida (sessão 20b, Caio):** o subtítulo passa a mostrar "Bairro · Sem ponto de coleta" (praias de referência e sem ponto), igual à busca. A ficha de "Sem resultado" do Figma 125:3674 não trazia a contagem; segue o pedido atual.

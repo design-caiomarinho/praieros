@@ -53,7 +53,8 @@ const {
   sourceHref = '#fonte',
 } = Astro.props;
 
-const subtitle = [neighborhood, pointCount > 0 ? pointsLabel(pointCount) : null]
+// Sem ponto de coleta (informação desconhecida) mostra "Sem ponto de coleta", como na busca.
+const subtitle = [neighborhood, pointsLabel(pointCount)]
   .filter(Boolean)
   .join(' · ');
 // Figma 125:3674: sem resultado, a ficha mostra o estado vazio no lugar dos pontos e das ações.
