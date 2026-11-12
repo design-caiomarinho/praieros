@@ -478,7 +478,7 @@ const sourceBulletin = site.current
       overflow: clip;
       background: var(--s-color-surface-accent-default);
       transition: width var(--motion-duration-panel-surface)
-        var(--motion-easing-panel);
+        var(--motion-easing-panel) var(--motion-delay-panel-surface-close);
     }
     .sidebar[data-active] {
       display: block;
@@ -543,7 +543,7 @@ const sourceBulletin = site.current
        entre eles e a borda do painel. Mesmos tempos e curva da coluna (ver search-panel). */
     .stage :global(.zoom) {
       transition: right var(--motion-duration-panel-surface)
-        var(--motion-easing-panel);
+        var(--motion-easing-panel) var(--motion-delay-panel-surface-close);
     }
     .stage:has(.sidebar[data-open]) :global(.zoom) {
       right: calc(var(--size-panel-width) + var(--space-stack-md));

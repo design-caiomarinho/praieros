@@ -54,6 +54,10 @@
       "header-line-close": {
         "$type": "duration",
         "$value": 1078
+      },
+      "panel-surface-close": {
+        "$type": "duration",
+        "$value": 100
       }
     },
     "easing": {

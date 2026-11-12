@@ -82,7 +82,8 @@ export function initSidebarShell(): void {
       window.clearTimeout(closeTimer);
       closeTimer = window.setTimeout(
         finish,
-        ms('--motion-duration-panel-surface'),
+        ms('--motion-duration-panel-surface') +
+          ms('--motion-delay-panel-surface-close'),
       );
     }
   }
