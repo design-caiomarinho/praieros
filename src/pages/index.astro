@@ -537,8 +537,9 @@ const sourceBulletin = site.current
     .sidebar[data-expanded] {
       height: 100%;
     }
-    /* Recolhida, a rolagem fica travada: o primeiro gesto para cima só expande a folha. */
-    .sidebar:not([data-expanded])
+    /* A rolagem só vale com a folha fixada na tela toda (data-settled, fim da animação): recolhida
+       ou subindo, fica travada, e o gesto só expande (arrasta primeiro, rola depois). */
+    .sidebar:not([data-settled])
       .sidebar__viewport
       :is(.panel, .search, .source-slot) {
       overflow-y: hidden;

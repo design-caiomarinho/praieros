@@ -1,4 +1,5 @@
 // @ts-check
+/* global process */
 import { defineConfig } from 'astro/config';
 
 // Páginas e endpoints de desenvolvimento: só existem no `astro dev`, nunca no build (docs/decisions.md).

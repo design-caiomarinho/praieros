@@ -5,6 +5,8 @@
 // topo faz o mesmo: toque alterna, arrastar para cima expande e para baixo recolhe.
 // A altura é CSS (`data-expanded` no #sidebar, ver index.astro); aqui só se decide quando mudar.
 
+import { cssTimeMs } from '../map/css-time.ts';
+
 const PANE_IDS = ['search', 'panel', 'source-slot'];
 /** Arrasto mínimo (px) do dedo para valer como gesto. */
 const DRAG = 10;
@@ -26,10 +28,32 @@ export function initSidebarSheet(): void {
   handle.append(document.createElement('span'));
   viewport.append(handle);
 
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   let expanded = false;
+  let settleTimer: number | undefined;
+  /** Rolagem só depois da folha fixar na tela toda (fim da animação); recolher trava na hora. */
+  function settle() {
+    window.clearTimeout(settleTimer);
+    shell!.toggleAttribute('data-settled', expanded);
+  }
+  shell.addEventListener('transitionend', (e) => {
+    if (e.target === shell && e.propertyName === 'height') settle();
+  });
   function set(value: boolean) {
+    if (value === expanded && shell!.hasAttribute('data-expanded') === value)
+      return;
     expanded = value;
     shell!.toggleAttribute('data-expanded', value);
+    window.clearTimeout(settleTimer);
+    shell!.removeAttribute('data-settled'); // travada enquanto a folha sobe (ou desce)
+    if (value) {
+      const ms = cssTimeMs(
+        getComputedStyle(shell!).getPropertyValue(
+          '--motion-duration-panel-surface',
+        ),
+      );
+      settleTimer = window.setTimeout(settle, reduce.matches ? 0 : ms + 100);
+    }
     handle.setAttribute('aria-expanded', String(value));
     handle.setAttribute(
       'aria-label',
@@ -86,8 +110,33 @@ export function initSidebarSheet(): void {
     { passive: true },
   );
 
+  // Mouse (janela estreita no desktop): arrastar a alça, mesmo critério do dedo.
+  handle.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || !mobile.matches) return;
+    const y0 = e.clientY;
+    let moved = false;
+    const move = (ev: PointerEvent) => {
+      const dy = ev.clientY - y0;
+      if (moved || Math.abs(dy) < DRAG) return;
+      moved = true;
+      set(dy < 0);
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      if (moved) suppressClick = true;
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  });
+  let suppressClick = false;
+
   // Toque (ou teclado) na alça alterna.
   handle.addEventListener('click', () => {
+    if (suppressClick) {
+      suppressClick = false;
+      return;
+    }
     const p = current();
     if (expanded || (p && overflows(p))) set(!expanded);
   });
