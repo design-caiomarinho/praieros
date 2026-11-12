@@ -53,14 +53,25 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
 
   <div class="zoom" id="map-zoom">
     <div data-zoom="in">
-      <ButtonIcon variant="outlined" icon="plus" label="Aumentar o zoom" />
+      <ButtonIcon
+        variant="outlined"
+        size="xsmall"
+        icon="plus"
+        label="Aumentar o zoom"
+      />
     </div>
     <div data-zoom="out">
-      <ButtonIcon variant="outlined" icon="minus" label="Diminuir o zoom" />
+      <ButtonIcon
+        variant="outlined"
+        size="xsmall"
+        icon="minus"
+        label="Diminuir o zoom"
+      />
     </div>
     <div data-zoom="fit">
       <ButtonIcon
         variant="outlined"
+        size="xsmall"
         icon="fit-screen"
         label="Ajustar o mapa à tela"
       />
