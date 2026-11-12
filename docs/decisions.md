@@ -414,3 +414,13 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Atribuição:** continua no topo do mapa no mobile (sessão 8a-2).
 - **Nomes dos marcadores:** o Figma mostra sempre; mantemos a regra de zoom ≥ 13 (decisão anterior, evita sobreposição).
 - **Fora do escopo desta sessão:** folha inferior, busca mobile, Classificação e Fonte no mobile (os frames não cobrem).
+
+## Sessão 18: busca mobile (Figma 117:5257)
+
+- **Layout:** tela cheia sob a navbar (`position: absolute; inset: 0` no palco, `z-index: 3`), não mais folha inferior. Padding 16 lateral e 24 vertical (cabeçalho e corpo); só o corpo rola. Desktop não mudou (painel lateral, padding 24). Fechar volta ao mapa e, como antes, devolve a ficha que estava aberta.
+- **Bairro selecionado (derivado do 2º quadro):** o botão do bairro fica "ligado" (`aria-pressed`, estilo `selected` do Button) quando o campo traz exatamente o nome dele; some ao editar o texto. No mobile, escolher um bairro **não** foca o campo, para o teclado virtual não cobrir a lista.
+- **Resultados:** mesmo item do desktop. Os bairros continuam abaixo dos resultados (quadros 5 e 6).
+- **Divergência com o CLAUDE.md (frame não seguido):** o frame mostra "0 ponto de coleta" na praia sem ponto. Mantida a regra atual: sem ponto, a contagem é omitida (praias de referência), não se escreve "0 ponto".
+- **Foco:** ao abrir, vai para o campo; ao fechar, volta ao botão de busca do cabeçalho; Esc fecha.
+- **Derivados (o Figma não cobre):** teclado virtual (lista rola dentro do corpo, `overscroll-behavior: contain`); área segura (`env(safe-area-inset-bottom)` no fim do corpo); alvo de toque do fechar: 40px desenhados, 44px de área (pseudo-elemento, 2px de folga). Botões de bairro ficam em 40px (Figma; gap de 8px impede ampliar a área sem sobrepor); as linhas de resultado já passam de 44px.
+- **Fora do escopo:** "Perto de você" (faltam permissão negada e fora de Salvador) e o skeleton de carregamento (ver `docs/motion.md`).

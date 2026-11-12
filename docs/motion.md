@@ -28,3 +28,7 @@ Tabela a preencher quando o motion for implementado:
 
 | Elemento | Gatilho | O que anima | Duração | Curva | Com movimento reduzido |
 | -------- | ------- | ----------- | ------- | ----- | ---------------------- |
+
+### Pendente de motion
+
+- **Skeleton de carregamento da busca mobile** (sessão 18): fora do escopo da sessão; implementar na fase de motion, sem inventar valores.

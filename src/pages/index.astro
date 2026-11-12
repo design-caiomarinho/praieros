@@ -375,14 +375,14 @@ const sourceBulletin = site.current
   .layout-desktop {
     display: none;
   }
-  /* Busca: o espaço só existe enquanto o painel está aberto. Mobile: folha inferior. */
+  /* Busca: o espaço só existe enquanto o painel está aberto. Mobile: tela cheia sob a navbar. */
   .search-slot {
     display: contents;
   }
   .search-slot :global(.search) {
     position: absolute;
-    inset: auto 0 0;
-    max-height: 100%;
+    inset: 0;
+    z-index: 3;
   }
   /* A faixa no topo do mapa só existe no desktop (no mobile fica dentro da folha). */
   .map-banner {
@@ -410,7 +410,7 @@ const sourceBulletin = site.current
     .search-slot :global(.search) {
       position: static;
       flex-shrink: 0;
-      max-height: none;
+      z-index: auto;
     }
     .map-banner:not([hidden]) {
       display: block;

@@ -133,7 +133,7 @@ const neighborhoods = suggestNeighborhoods(results);
         <div class="hood-grid">
           {neighborhoods.map((hood) => (
             <div class="hood" data-hood={hood}>
-              <Button variant="secondary" size="small">
+              <Button variant="secondary" size="small" selected={false}>
                 {abbreviateLabel(hood) === hood ? (
                   hood
                 ) : (
@@ -172,13 +172,17 @@ const neighborhoods = suggestNeighborhoods(results);
   .search:focus {
     outline: none;
   }
-  .search--desktop {
-    width: var(--size-panel-width);
-    max-width: 100%;
-    border-left: var(--border-width-default) solid var(--s-color-border-default);
+  /* Mobile: tela cheia sob a navbar (Figma 117:5257); o posicionamento vem da página. */
+  .search {
+    width: 100%;
   }
-  .search--mobile {
-    border-top: var(--border-width-default) solid var(--s-color-border-default);
+  @media (min-width: 1024px) {
+    .search {
+      width: var(--size-panel-width);
+      max-width: 100%;
+      border-left: var(--border-width-default) solid
+        var(--s-color-border-default);
+    }
   }
 
   /* Cabeçalho (Figma 117:6362): padding 24, 32 entre o bloco do título e o campo, borda inferior. */
@@ -433,6 +437,30 @@ const neighborhoods = suggestNeighborhoods(results);
     letter-spacing: var(--s-typo-body-medium-spacing);
   }
 
+  /* Mobile (abaixo de 1024px): padding lateral 16 e vertical 24 (Figma 117:5312 e 117:5329);
+     o corpo respeita a área segura de baixo (derivado, ver docs/decisions.md). */
+  @media (max-width: 1023px) {
+    .head {
+      padding: var(--space-inset-lg) var(--space-inset-md);
+    }
+    .body {
+      padding: var(--space-inset-lg) var(--space-inset-md);
+      padding-bottom: calc(
+        var(--space-inset-lg) + env(safe-area-inset-bottom, 0px)
+      );
+      overscroll-behavior: contain;
+    }
+    /* Alvo de toque do fechar: 40px no desenho, 44px na área de toque. */
+    .close :global(.btn-icon) {
+      position: relative;
+    }
+    .close :global(.btn-icon)::after {
+      content: '';
+      position: absolute;
+      inset: calc(var(--primitives-spacing-4) / -2);
+    }
+  }
+
   .sr-only {
     position: absolute;
     width: 1px;
@@ -481,7 +509,23 @@ const neighborhoods = suggestNeighborhoods(results);
     }
 
     // Os bairros ficam sempre visíveis (Figma 117:6342): só os resultados e o vazio mudam.
+    // Bairro "ligado" quando o campo traz exatamente o nome dele (Figma 117:5257, 2º quadro).
+    const hoodButtons = [...root.querySelectorAll<HTMLElement>('.hood')].map(
+      (el) => ({ el, button: el.querySelector<HTMLButtonElement>('button')! }),
+    );
+    function syncHoods() {
+      const typed = input.value.trim().toLowerCase();
+      hoodButtons.forEach(({ el, button }) => {
+        const on = typed !== '' && el.dataset.hood!.toLowerCase() === typed;
+        button.toggleAttribute('data-selected', on);
+        button.setAttribute('aria-pressed', String(on));
+      });
+    }
+    // Teclado virtual: no mobile, escolher um bairro não o abre (a lista fica toda visível).
+    const mobile = window.matchMedia('(max-width: 1023px)');
+
     function render() {
+      syncHoods();
       const searching = queryTokens(input.value).length > 0;
       items.forEach((i) => (i.li.hidden = true));
       if (!searching) {
@@ -558,7 +602,7 @@ const neighborhoods = suggestNeighborhoods(results);
       if (hood) {
         input.value = hood.dataset.hood!;
         render();
-        input.focus();
+        if (!mobile.matches) input.focus();
         return;
       }
       choose(target.closest<HTMLElement>('.result') ?? undefined);
