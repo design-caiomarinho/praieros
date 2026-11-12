@@ -529,20 +529,25 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     border-radius: var(--radius-full);
     overflow: clip;
   }
-  /* Selecionar: o círculo encolhe e some enquanto o pino cresce da ponta (fusão), e o marcador
-     sobe 12px para a ponta ficar no ponto. Mesmo tempo e curva do hover do pin (derivado; o
-     Figma não define a troca). Deselecionar é o caminho inverso, com a mesma curva e tempo. */
-  :global(.marker) {
-    translate: 0 12px;
-    transition: translate var(--motion-duration-pin-select)
-      var(--motion-easing-pin-hover);
+  /* Selecionar: o círculo (centrado no ponto) encolhe no lugar e some enquanto o pino cresce a
+     partir da ponta, que fica sempre sobre o ponto (a camada do pino sobe 12px do círculo). Nada
+     se desloca: só escala e opacidade, então a troca entre pontos não "pula". Mesmo tempo e curva
+     do hover do pin (derivado; o Figma não define a troca). Desselecionar é o inverso. */
+  :global(.marker__pin) {
+    inset: -12px 0 12px;
+    transform-origin: 50% 100%;
   }
-  :global(.marker--selected) {
-    translate: 0 0;
+  /* A parte do pino acima do marcador também recebe o clique. */
+  :global(.marker--selected::before) {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -12px;
+    height: 12px;
   }
   :global(.marker__disc),
   :global(.marker__pin) {
-    transform-origin: 50% 100%;
     transition:
       opacity var(--motion-duration-pin-select) var(--motion-easing-pin-hover),
       transform var(--motion-duration-pin-select) var(--motion-easing-pin-hover),

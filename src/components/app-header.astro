@@ -125,6 +125,21 @@ const { homeHref = '/', infoHref = '#fonte', searchId } = Astro.props;
     right: 0;
     width: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
   }
+  /* Mobile: a folha sobe de baixo, longe do botão; então a linha de baixo do cabeçalho não
+     encolhe nem abre vão sob o botão (busca ou Fonte). Só o botão muda de estado. */
+  @media (max-width: 1023.98px) {
+    .header[data-source-open] {
+      border-bottom-color: var(--s-color-border-default);
+    }
+    .header[data-source-open]::before,
+    .header[data-source-open]::after,
+    .header:not([data-source-open])::before {
+      display: none;
+    }
+    .header:not([data-source-open]):has([aria-expanded='true'])::after {
+      clip-path: inset(0);
+    }
+  }
   /* Mobile (abaixo do breakpoint de 1024px da página): inset md (16px). */
   @media (max-width: 1023px) {
     .header {

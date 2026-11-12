@@ -561,3 +561,8 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - A câmera passa a considerar o que o painel cobre nos dois eixos (`getCovered`: direita no desktop, embaixo no mobile = 60% do palco, igual à altura da folha em `index.astro`). Enquadrar, aproximar, escolher ponto pelo cartão e enquadrar bairro usam só a área visível (folga + deslocamento do centro).
 - `map-fit` deixou de medir a folha pelo DOM (ela começa fora da tela e dava medida errada na abertura): usa a mesma regra dos outros movimentos.
 - `revealSelected` (sidebar abrindo) não interrompe um movimento de câmera já em curso: antes ele sobrescrevia o enquadramento da escolha na busca, deixando o pin fora do lugar.
+
+## Sessão 23i: troca do pin sem deslocamento e linha da navbar no mobile (Caio)
+
+- **Pin:** o marcador não se desloca mais ao selecionar. O deslocamento do MapLibre voltou a ser o do círculo (`[0,-12]`) e o pino é uma camada que sobe 12px do círculo, com a ponta sempre sobre o ponto; só escala e opacidade animam (250 ms). Um `::before` do marcador selecionado leva o clique também à parte do pino acima da caixa.
+- **Navbar no mobile:** a folha sobe de baixo, longe do botão; por isso a linha de baixo do cabeçalho não encolhe nem abre vão sob o botão (busca ou Fonte). Só o botão muda de estado. No desktop segue o Figma 187:3852. (Interpretação do pedido de Caio: a linha "indo para a esquerda" no mobile estava errada.)

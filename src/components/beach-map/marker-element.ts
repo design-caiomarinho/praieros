@@ -101,7 +101,7 @@ export function setLabelVisible(
 }
 
 /**
- * Deslocamento fixo: ancora a ponta do pino (24px) no ponto. Normal, o círculo (24px) fica 12px
- * mais baixo, no centro do ponto: esse ajuste é CSS (`translate` do marcador) e anima na troca.
+ * Deslocamento fixo: o centro do círculo (24px) fica no ponto. O pino selecionado é uma camada que
+ * sobe 12px (CSS), com a ponta também sobre o ponto: o marcador nunca se desloca na troca.
  */
-export const MARKER_OFFSET = [0, -24] as const;
+export const MARKER_OFFSET = [0, -12] as const;
