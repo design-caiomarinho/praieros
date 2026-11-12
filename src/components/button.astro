@@ -13,6 +13,10 @@ interface Props {
   selected?: boolean;
   iconLeft?: IconName;
   iconRight?: IconName;
+  /** Linha de navegação: largura total, texto à esquerda e ícone à direita (Figma 125:3427). */
+  spread?: boolean;
+  /** Só com href: abrir em outra aba (rel seguro incluso). */
+  target?: '_blank';
   /** Só para a vitrine (/dev/components): força o visual de hover/foco. */
   state?: 'hover' | 'focus';
 }
@@ -26,13 +30,15 @@ const {
   selected,
   iconLeft,
   iconRight,
+  spread = false,
+  target,
   state,
 } = Astro.props;
 
 const asLink = href !== undefined && !disabled;
 const Tag = asLink ? 'a' : 'button';
 const attrs = asLink
-  ? { href }
+  ? { href, target, rel: target ? 'noopener noreferrer' : undefined }
   : {
       type,
       disabled,
@@ -42,6 +48,7 @@ const attrs = asLink
 
 <Tag
   class={`btn btn--${variant} btn--${size}`}
+  data-spread={spread ? '' : undefined}
   data-state={state}
   data-selected={selected ? '' : undefined}
   {...attrs}
@@ -79,6 +86,12 @@ const attrs = asLink
   .btn--small {
     padding: var(--space-inset-sm);
     height: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
+  }
+
+  /* Linha de navegação (spread): largura total, texto à esquerda, ícone à direita. */
+  .btn[data-spread] {
+    width: 100%;
+    justify-content: space-between;
   }
 
   /* Foco visível: anel de 1px a 4px da borda externa do Figma. */

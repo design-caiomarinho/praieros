@@ -183,8 +183,24 @@ const panels = site.beaches
       width: var(--size-panel-width);
       max-height: none;
     }
+    /* Corpo da ficha ocupa a altura toda (links e crédito no rodapé); rola se for alta. */
+    .panel:not([hidden]) {
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .panel [data-beach]:not([hidden]) {
+      display: flex;
+      flex: 1 0 auto;
+      flex-direction: column;
+    }
     .layout-desktop {
-      display: block;
+      display: flex;
+      flex: 1 0 auto;
+      flex-direction: column;
+    }
+    .layout-desktop > :global(section) {
+      flex: 1 0 auto;
     }
     .layout-mobile {
       display: none;

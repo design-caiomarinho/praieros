@@ -52,3 +52,6 @@
 | Chip da ficha (praia sem pontos) | Sem resultado                                                     | Terminologia fixa                                 |
 | Marcador (aria-label)            | Praia, Praia fora do boletim, Sem resultado                       | Provisório (sessão 10). Sem "Ponto de coleta"     |
 | Resumo do boletim (rótulo)       | N pontos de coleta (não inclui praias que não constam no boletim) | Provisório (sessão 10); a tela do resumo é futura |
+
+| Aviso de chuva (ficha com ponto Própria) | Depois de chuva forte, a água pode piorar. Evite o banho e confira o próximo boletim. | Figma 123:2645 (texto do design, não do boletim). Regra em `docs/decisions.md`, sessão 11 |
+| Botões da ficha | Ver detalhes · Compartilhar praia · Como ler e fonte · Boletim original | Figma 123:2440 |

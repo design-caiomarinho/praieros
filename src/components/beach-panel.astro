@@ -5,6 +5,7 @@ import NoResultBanner from './no-result-banner.astro';
 import Button from './button.astro';
 import ButtonIcon from './button-icon.astro';
 import Icon from './icon.astro';
+import { RAIN_NOTICE_TEXT } from '../lib/site/rain-notice.ts';
 import { pointsLabel } from '../lib/format/points-label.ts';
 import type { ChipStatus } from '../lib/rules/status.ts';
 
@@ -30,6 +31,8 @@ interface Props {
   notice?: 'outdated' | 'no-result';
   /** Frase já pronta sob o chip do boletim (ex.: "Esta praia não consta no boletim nº 37/2026."). */
   note?: string;
+  /** Mostra o aviso de chuva (decidido por `shouldShowRainNotice`). */
+  rainNotice?: boolean;
   layout?: 'desktop' | 'mobile';
   detailsHref?: string;
   sourceHref?: string;
@@ -42,6 +45,7 @@ const {
   points,
   notice,
   note,
+  rainNotice = false,
   layout = 'desktop',
   detailsHref = '#',
   sourceHref = '/fonte',
@@ -56,63 +60,84 @@ const subtitle =
 <section class={`panel panel--${layout}`} aria-label={`Ficha: ${name}`}>
   {notice === 'outdated' && <OutdatedBanner />}
   {notice === 'no-result' && <NoResultBanner />}
-  <div class="content">
-    <div class="top">
-      <div class="titles">
+  <header class="head">
+    <div class="titles">
+      <div class="top">
         <h2>{name}</h2>
-        <p class="subtitle">{subtitle}</p>
+        <div class="close" data-panel-close>
+          <ButtonIcon
+            variant="ghost"
+            size="xsmall"
+            icon="close"
+            label="Fechar ficha da praia"
+          />
+        </div>
       </div>
-      <div class="close" data-panel-close>
-        <ButtonIcon
-          variant="ghost"
-          size="xsmall"
-          icon="close"
-          label="Fechar ficha da praia"
-        />
-      </div>
+      <p class="subtitle">{subtitle}</p>
     </div>
-
     <div class="bulletin">
       <span class="bulletin-chip">
         Boletim nº {bulletin.number} · {bulletin.date}
       </span>
       {note && <p class="note">{note}</p>}
     </div>
+  </header>
 
-    {points.length > 0 && (
-      <div class="points">
-        <h3>Pontos de coleta</h3>
-        <div class="cards">
-          {points.map((p) => (
-            <PointCard
-              pointId={p.id}
-              name={p.name}
-              location={p.location}
-              status={p.status}
-              accuracy={p.accuracy}
-            />
-          ))}
+  <div class="body">
+    <div class="main">
+      {points.length > 0 && (
+        <div class="points">
+          <h3>Pontos de coleta</h3>
+          <div class="cards">
+            {points.map((p) => (
+              <PointCard
+                pointId={p.id}
+                name={p.name}
+                location={p.location}
+                status={p.status}
+                accuracy={p.accuracy}
+              />
+            ))}
+            {rainNotice && (
+              <div class="rain">
+                <Icon name="rain" size={20} />
+                <p>{RAIN_NOTICE_TEXT}</p>
+              </div>
+            )}
+          </div>
         </div>
+      )}
+
+      <div class="buttons">
+        <Button variant="primary" href={detailsHref}>
+          Ver detalhes
+        </Button>
+        <Button variant="secondary">Compartilhar praia</Button>
       </div>
-    )}
-
-    <div class="buttons">
-      <Button variant="primary" href={detailsHref}>
-        Ver detalhes
-      </Button>
-      <Button variant="secondary" iconLeft="share">
-        Compartilhar praia
-      </Button>
     </div>
 
-    <div class="links">
-      <a href={sourceHref}>Como ler e fonte</a>
-      <a href={bulletin.pdfUrl} target="_blank" rel="noopener noreferrer">
-        Boletim original <Icon name="external" size={20} />
-      </a>
+    <div class="foot">
+      <div class="links">
+        <Button
+          variant="secondary"
+          href={sourceHref}
+          spread
+          iconRight="chevron-right"
+        >
+          Como ler e fonte
+        </Button>
+        <Button
+          variant="secondary"
+          href={bulletin.pdfUrl}
+          target="_blank"
+          spread
+          iconRight="external"
+        >
+          Boletim original
+        </Button>
+      </div>
+      <p class="credit">Fonte: Inema · Praieros não é canal oficial</p>
     </div>
-
-    <p class="credit">Fonte: Inema · Praieros não é canal oficial</p>
   </div>
 </section>
 
@@ -134,28 +159,37 @@ const subtitle =
   .panel--mobile {
     border-top: var(--border-width-default) solid var(--s-color-border-default);
   }
-  .content {
+  /* Cabeçalho (Figma 123:2441): padding 24, borda inferior. */
+  .head {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-md);
+    gap: var(--space-stack-sm);
     padding: var(--space-inset-lg);
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .titles {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-2xs);
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-gap-md);
   }
   .close {
     display: contents;
   }
-  .top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-gap-md);
-  }
   h2 {
     margin: 0;
-    font-family: var(--s-typo-heading-medium-family);
-    font-weight: var(--s-typo-heading-medium-weight);
-    font-size: var(--s-typo-heading-medium-size);
-    line-height: var(--s-typo-heading-medium-line);
-    letter-spacing: var(--s-typo-heading-medium-spacing);
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-heading-large-family);
+    font-weight: var(--s-typo-heading-large-weight);
+    font-size: var(--s-typo-heading-large-size);
+    line-height: var(--s-typo-heading-large-line);
+    letter-spacing: var(--s-typo-heading-large-spacing);
   }
   .subtitle,
   .note {
@@ -171,40 +205,57 @@ const subtitle =
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-stack-xs);
+    gap: var(--space-stack-sm);
   }
   .bulletin-chip {
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
+    height: var(--primitives-spacing-24);
     padding: var(--space-inset-2xs) var(--space-inset-xs);
     border: var(--border-width-default) solid var(--s-color-border-default);
     border-radius: var(--radius-full);
+    background: var(--s-color-surface-strong);
     color: var(--s-color-content-secondary);
-    font-family: var(--s-typo-label-medium-family);
-    font-weight: var(--s-typo-label-medium-weight);
-    font-size: var(--s-typo-label-medium-size);
-    line-height: var(--s-typo-label-medium-line);
-    letter-spacing: var(--s-typo-label-medium-spacing);
+    font-family: var(--s-typo-body-small-family);
+    font-weight: var(--s-typo-body-small-weight);
+    font-size: var(--s-typo-body-small-size);
+    line-height: var(--s-typo-body-small-line);
+    letter-spacing: var(--s-typo-body-small-spacing);
+    white-space: nowrap;
+  }
+  /* Corpo (Figma 123:2456): padding 24; ações no topo, links e crédito no rodapé. */
+  .body {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-stack-xl);
+    padding: var(--space-inset-lg);
+  }
+  .main,
+  .foot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
   }
   .points {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-sm);
+    gap: var(--space-stack-md);
   }
   h3 {
     margin: 0;
-    font-family: var(--s-typo-body-large-family);
-    font-weight: var(--s-typo-label-medium-weight);
-    font-size: var(--s-typo-body-large-size);
-    line-height: var(--s-typo-body-large-line);
+    color: var(--s-color-content-muted);
+    font-family: var(--s-typo-body-small-family);
+    font-weight: var(--s-typo-body-small-weight);
+    font-size: var(--s-typo-body-small-size);
+    line-height: var(--s-typo-body-small-line);
+    letter-spacing: var(--s-typo-body-small-spacing);
   }
-  .cards {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-stack-xs);
-  }
-  .buttons {
+  .cards,
+  .buttons,
+  .links {
     display: flex;
     flex-direction: column;
     gap: var(--space-stack-xs);
@@ -212,25 +263,26 @@ const subtitle =
   .buttons > :global(*) {
     justify-content: center;
   }
-  .links {
+  /* Aviso de chuva (Figma 123:2643). */
+  .rain {
+    box-sizing: border-box;
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-gap-lg);
-  }
-  .links a {
-    display: inline-flex;
     align-items: center;
-    gap: var(--space-gap-2xs);
-    color: var(--s-color-content-accent);
+    gap: var(--space-gap-md);
+    padding: var(--space-inset-md);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    background: var(--s-color-surface-strong);
+    color: var(--s-color-content-secondary);
+  }
+  .rain p {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
     font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--s-typo-label-medium-weight);
+    font-weight: var(--s-typo-body-medium-weight);
     font-size: var(--s-typo-body-medium-size);
     line-height: var(--s-typo-body-medium-line);
-    text-decoration: underline;
-  }
-  .links a:focus-visible {
-    outline: var(--border-width-default) solid var(--s-color-border-focus);
-    outline-offset: var(--space-inset-2xs);
+    letter-spacing: var(--s-typo-body-medium-spacing);
   }
   .credit {
     margin: 0;

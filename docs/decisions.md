@@ -305,3 +305,15 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Busca:** ainda não construída; as referências já estão no modelo (`BeachModel.isReference`) que ela vai consumir.
 - **Referência só se a posição representativa estiver em Salvador** (além de algum vértice dentro do polígono): praia que só encosta na divisa fica de fora (ex.: Praia da Gamboa saiu em 2026-11-11).
 - **Decisões sobre suspeitas (Caio, 2026-11-11):** "Canta Galo" -> "Praia do Cantagalo" em `osm-name-hints.json` (só para a busca; o nome exibido não muda); "Praia da Barra" em `reference-exclude.json`; Praia da Paciência, Prainha da Fonte do Boi e Praia do Paredão ficam como referência.
+
+## Sessão 11: painel lateral fiel ao Figma (nó 123:2440)
+
+- **Estrutura:** cabeçalho (padding 24, borda inferior; título `heading-large`, subtítulo, chip do boletim) e corpo (padding 24). No corpo, ações no topo e links + crédito no rodapé do painel (`justify-between`); se a ficha for mais alta que a tela, o painel rola. Faixas Desatualizado/Sem resultado ficam acima do cabeçalho (não estão no Figma, vêm da tabela de estados).
+- **O que saiu da tela (só deixou de ser exibido):** ícone de compartilhar no botão "Compartilhar praia" e os links sublinhados azuis (viraram botões-linha). Nenhum dado nem lógica foi apagado (o ícone `share` segue no `Icon`).
+- **"1 pontos de coleta" no Figma:** erro de plural do exemplo; o código mantém "1 ponto" / "3 pontos" (`pointsLabel`).
+- **Botão fechar:** já era `ButtonIcon` xsmall (40 px) com ícone de 24 px; sem mudança.
+- **Botão-linha ("Como ler e fonte", "Boletim original"):** variante simples do `Button` (props `spread`, `target`), não estilo local. `secondary`, largura total, texto à esquerda e ícone de 20 px à direita (chevron e link externo). Hover e foco herdam do `secondary`. `target="_blank"` já inclui `rel="noopener noreferrer"`.
+- **Ícones novos** (do Figma, `currentColor`): `chevron-right-20`, `rain-20`.
+- **Tokens:** sem faltas. O chip do boletim tem altura de 24 px (`primitives-spacing-24`, como a altura dos botões; sem token semântico). Padding 4/8 px do chip pelos tokens `inset-2xs`/`inset-xs`.
+- **Aviso de chuva (texto do design, não do boletim).** Regra (Caio, 2026-11-11), função pura `shouldShowRainNotice` em `src/lib/site/rain-notice.ts`, com testes: mostra quando **pelo menos um ponto exibido está Própria**. Para praia desatualizada vale o último status conhecido (o painel já recebe esse status); pontos mistos mostram; todos Impróprios (ou Sem resultado) não mostram; fichas sem pontos (referência, sem resultado, antiga demais, nunca apareceu) não mostram. Fica dentro da lista de pontos, abaixo do último cartão, como no Figma. O texto não é lido do boletim nem reescrito por regra; é fixo.
+- **Variações sem Figma, derivadas por lógica:** 1, 2 ou 3 ou mais pontos (a lista de cartões só cresce); desatualizada (faixa acima do cabeçalho, chip do último status); sem resultado e referência (sem cartões, sem aviso de chuva, nota "não consta no boletim nº X" sob o chip, como antes). O chip do boletim, o link "Boletim original" e "Fonte: Inema" aparecem em toda ficha.

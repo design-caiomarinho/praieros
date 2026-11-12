@@ -3,6 +3,7 @@ import { ACCURACY_LABELS } from './accuracy.ts';
 import { STATUS_LABELS, type ChipStatus } from '../rules/status.ts';
 import type { BulletinRef } from '../rules/types.ts';
 import type { BeachModel } from './build-beach-models.ts';
+import { shouldShowRainNotice } from './rain-notice.ts';
 
 /** Página oficial do Inema, usada quando o boletim não guarda o link do PDF. */
 export const OFFICIAL_PAGE_URL =
@@ -34,6 +35,8 @@ export interface BeachPanelData {
   }[];
   notice?: 'outdated' | 'no-result';
   note?: string;
+  /** Aviso de chuva (texto do design): ver `shouldShowRainNotice`. */
+  rainNotice?: boolean;
 }
 
 /**
@@ -79,16 +82,18 @@ export function toPanelData(
     };
   }
 
+  const points = beach.points.map((p, i) => ({
+    id: `${beach.slug}:${p.code}`,
+    name: `Ponto ${i + 1}`,
+    location: p.location ?? undefined,
+    status: p.status,
+    accuracy: p.accuracy,
+  }));
   return {
     ...base,
-    points: beach.points.map((p, i) => ({
-      id: `${beach.slug}:${p.code}`,
-      name: `Ponto ${i + 1}`,
-      location: p.location ?? undefined,
-      status: p.status,
-      accuracy: p.accuracy,
-    })),
+    points,
     notice: beach.banner === 'outdated' ? 'outdated' : undefined,
+    rainNotice: shouldShowRainNotice(points.map((p) => p.status)),
   };
 }
 
