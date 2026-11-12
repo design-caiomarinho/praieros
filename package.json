@@ -25,6 +25,7 @@
     "catalog:propose": "node --env-file-if-exists=.env scripts/propose-catalog.ts",
     "tokens:build": "node scripts/build-tokens.ts",
     "catalog:place": "node --env-file-if-exists=.env scripts/place-catalog.ts",
+    "catalog:neighborhoods": "node --env-file-if-exists=.env scripts/fill-neighborhoods.ts",
     "catalog:reference": "node --env-file-if-exists=.env scripts/propose-reference.ts"
   },
   "dependencies": {

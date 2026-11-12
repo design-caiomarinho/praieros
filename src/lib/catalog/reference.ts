@@ -1,3 +1,4 @@
+import type { OsmSource } from './types.ts';
 import { normalizeBeachName } from '../rules/group.ts';
 import {
   distanceM,
@@ -29,6 +30,9 @@ export interface ReferenceBeach {
   source: 'osm';
   /** AAAA-MM-DD da consulta. */
   fetchedAt: string;
+  /** Bairro por consulta inversa do OSM (`npm run catalog:neighborhoods`); opcional. */
+  neighborhood?: string | null;
+  neighborhoodSource?: OsmSource | null;
 }
 
 export interface ReferenceFile {

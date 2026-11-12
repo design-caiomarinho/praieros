@@ -23,7 +23,7 @@ export interface PanelPoint {
 
 interface Props {
   name: string;
-  neighborhood: string;
+  neighborhood?: string;
   /** Boletim exibido na ficha (o atual, ou o último em que a praia apareceu). */
   bulletin: { number: string; date: string; pdfUrl: string };
   points: PanelPoint[];
@@ -51,10 +51,12 @@ const {
   sourceHref = '/fonte',
 } = Astro.props;
 
-const subtitle =
-  points.length > 0
-    ? `${neighborhood} · ${pointsLabel(points.length)}`
-    : neighborhood;
+const subtitle = [
+  neighborhood,
+  points.length > 0 ? pointsLabel(points.length) : null,
+]
+  .filter(Boolean)
+  .join(' · ');
 ---
 
 <section

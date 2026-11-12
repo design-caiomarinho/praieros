@@ -22,7 +22,8 @@ export function formatDate(iso: string): string {
 
 export interface BeachPanelData {
   name: string;
-  neighborhood: string;
+  /** Sem bairro conhecido: não exibe nada ("Salvador" não é bairro). */
+  neighborhood?: string;
   bulletin: { number: string; date: string; pdfUrl: string };
   points: {
     /** Mesmo id do marcador do ponto (`slug:código`). */
@@ -54,7 +55,7 @@ export function toPanelData(
   const number = bulletinNumber(ref);
   const base = {
     name: beach.name,
-    neighborhood: beach.neighborhood ?? 'Salvador',
+    neighborhood: beach.neighborhood ?? undefined,
     bulletin: {
       number,
       date: formatDate(ref.issuedAt),

@@ -82,7 +82,13 @@ export interface BuildOptions {
    */
   excluded?: readonly string[];
   /** Praias de referência (`data/catalog/reference-beaches.json`). Não entram no resumo (D2). */
-  references?: readonly { name: string; lat: number; lng: number }[];
+  references?: readonly {
+    name: string;
+    lat: number;
+    lng: number;
+    /** Bairro do OSM (não conferido): só em desenvolvimento, como o do catálogo. */
+    neighborhood?: string | null;
+  }[];
   /** Nomes de referência a ignorar (`data/catalog/reference-exclude.json`). */
   referenceExclude?: readonly string[];
 }
@@ -177,7 +183,10 @@ export function buildSiteModel(
     return {
       slug: beachSlug(state.name),
       name: state.name,
-      neighborhood: entry ? shownNeighborhood(entry) : null,
+      neighborhood:
+        (entry ? shownNeighborhood(entry) : null) ??
+        (includeUnverified ? reference?.neighborhood : null) ??
+        null,
       kind: state.kind,
       points,
       worstStatus: state.worstStatus,

@@ -139,10 +139,10 @@ describe('toPanelData (estados da ficha)', () => {
     ).toBeNull();
   });
 
-  it('bairro ausente cai em "Salvador"', () => {
+  it('bairro ausente não vira "Salvador" (fica sem bairro)', () => {
     expect(
       toPanelData(beach({ neighborhood: null }), CURRENT, urls)!.neighborhood,
-    ).toBe('Salvador');
+    ).toBeUndefined();
   });
 });
 
