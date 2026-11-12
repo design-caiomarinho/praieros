@@ -34,7 +34,7 @@ interface Props {
   /** Nº de pontos de coleta da praia para o subtítulo (padrão: `points.length`). */
   pointCount?: number;
   layout?: 'desktop' | 'mobile';
-  /** Mostra "Ver detalhes", que abre a Classificação (só desktop; ligado em index.astro). */
+  /** Mostra "Ver detalhes", que abre a Classificação (desktop e mobile; ligado em index.astro). */
   showDetails?: boolean;
   sourceHref?: string;
 }
@@ -145,7 +145,7 @@ const noResult = notice === 'no-result';
 
       {!noResult && (
         <div class="buttons">
-          {showDetails && layout === 'desktop' && (
+          {showDetails && (
             <div class="details" data-open-classification>
               <Button variant="primary">Ver detalhes</Button>
             </div>

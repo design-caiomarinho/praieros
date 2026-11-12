@@ -17,11 +17,14 @@ import { groupBySlug } from '../../lib/map/group-markers.ts';
 import { groupAriaLabel, groupBadge } from '../../lib/map/group-status.ts';
 import {
   isLabelVisible,
-  LABEL_MIN_ZOOM,
+  LABEL_FLOOR_ZOOM,
+  pickLabels,
+  type LabelCandidate,
+  type LabelObstacle,
 } from '../../lib/map/label-visibility.ts';
 import {
   GROUP_FIT_MAX_ZOOM,
-  isGroupSpread,
+  isGroupOpen,
   POINT_FOCUS_ZOOM,
 } from '../../lib/map/spread.ts';
 import {
@@ -47,21 +50,16 @@ export interface BeachMapOptions {
   onClear(): void;
   /** `ready` quando o mapa terminou de desenhar; `error` se estilo ou tiles falharem. */
   onState(state: 'loading' | 'ready' | 'error'): void;
-}
-
-export interface BeachMapController {
   /**
    * Largura (px) da parte direita do mapa coberta por um painel que sobrepõe (a busca no
    * desktop). Lida a cada movimento de câmera: o enquadramento usa só a área visível à esquerda.
    */
   getCoveredRight?(): number;
+  /** Duração e curva dos movimentos de câmera (tokens do painel, lidos por quem chama). */
+  getMotion?(): { duration: number; easing: (t: number) => number };
 }
 
-/** Animação do reenquadramento ao abrir a busca (tokens de motion, lidos por quem chama). */
-export interface RevealMotion {
-  duration: number;
-  delay: number;
-  easing: (t: number) => number;
+export interface BeachMapController {
   zoomIn(): void;
   zoomOut(): void;
   /** Reenquadra todos os pontos, respeitando o limite de Salvador (mesma visão inicial). */
@@ -75,14 +73,14 @@ export interface RevealMotion {
   fitBeaches(slugs: readonly string[], coveredBottom?: number): void;
   /** Seleciona a praia (e, se o grupo estiver aberto, um ponto). Praia selecionada fica aberta em qualquer zoom. */
   select(slug: string | null, pointId?: string | null): void;
+  /**
+   * Com o sidebar abrindo por cima: se a praia selecionada ficar escondida, leva-a para a área
+   * visível (mesma duração e curva do painel). Não mexe se ela já aparece.
+   */
+  revealSelected(): void;
   /** Para testes e depuração. */
   getMap(): maplibregl.Map;
   destroy(): void;
-  /**
-   * Com a busca abrindo por cima: se a praia selecionada ficar escondida, leva-a para a área
-   * visível (mesma duração e curva do painel). Não mexe se ela já aparece.
-   */
-  revealSelected(motion: RevealMotion): void;
 }
 
 // Uma entrada por marcador na tela. Praia de 1 ponto: `single`. Praia de 2+ pontos: marcador
@@ -91,8 +89,10 @@ interface Entry {
   marker: maplibregl.Marker;
   el: HTMLElement;
   status: ChipStatus;
-  /** Zoom mínimo do nome (Infinity = só por seleção, foco ou hover). */
-  labelMinZoom: number;
+  /** Nome por espaço livre (false para pins: só por seleção, foco ou hover). */
+  autoLabel: boolean;
+  /** Resultado da última disposição: o nome cabe sem cobrir outros. */
+  labelOk: boolean;
   pointId?: string;
   selected: boolean;
   hovered: boolean;
@@ -112,11 +112,6 @@ export async function createBeachMap(
 ): Promise<BeachMapController | null> {
   const { container, markers, palette, onSelect, onClear, onState } = opts;
   onState('loading');
-
-  let style;
-  try {
-    const res = await fetch(STYLE_URL);
-    if (!res.ok) throw new Error(String(res.status));
   const coveredRight = () => opts.getCoveredRight?.() ?? 0;
   /** Folga do enquadramento; à direita soma o que o painel sobreposto cobre. */
   const pad = () => ({
@@ -127,6 +122,14 @@ export async function createBeachMap(
   });
   /** Centro da área visível = centro do mapa menos metade do que está coberto. */
   const shift = (): [number, number] => [-coveredRight() / 2, 0];
+  /** Movimento suave da câmera: duração e curva do painel (sem animação com movimento reduzido). */
+  const motion = () =>
+    opts.getMotion?.() ?? { duration: 0, easing: (t: number) => t };
+
+  let style;
+  try {
+    const res = await fetch(STYLE_URL);
+    if (!res.ok) throw new Error(String(res.status));
     style = applyPalette(await res.json(), palette);
   } catch {
     onState('error');
@@ -191,28 +194,24 @@ export async function createBeachMap(
       ...(e.selected ? MARKER_OFFSET.selected : MARKER_OFFSET.normal),
     ]);
     e.el.style.zIndex = e.selected || e.hovered || e.focused ? '1' : '';
-    const zoom = map.getZoom();
     const visible = isLabelVisible(
       {
-        zoom,
+        zoom: 0,
         selected: e.selected,
         focused: e.focused,
         hovered: e.hovered,
       },
-      e.labelMinZoom,
+      e.labelOk ? 0 : Infinity,
     );
-    // Abaixo do zoom dos nomes, o nome que aparece por hover/foco/seleção é só uma dica
-    // flutuante: não aumenta a área de clique do marcador (não cobre pins vizinhos).
-    setLabelVisible(
-      e.el,
-      visible ? (zoom >= e.labelMinZoom ? 'shown' : 'peek') : 'hidden',
-    );
+    // Sem espaço para o nome, o que aparece por hover/foco/seleção é só uma dica flutuante:
+    // não aumenta a área de clique do marcador (não cobre pins vizinhos).
+    setLabelVisible(e.el, visible ? (e.labelOk ? 'shown' : 'peek') : 'hidden');
   }
 
   function build(
     pos: { lat: number; lng: number },
     view: MarkerView,
-    labelMinZoom: number,
+    autoLabel: boolean,
     pointId: string | undefined,
     onClick: () => void,
   ): Entry {
@@ -227,7 +226,8 @@ export async function createBeachMap(
         .addTo(map),
       el,
       status: view.status,
-      labelMinZoom,
+      autoLabel,
+      labelOk: false,
       pointId,
       selected: false,
       hovered: false,
@@ -255,16 +255,86 @@ export async function createBeachMap(
         refresh(b.single);
       }
       if (!b.cluster) continue;
-      const open =
-        isSelected || b.slug === expandedSlug || isGroupSpread(b.points, zoom);
+      // Aberto por clique ou seleção só enquanto os pins não se sobrepõem: ao afastar o zoom o
+      // grupo volta a ser um marcador só (nunca sobram pontos soltos do mesmo local).
+      const open = isGroupOpen(
+        b.points,
+        zoom,
+        isSelected || b.slug === expandedSlug,
+      );
       b.cluster.el.hidden = open;
-      if (!open) refresh(b.cluster);
+      b.cluster.selected = isSelected && !open;
       for (const pin of b.pins) {
         pin.el.hidden = !open;
         pin.selected = isSelected && pin.pointId === selectedPointId;
-        if (open) refresh(pin);
       }
     }
+    layoutLabels(zoom);
+    for (const b of beaches) {
+      if (b.single) refresh(b.single);
+      if (b.cluster && !b.cluster.el.hidden) refresh(b.cluster);
+      for (const pin of b.pins) if (!pin.el.hidden) refresh(pin);
+    }
+  }
+
+  const measure = document.createElement('canvas').getContext('2d');
+  const widthCache = new Map<string, number>();
+  /** Largura do nome (texto + padding + borda), medida com a fonte real do rótulo. */
+  function labelWidth(e: Entry): number {
+    const label = e.el.querySelector<HTMLElement>('.marker__label');
+    const text = label?.textContent ?? '';
+    const hit = widthCache.get(text);
+    if (hit !== undefined) return hit;
+    let w = text.length * 7;
+    if (label && measure) {
+      const cs = getComputedStyle(label);
+      measure.font =
+        cs.font || `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      w = measure.measureText(text).width;
+      w += parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + 2;
+    }
+    widthCache.set(text, w);
+    return w;
+  }
+
+  /** Decide quais nomes cabem: só marcadores na tela, de zoom `LABEL_FLOOR_ZOOM` para cima. */
+  function layoutLabels(zoom: number) {
+    const { clientWidth: cw, clientHeight: ch } = container;
+    const margin = 120;
+    const candidates: LabelCandidate[] = [];
+    const obstacles: LabelObstacle[] = [];
+    const all: Entry[] = [];
+    const rank = (s: ChipStatus) =>
+      s === 'unsuitable' ? 0 : s === 'no-result' ? 1 : s === 'outdated' ? 2 : 3;
+    for (const b of beaches) {
+      const entries = [
+        b.single,
+        b.cluster && !b.cluster.el.hidden ? b.cluster : undefined,
+        ...b.pins.filter((p) => !p.el.hidden),
+      ].filter((e): e is Entry => !!e);
+      for (const e of entries) {
+        e.labelOk = false;
+        all.push(e);
+        const ll = e.marker.getLngLat();
+        const { x, y } = map.project(ll);
+        if (x < -margin || y < -margin || x > cw + margin || y > ch + margin)
+          continue;
+        obstacles.push({ x, y, tag: !!e.el.querySelector('.marker__tag') });
+        if (e.autoLabel && zoom >= LABEL_FLOOR_ZOOM) {
+          // Selecionado/foco/hover já têm nome garantido; reserva o espaço deles primeiro.
+          const forced = e.selected || e.focused || e.hovered;
+          candidates.push({
+            id: String(all.length - 1),
+            x,
+            y,
+            width: labelWidth(e),
+            rank: (forced ? -10 : 0) + rank(e.status),
+          });
+        }
+      }
+    }
+    for (const id of pickLabels(candidates, obstacles))
+      all[Number(id)].labelOk = true;
   }
 
   map.on('error', (e) => {
@@ -291,16 +361,18 @@ export async function createBeachMap(
             label: m.beachName,
             tag: null,
           },
-          LABEL_MIN_ZOOM,
+          true,
           m.id,
           () => {
-            // Aproxima o ponto (nunca afasta) e abre a ficha.
+            // Abre a ficha (o sidebar passa a cobrir a direita) e aproxima o ponto (nunca afasta)
+            // até o centro da área visível, em movimento suave.
+            onSelect({ slug: g.slug, pointId: m.id });
             map.easeTo({
               center: [m.lng, m.lat],
               zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM),
-              duration: 0,
+              offset: shift(),
+              ...motion(),
             });
-            onSelect({ slug: g.slug, pointId: m.id });
           },
         );
       } else {
@@ -320,7 +392,7 @@ export async function createBeachMap(
             label: g.beachName,
             tag: { text: badge.text },
           },
-          LABEL_MIN_ZOOM,
+          true,
           undefined,
           () => {
             // Primeiro passo: só enquadra os pontos (sem aproximar demais) e abre o grupo
@@ -329,7 +401,7 @@ export async function createBeachMap(
             map.fitBounds(boundsOf(g.points)!, {
               padding: pad(),
               maxZoom: GROUP_FIT_MAX_ZOOM,
-              animate: false,
+              ...motion(),
             });
             update();
           },
@@ -346,7 +418,7 @@ export async function createBeachMap(
               label: m.beachName,
               tag: { text: String(m.number) },
             },
-            Infinity,
+            false,
             m.id,
             () => onSelect({ slug: g.slug, pointId: m.id }),
           );
@@ -359,6 +431,7 @@ export async function createBeachMap(
     update();
   });
   map.on('zoom', update);
+  map.on('moveend', update);
   map.on('resize', update);
   map.on('click', (e) => {
     // Clique em marcador também chega aqui (os marcadores ficam dentro do mapa).
@@ -370,7 +443,6 @@ export async function createBeachMap(
     }
     onClear();
   });
-              offset: shift(),
   map.once('idle', () => {
     ready = true;
     onState('ready');
@@ -381,7 +453,7 @@ export async function createBeachMap(
     zoomIn: () => map.zoomIn({ duration: 0 }),
     zoomOut: () => map.zoomOut({ duration: 0 }),
     fit() {
-      if (bounds) map.fitBounds(bounds, { padding: pad(), animate: false });
+      if (bounds) map.fitBounds(bounds, { padding: pad(), ...motion() });
       else
         map.jumpTo({
           center: [SALVADOR_FALLBACK.lng, SALVADOR_FALLBACK.lat],
@@ -398,7 +470,8 @@ export async function createBeachMap(
         map.easeTo({
           center: [m.lng, m.lat],
           zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM),
-          duration: 0,
+          offset: shift(),
+          ...motion(),
         });
         return;
       }
@@ -406,7 +479,7 @@ export async function createBeachMap(
       map.fitBounds(boundsOf(entry.points)!, {
         padding: pad(),
         maxZoom: GROUP_FIT_MAX_ZOOM,
-        animate: false,
+        ...motion(),
       });
       update();
     },
@@ -422,7 +495,7 @@ export async function createBeachMap(
           bottom: VIEW_PADDING + coveredBottom,
         },
         maxZoom: GROUP_FIT_MAX_ZOOM,
-        animate: false,
+        ...motion(),
       });
       update();
     },
@@ -431,6 +504,23 @@ export async function createBeachMap(
       selectedPointId = pointId;
       update();
     },
+    revealSelected() {
+      const entry = beaches.find((b) => b.slug === selectedSlug);
+      if (!entry) return;
+      const m =
+        entry.points.find((p) => p.id === selectedPointId) ?? entry.points[0];
+      if (!m) return;
+      const covered = coveredRight();
+      if (covered <= 0) return;
+      const x = map.project([m.lng, m.lat]).x;
+      const edge = VIEW_PADDING / 2;
+      if (x >= edge && x <= container.clientWidth - covered - edge) return; // já aparece
+      map.easeTo({
+        center: [m.lng, m.lat],
+        offset: shift(),
+        ...motion(),
+      });
+    },
     getMap: () => map,
     destroy: () => {
       resizeObserver.disconnect();
@@ -438,26 +528,3 @@ export async function createBeachMap(
     },
   };
 }
-          offset: shift(),
-    revealSelected({ duration, delay, easing }) {
-      const entry = beaches.find((b) => b.slug === selectedSlug);
-      if (!entry) return;
-      const m =
-        entry.points.find((p) => p.id === selectedPointId) ?? entry.points[0];
-      if (!m) return;
-      window.setTimeout(() => {
-        // Medido depois do atraso (a ficha pode ter saído e o mapa alargado). Se a busca já
-        // fechou nesse meio tempo, ou a praia já aparece, não há o que revelar.
-        const covered = coveredRight();
-        if (covered <= 0) return;
-        const x = map.project([m.lng, m.lat]).x;
-        const edge = VIEW_PADDING / 2;
-        if (x >= edge && x <= container.clientWidth - covered - edge) return;
-        map.easeTo({
-          center: [m.lng, m.lat],
-          offset: shift(),
-          duration,
-          easing,
-        });
-      }, delay);
-    },

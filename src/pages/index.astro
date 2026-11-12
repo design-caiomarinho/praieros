@@ -91,48 +91,63 @@ const sourceBulletin = site.current
       )}
       <!-- Ficha: escondida até um marcador ser escolhido. Desktop e mobile são o mesmo
            conteúdo; o CSS mostra só uma versão. -->
-      <aside class="panel" id="panel" aria-label="Ficha da praia" hidden>
-        {panels.map(({ slug, data, classification }) => (
-          <div data-beach={slug} hidden>
-            <div class="layout-desktop">
-              <BeachPanel
-                {...data}
-                layout="desktop"
-                showDetails={!!classification}
-              />
-            </div>
-            <div class="layout-mobile">
-              <BeachPanel {...data} layout="mobile" />
-            </div>
-            {classification && (
-              <div class="layout-classification">
-                <ClassificationPanel
-                  content={classification}
-                  pdfUrl={data.bulletin.pdfUrl}
-                  beachName={data.name}
-                />
+      <!-- Sidebar (desktop): camada azul + painel que entram da direita por cima do mapa e
+           hospedam a busca, a ficha, a Classificação e a Fonte (ver docs/motion.md). Trocar de
+           conteúdo com ele aberto só dissolve; no mobile é transparente (display: contents). -->
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar__viewport" id="sidebar-viewport">
+          <aside class="panel" id="panel" aria-label="Ficha da praia" hidden>
+            {panels.map(({ slug, data, classification }) => (
+              <div data-beach={slug} hidden>
+                <div class="layout-desktop">
+                  <BeachPanel
+                    {...data}
+                    layout="desktop"
+                    showDetails={!!classification}
+                  />
+                </div>
+                <div class="layout-mobile">
+                  <BeachPanel
+                    {...data}
+                    layout="mobile"
+                    showDetails={!!classification}
+                  />
+                </div>
+                {classification && (
+                  <div class="layout-classification">
+                    <ClassificationPanel
+                      content={classification}
+                      pdfUrl={data.bulletin.pdfUrl}
+                      beachName={data.name}
+                    />
+                  </div>
+                )}
               </div>
-            )}
+            ))}
+          </aside>
+          <!-- Busca: no mesmo sidebar da ficha. -->
+          <div class="search-slot" id="search-slot">
+            <SearchPanel
+              id="search"
+              results={searchResults}
+              bulletin={currentBulletin}
+            />
           </div>
-        ))}
-      </aside>
-      <!-- Busca: ocupa o lugar da ficha enquanto está aberta. -->
-      <div class="search-slot" id="search-slot">
-        <SearchPanel
-          id="search"
-          results={searchResults}
-          bulletin={currentBulletin}
-        />
-      </div>
-      <!-- Fonte e como ler: só desktop; ocupa o lugar da ficha/busca enquanto está aberta. -->
-      <div class="source-slot" id="source-slot" hidden>
-        <SourcePanel bulletin={sourceBulletin} />
+          <!-- Fonte e como ler: só desktop; ocupa o lugar da ficha/busca enquanto está aberta. -->
+          <div class="source-slot" id="source-slot" hidden>
+            <SourcePanel bulletin={sourceBulletin} />
+          </div>
+          <div class="sidebar__ghosts" aria-hidden="true"></div>
+        </div>
       </div>
     </div>
   </div>
 </BaseLayout>
 
 <script>
+  import { initSidebarShell } from '../lib/site/sidebar-shell.ts';
+
+  initSidebarShell();
   const map = document.getElementById('beach-map')!;
   const panel = document.getElementById('panel')!;
   let lastSlug: string | null = null;
@@ -166,6 +181,8 @@ const sourceBulletin = site.current
       if (view === 'beach') el.removeAttribute('data-view');
       else if (!el.hidden) el.setAttribute('data-view', view);
     });
+    // A folha começa do topo a cada vista (a rolagem da ficha não vaza para a Classificação).
+    panel.scrollTop = 0;
   }
 
   function close() {
@@ -258,14 +275,15 @@ const sourceBulletin = site.current
   }
   document.addEventListener('search-select', (e) => {
     const { slug } = (e as CustomEvent<{ slug: string }>).detail;
-    // Mesmo caminho do clique no marcador: enquadra (abrindo o grupo) e abre a ficha.
-    map.dispatchEvent(new CustomEvent('marker-focus', { detail: { slug } }));
+    // Mesmo caminho do clique no marcador: abre a ficha e enquadra (abrindo o grupo). A ficha
+    // abre antes para a câmera já contar com a área que o sidebar cobre.
     map.dispatchEvent(
       new CustomEvent('marker-select', {
         bubbles: true,
         detail: { slug, pointId: null },
       }),
     );
+    map.dispatchEvent(new CustomEvent('marker-focus', { detail: { slug } }));
     fromSearch = true;
     syncBack();
   });
@@ -311,7 +329,6 @@ const sourceBulletin = site.current
   // Fonte e como ler (desktop): ocupa o lugar da ficha/busca; voltar devolve a ficha que estava
   // aberta, fechar encerra tudo. O foco volta a quem abriu.
   const sourceSlot = document.getElementById('source-slot')!;
-  const desktop = window.matchMedia('(min-width: 1024px)');
   let sourceOpener: HTMLElement | null = null;
   let panelBeforeSource = false;
 
@@ -353,7 +370,7 @@ const sourceBulletin = site.current
 
   document.addEventListener('click', (e) => {
     const link = (e.target as Element).closest<HTMLElement>('a[href="#fonte"]');
-    if (!link || !desktop.matches) return;
+    if (!link) return;
     e.preventDefault();
     openSource(link);
   });
@@ -426,6 +443,16 @@ const sourceBulletin = site.current
     height: auto;
     max-height: 100%;
   }
+  /* Mobile: o sidebar não existe como caixa; as folhas continuam sobre o mapa. */
+  @media (max-width: 1023.98px) {
+    .sidebar,
+    .sidebar__viewport {
+      display: contents;
+    }
+    .sidebar__ghosts {
+      display: none;
+    }
+  }
   /* Faixa de aviso da praia aberta: no topo do mapa, no desktop e no mobile (Figma 125:3460). */
   .map-banner:not([hidden]) {
     display: block;
@@ -437,10 +464,57 @@ const sourceBulletin = site.current
   }
   /* Desktop: painel lateral à direita, com a largura do BeachPanel. */
   @media (min-width: 1024px) {
-    .panel {
-      position: static;
-      flex-shrink: 0;
+    /* Sidebar: a camada azul (largura 0 → 477px, ancorada à direita) sobrepõe o mapa e o painel
+       (477px) desliza por cima, recortado por ela. Origem fora da tela (abertura e fechamento).
+       Tempos do Figma 187:3839 (ver docs/motion.md). */
+    .sidebar {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      width: 0;
+      overflow: clip;
+      background: var(--s-color-surface-accent-default);
+      transition: width var(--motion-duration-panel-surface)
+        var(--motion-easing-panel-close);
+    }
+    .sidebar[data-active] {
+      display: block;
+    }
+    .sidebar[data-open] {
       width: var(--size-panel-width);
+      transition-delay: var(--motion-delay-panel-surface);
+      transition-timing-function: var(--motion-easing-panel);
+    }
+    .sidebar__viewport {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: var(--size-panel-width);
+      transform: translateX(100%);
+      transition: transform var(--motion-duration-panel)
+        var(--motion-easing-panel-close);
+    }
+    .sidebar[data-open] .sidebar__viewport {
+      transform: none;
+      transition-delay: var(--motion-delay-panel);
+      transition-timing-function: var(--motion-easing-panel);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .sidebar,
+      .sidebar[data-open],
+      .sidebar__viewport,
+      .sidebar[data-open] .sidebar__viewport {
+        transition: none;
+      }
+    }
+    .panel {
+      position: absolute;
+      inset: 0;
+      width: auto;
       height: auto;
       max-height: none;
     }
@@ -457,35 +531,34 @@ const sourceBulletin = site.current
     }
     .search-slot :global(.search) {
       position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
+      width: auto;
       height: auto;
       z-index: auto;
-    /* Ancorada à direita da coluna (que cresce na abertura); ver motion em search-panel. */
     }
     .map-banner:not([hidden]) {
       right: var(--size-panel-width);
-    }
-    .layout-desktop {
-      display: flex;
-      flex: 1 0 auto;
-      flex-direction: column;
     }
     /* Botões de zoom e ajustar: acompanham a coluna da busca (que sobrepõe o mapa), com 16px
        entre eles e a borda do painel. Mesmos tempos e curva da coluna (ver search-panel). */
     .stage :global(.zoom) {
       transition: right var(--motion-duration-panel-surface)
-        var(--motion-easing-panel);
+        var(--motion-easing-panel-close);
     }
-    .stage:has(.search-slot .search[data-open]) :global(.zoom) {
+    .stage:has(.sidebar[data-open]) :global(.zoom) {
       right: calc(var(--size-panel-width) + var(--space-stack-md));
       transition-delay: var(--motion-delay-panel-surface);
+      transition-timing-function: var(--motion-easing-panel);
     }
     @media (prefers-reduced-motion: reduce) {
       .stage :global(.zoom) {
         transition: none;
       }
+    }
+    .layout-desktop {
+      display: flex;
+      flex: 1 0 auto;
+      flex-direction: column;
     }
     .layout-desktop > :global(section) {
       flex: 1 0 auto;
@@ -493,36 +566,83 @@ const sourceBulletin = site.current
     .layout-mobile {
       display: none;
     }
-    /* Classificação: só desktop; no lugar da ficha enquanto estiver aberta. */
-    [data-view='classification'] .layout-desktop {
-      display: none;
-    }
-    [data-view='classification'] .layout-classification {
-      display: flex;
-      flex: 1 0 auto;
-      flex-direction: column;
-    }
     .layout-classification > :global(section) {
       flex: 1 0 auto;
     }
   }
+  /* Classificação: no lugar da ficha enquanto estiver aberta (desktop e folha inferior mobile). */
   .layout-classification {
     display: none;
   }
-  /* Fonte e como ler: só desktop, à direita como a ficha. */
+  [data-view='classification'] .layout-desktop,
+  [data-view='classification'] .layout-mobile {
+    display: none;
+  }
+  [data-view='classification'] .layout-classification {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+  }
+  /* Fonte e como ler: mobile = folha inferior (60% do palco, rola por dentro), como a ficha;
+     desktop = à direita como a ficha. */
   .source-slot {
     display: none;
   }
+  .source-slot:not([hidden]) {
+    display: block;
+    position: absolute;
+    inset: auto 0 0;
+    height: 60%;
+    z-index: 3;
+    overflow-y: auto;
+    background: var(--s-color-surface-default);
+  }
   @media (min-width: 1024px) {
     .source-slot:not([hidden]) {
+      position: absolute;
+      inset: 0;
+      height: auto;
+      z-index: auto;
       display: flex;
       flex-direction: column;
-      flex-shrink: 0;
-      width: var(--size-panel-width);
+      width: auto;
       overflow-y: auto;
+    }
+    .sidebar__ghosts {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
     }
     .source-slot :global(section) {
       flex: 1 0 auto;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Fantasma do conteúdo que saiu (clone criado por sidebar-shell.ts): dissolve por cima do novo
+     conteúdo (300 ms, ver docs/motion.md); ao fechar o sidebar, fica parado até a saída acabar. */
+  .sidebar__ghost {
+    position: absolute !important;
+    inset: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    pointer-events: none;
+  }
+  .sidebar__ghost[data-leaving] {
+    animation: sidebar-dissolve-out var(--motion-duration-dissolve)
+      var(--motion-easing-dissolve) forwards;
+  }
+  @keyframes sidebar-dissolve-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar__ghost[data-leaving] {
+      animation: none;
+      opacity: 0;
     }
   }
 </style>

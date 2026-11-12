@@ -217,48 +217,25 @@ const neighborhoods = suggestNeighborhoods(results);
   .search {
     transform: translateY(100%);
     transition: transform var(--motion-duration-panel)
-      var(--motion-easing-panel);
+      var(--motion-easing-panel-close);
   }
   .search[data-open] {
     transform: none;
     transition-delay: var(--motion-delay-panel);
+    transition-timing-function: var(--motion-easing-panel);
   }
+  /* Desktop: quem entra e sai é o sidebar da página (camada azul + painel; ver index e
+     docs/motion.md); o painel em si não desliza, só aparece e some (a troca de conteúdo dissolve). */
   @media (min-width: 1024px) {
-    .search {
-      transform: translateX(100%);
-    }
+    .search,
     .search[data-open] {
       transform: none;
-    }
-    /* A coluna da busca cresce da direita (4px → 477px) junto com a camada azul e SOBREPÕE o
-       mapa (fora do fluxo: o mapa não muda de tamanho; a câmera e os botões de zoom é que
-       respeitam a área visível, ver beach-map e index). A camada azul preenche a coluna; o
-       painel (477px, ancorado à direita) desliza por cima, com atraso, recortado pela coluna. */
-    :global(.search-slot:has(.search:not([hidden]))) {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 3;
-      display: block;
-      width: var(--border-width-accent);
-      overflow: hidden;
-      /* `clip` não rola: o foco no campo não desloca o painel dentro da coluna. */
-      overflow: clip;
-      background: var(--s-color-surface-accent-default);
-      transition: width var(--motion-duration-panel-surface)
-        var(--motion-easing-panel);
-    }
-    :global(.search-slot:has(.search[data-open])) {
-      width: var(--size-panel-width);
-      transition-delay: var(--motion-delay-panel-surface);
+      transition: none;
     }
   }
   @media (prefers-reduced-motion: reduce) {
     .search,
-    .search[data-open],
-    :global(.search-slot:has(.search:not([hidden]))),
-    :global(.search-slot:has(.search[data-open])) {
+    .search[data-open] {
       transition: none;
     }
   }
@@ -616,6 +593,7 @@ const neighborhoods = suggestNeighborhoods(results);
 
 <script>
   import { queryTokens, searchBeaches } from '../lib/search/search.ts';
+  import { halfwayTime } from '../lib/map/cubic-bezier.ts';
 
   const root = document.querySelector<HTMLElement>('.search');
   if (root) init(root);
@@ -749,17 +727,38 @@ const neighborhoods = suggestNeighborhoods(results);
       else engageTimer = window.setTimeout(apply, after);
     }
 
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    // Instante em que o painel está a 50% em cena (fração da duração), na entrada e na saída:
+    // a curva do Figma não é simétrica, então não é metade do tempo.
+    const halfway = {
+      get open() {
+        return halfwayTime(css('--motion-easing-panel'));
+      },
+      get close() {
+        return 1 - halfwayTime(css('--motion-easing-panel'));
+      },
+    };
+    function css(name: string) {
+      return getComputedStyle(root).getPropertyValue(name);
+    }
     function setOpen(open: boolean, animate = true) {
       window.clearTimeout(hideTimer);
+      // Sidebar já aberto por outro painel (ficha, Fonte): o painel da busca só entra no lugar,
+      // então o botão já fica desativado na hora.
+      const shellOpen =
+        desktop.matches &&
+        !!document.getElementById('sidebar')?.hasAttribute('data-open');
       trigger?.setAttribute('aria-expanded', String(open));
       trigger?.setAttribute('aria-disabled', String(open));
       setEngaged(
         open,
         open
-          ? motionMs('--motion-delay-panel') +
-              motionMs('--motion-duration-panel') / 2
+          ? shellOpen
+            ? 0
+            : motionMs('--motion-delay-panel') +
+              motionMs('--motion-duration-panel') * halfway.open
           : animate && !root.hidden
-            ? motionMs('--motion-duration-panel') / 2
+            ? motionMs('--motion-duration-panel') * halfway.close
             : 0,
       );
       if (open) {
@@ -771,7 +770,8 @@ const neighborhoods = suggestNeighborhoods(results);
       }
       root.removeAttribute('data-open');
       if (root.hidden) return;
-      if (!animate || reduceMotion.matches) {
+      // Desktop: o sidebar da página anima a saída (com um fantasma do conteúdo): some na hora.
+      if (!animate || reduceMotion.matches || desktop.matches) {
         root.hidden = true;
         return;
       }

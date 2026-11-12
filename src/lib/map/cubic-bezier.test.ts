@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cubicBezier, parseCubicBezier } from './cubic-bezier.ts';
+import { cubicBezier, halfwayTime, parseCubicBezier } from './cubic-bezier.ts';
 
 describe('cubicBezier', () => {
   it('fixa as pontas em 0 e 1', () => {
@@ -18,5 +18,12 @@ describe('cubicBezier', () => {
     const f = parseCubicBezier('cubic-bezier(0.645, 0.045, 0.355, 1)');
     expect(f(0.5)).toBeCloseTo(cubicBezier(0.645, 0.045, 0.355, 1)(0.5), 6);
     expect(parseCubicBezier('lixo')(0.4)).toBe(0.4);
+  });
+
+  it('acha o instante dos 50% (curva simétrica = metade do tempo; a do painel chega antes)', () => {
+    expect(halfwayTime('cubic-bezier(0.42, 0, 0.58, 1)')).toBeCloseTo(0.5, 2);
+    const t = halfwayTime('cubic-bezier(0.175, 0.885, 0.32, 1.1)');
+    expect(t).toBeLessThan(0.3);
+    expect(cubicBezier(0.175, 0.885, 0.32, 1.1)(t)).toBeCloseTo(0.5, 2);
   });
 });

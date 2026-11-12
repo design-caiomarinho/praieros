@@ -81,7 +81,26 @@ const { homeHref = '/', infoHref = '#fonte', searchId } = Astro.props;
     transition-timing-function: var(--motion-easing-header-line);
     transition-delay: var(--motion-delay-header-line);
   }
+  /* A borda de baixo (1px) é transparente e mostrava o fundo branco do cabeçalho sob o botão
+     azul de busca quando a linha encolhe (sobrava uma faixa branca entre o botão e a camada azul
+     do sidebar). Esta faixa, sob a linha, acompanha a cor do botão: azul enquanto ele é azul,
+     branca quando ele vira "desabilitado" (mesma transição do botão). Fechado, a linha a cobre. */
+  .header:not([data-source-open])::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: calc(var(--border-width-default) * -1);
+    width: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+    height: var(--border-width-default);
+    background: var(--s-color-surface-accent-default);
+    transition: background-color var(--motion-duration-hover)
+      var(--motion-easing-hover);
+  }
+  .header:not([data-source-open]):has([data-engaged])::before {
+    background: var(--s-color-surface-default);
+  }
   @media (prefers-reduced-motion: reduce) {
+    .header:not([data-source-open])::before,
     .header:not([data-source-open])::after {
       transition: none;
     }

@@ -43,3 +43,29 @@ export function centerOf(points: readonly LngLat[]): LngLat {
     lng: (Math.min(...lngs) + Math.max(...lngs)) / 2,
   };
 }
+
+/**
+ * Afastamento mínimo (px) para manter aberto um grupo que o usuário abriu (clique ou seleção).
+ * Abaixo disso os pins se sobrepõem e o grupo volta a ser um marcador só ao afastar o zoom.
+ */
+export const GROUP_KEEP_OPEN_MIN_SPREAD_PX = 32;
+
+/**
+ * Grupo aberto? Sem pedido do usuário, só quando os pontos já se afastam sozinhos
+ * (`GROUP_OPEN_MIN_SPREAD_PX`). Com pedido (clique no marcador ou praia selecionada), fica aberto
+ * enquanto os pins não se sobrepõem, ou em qualquer zoom de enquadramento (`GROUP_FIT_MAX_ZOOM`
+ * ou mais). Ao afastar além disso, nunca sobram pontos soltos do mesmo local.
+ */
+export function isGroupOpen(
+  points: readonly LngLat[],
+  zoom: number,
+  requested: boolean,
+): boolean {
+  if (points.length < 2) return false;
+  if (isGroupSpread(points, zoom)) return true;
+  if (!requested) return false;
+  return (
+    zoom >= GROUP_FIT_MAX_ZOOM ||
+    maxSpreadPx(points, zoom) >= GROUP_KEEP_OPEN_MIN_SPREAD_PX
+  );
+}

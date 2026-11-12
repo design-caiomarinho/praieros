@@ -278,6 +278,35 @@ const mapCredits = [
     outline: var(--border-width-default) solid var(--s-color-content-primary);
     outline-offset: var(--space-stack-2xs);
   }
+  /* Mobile, folha inferior (mesmo padrão da ficha): sem largura fixa, borda no topo, padding 16
+     lateral e 24 vertical, área segura embaixo, alvo de toque do fechar de 44px. */
+  @media (max-width: 1023px) {
+    .panel {
+      width: auto;
+      border-left: 0;
+      border-top: var(--border-width-default) solid
+        var(--s-color-border-default);
+    }
+    .head {
+      padding: var(--space-inset-lg) var(--space-inset-md);
+    }
+    .section {
+      padding: var(--space-inset-lg) var(--space-inset-md);
+    }
+    .section:last-child {
+      padding-bottom: calc(
+        var(--space-inset-lg) + env(safe-area-inset-bottom, 0px)
+      );
+    }
+    .close :global(.btn-icon) {
+      position: relative;
+    }
+    .close :global(.btn-icon)::after {
+      content: '';
+      position: absolute;
+      inset: calc(var(--primitives-spacing-4) / -2);
+    }
+  }
   .original > :global(*) {
     width: 100%;
   }

@@ -114,27 +114,33 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     road: token('--s-color-surface-default'),
   });
 
-  // Desktop: a busca sobrepõe o mapa pela direita. Enquanto aberta, a câmera usa só a área
-  // visível à esquerda (largura do painel = o que cobre).
+  // Desktop: o sidebar (busca, ficha, Classificação, Fonte) sobrepõe o mapa pela direita. Enquanto
+  // algum painel está aberto, a câmera usa só a área visível à esquerda (largura do painel).
   const desktop = window.matchMedia('(min-width: 1024px)');
-  const coveredRight = () => {
-    const s = document.getElementById('search');
-    return desktop.matches && s && !s.hidden && s.hasAttribute('data-open')
-      ? s.offsetWidth
-      : 0;
-  };
-  // A busca abre: leva a praia selecionada para a área visível, no ritmo do painel.
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const reveal = () => {
+  const coveredRight = () =>
+    desktop.matches &&
+    ['search', 'panel', 'source-slot'].some(
+      (id) => !document.getElementById(id)?.hidden,
+    )
+      ? parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            '--size-panel-width',
+          ),
+        ) || 0
+      : 0;
+  // Movimentos da câmera: mesma duração e curva do painel (sem animação com movimento reduzido).
+  const motion = () => {
     const css = getComputedStyle(document.documentElement);
-    const ms = (name: string) => parseFloat(css.getPropertyValue(name)) || 0;
-    controller?.revealSelected({
-      duration: reduceMotion.matches ? 0 : ms('--motion-duration-panel'),
-      delay: reduceMotion.matches ? 0 : ms('--motion-delay-panel'),
+    return {
+      duration: reduceMotion.matches
+        ? 0
+        : parseFloat(css.getPropertyValue('--motion-duration-panel')) || 0,
       easing: parseCubicBezier(css.getPropertyValue('--motion-easing-panel')),
-    });
+    };
   };
-  document.addEventListener('search-open', reveal);
+  // O sidebar abre: leva a praia selecionada para a área visível, se ela ficar escondida.
+  document.addEventListener('sidebar-open', () => controller?.revealSelected());
 
   let controller: BeachMapController | null = null;
   let selectedSlug: string | null = null;
@@ -165,6 +171,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
         root.dispatchEvent(new CustomEvent('map-clear', { bubbles: true }));
       },
       getCoveredRight: coveredRight,
+      getMotion: motion,
       onState: (s) => {
         show(s);
         if (s === 'error') {
