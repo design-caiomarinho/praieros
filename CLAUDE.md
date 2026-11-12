@@ -66,7 +66,7 @@ Layout: desktop = mapa + painel lateral; mobile = mapa + folha inferior. Medidas
 - Use exatamente: **Própria**, **Imprópria**, **Sem resultado**, **Boletim desatualizado**, **Ponto de coleta**.
 - **Nomenclatura.** Código (arquivos, componentes, props, tipos, enums, funções, variáveis) em inglês; textos da interface em português. Arquivos de componentes em kebab-case, iguais ao Figma (`status-chip.astro`); a maiúscula só na importação (`import StatusChip from './status-chip.astro'`). Status no código: `suitable | unsuitable | outdated | no-result` (Própria, Imprópria, Desatualizado, Sem resultado); `outdated` só existe na interface (`ChipStatus`). O valor do boletim (`Category`: "Própria" | "Imprópria") fica em português, como vem do Inema e como é gravado em `data/bulletins/`; a conversão para o enum acontece só em `src/lib/rules/status.ts` (`categoryToStatus`). Comentários e descrições de testes seguem em português.
 - Tom direto, sem culpar o usuário. Evitar "Oops". Erros dizem o que houve e o que fazer.
-- Singular/plural correto ("1 ponto", "3 pontos"). Nomes de praia com capitalização do boletim.
+- Singular/plural correto ("0 ponto", "1 ponto", "3 pontos"; 0 no singular, como no concept da busca). Nomes de praia com capitalização do boletim.
 - Textos oficiais (resolução CONAMA nº 274/2000) **não são reescritos**: só citados, com link.
 - Os textos finais ficam em `docs/copy.md`. Não inventar copy nova sem registrar lá.
 
