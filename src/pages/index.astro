@@ -3,12 +3,18 @@ import BaseLayout from '../layouts/base-layout.astro';
 import AppHeader from '../components/app-header.astro';
 import BeachMap from '../components/beach-map.astro';
 import BeachPanel from '../components/beach-panel.astro';
+import SearchPanel from '../components/search-panel.astro';
+import { toSearchResults } from '../lib/search/search.ts';
 import OutdatedBanner from '../components/outdated-banner.astro';
 import NoResultBanner from '../components/no-result-banner.astro';
 import { loadSalvadorInputs, NOT_BEACHES } from '../lib/site/load-data.ts';
 import { buildSiteModel } from '../lib/site/build-beach-models.ts';
 import { toMarkers } from '../lib/site/map-markers.ts';
-import { bulletinNumber, toPanelData } from '../lib/site/panel-props.ts';
+import {
+  bulletinNumber,
+  formatDate,
+  toPanelData,
+} from '../lib/site/panel-props.ts';
 
 // Pontos com verified: false só aparecem em desenvolvimento; em produção, nenhum.
 const { bulletins, catalog, references, referenceExclude, aliases } =
@@ -35,6 +41,13 @@ const panels = site.beaches
     const data = toPanelData(beach, site.current, pdfUrls);
     return data ? [{ slug: beach.slug, data }] : [];
   });
+const searchResults = toSearchResults(site.beaches, slugsOnMap);
+const currentBulletin = site.current
+  ? {
+      number: bulletinNumber(site.current),
+      date: formatDate(site.current.issuedAt),
+    }
+  : null;
 ---
 
 <BaseLayout
@@ -42,7 +55,7 @@ const panels = site.beaches
   description="Boletim de balneabilidade do Inema para as praias de Salvador (BA), apresentado de forma clara. Site independente, sem vínculo com o Inema."
 >
   <div class="app">
-    <AppHeader />
+    <AppHeader searchId="search" />
     <div class="stage" id="stage">
       <BeachMap markers={markers} />
       <!-- Faixa de aviso da praia aberta (desktop): no topo do mapa, não no painel. -->
@@ -72,6 +85,14 @@ const panels = site.beaches
           </div>
         ))}
       </aside>
+      <!-- Busca: ocupa o lugar da ficha enquanto está aberta. -->
+      <div class="search-slot" id="search-slot">
+        <SearchPanel
+          id="search"
+          results={searchResults}
+          bulletin={currentBulletin}
+        />
+      </div>
     </div>
   </div>
 </BaseLayout>
@@ -164,6 +185,30 @@ const panels = site.beaches
     else if (marked) clearMark();
   });
 
+  // Busca: abre no lugar da ficha. Fechar sem escolher devolve a ficha que estava aberta.
+  let panelWasOpen = false;
+  document.addEventListener('search-open', () => {
+    panelWasOpen = !panel.hidden;
+    panel.hidden = true;
+    syncBanner(null);
+  });
+  document.addEventListener('search-close', () => {
+    if (!panelWasOpen || !lastSlug) return;
+    panel.hidden = false;
+    syncBanner(lastSlug);
+  });
+  document.addEventListener('search-select', (e) => {
+    const { slug } = (e as CustomEvent<{ slug: string }>).detail;
+    // Mesmo caminho do clique no marcador: enquadra (abrindo o grupo) e abre a ficha.
+    map.dispatchEvent(new CustomEvent('marker-focus', { detail: { slug } }));
+    map.dispatchEvent(
+      new CustomEvent('marker-select', {
+        bubbles: true,
+        detail: { slug, pointId: null },
+      }),
+    );
+  });
+
   // Os cartões dos pontos são só visualização: quem escolhe o ponto é o pin no mapa.
   panel.addEventListener('click', (e) => {
     if ((e.target as Element).closest('[data-panel-close]')) close();
@@ -198,6 +243,15 @@ const panels = site.beaches
   .layout-desktop {
     display: none;
   }
+  /* Busca: o espaço só existe enquanto o painel está aberto. Mobile: folha inferior. */
+  .search-slot {
+    display: contents;
+  }
+  .search-slot :global(.search) {
+    position: absolute;
+    inset: auto 0 0;
+    max-height: 100%;
+  }
   /* A faixa no topo do mapa só existe no desktop (no mobile fica dentro da folha). */
   .map-banner {
     display: none;
@@ -220,6 +274,11 @@ const panels = site.beaches
       display: flex;
       flex: 1 0 auto;
       flex-direction: column;
+    }
+    .search-slot :global(.search) {
+      position: static;
+      flex-shrink: 0;
+      max-height: none;
     }
     .map-banner:not([hidden]) {
       display: block;

@@ -341,3 +341,18 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Subtítulo:** usa o nº real de pontos da praia (`pointCount`); com 0 pontos mostra só o bairro, ou nada. Nunca "0 pontos".
 - **Navbar:** divisor de 1px antes de todos os botões, inclusive o primeiro (como no Figma).
 - **Botões de zoom:** o Figma 125:3687 mostra 56 px; mantido o 40 px (xsmall) da decisão de 2026-11-12, por ser mais recente. Pendente de confirmação.
+
+## Sessão 12: busca (Figma 117:5075)
+
+- **O que o nó define:** só o estado inicial no desktop (título, chip do boletim, campo, "Perto de você", grade "Bairros"). Resultados, sem resultado de busca e mobile foram derivados por lógica. Os exemplos (bairros, praias do mapa, boletim nº 36) não são regra.
+- **Bairros sugeridos (decisão de Caio):** derivados do catálogo: bairros com ao menos uma praia, sem repetir (sem diferenciar acento nem caixa), em ordem alfabética; a seção some se não houver nenhum. Clicar preenche o campo com o bairro e lista as praias dele. Hoje, em produção: **0 bairros** (nenhum está conferido, então não aparecem); em dev: **25** (sem conferir; ex.: "Rio Vemelho" vem do OSM com erro de grafia).
+- **"Perto de você / Usar minha localização": não renderizado.** Pendente do design: faltam frames de pedido de permissão, permissão negada e usuário fora de Salvador.
+- **Sem resultado de busca:** texto provisório (`docs/copy.md`), a substituir quando houver frame.
+- **Mobile fora desta sessão.** O componente tem `layout` (`desktop` | `mobile`) e na página o painel vira folha inferior abaixo de 1024px, mas não foi verificado nem desenhado.
+- **Largura:** o frame do Figma tem 477px; o painel usa `--size-panel-width` (428px, decisão da sessão 8a), igual à ficha, para a troca entre busca e ficha não pular. Pendente de confirmação.
+- **Busca:** normalização sem acento, sem caixa e ignorando "praia", "de", "do", "da" (também "dos", "das"); se o texto só tiver essas palavras, compara com elas mesmas. Ordem: nome começa com o texto, cada termo começa uma palavra do nome, nome contém, bairro; empate alfabético (pt-BR). Sem dependência nova.
+- **Universo:** todas as praias do modelo (inclui referência, desatualizada e antiga demais). Praia sem marcador no mapa fica na lista como não selecionável (`aria-disabled`); hoje todas têm marcador.
+- **Resultado:** pior status (D1). "N de M pontos impróprios" só com 2+ pontos e ao menos um impróprio. Referência: "Sem resultado", sem contagem. Desatualizada: chip com o último status conhecido e a linha "Boletim desatualizado".
+- **Integração:** botão da navbar tem `aria-controls`/`aria-expanded`. Abrir a busca esconde a ficha; fechar sem escolher (Esc ou fechar) devolve a ficha e o foco ao botão. Escolher uma praia enquadra como o clique no marcador (1 ponto aproxima; 2+ abre o grupo) e abre a ficha (o grupo abre a ficha sem ponto escolhido). Novo `focusBeach` no controlador do mapa e evento `marker-focus`.
+- **Teclado:** foco no campo ao abrir; ↓/↑ entre campo e resultados; Enter escolhe (no campo, o primeiro resultado); Esc fecha.
+- **Tokens:** botão de bairro sem ícone com 40px (Figma 125:3132: padding 12 + texto de 14px), em vez dos 48px do `small`. Peso do nome da praia: 600 (não há token 700; mesmo padrão do PointCard).

@@ -11,6 +11,8 @@ interface Props {
   href?: string;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
+  /** Botão que abre um painel: id do painel (aria-controls, com aria-expanded). */
+  controls?: string;
   /** Só para a vitrine (/dev/components): força o visual de hover/foco. */
   state?: 'hover' | 'focus';
 }
@@ -23,12 +25,20 @@ const {
   href,
   type = 'button',
   disabled = false,
+  controls,
   state,
 } = Astro.props;
 
 const asLink = href !== undefined && !disabled;
 const Tag = asLink ? 'a' : 'button';
-const attrs = asLink ? { href } : { type, disabled };
+const attrs = asLink
+  ? { href }
+  : {
+      type,
+      disabled,
+      'aria-controls': controls,
+      'aria-expanded': controls ? ('false' as const) : undefined,
+    };
 ---
 
 <Tag

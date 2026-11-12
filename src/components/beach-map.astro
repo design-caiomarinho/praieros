@@ -157,6 +157,10 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
         controller.getMap();
   }
 
+  root.addEventListener('marker-focus', (e) => {
+    const { slug } = (e as CustomEvent<{ slug: string }>).detail;
+    controller?.focusBeach(slug);
+  });
   root.addEventListener('marker-set', (e) => {
     const d = (
       e as CustomEvent<{ slug: string | null; pointId?: string | null }>

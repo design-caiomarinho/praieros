@@ -54,6 +54,8 @@ export interface BeachMapController {
   zoomOut(): void;
   /** Reenquadra todos os pontos, respeitando o limite de Salvador (mesma visão inicial). */
   fit(): void;
+  /** Enquadra a praia como no clique no marcador (abrir a ficha é com quem chama). */
+  focusBeach(slug: string): void;
   /** Seleciona a praia (e, se o grupo estiver aberto, um ponto). Praia selecionada fica aberta em qualquer zoom. */
   select(slug: string | null, pointId?: string | null): void;
   /** Para testes e depuração. */
@@ -344,6 +346,28 @@ export async function createBeachMap(
           center: [SALVADOR_FALLBACK.lng, SALVADOR_FALLBACK.lat],
           zoom: SALVADOR_FALLBACK.zoom,
         });
+    },
+    focusBeach(slug) {
+      // Mesmo enquadramento do clique no marcador: 1 ponto aproxima (nunca afasta);
+      // 2+ pontos enquadra o grupo e o abre em pins.
+      const entry = beaches.find((b) => b.slug === slug);
+      if (!entry) return;
+      if (entry.points.length === 1) {
+        const m = entry.points[0];
+        map.easeTo({
+          center: [m.lng, m.lat],
+          zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM),
+          duration: 0,
+        });
+        return;
+      }
+      expandedSlug = slug;
+      map.fitBounds(boundsOf(entry.points)!, {
+        padding: VIEW_PADDING,
+        maxZoom: GROUP_FIT_MAX_ZOOM,
+        animate: false,
+      });
+      update();
     },
     select(slug, pointId = null) {
       selectedSlug = slug;

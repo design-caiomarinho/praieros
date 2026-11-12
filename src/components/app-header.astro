@@ -8,9 +8,11 @@ interface Props {
   homeHref?: string;
   /** Destino de "Informações" (Fonte e como ler). */
   infoHref?: string;
+  /** Id do painel de busca que o botão de busca abre (aria-controls). */
+  searchId?: string;
 }
 
-const { homeHref = '/', infoHref = '/fonte' } = Astro.props;
+const { homeHref = '/', infoHref = '/fonte', searchId } = Astro.props;
 ---
 
 <header class="header">
@@ -30,7 +32,12 @@ const { homeHref = '/', infoHref = '/fonte' } = Astro.props;
       label="Fonte e como ler"
       href={infoHref}
     />
-    <ButtonIcon variant="filled" icon="search" label="Buscar praia" />
+    <ButtonIcon
+      variant="filled"
+      icon="search"
+      label="Buscar praia"
+      controls={searchId}
+    />
   </div>
 </header>
 

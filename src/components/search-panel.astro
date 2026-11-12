@@ -1,0 +1,460 @@
+---
+import Button from './button.astro';
+import ButtonIcon from './button-icon.astro';
+import InputText from './input-text.astro';
+import StatusChip from './status-chip.astro';
+import { pointsLabel } from '../lib/format/points-label.ts';
+import { STATUS_LABELS } from '../lib/rules/status.ts';
+import {
+  improperSummary,
+  suggestNeighborhoods,
+  type SearchResult,
+} from '../lib/search/search.ts';
+
+// Painel de busca (Figma 117:5075, Pesquisar praia / Desktop). Só apresentação: recebe as
+// praias prontas (R1–R4 e D1 já aplicadas) e filtra no navegador com `lib/search`.
+// Cada praia vira um item escondido, mostrado e reordenado conforme o texto.
+// Item de resultado e estado "sem resultado de busca" são derivados (sem frame no Figma).
+interface Props {
+  id?: string;
+  results: SearchResult[];
+  /** Boletim atual (chip do cabeçalho). */
+  bulletin: { number: string; date: string } | null;
+  /** Estrutura pronta para a folha inferior (mobile); por ora só desktop. */
+  layout?: 'desktop' | 'mobile';
+}
+
+const { id = 'search', results, bulletin, layout = 'desktop' } = Astro.props;
+const neighborhoods = suggestNeighborhoods(results);
+---
+
+<section
+  id={id}
+  class={`search search--${layout}`}
+  aria-label="Buscar praia"
+  tabindex="-1"
+  hidden
+>
+  <header class="head">
+    <div class="top">
+      <h2>Buscar</h2>
+      <div class="close" data-search-close>
+        <ButtonIcon
+          variant="ghost"
+          size="xsmall"
+          icon="close"
+          label="Fechar busca"
+        />
+      </div>
+    </div>
+    {bulletin && (
+      <span class="bulletin-chip">
+        Boletim nº {bulletin.number} · emitido em {bulletin.date}
+      </span>
+    )}
+    <InputText label="Buscar praia" name="q" />
+  </header>
+
+  <div class="body">
+    {neighborhoods.length > 0 && (
+      <div class="hoods" data-hoods>
+        <h3>Bairros</h3>
+        <div class="hood-grid">
+          {neighborhoods.map((hood) => (
+            <div class="hood" data-hood={hood}>
+              <Button variant="secondary" size="small">
+                {hood}
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <ul class="results" data-results aria-label="Resultados da busca" hidden>
+      {results.map((r) => {
+        const sub = [
+          r.neighborhood,
+          r.pointCount > 0 ? pointsLabel(r.pointCount) : null,
+        ]
+          .filter(Boolean)
+          .join(' · ');
+        const improper = improperSummary(r);
+        return (
+          <li
+            data-result
+            data-slug={r.slug}
+            data-name={r.name}
+            data-hood={r.neighborhood ?? ''}
+            hidden
+          >
+            <button
+              type="button"
+              class="result"
+              aria-disabled={r.selectable ? undefined : 'true'}
+              aria-label={`${r.name}, ${
+                r.outdated
+                  ? `Boletim desatualizado, último resultado: ${STATUS_LABELS[r.status]}`
+                  : STATUS_LABELS[r.status]
+              }${improper ? `, ${improper}` : ''}`}
+            >
+              <span class="text">
+                <span class="name">{r.name}</span>
+                {sub && <span class="sub">{sub}</span>}
+                {improper && <span class="sub">{improper}</span>}
+                {r.outdated && <span class="sub">Boletim desatualizado</span>}
+              </span>
+              <StatusChip status={r.status} />
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+
+    <!-- Texto provisório (sem frame no Figma): ver docs/copy.md. -->
+    <div class="empty" data-empty hidden>
+      <p class="empty-title">Nenhuma praia encontrada</p>
+      <p class="empty-body">Confira a escrita ou busque pelo bairro.</p>
+    </div>
+  </div>
+
+  <p class="sr-only" role="status" aria-live="polite" data-live></p>
+</section>
+
+<style>
+  .search {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+  }
+  .search[hidden],
+  .search [hidden] {
+    display: none;
+  }
+  /* Recebe o foco só como último recurso (sem anel: não é um controle). */
+  .search:focus {
+    outline: none;
+  }
+  .search--desktop {
+    width: var(--size-panel-width);
+    max-width: 100%;
+    border-left: var(--border-width-default) solid var(--s-color-border-default);
+  }
+  .search--mobile {
+    border-top: var(--border-width-default) solid var(--s-color-border-default);
+  }
+
+  /* Cabeçalho (Figma 117:5179): padding 24, borda inferior. */
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-lg);
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-gap-md);
+  }
+  .close {
+    display: contents;
+  }
+  h2 {
+    margin: 0;
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-heading-large-family);
+    font-weight: var(--s-typo-heading-large-weight);
+    font-size: var(--s-typo-heading-large-size);
+    line-height: var(--s-typo-heading-large-line);
+    letter-spacing: var(--s-typo-heading-large-spacing);
+  }
+  .bulletin-chip {
+    box-sizing: border-box;
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    height: var(--primitives-spacing-24);
+    padding: var(--space-inset-2xs) var(--space-inset-xs);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    border-radius: var(--radius-full);
+    background: var(--s-color-surface-strong);
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-small-family);
+    font-weight: var(--s-typo-body-small-weight);
+    font-size: var(--s-typo-body-small-size);
+    line-height: var(--s-typo-body-small-line);
+    letter-spacing: var(--s-typo-body-small-spacing);
+    white-space: nowrap;
+  }
+  /* Respiro maior entre o chip e o campo (Figma: stack/xl entre os dois blocos). */
+  .bulletin-chip + :global(.field) {
+    margin-top: var(--space-stack-md);
+  }
+
+  /* Corpo (Figma 117:5195): padding 24. */
+  .body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: var(--space-inset-lg);
+  }
+  .hoods {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+  }
+  h3 {
+    margin: 0;
+    color: var(--s-color-content-muted);
+    font-family: var(--s-typo-body-small-family);
+    font-weight: var(--s-typo-body-small-weight);
+    font-size: var(--s-typo-body-small-size);
+    line-height: var(--s-typo-body-small-line);
+    letter-spacing: var(--s-typo-body-small-spacing);
+  }
+  .hood-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-gap-xs);
+  }
+  .hood {
+    display: flex;
+  }
+  .hood > :global(*) {
+    flex: 1;
+    min-width: 0;
+  }
+  /* Figma 125:3132: sem ícone o botão fica com 40px (padding + texto), não os 48px do small. */
+  .hood :global(.btn--small) {
+    height: auto;
+  }
+
+  /* Resultados: item derivado (nome, bairro · pontos, D1, chip). */
+  .results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .result {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-gap-md);
+    width: 100%;
+    padding: var(--space-inset-md);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    background: var(--s-color-surface-default);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .result:hover,
+  .result:focus-visible {
+    background: var(--s-color-surface-hover);
+    border-color: var(--s-color-border-accent);
+  }
+  .result:focus-visible {
+    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline-offset: calc(
+      var(--primitives-spacing-4) - var(--border-width-default)
+    );
+  }
+  .result[aria-disabled='true'] {
+    cursor: default;
+  }
+  .text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .name {
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--primitives-font-weight-600);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  .sub {
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-small-family);
+    font-weight: var(--s-typo-body-small-weight);
+    font-size: var(--s-typo-body-small-size);
+    line-height: var(--s-typo-body-small-line);
+    letter-spacing: var(--s-typo-body-small-spacing);
+  }
+
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-gap-md);
+    text-align: center;
+  }
+  .empty-title,
+  .empty-body {
+    margin: 0;
+  }
+  .empty-title {
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-heading-large-family);
+    font-weight: var(--s-typo-heading-large-weight);
+    font-size: var(--s-typo-heading-large-size);
+    line-height: var(--s-typo-heading-large-line);
+    letter-spacing: var(--s-typo-heading-large-spacing);
+  }
+  .empty-body {
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<script>
+  import { queryTokens, searchBeaches } from '../lib/search/search.ts';
+
+  const root = document.querySelector<HTMLElement>('.search');
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const trigger = document.querySelector<HTMLElement>(
+      `[aria-controls="${root.id}"]`,
+    );
+    const input = root.querySelector<HTMLInputElement>('input')!;
+    const list = root.querySelector<HTMLElement>('[data-results]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const hoods = root.querySelector<HTMLElement>('[data-hoods]');
+    const live = root.querySelector<HTMLElement>('[data-live]')!;
+    const items = [...root.querySelectorAll<HTMLElement>('[data-result]')].map(
+      (li) => ({
+        li,
+        slug: li.dataset.slug!,
+        name: li.dataset.name!,
+        neighborhood: li.dataset.hood || null,
+      }),
+    );
+
+    function visibleButtons() {
+      return items
+        .filter((i) => !i.li.hidden)
+        .map((i) => i.li.querySelector<HTMLButtonElement>('button')!);
+    }
+
+    function render() {
+      const searching = queryTokens(input.value).length > 0;
+      items.forEach((i) => (i.li.hidden = true));
+      if (hoods) hoods.hidden = searching;
+      if (!searching) {
+        list.hidden = true;
+        empty.hidden = true;
+        live.textContent = '';
+        return;
+      }
+      const found = searchBeaches(items, input.value);
+      found.forEach((i) => {
+        i.li.hidden = false;
+        list.append(i.li);
+      });
+      list.hidden = found.length === 0;
+      empty.hidden = found.length > 0;
+      live.textContent =
+        found.length === 0
+          ? 'Nenhuma praia encontrada'
+          : `${found.length} ${found.length === 1 ? 'praia encontrada' : 'praias encontradas'}`;
+    }
+
+    function setOpen(open: boolean) {
+      root.hidden = !open;
+      trigger?.setAttribute('aria-expanded', String(open));
+    }
+
+    function open() {
+      input.value = '';
+      render();
+      setOpen(true);
+      document.dispatchEvent(new CustomEvent('search-open'));
+      input.focus();
+    }
+
+    function close() {
+      setOpen(false);
+      document.dispatchEvent(new CustomEvent('search-close'));
+      trigger?.focus();
+    }
+
+    function choose(button: HTMLElement | undefined) {
+      if (!button || button.getAttribute('aria-disabled') === 'true') return;
+      const slug = button.closest<HTMLElement>('[data-result]')?.dataset.slug;
+      if (!slug) return;
+      setOpen(false);
+      document.dispatchEvent(
+        new CustomEvent('search-select', { detail: { slug } }),
+      );
+    }
+
+    trigger?.addEventListener('click', () => (root.hidden ? open() : close()));
+    input.addEventListener('input', render);
+
+    root.addEventListener('click', (e) => {
+      const target = e.target as Element;
+      if (target.closest('[data-search-close]')) return close();
+      const hood = target.closest<HTMLElement>('[data-hood]');
+      if (hood && !hood.matches('[data-result]')) {
+        input.value = hood.dataset.hood!;
+        render();
+        input.focus();
+        return;
+      }
+      choose(target.closest<HTMLElement>('.result') ?? undefined);
+    });
+
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        return close();
+      }
+      const buttons = visibleButtons();
+      const at = buttons.indexOf(document.activeElement as HTMLButtonElement);
+      if (e.key === 'ArrowDown' && buttons.length > 0) {
+        e.preventDefault();
+        buttons[Math.min(at + 1, buttons.length - 1)].focus();
+      } else if (e.key === 'ArrowUp' && at >= 0) {
+        e.preventDefault();
+        (at === 0 ? input : buttons[at - 1]).focus();
+      } else if (
+        e.key === 'Enter' &&
+        document.activeElement === input &&
+        buttons.length > 0
+      ) {
+        e.preventDefault();
+        choose(buttons[0]);
+      }
+    });
+  }
+</script>
