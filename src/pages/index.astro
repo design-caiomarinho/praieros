@@ -329,6 +329,11 @@ const sourceBulletin = site.current
     if (target.closest('[data-source-back]')) closeSource(true);
     else if (target.closest('[data-source-close]')) closeSource(false);
   });
+  // O cabeçalho acompanha: com a Fonte aberta, o botão de informação fica sem a linha de baixo.
+  const header = document.querySelector('header');
+  new MutationObserver(() =>
+    header?.toggleAttribute('data-source-open', !sourceSlot.hidden),
+  ).observe(sourceSlot, { attributes: true, attributeFilter: ['hidden'] });
   // Escolher um marcador ou abrir a busca tira a Fonte do lugar.
   map.addEventListener('marker-select', () => {
     sourceSlot.hidden = true;

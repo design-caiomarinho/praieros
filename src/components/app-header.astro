@@ -67,6 +67,27 @@ const { homeHref = '/', infoHref = '#fonte', searchId } = Astro.props;
     height: var(--border-width-default);
     background: var(--s-color-border-default);
   }
+  /* Fonte e como ler aberta (`data-source-open`, ligado em index.astro): o botão de informação
+     se junta ao painel, sem a linha de baixo. A linha continua à esquerda e sob a busca. */
+  .header[data-source-open] {
+    border-bottom-color: transparent;
+  }
+  .header[data-source-open]::before,
+  .header[data-source-open]::after {
+    content: '';
+    position: absolute;
+    bottom: calc(var(--border-width-default) * -1);
+    height: var(--border-width-default);
+    background: var(--s-color-border-default);
+  }
+  .header[data-source-open]::before {
+    left: 0;
+    right: calc((var(--space-inset-md) * 2 + var(--primitives-spacing-24)) * 2);
+  }
+  .header[data-source-open]::after {
+    right: 0;
+    width: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+  }
   /* Mobile (abaixo do breakpoint de 1024px da página): inset md (16px). */
   @media (max-width: 1023px) {
     .header {
