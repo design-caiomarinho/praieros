@@ -3,11 +3,13 @@
 // ARRASTE, a parte de cima da folha (alça + área do título); fora dela o gesto é a rolagem normal
 // do conteúdo. A zona não inclui botões (fechar, voltar, campos): neles o toque funciona como sempre.
 //
-// A alça é interativa: ao pressionar e mexer, a folha segue o dedo (ou o mouse) em tempo real. Ao
-// soltar, o movimento se completa pela intenção: soltou um pouco acima de onde começou → sobe até a
-// tela toda; um pouco abaixo → desce à posição de origem (60%); muito abaixo → fecha o painel (o
-// mesmo que o X). O resto do caminho é animado e, até ele acabar, a rolagem do conteúdo fica
-// travada (`data-moving`). A altura final é CSS (`data-expanded` no #sidebar, ver index.astro).
+// A alça (e a zona do título) é interativa: ao pressionar e mexer, a folha segue o dedo (ou o mouse)
+// em tempo real, entre a origem (60%) e a tela toda; a origem é o limite de baixo (a folha não fica
+// menor que isso; fechar é pelo X ou pelo mapa). Ao soltar, o movimento se completa pela intenção:
+// um pouco acima de onde começou → sobe até a tela toda; um pouco abaixo → desce à origem.
+// Na origem, um gesto de rolar para cima em qualquer ponto da folha dispara a subida completa de
+// uma vez. Até o movimento acabar, a rolagem do conteúdo fica travada (`data-moving`).
+// A altura final é CSS (`data-expanded` no #sidebar, ver index.astro).
 
 import { cssTimeMs } from '../map/css-time.ts';
 
@@ -16,8 +18,8 @@ const PANE_IDS = ['search', 'panel', 'source-slot'];
 const DRAG = 10;
 /** Soltar com esta fração da altura do palco além do ponto de partida já conta como intenção. */
 const INTENT = 0.06;
-/** Soltar com a folha abaixo desta fração da altura do palco fecha o painel. */
-const DISMISS_BELOW = 0.45;
+/** Altura da folha na origem, como fração do palco (igual a index.astro e beach-map.astro). */
+const SHEET_RATIO = 0.6;
 /** Altura da zona de arraste (alça 24 + título 48 = 3 × spacing-24), medida do topo da folha. */
 const ZONE = 72;
 /** Elementos interativos: dentro deles não começa arraste (fechar, voltar, campos). */
@@ -106,21 +108,6 @@ export function initSidebarSheet(): void {
     return y - viewport!.getBoundingClientRect().top <= ZONE;
   }
 
-  /** Fecha o painel aberto, como o X dele (ficha, Classificação, Fonte ou busca). */
-  function dismiss() {
-    const p = current();
-    const close = [
-      ...(p?.querySelectorAll<HTMLElement>(
-        '[data-panel-close], [data-search-close]',
-      ) ?? []),
-    ].find((el) => el.offsetParent !== null);
-    if (close) close.click();
-    else
-      document
-        .getElementById('beach-map')
-        ?.dispatchEvent(new CustomEvent('map-clear', { bubbles: true }));
-  }
-
   // Arraste em tempo real: a altura da folha segue o ponteiro (sem transição). Ao soltar, o estilo
   // inline sai e o CSS anima da altura atual até a do estado escolhido.
   let drag: {
@@ -131,6 +118,7 @@ export function initSidebarSheet(): void {
     fromContent: boolean;
   } | null = null;
   let dragged = false;
+  let suppressClick = false;
   /** Na origem, um gesto para cima em qualquer ponto da folha também pede a folha inteira. */
   function openable(target: EventTarget | null) {
     return (
@@ -153,8 +141,13 @@ export function initSidebarSheet(): void {
     if (!drag) return;
     const dy = drag.y0 - y; // para cima é positivo
     if (!dragged && Math.abs(dy) < DRAG) return;
-    if (!dragged && drag.fromContent && dy < 0) {
-      drag = null; // para baixo, a partir do conteúdo, não é da folha
+    if (!dragged && drag.fromContent) {
+      // A partir do conteúdo: para cima dispara a subida completa de uma vez; para baixo não é da folha.
+      drag = null;
+      if (dy > 0) {
+        suppressClick = true;
+        set(true);
+      }
       return;
     }
     if (!dragged) {
@@ -165,7 +158,7 @@ export function initSidebarSheet(): void {
       shell!.style.transition = 'none';
     }
     const H = stageHeight();
-    shell!.style.height = `${Math.min(Math.max(drag.startH + dy, H * 0.3), H)}px`;
+    shell!.style.height = `${Math.min(Math.max(drag.startH + dy, H * SHEET_RATIO), H)}px`;
   }
   function dragEnd() {
     if (!drag) return;
@@ -174,32 +167,10 @@ export function initSidebarSheet(): void {
     if (!dragged) return;
     const H = stageHeight();
     const h = shell!.getBoundingClientRect().height;
-    let target: 'dismiss' | 'expanded' | 'collapsed';
-    if (h < H * DISMISS_BELOW) target = 'dismiss';
-    else if (h - d.startH > H * INTENT) target = 'expanded';
+    let target: 'expanded' | 'collapsed';
+    if (h - d.startH > H * INTENT) target = 'expanded';
     else if (d.startH - h > H * INTENT) target = 'collapsed';
     else target = d.startExpanded ? 'expanded' : 'collapsed';
-
-    if (target === 'dismiss') {
-      // Fecha na altura em que foi solta (sem animar a altura de volta aos 60%, o que embolava com
-      // a saída). O tamanho inicial só volta depois que o sidebar sai de cena (ou reabre).
-      expanded = false;
-      shell!.removeAttribute('data-expanded');
-      label();
-      const restore = new MutationObserver(() => {
-        if (shell!.hasAttribute('data-active')) return;
-        restore.disconnect();
-        shell!.style.height = '';
-        shell!.style.transition = '';
-        settle();
-      });
-      restore.observe(shell!, {
-        attributes: true,
-        attributeFilter: ['data-active', 'data-open'],
-      });
-      dismiss();
-      return;
-    }
 
     // Devolve a transição e troca o estilo inline pelo estado final: a altura anima daqui até lá.
     shell!.style.transition = '';
@@ -237,7 +208,6 @@ export function initSidebarSheet(): void {
   viewport.addEventListener('touchcancel', dragEnd);
 
   // Mouse (janela estreita no desktop): mesmo arraste, por eventos de ponteiro.
-  let suppressClick = false;
   viewport.addEventListener('pointerdown', (e) => {
     if (e.pointerType !== 'mouse') return;
     const inside = inZone(e.target, e.clientY);
