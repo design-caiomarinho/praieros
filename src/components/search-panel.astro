@@ -33,6 +33,7 @@ const neighborhoods = suggestNeighborhoods(results);
   class={`search search--${layout}`}
   aria-label="Buscar praia"
   tabindex="-1"
+  data-scroll-fade
   hidden
 >
   <header class="head">
@@ -57,7 +58,7 @@ const neighborhoods = suggestNeighborhoods(results);
     <InputText label="Buscar praia" name="q" />
   </header>
 
-  <div class="body" data-scroll-fade>
+  <div class="body">
     <div class="found" data-found hidden>
       <p class="count" aria-hidden="true">
         <strong data-count-n></strong>
@@ -158,6 +159,8 @@ const neighborhoods = suggestNeighborhoods(results);
     flex-direction: column;
     min-height: 0;
     width: 100%;
+    /* O painel inteiro rola (cabeçalho e corpo), como Fonte e como ler. */
+    overflow-y: auto;
     background: var(--s-color-surface-default);
     color: var(--s-color-content-primary);
   }
@@ -235,23 +238,16 @@ const neighborhoods = suggestNeighborhoods(results);
     white-space: nowrap;
   }
 
-  /* Corpo (Figma 117:6377): padding 24, 32 entre resultados e bairros. É o único que rola;
-     `position: relative` prende os textos só para leitor de tela (sr-only) aqui dentro, para
-     não criarem rolagem na página. */
+  /* Corpo (Figma 117:6377): padding 24, 32 entre resultados e bairros. Ocupa o resto da altura
+     (centra o "sem resultado"); quem rola é o painel todo. `position: relative` prende os
+     textos só para leitor de tela (sr-only) aqui dentro, para não criarem rolagem na página. */
   .body {
     position: relative;
     display: flex;
-    flex: 1 1 auto;
+    flex: 1 0 auto;
     flex-direction: column;
     gap: var(--space-stack-xl);
-    --fade-gap: var(--space-stack-xl);
-    min-height: 0;
-    overflow-y: auto;
     padding: var(--space-inset-lg);
-  }
-  /* A área que rola pode receber foco do navegador: sem anel solto na lateral do painel. */
-  .body:focus-visible {
-    outline: none;
   }
   .hoods,
   .found {
@@ -446,6 +442,8 @@ const neighborhoods = suggestNeighborhoods(results);
       padding-bottom: calc(
         var(--space-inset-lg) + env(safe-area-inset-bottom, 0px)
       );
+    }
+    .search {
       overscroll-behavior: contain;
     }
     /* Alvo de toque do fechar: 40px no desenho, 44px na área de toque. */
