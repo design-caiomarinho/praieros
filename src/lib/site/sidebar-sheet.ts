@@ -44,11 +44,20 @@ export function initSidebarSheet(): void {
   viewport.append(handle);
 
   let expanded = false;
+  // Folha na tela toda e já fixada: encosta no cabeçalho, e a linha sob o botão ativo some (CSS).
+  const header = document.querySelector('header');
+  function syncTop() {
+    header?.toggleAttribute(
+      'data-sheet-top',
+      mobile.matches && expanded && !shell!.hasAttribute('data-moving'),
+    );
+  }
   let settleTimer: number | undefined;
   /** Fim do movimento: a rolagem do conteúdo volta. */
   function settle() {
     window.clearTimeout(settleTimer);
     shell!.removeAttribute('data-moving');
+    syncTop();
   }
   shell.addEventListener('transitionend', (e) => {
     if (e.target === shell && e.propertyName === 'height') settle();
@@ -58,6 +67,7 @@ export function initSidebarSheet(): void {
     window.clearTimeout(settleTimer);
     if (reduce.matches) return settle();
     shell!.setAttribute('data-moving', '');
+    syncTop();
     const ms = cssTimeMs(
       getComputedStyle(shell!).getPropertyValue(
         '--motion-duration-panel-surface',
@@ -70,6 +80,7 @@ export function initSidebarSheet(): void {
     panes.forEach((p) => (p.scrollTop = 0));
   }
   function label() {
+    syncTop();
     handle.setAttribute('aria-expanded', String(expanded));
     handle.setAttribute(
       'aria-label',
@@ -131,6 +142,7 @@ export function initSidebarSheet(): void {
       dragged = true;
       window.clearTimeout(settleTimer);
       shell!.setAttribute('data-moving', '');
+      syncTop();
       shell!.style.transition = 'none';
     }
     const H = stageHeight();

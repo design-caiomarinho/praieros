@@ -634,3 +634,5 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 Correção (25b): ao fechar soltando muito abaixo, a folha fecha na altura em que foi solta (a altura não anima de volta aos 60%, o que embolava com a saída). O tamanho inicial volta quando o sidebar sai de cena.
 
 Regra (25b): sem rolagem interna na posição de origem (60%) nem durante a animação, em todos os painéis (ficha, busca, Classificação, Fonte). O conteúdo só rola com a folha na tela toda e já fixada; voltando à origem, o conteúdo volta ao topo. (O seletor usa `:global`, pois os painéis são de outros componentes.)
+
+Regra (25b): no mobile, com a folha na tela toda e já fixada, o cabeçalho ganha `data-sheet-top` e a linha de baixo some sob o botão ativo (busca ou Fonte), como no desktop, mas sem animação (encostou, sumiu). Ao começar a descer, a linha volta na hora.
