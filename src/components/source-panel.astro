@@ -238,11 +238,12 @@ const mapCredits = [
   }
   dt {
     color: var(--s-color-content-primary);
-    font-family: var(--s-typo-body-large-family);
-    font-weight: var(--s-typo-body-large-weight);
-    font-size: var(--s-typo-body-large-size);
-    line-height: var(--s-typo-body-large-line);
-    letter-spacing: var(--s-typo-body-large-spacing);
+    /* Termo do glossário (Figma 126:5108): 16 px em negrito (600, o maior peso dos tokens). */
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--primitives-font-weight-600);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
   }
   /* Texto + botão: 32px entre eles (Figma 126:5146, stack xl). */
   .stack {
