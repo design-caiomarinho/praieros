@@ -319,7 +319,7 @@ const sourceBulletin = site.current
     // A busca sai (nunca dois painéis ao mesmo tempo).
     const search = document.getElementById('search');
     if (search && !search.hidden) {
-      search.querySelector<HTMLElement>('[data-search-close] button')?.click();
+      document.dispatchEvent(new CustomEvent('search-dismiss'));
     }
     if (sourceSlot.hidden) {
       sourceOpener = opener;

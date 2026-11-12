@@ -482,3 +482,27 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - Ficha aberta **pela busca** mostra a seta de voltar ao lado do título (mesmo padrão de Fonte e como ler e da vista de bairro); aberta pelo mapa (pin ou cartão), não mostra.
 - Voltar reabre a busca **como estava** (texto, bairro escolhido e lista), com o foco no resultado que foi aberto; a ficha sai. Escolher outra praia pelo mapa apaga a origem "busca".
 - Evento `search-back` (index → busca); `fromSearch` fica em `index.astro`.
+
+## Sessão 21: Classificação no mobile (folha inferior, imagem de Caio)
+
+- **Classificação mobile = mesma folha da ficha** (60% do palco, borda no topo, rolagem por dentro), no lugar da ficha enquanto aberta. Cabeçalho e corpo com padding 24 vertical e 16 lateral, área segura embaixo, alvo de toque do fechar de 44px. Mesmo componente do desktop, só com `@media (max-width: 1023px)`.
+- **"Ver detalhes" agora aparece na ficha mobile** e abre a Classificação; voltar devolve a ficha. A rolagem da folha volta ao topo a cada troca de vista.
+- **Skeleton de carregamento (3º/4º quadros da imagem):** não feito; os dados são estáticos e ele nunca apareceria (ver sessão 20). Pendente para quando houver carregamento real.
+
+## Sessão 21b: Fonte e como ler no mobile (folha inferior)
+
+- Mesma folha da Classificação e da ficha: 60% do palco, borda no topo, rolagem por dentro, padding 24 vertical e 16 lateral, área segura embaixo, fechar com alvo de 44px. O link "Fonte e como ler" (cabeçalho e ficha) agora abre o painel também no mobile; voltar, fechar e Esc funcionam como no desktop. Desktop não mudou.
+- Skeleton de carregamento (quadros de baixo da imagem): não feito, mesma razão da sessão 20.
+
+## Sessão 22: reagrupar ao afastar o zoom e nomes por espaço livre (Caio)
+
+- **Grupo aberto volta a ser um marcador só ao afastar o zoom**, mesmo se aberto por clique ou seleção (antes ficava aberto em qualquer zoom e deixava pins do mesmo local soltos e sobrepostos). Regra em `isGroupOpen` (`spread.ts`): aberto por pedido enquanto os pontos estão a 32 px ou mais na tela (`GROUP_KEEP_OPEN_MIN_SPREAD_PX`, premissa: ~ largura do ícone + folga) ou no zoom de enquadramento (17+); sem pedido, 56 px como antes. A praia selecionada que se fecha mostra o marcador agrupado em estado selecionado.
+- **Nomes por espaço, não por zoom fixo:** `pickLabels` (`label-visibility.ts`) escolhe, a partir do zoom 11 (`LABEL_FLOOR_ZOOM`, premissa; substitui o 13 fixo), os nomes que cabem sem cobrir outro nome nem outro ícone. Prioridade: Imprópria, Sem resultado, Desatualizada, Própria; selecionado/foco/hover primeiro. Medido com a fonte real do rótulo; recalculado em zoom e ao fim do movimento. Pins numerados continuam sem nome fixo.
+
+## Sessão 23: motion de abrir e fechar a busca (Figma 187:3839)
+
+- **Valores lidos do Figma** (chaves do protótipo, não variáveis): painel `translateX 477→0`, 1300 ms, atraso 400 ms; camada azul de fundo (`surface/accent`, Frame 117) `473→0`, 1500 ms, atraso 200 ms; linha do cabeçalho 1440→1384 px (menos a largura do botão), 418 ms, atraso ≈304 ms. Curvas `0.645,0.045,0.355,1` (painel e camada) e `0.64,0.05,0.35,1` (linha). Tokens `--motion-*` em `tokens/extra.json` (tipos novos `duration` e `cubicBezier` em `to-css.ts`); os nomes são nossos, os valores do Figma.
+- **Fechamento = inverso literal** (confirmado por Caio): painel e camada saem juntos com atraso 0 e as mesmas durações; a linha volta no fim (atraso 978 ms = 1700 − 304 − 418) com a curva espelhada `0.65,0,0.36,0.95` (derivada; a curva do painel é simétrica). O painel só é escondido ao fim de 1500 ms.
+- **Derivações:** a camada começa 4 px visível (473 de 477 = `border-width.accent`, token). A largura da linha não é animada: `clip-path` na `::after` (a borda fica transparente), sem reflow. Mobile (Figma não cobre): folha `translateY(100%→0)` com os mesmos tokens, sem camada azul.
+- **Troca de painel sem animar:** escolher marcador/praia ou abrir Fonte e como ler tira a busca na hora (evento `search-dismiss`), para nunca haver dois painéis lado a lado durante a saída. Só o fechar pelo "x" e Esc animam.
+- **Movimento reduzido (proposta):** sem transição nenhuma; o painel aparece e some na hora, mesmo estado final. Foco ao abrir/fechar não depende da animação; durante a saída o painel fica `inert`.

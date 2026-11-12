@@ -15,6 +15,30 @@
       "$value": 4
     }
   },
+  "motion": {
+    "duration": {
+      "panel": { "$type": "duration", "$value": 1300 },
+      "panel-surface": { "$type": "duration", "$value": 1500 },
+      "header-line": { "$type": "duration", "$value": 418 }
+    },
+    "delay": {
+      "panel": { "$type": "duration", "$value": 400 },
+      "panel-surface": { "$type": "duration", "$value": 200 },
+      "header-line": { "$type": "duration", "$value": 304 },
+      "header-line-close": { "$type": "duration", "$value": 978 }
+    },
+    "easing": {
+      "panel": { "$type": "cubicBezier", "$value": "0.645, 0.045, 0.355, 1" },
+      "header-line": {
+        "$type": "cubicBezier",
+        "$value": "0.64, 0.05, 0.35, 1"
+      },
+      "header-line-close": {
+        "$type": "cubicBezier",
+        "$value": "0.65, 0, 0.36, 0.95"
+      }
+    }
+  },
   "size": {
     "panel-width": {
       "$type": "dimension",

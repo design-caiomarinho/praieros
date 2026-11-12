@@ -54,18 +54,37 @@ const { homeHref = '/', infoHref = '#fonte', searchId } = Astro.props;
       var(--s-color-border-default);
   }
   /* Busca aberta: a linha de baixo não passa sob o botão, que se junta ao painel (Figma 126:4604). */
-  .header:has([aria-expanded='true']) {
+  /* A linha de baixo é desenhada por ::after (a borda fica transparente), para encolher na
+     abertura da busca só com clip-path, sem reflow (Figma 187:3852: 1440 → 1384 = menos a largura
+     do botão). Entrada e saída com tempos próprios (ver docs/motion.md). */
+  .header:not([data-source-open]) {
     border-bottom-color: transparent;
   }
-  .header:has([aria-expanded='true'])::after {
+  .header:not([data-source-open])::after {
     content: '';
     position: absolute;
     left: 0;
-    right: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+    right: 0;
     /* Sobre a linha da borda (que fica fora da caixa de padding), não 1px acima. */
     bottom: calc(var(--border-width-default) * -1);
     height: var(--border-width-default);
     background: var(--s-color-border-default);
+    clip-path: inset(0);
+    transition: clip-path var(--motion-duration-header-line)
+      var(--motion-easing-header-line-close)
+      var(--motion-delay-header-line-close);
+  }
+  .header:has([aria-expanded='true']):not([data-source-open])::after {
+    clip-path: inset(
+      0 calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24)) 0 0
+    );
+    transition-timing-function: var(--motion-easing-header-line);
+    transition-delay: var(--motion-delay-header-line);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .header:not([data-source-open])::after {
+      transition: none;
+    }
   }
   /* Fonte e como ler aberta (`data-source-open`, ligado em index.astro): o botão de informação
      se junta ao painel, sem a linha de baixo. A linha continua à esquerda e sob a busca. */

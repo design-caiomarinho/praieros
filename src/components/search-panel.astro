@@ -210,6 +210,58 @@ const neighborhoods = suggestNeighborhoods(results);
     }
   }
 
+  /* Motion de abrir/fechar (Figma 187:3839; ver docs/motion.md). Só transform. Estado fechado =
+     fora da tela, com os tempos de SAÍDA (inverso da entrada); `data-open` = em cena, com os
+     tempos de ENTRADA. Desktop: o painel e a camada azul de fundo (::before do espaço) entram
+     da direita. Mobile (derivado): a folha sobe de baixo, sem a camada azul. */
+  .search {
+    transform: translateY(100%);
+    transition: transform var(--motion-duration-panel)
+      var(--motion-easing-panel);
+  }
+  .search[data-open] {
+    transform: none;
+    transition-delay: var(--motion-delay-panel);
+  }
+  @media (min-width: 1024px) {
+    .search {
+      transform: translateX(100%);
+    }
+    .search[data-open] {
+      transform: none;
+    }
+    /* O espaço de 477px existe enquanto a busca está montada e recorta o que desliza. */
+    :global(.search-slot:has(.search:not([hidden]))) {
+      position: relative;
+      display: flex;
+      flex-shrink: 0;
+      width: var(--size-panel-width);
+      overflow: hidden;
+    }
+    :global(.search-slot:has(.search:not([hidden]))::before) {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--s-color-surface-accent-default);
+      /* Parte já visível no começo: 473 de 477 no Figma = largura do acento (4px). */
+      transform: translateX(calc(100% - var(--border-width-accent)));
+      transition: transform var(--motion-duration-panel-surface)
+        var(--motion-easing-panel);
+    }
+    :global(.search-slot:has(.search[data-open])::before) {
+      transform: none;
+      transition-delay: var(--motion-delay-panel-surface);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .search,
+    .search[data-open],
+    :global(.search-slot:has(.search:not([hidden]))::before),
+    :global(.search-slot:has(.search[data-open])::before) {
+      transition: none;
+    }
+  }
+
   /* Cabeçalho (Figma 117:5179): padding 24, 24 entre o bloco do título e o campo, borda inferior. */
   .head {
     display: flex;
@@ -671,10 +723,40 @@ const neighborhoods = suggestNeighborhoods(results);
           : `${hits.length} ${one ? 'praia encontrada' : 'praias encontradas'}`;
     }
 
-    function setOpen(open: boolean) {
-      root.hidden = !open;
+    // Motion: entrada e saída animadas por CSS (transform); a saída só esconde o painel depois
+    // do fim da transição. Reabrir durante a saída reverte a partir da posição atual.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let hideTimer: number | undefined;
+    function exitMs() {
+      const v = getComputedStyle(root).getPropertyValue(
+        '--motion-duration-panel-surface',
+      );
+      return parseFloat(v) || 0;
+    }
+
+    function setOpen(open: boolean, animate = true) {
+      window.clearTimeout(hideTimer);
       trigger?.setAttribute('aria-expanded', String(open));
       trigger?.setAttribute('aria-disabled', String(open));
+      if (open) {
+        root.inert = false;
+        root.hidden = false;
+        void root.offsetWidth; // fixa o estado de partida antes de ligar `data-open`
+        root.setAttribute('data-open', '');
+        return;
+      }
+      root.removeAttribute('data-open');
+      if (root.hidden) return;
+      if (!animate || reduceMotion.matches) {
+        root.hidden = true;
+        return;
+      }
+      // Saindo: sem foco nem leitura dentro até sumir (o foco já foi devolvido ao botão).
+      root.inert = true;
+      hideTimer = window.setTimeout(() => {
+        root.hidden = true;
+        root.inert = false;
+      }, exitMs());
     }
 
     function open() {
@@ -687,7 +769,9 @@ const neighborhoods = suggestNeighborhoods(results);
     }
 
     // Um marcador do mapa abriu a ficha: a busca sai (nunca dois painéis ao mesmo tempo).
-    document.addEventListener('marker-select', () => setOpen(false));
+    // Troca de painel: a busca sai na hora (sem animar), para nunca haver dois painéis lado a lado.
+    document.addEventListener('marker-select', () => setOpen(false, false));
+    document.addEventListener('search-dismiss', () => setOpen(false, false));
 
     // Voltar da ficha aberta pela busca: reabre a busca sem limpar o que estava nela.
     let lastChosen = '';
@@ -712,7 +796,7 @@ const neighborhoods = suggestNeighborhoods(results);
       const slug = button.closest<HTMLElement>('[data-result]')?.dataset.slug;
       if (!slug) return;
       lastChosen = slug;
-      setOpen(false);
+      setOpen(false, false);
       document.dispatchEvent(
         new CustomEvent('search-select', { detail: { slug } }),
       );
@@ -721,7 +805,7 @@ const neighborhoods = suggestNeighborhoods(results);
     // Com a busca aberta o botão tem aparência de desabilitado e não faz nada: fecha-se pelo
     // "x" do painel (ou Esc).
     trigger?.addEventListener('click', () => {
-      if (root.hidden) open();
+      if (!root.hasAttribute('data-open')) open();
     });
     input.addEventListener('input', () => {
       hoodPicked = false;

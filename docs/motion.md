@@ -26,9 +26,21 @@ O Claude Code não deve depender das interações de protótipo do Figma, porque
 
 Tabela a preencher quando o motion for implementado:
 
-| Elemento | Gatilho | O que anima | Duração | Curva | Com movimento reduzido |
-| -------- | ------- | ----------- | ------- | ----- | ---------------------- |
+| Elemento                                               | Gatilho      | O que anima                                                                                                      | Duração                | Curva                                                                  | Com movimento reduzido |
+| ------------------------------------------------------ | ------------ | ---------------------------------------------------------------------------------------------------------------- | ---------------------- | ---------------------------------------------------------------------- | ---------------------- |
+| Painel de busca (desktop)                              | Abrir        | `translateX(100% → 0)`                                                                                           | 1300 ms, atraso 400 ms | `easing-panel`                                                         | Sem transição          |
+| Camada azul de fundo (`.search-slot::before`, desktop) | Abrir        | `translateX(473px → 0)` (100% − 4px)                                                                             | 1500 ms, atraso 200 ms | `easing-panel`                                                         | Sem transição          |
+| Linha do cabeçalho (`.header::after`)                  | Abrir        | `clip-path` encolhe 56 px à direita                                                                              | 418 ms, atraso 304 ms  | `easing-header-line`                                                   | Sem transição          |
+| Os três acima                                          | Fechar       | Inverso: painel e camada saem juntos (atraso 0); linha volta com atraso 978 ms; `.search` some ao fim de 1500 ms | mesmas durações        | mesma `easing-panel`; linha com `easing-header-line-close` (espelhada) | Some na hora           |
+| Folha de busca (mobile, derivado)                      | Abrir/fechar | `translateY(100% → 0)`, sem camada azul                                                                          | como o painel          | `easing-panel`                                                         | Sem transição          |
+
+Tokens (`tokens/extra.json`, `--motion-*`): `duration-{panel,panel-surface,header-line}`, `delay-{panel,panel-surface,header-line,header-line-close}`, `easing-{panel,header-line,header-line-close}`. Valores do Figma 187:3839; derivações em `docs/decisions.md`.
+
+Comportamento: só `transform` e `clip-path`; interrompível (reabrir durante a saída reverte a partir da posição atual); o foco vai ao campo ao abrir e volta ao botão ao fechar, sem esperar a animação; durante a saída o painel fica `inert`. Troca de painel (marcador, escolher praia, abrir Fonte) tira a busca na hora, sem animar.
 
 ### Pendente de motion
+
+- **Esqueleto de carregamento** e **câmera do mapa** (voo até a praia): seguem pendentes.
+- **Ficha, Classificação e Fonte** (abrir/fechar): ainda sem motion.
 
 - **Brilho/pulso do skeleton da busca** (sessão 19): os blocos já existem, estáticos; falta duração, curva e movimento reduzido do Figma.
