@@ -549,3 +549,9 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Pin selecionado:** círculo e pino viram duas camadas (`.marker__disc`, `.marker__pin`) que se fundem (opacidade + escala 0,4 → 1, origem na base). O deslocamento do MapLibre ficou fixo na ponta do pino (`[0,-24]`) e os 12px do círculo normal são o `translate` CSS do marcador, que anima junto. Tempo e curva do hover do pin (500 ms, `easing-pin-hover`): o Figma não define a troca (derivado). O círculo mantém a cor do status ao sumir. Não é morph de path (os glifos são diferentes).
 - **Mobile:** o sidebar passa a existir também abaixo de 1024px, na vertical (60% do palco): `::before` azul e o painel branco sobem de baixo com os mesmos tempos, atrasos e curva do desktop (entrada: azul 200 ms, branco 300 ms; saída: branco 0, azul 100 ms), com dissolve na troca de conteúdo. A busca no mobile deixa de ter animação própria. Perda aceita: a busca sem resultado não encolhe mais ao conteúdo (a folha tem sempre 60%).
 - Pendente: a câmera do mapa no mobile ainda não se adapta à área acima da folha.
+
+## Sessão 23g: clique no terreno, carregando e troca do pin mais rápida (Caio)
+
+- **Clique no terreno do mapa:** fecha o painel aberto (ficha, Classificação ou Fonte) e desmarca o pin de uma vez (antes eram dois cliques). Com a busca aberta, o clique não a fecha.
+- **Aviso "Carregando o mapa":** entra como o nome do pin (opacidade 0 → 1, de cima para baixo −8px → 0, 1000 ms, `easing-pin-label`); sai com o inverso, mesma curva e tempo. Sem animação com movimento reduzido.
+- **Troca círculo ↔ pino:** acelerada de 500 para 250 ms (`duration-pin-select`, curva `easing-pin-hover`); o hover do ícone continua em 500 ms.

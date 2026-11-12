@@ -146,9 +146,25 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   let selectedSlug: string | null = null;
   let selectedPointId: string | null = null;
 
+  let loadingTimer: number | undefined;
   function show(state: 'loading' | 'ready' | 'error') {
     root.toggleAttribute('data-ready', state === 'ready');
-    loading.hidden = state !== 'loading';
+    const showLoading = state === 'loading';
+    window.clearTimeout(loadingTimer);
+    if (showLoading) {
+      loading.removeAttribute('data-leaving');
+      loading.hidden = false;
+    } else if (!loading.hidden && !reduceMotion.matches) {
+      // Sai com a mesma animação da entrada, ao contrário (mesma curva e tempo).
+      loading.setAttribute('data-leaving', '');
+      loadingTimer = window.setTimeout(
+        () => {
+          loading.hidden = true;
+          loading.removeAttribute('data-leaving');
+        },
+        parseFloat(token('--motion-duration-pin-label')) || 0,
+      );
+    } else loading.hidden = true;
     errorBox.hidden = state !== 'error';
     zoom.hidden = state === 'error';
   }
@@ -280,6 +296,28 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     display: flex;
     align-items: center;
     background: var(--s-color-surface-default);
+    /* Aparece como o nome do pin (Figma 204:7892): opacidade 0 → 1 e de cima para baixo (-8px →
+       0), 1000 ms na curva do nome; ao sair, o inverso com a mesma curva e tempo. */
+    animation: loading-in var(--motion-duration-pin-label)
+      var(--motion-easing-pin-label) both;
+  }
+  .loading[data-leaving] {
+    animation-direction: reverse;
+  }
+  @keyframes loading-in {
+    from {
+      opacity: 0;
+      translate: 0 calc(var(--space-stack-xs) * -1);
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .loading {
+      animation: none;
+    }
   }
   .loading[hidden],
   .error[hidden],
@@ -502,7 +540,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
      Figma não define a troca). Deselecionar é o caminho inverso, com a mesma curva e tempo. */
   :global(.marker) {
     translate: 0 12px;
-    transition: translate var(--motion-duration-pin-hover)
+    transition: translate var(--motion-duration-pin-select)
       var(--motion-easing-pin-hover);
   }
   :global(.marker--selected) {
@@ -512,8 +550,8 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   :global(.marker__pin) {
     transform-origin: 50% 100%;
     transition:
-      opacity var(--motion-duration-pin-hover) var(--motion-easing-pin-hover),
-      transform var(--motion-duration-pin-hover) var(--motion-easing-pin-hover),
+      opacity var(--motion-duration-pin-select) var(--motion-easing-pin-hover),
+      transform var(--motion-duration-pin-select) var(--motion-easing-pin-hover),
       background-color var(--motion-duration-hover) var(--motion-easing-hover),
       border-color var(--motion-duration-hover) var(--motion-easing-hover),
       color var(--motion-duration-hover) var(--motion-easing-hover);

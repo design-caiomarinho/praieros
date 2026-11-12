@@ -249,10 +249,15 @@ const sourceBulletin = site.current
       ?.focus();
   });
   map.addEventListener('map-clear', () => {
-    // Clique no mapa vazio: primeiro fecha a ficha; com ela fechada, tira a marca.
-    if (!document.getElementById('source-slot')!.hidden) return;
+    // Clique no mapa vazio: fecha o painel aberto (ficha, Classificação ou Fonte) e tira a
+    // marca do pin, de uma vez (pedido de Caio).
+    const source = document.getElementById('source-slot')!;
+    if (!source.hidden) {
+      source.hidden = true;
+      panelBeforeSource = false;
+    }
     if (!panel.hidden) close();
-    else if (marked) clearMark();
+    if (marked) clearMark();
   });
 
   // Busca: abre no lugar da ficha e a encerra de vez (a ficha não fica "viva" por baixo).
