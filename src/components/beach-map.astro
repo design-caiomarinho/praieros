@@ -157,6 +157,16 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
         controller.getMap();
   }
 
+  // Um painel abrindo ou fechando muda a largura do mapa. Redimensiona o canvas na hora, sem
+  // depender só do observador do MapLibre (sobrava uma faixa do fundo junto ao painel).
+  // Só o atributo hidden dos painéis: observar os marcadores geraria laço com o 'resize'.
+  const syncSize = new MutationObserver(() => controller?.getMap().resize());
+  ['panel', 'search'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el)
+      syncSize.observe(el, { attributes: true, attributeFilter: ['hidden'] });
+  });
+
   root.addEventListener('marker-focus', (e) => {
     const { slug } = (e as CustomEvent<{ slug: string }>).detail;
     controller?.focusBeach(slug);

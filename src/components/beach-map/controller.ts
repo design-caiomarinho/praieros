@@ -132,6 +132,9 @@ export async function createBeachMap(
 
   // Tela redimensionada (ou painel abrindo): recalcula o zoom mínimo.
   const resizeObserver = new ResizeObserver(() => {
+    // O canvas acompanha o contêiner na hora (um painel abrindo muda a largura do mapa);
+    // sem isso sobra uma faixa do fundo (cor do mar) junto ao painel.
+    map.resize();
     map.setMaxBounds(containBounds(navBounds, viewport()));
     map.setMinZoom(minZoomFor());
   });
