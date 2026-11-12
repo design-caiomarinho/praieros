@@ -527,7 +527,9 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 
 ## Sessão 23d: novos tempos e curva do Figma 187:3839 (Caio)
 
-- **Valores relidos do Figma (animação revisada):** painel `translateX 477→0` com atraso 300 ms e duração 1500 ms; camada azul `473→0` com atraso 200 ms e duração 1500 ms; ambos com a curva `0.175, 0.885, 0.32, 1.1` (passa de 1: leve ultrapassagem, como no Figma). Linha do cabeçalho inalterada (atraso 304 ms, 418 ms, `0.64, 0.05, 0.35, 1`).
-- **Fechamento = inverso literal:** atraso 0 e as mesmas durações, com a curva **espelhada** (`0.68, -0.1, 0.825, 0.115`, token `easing-panel-close`; antes a curva era simétrica e servia para os dois sentidos). Linha de volta com atraso 1078 ms (1800 − 304 − 418).
+- **Valores relidos do Figma (animação revisada):** painel `translateX 477→0` com atraso 300 ms e duração 1500 ms; camada azul `473→0` com atraso 200 ms e duração 1500 ms; ambos com a curva `0.175, 0.885, 0.32, 0.99` (passa de 1: leve ultrapassagem, como no Figma). Linha do cabeçalho inalterada (atraso 304 ms, 418 ms, `0.64, 0.05, 0.35, 1`).
+- **Fechamento = inverso literal:** atraso 0 e as mesmas durações, com a curva **espelhada** (`0.68, 0.01, 0.825, 0.115`, token `easing-panel-close`; antes a curva era simétrica e servia para os dois sentidos). Linha de volta com atraso 1078 ms (1800 − 304 − 418).
 - **50% do painel:** a curva não é simétrica, então o botão de busca liga/desliga no instante em que a curva chega a 50% (`halfwayTime`, ~12% do tempo): ≈ 480 ms depois de abrir e ≈ 1320 ms depois de fechar.
 - **Câmera:** usa a curva e a duração do painel (agora 1500 ms, com a leve ultrapassagem).
+
+- **Ajuste (Caio): sem o "bounce" final.** O último ponto de controle da curva do painel passa de 1.1 para 0.99: `0.175, 0.885, 0.32, 0.99` (não ultrapassa mais 1). A curva de saída espelhada vira `0.68, 0.01, 0.825, 0.115`. Substitui a ultrapassagem descrita acima.

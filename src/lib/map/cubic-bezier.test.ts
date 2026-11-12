@@ -22,8 +22,8 @@ describe('cubicBezier', () => {
 
   it('acha o instante dos 50% (curva simétrica = metade do tempo; a do painel chega antes)', () => {
     expect(halfwayTime('cubic-bezier(0.42, 0, 0.58, 1)')).toBeCloseTo(0.5, 2);
-    const t = halfwayTime('cubic-bezier(0.175, 0.885, 0.32, 1.1)');
+    const t = halfwayTime('cubic-bezier(0.175, 0.885, 0.32, 0.99)');
     expect(t).toBeLessThan(0.3);
-    expect(cubicBezier(0.175, 0.885, 0.32, 1.1)(t)).toBeCloseTo(0.5, 2);
+    expect(cubicBezier(0.175, 0.885, 0.32, 0.99)(t)).toBeCloseTo(0.5, 2);
   });
 });

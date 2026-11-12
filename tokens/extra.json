@@ -30,10 +30,10 @@
       "header-line-close": { "$type": "duration", "$value": 1078 }
     },
     "easing": {
-      "panel": { "$type": "cubicBezier", "$value": "0.175, 0.885, 0.32, 1.1" },
+      "panel": { "$type": "cubicBezier", "$value": "0.175, 0.885, 0.32, 0.99" },
       "panel-close": {
         "$type": "cubicBezier",
-        "$value": "0.68, -0.1, 0.825, 0.115"
+        "$value": "0.68, 0.01, 0.825, 0.115"
       },
       "header-line": {
         "$type": "cubicBezier",
