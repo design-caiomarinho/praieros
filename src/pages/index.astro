@@ -205,7 +205,11 @@ const sourceBulletin = site.current
     ).detail;
     const sameBeach = !panel.hidden && lastSlug === slug;
     // Outra praia: volta para a ficha (a Classificação é de uma praia só).
-    if (!sameBeach) setView('beach');
+    if (!sameBeach) {
+      setView('beach');
+      fromSearch = false; // a busca (search-select) liga de novo logo depois
+      syncBack();
+    }
     lastSlug = slug;
     marked = true;
     panel.querySelectorAll('[data-beach]').forEach((el) => {
@@ -245,6 +249,13 @@ const sourceBulletin = site.current
     });
     syncBanner(null);
   });
+  // Ficha aberta pela busca mostra a seta de voltar; aberta pelo mapa, não.
+  let fromSearch = false;
+  function syncBack() {
+    document
+      .querySelectorAll<HTMLElement>('[data-panel-back]')
+      .forEach((el) => (el.hidden = !fromSearch));
+  }
   document.addEventListener('search-select', (e) => {
     const { slug } = (e as CustomEvent<{ slug: string }>).detail;
     // Mesmo caminho do clique no marcador: enquadra (abrindo o grupo) e abre a ficha.
@@ -255,6 +266,8 @@ const sourceBulletin = site.current
         detail: { slug, pointId: null },
       }),
     );
+    fromSearch = true;
+    syncBack();
   });
 
   // Os cartões dos pontos são só visualização: quem escolhe o ponto é o pin no mapa.
@@ -267,7 +280,10 @@ const sourceBulletin = site.current
     const target = e.target as Element;
     const card = target.closest<HTMLElement>('[data-point-id]');
     if (target.closest('[data-panel-close]')) close();
-    else if (card && card.dataset.pointId) {
+    else if (target.closest('[data-panel-back]')) {
+      // Volta à busca como estava (texto, bairro e lista); a ficha sai.
+      document.dispatchEvent(new CustomEvent('search-back'));
+    } else if (card && card.dataset.pointId) {
       // Cartão do ponto: escolhe o pin dele no mapa (mesmo caminho do clique no pin).
       const slug = card.closest<HTMLElement>('[data-beach]')?.dataset.beach;
       if (slug) {

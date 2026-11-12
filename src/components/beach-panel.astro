@@ -70,7 +70,18 @@ const noResult = notice === 'no-result';
   <header class="head">
     <div class="titles">
       <div class="top">
-        <h2>{name}</h2>
+        <div class="title">
+          {/* Só aparece quando a ficha foi aberta pela busca (index.astro). */}
+          <div class="back" data-panel-back hidden>
+            <ButtonIcon
+              variant="ghost"
+              size="xsmall"
+              icon="arrow-left"
+              label="Voltar à busca"
+            />
+          </div>
+          <h2>{name}</h2>
+        </div>
         <div class="close" data-panel-close>
           <ButtonIcon
             variant="ghost"
@@ -211,8 +222,18 @@ const noResult = notice === 'no-result';
     justify-content: space-between;
     gap: var(--space-gap-md);
   }
-  .close {
+  .close,
+  .back {
     display: contents;
+  }
+  .back[hidden] {
+    display: none;
+  }
+  .title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+    min-width: 0;
   }
   h2 {
     margin: 0;

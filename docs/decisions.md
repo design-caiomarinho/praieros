@@ -476,3 +476,9 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 
 - Cartões de ponto não selecionados ficam a **80%** (antes 50%): são clicáveis, então não podem parecer apagados. No hover e no foco por teclado voltam a **100%**, sem transição (motion pendente).
 - Clicar em um cartão de ponto escolhe o pin e **enquadra as localizações da praia** (`map-fit` com o slug), em vez de só trocar o pin. No mobile o enquadramento desconta a folha da ficha (`#panel`) além da busca (`#search`), para os pontos não ficarem atrás dela.
+
+## Sessão 20d — seta de voltar na ficha aberta pela busca
+
+- Ficha aberta **pela busca** mostra a seta de voltar ao lado do título (mesmo padrão de Fonte e como ler e da vista de bairro); aberta pelo mapa (pin ou cartão), não mostra.
+- Voltar reabre a busca **como estava** (texto, bairro escolhido e lista), com o foco no resultado que foi aberto; a ficha sai. Escolher outra praia pelo mapa apaga a origem "busca".
+- Evento `search-back` (index → busca); `fromSearch` fica em `index.astro`.

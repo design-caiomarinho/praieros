@@ -689,6 +689,18 @@ const neighborhoods = suggestNeighborhoods(results);
     // Um marcador do mapa abriu a ficha: a busca sai (nunca dois painéis ao mesmo tempo).
     document.addEventListener('marker-select', () => setOpen(false));
 
+    // Voltar da ficha aberta pela busca: reabre a busca sem limpar o que estava nela.
+    let lastChosen = '';
+    document.addEventListener('search-back', () => {
+      render();
+      setOpen(true);
+      document.dispatchEvent(new CustomEvent('search-open'));
+      const result = [...root.querySelectorAll<HTMLElement>('[data-result]')]
+        .find((li) => li.dataset.slug === lastChosen && !li.hidden)
+        ?.querySelector<HTMLElement>('.result');
+      (result ?? input).focus();
+    });
+
     function close() {
       setOpen(false);
       document.dispatchEvent(new CustomEvent('search-close'));
@@ -699,6 +711,7 @@ const neighborhoods = suggestNeighborhoods(results);
       if (!button || button.getAttribute('aria-disabled') === 'true') return;
       const slug = button.closest<HTMLElement>('[data-result]')?.dataset.slug;
       if (!slug) return;
+      lastChosen = slug;
       setOpen(false);
       document.dispatchEvent(
         new CustomEvent('search-select', { detail: { slug } }),
