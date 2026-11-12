@@ -204,7 +204,7 @@ const neighborhoods = suggestNeighborhoods(results);
   @media (min-width: 1024px) {
     .search {
       width: var(--size-panel-width);
-      max-width: 100%;
+      max-width: none;
       border-left: var(--border-width-default) solid
         var(--s-color-border-default);
     }
@@ -230,34 +230,30 @@ const neighborhoods = suggestNeighborhoods(results);
     .search[data-open] {
       transform: none;
     }
-    /* O espaço de 477px existe enquanto a busca está montada e recorta o que desliza. */
+    /* A coluna da busca cresce da direita (4px → 477px) junto com a camada azul, e o mapa
+       acompanha o espaço (o contêiner do mapa é observado e o canvas redimensiona a cada quadro).
+       A camada azul preenche a coluna; o painel (477px, ancorado à direita) desliza por cima,
+       com atraso, recortado pela coluna. */
     :global(.search-slot:has(.search:not([hidden]))) {
       position: relative;
-      display: flex;
+      display: block;
       flex-shrink: 0;
-      width: var(--size-panel-width);
+      width: var(--border-width-accent);
       overflow: hidden;
-    }
-    :global(.search-slot:has(.search:not([hidden]))::before) {
-      content: '';
-      position: absolute;
-      inset: 0;
       background: var(--s-color-surface-accent-default);
-      /* Parte já visível no começo: 473 de 477 no Figma = largura do acento (4px). */
-      transform: translateX(calc(100% - var(--border-width-accent)));
-      transition: transform var(--motion-duration-panel-surface)
+      transition: width var(--motion-duration-panel-surface)
         var(--motion-easing-panel);
     }
-    :global(.search-slot:has(.search[data-open])::before) {
-      transform: none;
+    :global(.search-slot:has(.search[data-open])) {
+      width: var(--size-panel-width);
       transition-delay: var(--motion-delay-panel-surface);
     }
   }
   @media (prefers-reduced-motion: reduce) {
     .search,
     .search[data-open],
-    :global(.search-slot:has(.search:not([hidden]))::before),
-    :global(.search-slot:has(.search[data-open])::before) {
+    :global(.search-slot:has(.search:not([hidden]))),
+    :global(.search-slot:has(.search[data-open])) {
       transition: none;
     }
   }
