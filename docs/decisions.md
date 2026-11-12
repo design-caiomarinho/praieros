@@ -566,3 +566,7 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 
 - **Pin:** o marcador não se desloca mais ao selecionar. O deslocamento do MapLibre voltou a ser o do círculo (`[0,-12]`) e o pino é uma camada que sobe 12px do círculo, com a ponta sempre sobre o ponto; só escala e opacidade animam (250 ms). Um `::before` do marcador selecionado leva o clique também à parte do pino acima da caixa.
 - **Navbar no mobile:** a folha sobe de baixo, longe do botão; por isso a linha de baixo do cabeçalho não encolhe nem abre vão sob o botão (busca ou Fonte). Só o botão muda de estado. No desktop segue o Figma 187:3852. (Interpretação do pedido de Caio: a linha "indo para a esquerda" no mobile estava errada.)
+
+## Sessão 23j: cartões de ponto, interação invertida (Caio)
+
+- Na ficha com vários pontos, o cartão do pin escolhido fica a 50% e sem hover (cursor padrão): não há o que escolher nele. Os outros ficam a 100%, com hover animado (300 ms, tokens de hover; opacidade e fundo). Antes era o contrário (os outros a 80%). Interpretação da frase de Caio: "quem tiver selecionado" = o ponto escolhido.

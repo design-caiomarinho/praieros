@@ -71,14 +71,28 @@ const Tag = pointId ? 'button' : 'article';
   .card--no-result {
     border-left-color: var(--s-color-border-unknown);
   }
-  /* Com um pin escolhido no mapa, os outros pontos ficam a 80% (são clicáveis, então não podem
-     parecer apagados); no hover ou no foco voltam a 100%. */
-  .card[data-dimmed] {
-    opacity: 0.8;
+  /* O ponto escolhido (pin ativo no mapa) fica a 50% e sem hover: não há o que escolher nele.
+     Os outros pontos ficam a 100%, com o hover de sempre (pedido de Caio). */
+  .card {
+    transition: opacity var(--motion-duration-hover) var(--motion-easing-hover);
   }
-  .card[data-dimmed]:hover,
-  .card[data-dimmed]:focus-visible {
-    opacity: 1;
+  .body {
+    transition: background-color var(--motion-duration-hover)
+      var(--motion-easing-hover);
+  }
+  .card[data-dimmed] {
+    opacity: 0.5;
+    cursor: default;
+  }
+  button.card[data-dimmed]:hover .body,
+  button.card[data-dimmed]:focus-visible .body {
+    background: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .body {
+      transition: none;
+    }
   }
   .body {
     display: flex;

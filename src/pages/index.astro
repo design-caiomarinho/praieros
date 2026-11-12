@@ -162,8 +162,8 @@ const sourceBulletin = site.current
         !!pointId &&
         sameBeach &&
         card.getAttribute('data-point-id') === pointId;
-      // Com um pin escolhido, os outros cartões da praia ficam a 50% (só visual).
-      card.toggleAttribute('data-dimmed', !!pointId && sameBeach && !active);
+      // O cartão do pin escolhido fica a 50% e sem hover (só visual); os outros seguem normais.
+      card.toggleAttribute('data-dimmed', active);
       // Cartão = botão que escolhe o pin: marca qual está escolhido (leitor de tela).
       card.setAttribute('aria-pressed', String(active));
     });
