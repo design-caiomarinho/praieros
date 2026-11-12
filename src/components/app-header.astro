@@ -26,7 +26,12 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
     />
   </a>
   <div class="actions">
-    <ButtonIcon variant="ghost" icon="share" label="Compartilhar o site" />
+    <ButtonIcon
+      variant="ghost"
+      icon="share"
+      label="Compartilhar o site"
+      disabled
+    />
     <ButtonIcon
       variant="ghost"
       icon="info"

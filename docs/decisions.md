@@ -604,3 +604,8 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 
 - **Causa dos bugs só no GitHub Pages:** o CSS do build é minificado e reescreve `300ms` como `.3s` e `1500ms` como `1.5s`. O JS lia os tokens de tempo com `parseFloat` (leitura em ms) e passou a ver 0,3 ms e 1,5 ms: câmera instantânea, faixa de carregamento sem etapas (sem subida nem zoom out), atrasos do banner, fechamento do painel, dissolve e botão "engajado" todos sem espera.
 - **Correção:** `cssTimeMs` (`src/lib/map/css-time.ts`, com testes) lê `ms`, `s` e número puro; todos os pontos do JS que liam tokens de tempo passam a usá-lo. **Regra:** nunca `parseFloat` em token de tempo; testar animações também no build (`npm run build` + `astro preview`), não só no `astro dev`.
+
+### Sessão 24c: pin após os detalhes e compartilhar desativado
+
+- **Pin ao fechar depois dos detalhes:** fechar a Classificação (X) encerra tudo e o pin volta ao normal; o clique no terreno sempre desmarca (mesmo sem `marked`). Fechar a ficha comum (X) continua mantendo o pin marcado, como já decidido.
+- **Compartilhar desativado por enquanto:** o botão de ícone do cabeçalho e os botões "Compartilhar praia" (ficha e Classificação) ficam `disabled` (visual de desabilitado dos componentes) até a R6 ser implementada.

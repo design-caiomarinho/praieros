@@ -320,7 +320,7 @@ const sourceBulletin = site.current
       panelBeforeSource = false;
     }
     if (!panel.hidden) close();
-    if (marked) clearMark();
+    if (marked || lastSlug) clearMark();
   });
 
   // Busca: abre no lugar da ficha e a encerra de vez (a ficha não fica "viva" por baixo).
@@ -367,8 +367,15 @@ const sourceBulletin = site.current
     const card = target.closest<HTMLElement>('[data-point-id]');
     // O cartão do ponto já escolhido não faz nada.
     if (card?.hasAttribute('data-current')) return;
-    if (target.closest('[data-panel-close]')) close();
-    else if (target.closest('[data-panel-back]')) {
+    if (target.closest('[data-panel-close]')) {
+      // Fechar a Classificação (depois de ver os detalhes) encerra tudo: o pin volta ao normal.
+      const fromDetails =
+        panel
+          .querySelector('[data-beach]:not([hidden])')
+          ?.getAttribute('data-view') === 'classification';
+      close();
+      if (fromDetails && marked) clearMark();
+    } else if (target.closest('[data-panel-back]')) {
       // Volta à busca como estava (texto, bairro e lista); a ficha sai.
       document.dispatchEvent(new CustomEvent('search-back'));
     } else if (card && card.dataset.pointId) {
