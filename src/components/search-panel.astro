@@ -333,9 +333,8 @@ const neighborhoods = suggestNeighborhoods(results);
     outline: var(--border-width-default) solid var(--s-color-border-focus);
     outline-offset: var(--primitives-spacing-4);
   }
-  /* Desabilitado (sem marcador no mapa): mesmo visual do botão secundário desabilitado. */
+  /* Desabilitado (sem marcador no mapa): só borda e texto mudam; a superfície não muda. */
   .result[aria-disabled='true'] {
-    background: transparent;
     border-color: var(--s-color-surface-hover);
     color: var(--s-color-content-disabled);
     cursor: not-allowed;
