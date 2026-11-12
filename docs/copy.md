@@ -55,3 +55,5 @@
 
 | Aviso de chuva (ficha com ponto Própria) | Depois de chuva forte, a água pode piorar. Evite o banho e confira o próximo boletim. | Figma 123:2645 (texto do design, não do boletim). Regra em `docs/decisions.md`, sessão 11 |
 | Botões da ficha | Ver detalhes · Compartilhar praia · Como ler e fonte · Boletim original | Figma 123:2440 |
+
+Sessão 11: "Posição aproximada" e "Posição muito aproximada" (linhas acima) **não são mais exibidas** no cartão do ponto (decisão do Caio; o Figma não tem). O chip do boletim passou a "Boletim nº X · emitido em dd/mm/aaaa" (Figma 123:2445).

@@ -57,9 +57,14 @@ const subtitle =
     : neighborhood;
 ---
 
-<section class={`panel panel--${layout}`} aria-label={`Ficha: ${name}`}>
-  {notice === 'outdated' && <OutdatedBanner />}
-  {notice === 'no-result' && <NoResultBanner />}
+<section
+  class={`panel panel--${layout}`}
+  aria-label={`Ficha: ${name}`}
+  tabindex="-1"
+>
+  {/* Desktop: a faixa fica no topo do mapa (index.astro), fora do painel. */}
+  {layout === 'mobile' && notice === 'outdated' && <OutdatedBanner />}
+  {layout === 'mobile' && notice === 'no-result' && <NoResultBanner />}
   <header class="head">
     <div class="titles">
       <div class="top">
@@ -77,7 +82,7 @@ const subtitle =
     </div>
     <div class="bulletin">
       <span class="bulletin-chip">
-        Boletim nº {bulletin.number} · {bulletin.date}
+        Boletim nº {bulletin.number} · emitido em {bulletin.date}
       </span>
       {note && <p class="note">{note}</p>}
     </div>
@@ -151,6 +156,10 @@ const subtitle =
     color: var(--s-color-content-primary);
   }
   /* Desktop: painel lateral. Mobile: folha inferior (sem raio, não há token). */
+  /* Recebe o foco ao abrir (sem anel: não é um controle). */
+  .panel:focus {
+    outline: none;
+  }
   .panel--desktop {
     width: var(--size-panel-width);
     max-width: 100%;

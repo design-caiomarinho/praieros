@@ -260,6 +260,9 @@ const statuses: ChipStatus[] = [
             <code>{s.name}</code>
             <div class="pair">
               <div class="frame frame--desktop">
+                {/* No site, a faixa desktop fica no topo do mapa (fora do painel). */}
+                {s.props.notice === 'outdated' && <OutdatedBanner />}
+                {s.props.notice === 'no-result' && <NoResultBanner />}
                 <BeachPanel
                   {...s.props}
                   bulletin={fakeBulletin}

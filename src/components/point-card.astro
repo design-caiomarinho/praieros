@@ -1,7 +1,6 @@
 ---
 import StatusChip from './status-chip.astro';
 import type { ChipStatus } from '../lib/rules/status.ts';
-import { ACCURACY_LABELS } from '../lib/site/accuracy.ts';
 
 // Cartão de ponto de coleta (Figma, nó 125:3704, estado no-result).
 interface Props {
@@ -10,12 +9,11 @@ interface Props {
   name: string;
   location?: string;
   status: ChipStatus;
-  /** Posição automática no mapa (copy provisória, pendente de componentizar no Figma). */
+  /** Posição automática no mapa. Guardada, mas não exibida (o Figma não tem o aviso). */
   accuracy?: 'approximate' | 'very-approximate' | null;
 }
 
-const { pointId, name, location, status, accuracy = null } = Astro.props;
-const accuracyLabel = accuracy ? ACCURACY_LABELS[accuracy] : null;
+const { pointId, name, location, status } = Astro.props;
 ---
 
 <article class={`card card--${status}`} data-point-id={pointId}>
@@ -25,11 +23,6 @@ const accuracyLabel = accuracy ? ACCURACY_LABELS[accuracy] : null;
       <StatusChip status={status} />
     </div>
     {location && <p class="location">{location}</p>}
-    {accuracyLabel && (
-      <p class:list={['location', 'accuracy', `accuracy--${accuracy}`]}>
-        {accuracyLabel}
-      </p>
-    )}
   </div>
 </article>
 
@@ -86,10 +79,5 @@ const accuracyLabel = accuracy ? ACCURACY_LABELS[accuracy] : null;
     font-size: var(--s-typo-body-medium-size);
     line-height: var(--s-typo-body-medium-line);
     letter-spacing: var(--s-typo-body-medium-spacing);
-  }
-  /* Quanto menos exata a posição, mais claro o aviso (texto provisório, pendente no Figma). */
-  .accuracy--very-approximate {
-    color: var(--s-color-content-warning);
-    font-weight: var(--s-typo-label-medium-weight);
   }
 </style>

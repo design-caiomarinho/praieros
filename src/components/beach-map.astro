@@ -342,6 +342,15 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   :global(.marker[data-label='hidden'] .marker__label) {
     display: none;
   }
+  /* Nome só como dica (hover/foco/seleção em zoom afastado): flutua sob o ícone, fora da
+     área de clique, para não cobrir os pins vizinhos. */
+  :global(.marker[data-label='peek'] .marker__label) {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-top: var(--space-stack-xs);
+    transform: translateX(-50%);
+  }
   /* O clique vale para o marcador todo (ícone, selo e nome), não para o SVG de dentro. */
   :global(.marker > *) {
     pointer-events: none;

@@ -82,8 +82,11 @@ export function setMarkerState(
 }
 
 /** Mostra ou esconde só o texto do nome (sem animação). Ícone, número e selo ficam. */
-export function setLabelVisible(el: HTMLElement, visible: boolean): void {
-  el.dataset.label = visible ? 'shown' : 'hidden';
+export function setLabelVisible(
+  el: HTMLElement,
+  mode: 'shown' | 'peek' | 'hidden',
+): void {
+  el.dataset.label = mode;
 }
 
 /** Deslocamento para ancorar o ponto no centro do círculo (24px) ou na ponta do pino. */

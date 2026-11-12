@@ -5,6 +5,9 @@ export const GROUP_OPEN_MIN_SPREAD_PX = 56;
 /** Zoom máximo ao enquadrar os pontos de uma praia no clique (não aproximar demais). */
 export const GROUP_FIT_MAX_ZOOM = 17;
 
+/** Zoom mínimo ao clicar numa praia de um ponto só (aproxima, nunca afasta). */
+export const POINT_FOCUS_ZOOM = 15;
+
 const TILE_SIZE = 512; // tamanho de tile do MapLibre
 
 function toPixels(p: LngLat, zoom: number): { x: number; y: number } {

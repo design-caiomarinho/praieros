@@ -19,7 +19,11 @@ import {
   isLabelVisible,
   LABEL_MIN_ZOOM,
 } from '../../lib/map/label-visibility.ts';
-import { GROUP_FIT_MAX_ZOOM, isGroupSpread } from '../../lib/map/spread.ts';
+import {
+  GROUP_FIT_MAX_ZOOM,
+  isGroupSpread,
+  POINT_FOCUS_ZOOM,
+} from '../../lib/map/spread.ts';
 import {
   createMarkerElement,
   MARKER_OFFSET,
@@ -134,6 +138,8 @@ export async function createBeachMap(
   let ready = false;
   let selectedSlug: string | null = null;
   let selectedPointId: string | null = null;
+  /** Grupo aberto por clique no marcador agrupado (sem ficha aberta). */
+  let expandedSlug: string | null = null;
   const beaches: BeachEntries[] = [];
 
   function refresh(e: Entry) {
@@ -142,17 +148,21 @@ export async function createBeachMap(
       ...(e.selected ? MARKER_OFFSET.selected : MARKER_OFFSET.normal),
     ]);
     e.el.style.zIndex = e.selected || e.hovered || e.focused ? '1' : '';
+    const zoom = map.getZoom();
+    const visible = isLabelVisible(
+      {
+        zoom,
+        selected: e.selected,
+        focused: e.focused,
+        hovered: e.hovered,
+      },
+      e.labelMinZoom,
+    );
+    // Abaixo do zoom dos nomes, o nome que aparece por hover/foco/seleção é só uma dica
+    // flutuante: não aumenta a área de clique do marcador (não cobre pins vizinhos).
     setLabelVisible(
       e.el,
-      isLabelVisible(
-        {
-          zoom: map.getZoom(),
-          selected: e.selected,
-          focused: e.focused,
-          hovered: e.hovered,
-        },
-        e.labelMinZoom,
-      ),
+      visible ? (zoom >= e.labelMinZoom ? 'shown' : 'peek') : 'hidden',
     );
   }
 
@@ -202,7 +212,8 @@ export async function createBeachMap(
         refresh(b.single);
       }
       if (!b.cluster) continue;
-      const open = isSelected || isGroupSpread(b.points, zoom);
+      const open =
+        isSelected || b.slug === expandedSlug || isGroupSpread(b.points, zoom);
       b.cluster.el.hidden = open;
       if (!open) refresh(b.cluster);
       for (const pin of b.pins) {
@@ -239,7 +250,15 @@ export async function createBeachMap(
           },
           LABEL_MIN_ZOOM,
           m.id,
-          () => onSelect({ slug: g.slug, pointId: m.id }),
+          () => {
+            // Aproxima o ponto (nunca afasta) e abre a ficha.
+            map.easeTo({
+              center: [m.lng, m.lat],
+              zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM),
+              duration: 0,
+            });
+            onSelect({ slug: g.slug, pointId: m.id });
+          },
         );
       } else {
         const statuses = g.points.map((p) => p.baseStatus);
@@ -261,16 +280,15 @@ export async function createBeachMap(
           LABEL_MIN_ZOOM,
           undefined,
           () => {
-            // Enquadra os pontos (sem aproximar demais) e abre o grupo.
-            selectedSlug = g.slug;
-            selectedPointId = null;
+            // Primeiro passo: só enquadra os pontos (sem aproximar demais) e abre o grupo
+            // em pins numerados. A ficha NÃO abre; ela abre ao clicar num pin.
+            expandedSlug = g.slug;
             map.fitBounds(boundsOf(g.points)!, {
               padding: VIEW_PADDING,
               maxZoom: GROUP_FIT_MAX_ZOOM,
               animate: false,
             });
             update();
-            onSelect({ slug: g.slug });
           },
         );
         g.points.forEach((m) => {
@@ -302,6 +320,11 @@ export async function createBeachMap(
   map.on('click', (e) => {
     // Clique em marcador também chega aqui (os marcadores ficam dentro do mapa).
     if ((e.originalEvent.target as Element | null)?.closest('.marker')) return;
+    // Clique no vazio também recolhe o grupo aberto por clique (sem ficha).
+    if (expandedSlug) {
+      expandedSlug = null;
+      update();
+    }
     onClear();
   });
   map.once('idle', () => {

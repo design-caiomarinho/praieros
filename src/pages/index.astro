@@ -3,6 +3,8 @@ import BaseLayout from '../layouts/base-layout.astro';
 import AppHeader from '../components/app-header.astro';
 import BeachMap from '../components/beach-map.astro';
 import BeachPanel from '../components/beach-panel.astro';
+import OutdatedBanner from '../components/outdated-banner.astro';
+import NoResultBanner from '../components/no-result-banner.astro';
 import { loadSalvadorInputs, NOT_BEACHES } from '../lib/site/load-data.ts';
 import { buildSiteModel } from '../lib/site/build-beach-models.ts';
 import { toMarkers } from '../lib/site/map-markers.ts';
@@ -43,6 +45,19 @@ const panels = site.beaches
     <AppHeader />
     <div class="stage" id="stage">
       <BeachMap markers={markers} />
+      <!-- Faixa de aviso da praia aberta (desktop): no topo do mapa, não no painel. -->
+      {panels.map(
+        ({ slug, data }) =>
+          data.notice && (
+            <div class="map-banner" data-banner={slug} hidden>
+              {data.notice === 'outdated' ? (
+                <OutdatedBanner />
+              ) : (
+                <NoResultBanner />
+              )}
+            </div>
+          ),
+      )}
       <!-- Ficha: escondida até um marcador ser escolhido. Desktop e mobile são o mesmo
            conteúdo; o CSS mostra só uma versão. -->
       <aside class="panel" id="panel" aria-label="Ficha da praia" hidden>
@@ -81,8 +96,15 @@ const panels = site.beaches
     });
   }
 
+  function syncBanner(slug: string | null) {
+    document.querySelectorAll<HTMLElement>('[data-banner]').forEach((el) => {
+      el.hidden = el.getAttribute('data-banner') !== slug;
+    });
+  }
+
   function close() {
     panel.hidden = true;
+    syncBanner(null);
     panel.querySelectorAll('[data-beach]').forEach((el) => {
       (el as HTMLElement).hidden = true;
     });
@@ -121,6 +143,7 @@ const panels = site.beaches
       (el as HTMLElement).hidden = el.getAttribute('data-beach') !== slug;
     });
     panel.hidden = false;
+    syncBanner(slug);
     setActivePoint(slug, pointId);
     map.dispatchEvent(
       new CustomEvent('marker-set', { detail: { slug, pointId } }),
@@ -129,7 +152,7 @@ const panels = site.beaches
     if (sameBeach) return;
     [
       ...panel.querySelectorAll<HTMLElement>(
-        `[data-beach="${CSS.escape(slug)}"] [data-panel-close] button`,
+        `[data-beach="${CSS.escape(slug)}"] section.panel`,
       ),
     ]
       .find((b) => b.offsetParent !== null)
@@ -175,6 +198,10 @@ const panels = site.beaches
   .layout-desktop {
     display: none;
   }
+  /* A faixa no topo do mapa só existe no desktop (no mobile fica dentro da folha). */
+  .map-banner {
+    display: none;
+  }
   /* Desktop: painel lateral à direita, com a largura do BeachPanel. */
   @media (min-width: 1024px) {
     .panel {
@@ -193,6 +220,14 @@ const panels = site.beaches
       display: flex;
       flex: 1 0 auto;
       flex-direction: column;
+    }
+    .map-banner:not([hidden]) {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: var(--size-panel-width);
+      z-index: 2;
     }
     .layout-desktop {
       display: flex;

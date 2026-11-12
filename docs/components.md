@@ -29,3 +29,13 @@ Marcador agrupado, selo e pin numerado (sessão 9): derivados do MapMarker por l
 Praia de referência (sessão 10): derivada por lógica, só com componentes e tokens existentes. **Pendentes de componentizar no Figma**: (1) ficha sem nenhum cartão de ponto (BeachPanel com `NoResultBanner` e a nota "Esta praia não consta no boletim nº X."); (2) marcador `no-result` (?) de praia de referência, sem selo nem número (o MapMarker `no-result` já existe, 117:4522). Código: `src/lib/site/map-markers.ts`, `src/lib/site/panel-props.ts`. Na visão geral do catálogo (dev) o pin ◇ é só ferramenta de conferência.
 
 Ficha desktop (sessão 11): **pendentes de componentizar no Figma**: (1) aviso de chuva (caixa `surface-strong` com ícone de 20 px e texto, nó `123:2643`, hoje só dentro da ficha); (2) botão-linha (Button secondary em largura total, texto à esquerda e ícone à direita, nós `125:3427` e `125:3437`); (3) cabeçalho da ficha com borda inferior e chip do boletim em `surface-strong`.
+
+### Resumo: pendentes de componentizar no Figma (para Caio, depois)
+
+1. Aviso de chuva da ficha (nó `123:2643`).
+2. Botão-linha (Button secondary `spread`, nós `125:3427` e `125:3437`).
+3. Cabeçalho da ficha (borda inferior, chip do boletim em `surface-strong`, "emitido em").
+4. Faixa Desatualizado / Sem resultado **no topo do mapa** (desktop): hoje é o mesmo `OutdatedBanner` / `NoResultBanner` (`132:8746`, `125:3786`) posicionado sobre o mapa, fora do painel.
+5. Marcador agrupado, selo com o total, pin numerado e cartão a 50% (sessão 9).
+6. Ficha sem cartões de ponto, para praia de referência (sessão 10).
+7. BeachMap (carregando, erro, zoom) e BeachPanel como um todo (sem nó próprio).
