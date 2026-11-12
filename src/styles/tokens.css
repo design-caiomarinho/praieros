@@ -252,9 +252,7 @@
   --motion-delay-header-line: 304ms;
   --motion-delay-header-line-close: 1078ms;
   --motion-easing-panel: cubic-bezier(0.175, 0.885, 0.32, 0.99);
-  --motion-easing-panel-close: cubic-bezier(0.68, 0.01, 0.825, 0.115);
   --motion-easing-header-line: cubic-bezier(0.64, 0.05, 0.35, 1);
-  --motion-easing-header-line-close: cubic-bezier(0.65, 0, 0.36, 0.95);
   --motion-easing-hover: cubic-bezier(0.42, 0, 0.58, 1);
   --motion-easing-dissolve: cubic-bezier(0.42, 0, 0.58, 1);
 

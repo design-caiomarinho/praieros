@@ -217,7 +217,7 @@ const neighborhoods = suggestNeighborhoods(results);
   .search {
     transform: translateY(100%);
     transition: transform var(--motion-duration-panel)
-      var(--motion-easing-panel-close);
+      var(--motion-easing-panel);
   }
   .search[data-open] {
     transform: none;
@@ -735,7 +735,7 @@ const neighborhoods = suggestNeighborhoods(results);
         return halfwayTime(css('--motion-easing-panel'));
       },
       get close() {
-        return 1 - halfwayTime(css('--motion-easing-panel'));
+        return halfwayTime(css('--motion-easing-panel')); // mesma curva na saída
       },
     };
     function css(name: string) {

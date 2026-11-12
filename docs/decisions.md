@@ -533,3 +533,5 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Câmera:** usa a curva e a duração do painel (agora 1500 ms, com a leve ultrapassagem).
 
 - **Ajuste (Caio): sem o "bounce" final.** O último ponto de controle da curva do painel passa de 1.1 para 0.99: `0.175, 0.885, 0.32, 0.99` (não ultrapassa mais 1). A curva de saída espelhada vira `0.68, 0.01, 0.825, 0.115`. Substitui a ultrapassagem descrita acima.
+
+- **Ajuste (Caio): a saída usa a mesma curva, sem espelhar.** Painel e camada azul saem com `0.175, 0.885, 0.32, 0.99`, e a linha do cabeçalho com a mesma curva da entrada (`0.64, 0.05, 0.35, 1`). Os tokens `easing-panel-close` e `easing-header-line-close` foram removidos; atrasos e durações do fechamento seguem como no inverso (atraso 0; linha com atraso 1078 ms). O botão de busca volta a `filled` no mesmo instante de 50% da curva (~12% da duração, ≈ 180 ms depois de fechar). Substitui as curvas espelhadas citadas antes.

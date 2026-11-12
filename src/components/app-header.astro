@@ -71,8 +71,7 @@ const { homeHref = '/', infoHref = '#fonte', searchId } = Astro.props;
     background: var(--s-color-border-default);
     clip-path: inset(0);
     transition: clip-path var(--motion-duration-header-line)
-      var(--motion-easing-header-line-close)
-      var(--motion-delay-header-line-close);
+      var(--motion-easing-header-line) var(--motion-delay-header-line-close);
   }
   .header:has([aria-expanded='true']):not([data-source-open])::after {
     clip-path: inset(
