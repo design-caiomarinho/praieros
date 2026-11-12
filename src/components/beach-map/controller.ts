@@ -51,10 +51,11 @@ export interface BeachMapOptions {
   /** `ready` quando o mapa terminou de desenhar; `error` se estilo ou tiles falharem. */
   onState(state: 'loading' | 'ready' | 'error'): void;
   /**
-   * Largura (px) da parte direita do mapa coberta por um painel que sobrepõe (a busca no
-   * desktop). Lida a cada movimento de câmera: o enquadramento usa só a área visível à esquerda.
+   * Parte do mapa coberta por um painel que sobrepõe (px): à direita no desktop (sidebar) ou
+   * embaixo no mobile (folha). Lida a cada movimento de câmera: o enquadramento usa só a área
+   * visível.
    */
-  getCoveredRight?(): number;
+  getCovered?(): { right: number; bottom: number };
   /** Duração e curva dos movimentos de câmera (tokens do painel, lidos por quem chama). */
   getMotion?(): { duration: number; easing: (t: number) => number };
 }
@@ -66,11 +67,8 @@ export interface BeachMapController {
   fit(): void;
   /** Enquadra a praia como no clique no marcador (abrir a ficha é com quem chama). */
   focusBeach(slug: string): void;
-  /**
-   * Enquadra todas as praias dadas (ex.: as de um bairro) para mostrar de onde se trata.
-   * `coveredBottom` = altura (px) do painel que cobre a parte de baixo do mapa (folha mobile).
-   */
-  fitBeaches(slugs: readonly string[], coveredBottom?: number): void;
+  /** Enquadra todas as praias dadas (ex.: as de um bairro) para mostrar de onde se trata. */
+  fitBeaches(slugs: readonly string[]): void;
   /** Seleciona a praia (e, se o grupo estiver aberto, um ponto). Praia selecionada fica aberta em qualquer zoom. */
   select(slug: string | null, pointId?: string | null): void;
   /**
@@ -112,16 +110,22 @@ export async function createBeachMap(
 ): Promise<BeachMapController | null> {
   const { container, markers, palette, onSelect, onClear, onState } = opts;
   onState('loading');
-  const coveredRight = () => opts.getCoveredRight?.() ?? 0;
-  /** Folga do enquadramento; à direita soma o que o painel sobreposto cobre. */
-  const pad = () => ({
-    top: VIEW_PADDING,
-    left: VIEW_PADDING,
-    bottom: VIEW_PADDING,
-    right: VIEW_PADDING + coveredRight(),
-  });
+  const covered = () => opts.getCovered?.() ?? { right: 0, bottom: 0 };
+  /** Folga do enquadramento; soma o que o painel sobreposto cobre (direita ou embaixo). */
+  const pad = () => {
+    const c = covered();
+    return {
+      top: VIEW_PADDING,
+      left: VIEW_PADDING,
+      bottom: VIEW_PADDING + c.bottom,
+      right: VIEW_PADDING + c.right,
+    };
+  };
   /** Centro da área visível = centro do mapa menos metade do que está coberto. */
-  const shift = (): [number, number] => [-coveredRight() / 2, 0];
+  const shift = (): [number, number] => {
+    const c = covered();
+    return [-c.right / 2, -c.bottom / 2];
+  };
   /** Movimento suave da câmera: duração e curva do painel (sem animação com movimento reduzido). */
   const motion = () =>
     opts.getMotion?.() ?? { duration: 0, easing: (t: number) => t };
@@ -480,17 +484,14 @@ export async function createBeachMap(
       });
       update();
     },
-    fitBeaches(slugs, coveredBottom = 0) {
+    fitBeaches(slugs) {
       const points = beaches
         .filter((b) => slugs.includes(b.slug))
         .flatMap((b) => b.points);
       const bounds = boundsOf(points);
       if (!bounds) return; // nenhuma praia do grupo está no mapa: não mexe na câmera
       map.fitBounds(bounds, {
-        padding: {
-          ...pad(),
-          bottom: VIEW_PADDING + coveredBottom,
-        },
+        padding: pad(),
         maxZoom: GROUP_FIT_MAX_ZOOM,
         ...motion(),
       });
@@ -507,11 +508,20 @@ export async function createBeachMap(
       const m =
         entry.points.find((p) => p.id === selectedPointId) ?? entry.points[0];
       if (!m) return;
-      const covered = coveredRight();
-      if (covered <= 0) return;
-      const x = map.project([m.lng, m.lat]).x;
+      // Já há um movimento de câmera em curso (clique no pin, escolha na busca, enquadramento):
+      // ele já conta com o painel; este não o interrompe.
+      if (map.isMoving()) return;
+      const c = covered();
+      if (c.right <= 0 && c.bottom <= 0) return;
+      const { x, y } = map.project([m.lng, m.lat]);
       const edge = VIEW_PADDING / 2;
-      if (x >= edge && x <= container.clientWidth - covered - edge) return; // já aparece
+      if (
+        x >= edge &&
+        x <= container.clientWidth - c.right - edge &&
+        y >= edge &&
+        y <= container.clientHeight - c.bottom - edge
+      )
+        return; // já aparece
       map.easeTo({
         center: [m.lng, m.lat],
         offset: shift(),

@@ -555,3 +555,9 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Clique no terreno do mapa:** fecha o painel aberto (ficha, Classificação ou Fonte) e desmarca o pin de uma vez (antes eram dois cliques). Com a busca aberta, o clique não a fecha.
 - **Aviso "Carregando o mapa":** entra como o nome do pin (opacidade 0 → 1, de cima para baixo −8px → 0, 1000 ms, `easing-pin-label`); sai com o inverso, mesma curva e tempo. Sem animação com movimento reduzido.
 - **Troca círculo ↔ pino:** acelerada de 500 para 250 ms (`duration-pin-select`, curva `easing-pin-hover`); o hover do ícone continua em 500 ms.
+
+## Sessão 23h: câmera do mapa no mobile (Caio)
+
+- A câmera passa a considerar o que o painel cobre nos dois eixos (`getCovered`: direita no desktop, embaixo no mobile = 60% do palco, igual à altura da folha em `index.astro`). Enquadrar, aproximar, escolher ponto pelo cartão e enquadrar bairro usam só a área visível (folga + deslocamento do centro).
+- `map-fit` deixou de medir a folha pelo DOM (ela começa fora da tela e dava medida errada na abertura): usa a mesma regra dos outros movimentos.
+- `revealSelected` (sidebar abrindo) não interrompe um movimento de câmera já em curso: antes ele sobrescrevia o enquadramento da escolha na busca, deixando o pin fora do lugar.

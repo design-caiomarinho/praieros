@@ -118,17 +118,22 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   // algum painel está aberto, a câmera usa só a área visível à esquerda (largura do painel).
   const desktop = window.matchMedia('(min-width: 1024px)');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const coveredRight = () =>
-    desktop.matches &&
-    ['search', 'panel', 'source-slot'].some(
+  // Mobile: a folha inferior cobre 60% do palco (altura definida em index.astro).
+  const SHEET_RATIO = 0.6;
+  const covered = () => {
+    const open = ['search', 'panel', 'source-slot'].some(
       (id) => !document.getElementById(id)?.hidden,
-    )
-      ? parseFloat(
-          getComputedStyle(document.documentElement).getPropertyValue(
-            '--size-panel-width',
-          ),
-        ) || 0
-      : 0;
+    );
+    if (!open) return { right: 0, bottom: 0 };
+    if (!desktop.matches)
+      return { right: 0, bottom: root.clientHeight * SHEET_RATIO };
+    const w = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        '--size-panel-width',
+      ),
+    );
+    return { right: w || 0, bottom: 0 };
+  };
   // Movimentos da câmera: mesma duração e curva do painel (sem animação com movimento reduzido).
   const motion = () => {
     const css = getComputedStyle(document.documentElement);
@@ -186,7 +191,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
       onClear: () => {
         root.dispatchEvent(new CustomEvent('map-clear', { bubbles: true }));
       },
-      getCoveredRight: coveredRight,
+      getCovered: covered,
       getMotion: motion,
       onState: (s) => {
         show(s);
@@ -218,21 +223,10 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     const { slug } = (e as CustomEvent<{ slug: string }>).detail;
     controller?.focusBeach(slug);
   });
-  // Bairro escolhido na busca: enquadra as praias dele. No mobile a folha da busca cobre a parte
-  // de baixo do mapa, então o enquadramento ganha essa folga embaixo.
+  // Bairro escolhido na busca: enquadra as praias dele na área visível (sem o painel por cima).
   root.addEventListener('map-fit', (e) => {
     const { slugs } = (e as CustomEvent<{ slugs: string[] }>).detail;
-    const m = root.getBoundingClientRect();
-    // Folha aberta (busca ou ficha) que cobre a parte de baixo do mapa, de lado a lado.
-    const covered = ['search', 'panel'].reduce((max, id) => {
-      const el = document.getElementById(id);
-      if (!el || el.hidden) return max;
-      const s = el.getBoundingClientRect();
-      return s.width >= m.width - 1 && s.top > m.top
-        ? Math.max(max, m.bottom - s.top)
-        : max;
-    }, 0);
-    controller?.fitBeaches(slugs, covered);
+    controller?.fitBeaches(slugs);
   });
   root.addEventListener('marker-set', (e) => {
     const d = (
