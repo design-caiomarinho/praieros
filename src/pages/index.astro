@@ -146,6 +146,7 @@ const sourceBulletin = site.current
 
 <script>
   import { halfwayTime } from '../lib/map/cubic-bezier.ts';
+  import { cssTimeMs } from '../lib/map/css-time.ts';
   import { initSidebarShell } from '../lib/site/sidebar-shell.ts';
 
   initSidebarShell();
@@ -177,7 +178,7 @@ const sourceBulletin = site.current
    *  entra daí, sem esperar o painel terminar de chegar. */
   function panelHalfway(): number {
     const cs = getComputedStyle(document.documentElement);
-    const n = (name: string) => parseFloat(cs.getPropertyValue(name)) || 0;
+    const n = (name: string) => cssTimeMs(cs.getPropertyValue(name));
     return (
       n('--motion-delay-panel') +
       halfwayTime(cs.getPropertyValue('--motion-easing-panel')) *
@@ -221,7 +222,7 @@ const sourceBulletin = site.current
       } else if (!el.hasAttribute('data-leaving')) {
         el.setAttribute('data-leaving', '');
         const ms =
-          parseFloat(
+          cssTimeMs(
             getComputedStyle(el).getPropertyValue(
               '--motion-duration-pin-label',
             ),

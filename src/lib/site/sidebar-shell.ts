@@ -12,6 +12,7 @@
 // No mobile é o mesmo sidebar, na vertical (folha inferior): só o CSS muda.
 
 import { halfwayTime } from '../map/cubic-bezier.ts';
+import { cssTimeMs } from '../map/css-time.ts';
 
 const PANE_IDS = ['search', 'panel', 'source-slot'];
 
@@ -24,7 +25,7 @@ export function initSidebarShell(): void {
   );
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const ms = (name: string) =>
-    parseFloat(getComputedStyle(shell).getPropertyValue(name)) || 0;
+    cssTimeMs(getComputedStyle(shell).getPropertyValue(name));
 
   const infoButton = document.querySelector<HTMLElement>(
     'header a[href="#fonte"]',

@@ -95,6 +95,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   } from './beach-map/controller.ts';
   import type { MarkerData } from '../lib/site/map-markers.ts';
   import { parseCubicBezier } from '../lib/map/cubic-bezier.ts';
+  import { cssTimeMs } from '../lib/map/css-time.ts';
 
   const root = document.getElementById('beach-map')!;
   const canvas = document.getElementById('map-canvas')!;
@@ -142,7 +143,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     return {
       duration: reduceMotion.matches
         ? 0
-        : parseFloat(css.getPropertyValue('--motion-duration-panel')) || 0,
+        : cssTimeMs(css.getPropertyValue('--motion-duration-panel')),
       easing: parseCubicBezier(css.getPropertyValue('--motion-easing-panel')),
     };
   };
@@ -175,7 +176,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
       }
       return;
     }
-    const finish = parseFloat(token('--motion-duration-hover')) || 0;
+    const finish = cssTimeMs(token('--motion-duration-hover'));
     const progress = getComputedStyle(fill).transform;
     fill.style.animation = 'none';
     fill.style.transform = progress;
@@ -192,7 +193,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
           loading.hidden = true;
           loading.removeAttribute('data-leaving');
         },
-        parseFloat(token('--motion-duration-pin-label')) || 0,
+        cssTimeMs(token('--motion-duration-pin-label')),
       );
     }, finish);
   }

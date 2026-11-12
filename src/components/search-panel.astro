@@ -568,6 +568,7 @@ const neighborhoods = suggestNeighborhoods(results);
 <script>
   import { queryTokens, searchBeaches } from '../lib/search/search.ts';
   import { halfwayTime } from '../lib/map/cubic-bezier.ts';
+  import { cssTimeMs } from '../lib/map/css-time.ts';
 
   const root = document.querySelector<HTMLElement>('.search');
   if (root) init(root);
@@ -685,7 +686,7 @@ const neighborhoods = suggestNeighborhoods(results);
     // O estado para leitores de tela (aria-expanded) muda na hora.
     let engageTimer: number | undefined;
     function motionMs(name: string) {
-      return parseFloat(getComputedStyle(root).getPropertyValue(name)) || 0;
+      return cssTimeMs(getComputedStyle(root).getPropertyValue(name));
     }
     function setEngaged(on: boolean, after: number) {
       window.clearTimeout(engageTimer);

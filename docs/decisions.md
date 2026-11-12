@@ -599,3 +599,8 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Base:** `astro.config.mjs` usa `base: '/praieros'` só quando `GITHUB_ACTIONS` está definido; em desenvolvimento e em build local o site continua na raiz. Favicon e link do logotipo usam `BASE_URL`; as fontes (`/fonts/…`) o Vite já prefixa.
 - **Antes de divulgar (pendências do CLAUDE.md):** ler os Termos do OpenFreeMap e confirmar os termos de uso do site do Inema.
 - **Ativação:** precisa ligar em Settings → Pages → Source: GitHub Actions (o token do workflow não consegue ativar sozinho). O repositório parece privado (a API pública devolve 404); Pages em repositório privado exige plano pago.
+
+### Sessão 24b: auditoria do build de produção
+
+- **Causa dos bugs só no GitHub Pages:** o CSS do build é minificado e reescreve `300ms` como `.3s` e `1500ms` como `1.5s`. O JS lia os tokens de tempo com `parseFloat` (leitura em ms) e passou a ver 0,3 ms e 1,5 ms: câmera instantânea, faixa de carregamento sem etapas (sem subida nem zoom out), atrasos do banner, fechamento do painel, dissolve e botão "engajado" todos sem espera.
+- **Correção:** `cssTimeMs` (`src/lib/map/css-time.ts`, com testes) lê `ms`, `s` e número puro; todos os pontos do JS que liam tokens de tempo passam a usá-lo. **Regra:** nunca `parseFloat` em token de tempo; testar animações também no build (`npm run build` + `astro preview`), não só no `astro dev`.
