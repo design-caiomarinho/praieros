@@ -183,6 +183,18 @@ const sourceBulletin = site.current
       el.removeAttribute('data-timer');
       if (el === next) {
         el.removeAttribute('data-leaving');
+        if (el.hidden) {
+          // Sidebar ainda fechado: a faixa espera o painel chegar (atraso + duração do painel).
+          const opening = !document
+            .getElementById('sidebar')
+            ?.hasAttribute('data-open');
+          el.style.setProperty(
+            '--banner-delay',
+            opening
+              ? 'calc(var(--motion-delay-panel) + var(--motion-duration-panel))'
+              : '0ms',
+          );
+        }
         el.hidden = false;
       } else if (el.hidden) {
         el.removeAttribute('data-leaving');
@@ -548,9 +560,11 @@ const sourceBulletin = site.current
      o inverso. */
   .map-banner > :global(*) {
     animation: banner-in var(--motion-duration-pin-label)
-      var(--motion-easing-pin-label) both;
+      var(--motion-easing-pin-label) var(--banner-delay, 0ms) both;
   }
+  /* Saída: começa na hora, antes do painel (que tem os próprios atrasos de saída). */
   .map-banner[data-leaving] > :global(*) {
+    animation-delay: 0ms;
     animation-direction: reverse;
   }
   @keyframes banner-in {
