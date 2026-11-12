@@ -252,6 +252,7 @@ const sourceBulletin = site.current
     // Clique no mapa vazio: fecha o painel aberto (ficha, Classificação ou Fonte) e tira a
     // marca do pin, de uma vez (pedido de Caio).
     const source = document.getElementById('source-slot')!;
+    document.dispatchEvent(new CustomEvent('search-outside'));
     if (!source.hidden) {
       source.hidden = true;
       panelBeforeSource = false;

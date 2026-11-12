@@ -751,6 +751,12 @@ const neighborhoods = suggestNeighborhoods(results);
     // Troca de painel: a busca sai na hora (sem animar), para nunca haver dois painéis lado a lado.
     document.addEventListener('marker-select', () => setOpen(false, false));
     document.addEventListener('search-dismiss', () => setOpen(false, false));
+    // Clique no mapa vazio: fecha a busca com a saída animada (sem devolver o foco ao botão).
+    document.addEventListener('search-outside', () => {
+      if (root.hidden) return;
+      setOpen(false);
+      document.dispatchEvent(new CustomEvent('search-close'));
+    });
 
     // Voltar da ficha aberta pela busca: reabre a busca sem limpar o que estava nela.
     let lastChosen = '';

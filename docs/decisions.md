@@ -552,7 +552,7 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 
 ## Sessão 23g: clique no terreno, carregando e troca do pin mais rápida (Caio)
 
-- **Clique no terreno do mapa:** fecha o painel aberto (ficha, Classificação ou Fonte) e desmarca o pin de uma vez (antes eram dois cliques). Com a busca aberta, o clique não a fecha.
+- **Clique no terreno do mapa:** fecha o painel aberto (ficha, Classificação ou Fonte) e desmarca o pin de uma vez (antes eram dois cliques). Com a busca aberta, o clique também a fecha (saída animada, sem devolver o foco ao botão).
 - **Aviso "Carregando o mapa":** entra como o nome do pin (opacidade 0 → 1, de cima para baixo −8px → 0, 1000 ms, `easing-pin-label`); sai com o inverso, mesma curva e tempo. Sem animação com movimento reduzido.
 - **Troca círculo ↔ pino:** acelerada de 500 para 250 ms (`duration-pin-select`, curva `easing-pin-hover`); o hover do ícone continua em 500 ms.
 
@@ -570,3 +570,5 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 ## Sessão 23j: cartões de ponto, interação invertida (Caio)
 
 - Na ficha com vários pontos, o cartão do pin escolhido fica a 50% e sem hover (cursor padrão): não há o que escolher nele. Os outros ficam a 100%, com hover animado (300 ms, tokens de hover; opacidade e fundo). Antes era o contrário (os outros a 80%). Interpretação da frase de Caio: "quem tiver selecionado" = o ponto escolhido.
+
+- (Sessão 23j, Caio) Clique no terreno do mapa com a busca aberta também a fecha, como os outros painéis (evento `search-outside`; saída animada).
