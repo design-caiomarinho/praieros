@@ -40,6 +40,8 @@ maplibregl.setWorkerUrl(workerUrl);
 // Instância pública do OpenFreeMap, estilo Bright (docs/decisions.md).
 const STYLE_URL = 'https://tiles.openfreemap.org/styles/bright';
 const VIEW_PADDING = 64;
+/** Abertura: o mapa nasce 1 nível de zoom acima do enquadramento (metade da área) e faz zoom out até ele. */
+const INTRO_ZOOM = 1;
 
 export interface BeachMapOptions {
   container: HTMLElement;
@@ -164,6 +166,7 @@ export async function createBeachMap(
           zoom: SALVADOR_FALLBACK.zoom,
         }),
   });
+  if (bounds) map.jumpTo({ zoom: map.getZoom() + INTRO_ZOOM });
   // Atribuição visível (OpenStreetMap e OpenMapTiles vêm do estilo), à esquerda para não
   // colidir com os controles de zoom.
   map.addControl(

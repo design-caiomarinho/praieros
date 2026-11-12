@@ -249,6 +249,7 @@
   --motion-duration-dissolve: 150ms;
   --motion-duration-pin-label: 1000ms;
   --motion-duration-pin-select: 250ms;
+  --motion-duration-load-progress: 2500ms;
   --motion-duration-pin-hover: 500ms;
   --motion-delay-panel: 300ms;
   --motion-delay-panel-surface: 200ms;

@@ -25,11 +25,13 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     aria-label="Mapa das praias"
   ></div>
 
-  <div class="loading" id="map-loading" role="status">
-    <span class="loading__icon">
-      <Icon name="spinner" />
-    </span>
-    <span class="loading__text">Carregando o mapa…</span>
+  <div
+    class="loadbar"
+    id="map-loading"
+    role="status"
+    aria-label="Carregando o mapa"
+  >
+    <span class="loadbar__fill"></span>
   </div>
 
   <div class="error" id="map-error" hidden>
@@ -155,25 +157,46 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   let selectedSlug: string | null = null;
   let selectedPointId: string | null = null;
 
+  // Faixa de carregamento sob a navbar: o azul avança da esquerda para a direita e, com o mapa
+  // pronto, completa; ao chegar ao fim some e o mapa faz o zoom out até o enquadramento.
+  const fill = loading.querySelector<HTMLElement>('.loadbar__fill')!;
   let loadingTimer: number | undefined;
+  function resetBar() {
+    window.clearTimeout(loadingTimer);
+    fill.removeAttribute('style');
+    loading.removeAttribute('data-leaving');
+  }
+  function finishBar(zoomOut: boolean) {
+    if (reduceMotion.matches || !zoomOut) {
+      loading.hidden = true;
+      if (zoomOut) controller?.fit();
+      return;
+    }
+    const finish = parseFloat(token('--motion-duration-hover')) || 0;
+    const progress = getComputedStyle(fill).transform;
+    fill.style.animation = 'none';
+    fill.style.transform = progress;
+    void fill.offsetWidth;
+    fill.style.transition = `transform ${finish}ms var(--motion-easing-hover)`;
+    fill.style.transform = 'scaleX(1)';
+    loadingTimer = window.setTimeout(() => {
+      loading.setAttribute('data-leaving', '');
+      controller?.fit(); // zoom out: 1 nível acima → enquadramento, com o tempo e a curva da câmera
+      loadingTimer = window.setTimeout(() => {
+        loading.hidden = true;
+        loading.removeAttribute('data-leaving');
+      }, finish);
+    }, finish);
+  }
   function show(state: 'loading' | 'ready' | 'error') {
     root.toggleAttribute('data-ready', state === 'ready');
-    const showLoading = state === 'loading';
-    window.clearTimeout(loadingTimer);
-    if (showLoading) {
-      loading.removeAttribute('data-leaving');
+    if (state === 'loading') {
+      resetBar();
       loading.hidden = false;
-    } else if (!loading.hidden && !reduceMotion.matches) {
-      // Sai com a mesma animação da entrada, ao contrário (mesma curva e tempo).
-      loading.setAttribute('data-leaving', '');
-      loadingTimer = window.setTimeout(
-        () => {
-          loading.hidden = true;
-          loading.removeAttribute('data-leaving');
-        },
-        parseFloat(token('--motion-duration-pin-label')) || 0,
-      );
-    } else loading.hidden = true;
+    } else if (!loading.hidden) {
+      window.clearTimeout(loadingTimer);
+      finishBar(state === 'ready');
+    }
     errorBox.hidden = state !== 'error';
     zoom.hidden = state === 'error';
   }
@@ -285,64 +308,48 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     opacity: 1;
   }
 
-  /* Carregando (Figma 117:4900): pílula no topo, centralizada. */
-  .loading {
+  /* Carregando: faixa de ponta a ponta sob a navbar; o azul avança da esquerda para a direita
+     (sem fim até o mapa ficar pronto: chega a 90% e espera) e some ao completar. */
+  .loadbar {
     position: absolute;
-    top: var(--space-inset-lg);
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    background: var(--s-color-surface-default);
-    /* Aparece como o nome do pin (Figma 204:7892): opacidade 0 → 1 e de cima para baixo (-8px →
-       0), 1000 ms na curva do nome; ao sair, o inverso com a mesma curva e tempo. */
-    animation: loading-in var(--motion-duration-pin-label)
-      var(--motion-easing-pin-label) both;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    height: var(--primitives-spacing-4);
+    transition: opacity var(--motion-duration-hover) var(--motion-easing-hover);
   }
-  .loading[data-leaving] {
-    animation-direction: reverse;
+  .loadbar[data-leaving] {
+    opacity: 0;
   }
-  @keyframes loading-in {
-    from {
-      opacity: 0;
-      translate: 0 calc(var(--space-stack-xs) * -1);
-    }
+  .loadbar__fill {
+    display: block;
+    height: 100%;
+    background: var(--s-color-surface-accent-default);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: loadbar-progress var(--motion-duration-load-progress)
+      var(--motion-easing-panel) forwards;
+  }
+  @keyframes loadbar-progress {
     to {
-      opacity: 1;
-      translate: 0 0;
+      transform: scaleX(0.9);
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .loading {
+    .loadbar,
+    .loadbar__fill {
+      transition: none;
+    }
+    .loadbar__fill {
       animation: none;
+      transform: scaleX(0.9);
     }
   }
-  .loading[hidden],
+  .loadbar[hidden],
   .error[hidden],
   .zoom[hidden] {
     display: none;
-  }
-  .loading__icon {
-    display: flex;
-    padding: var(--space-inset-md);
-    background: var(--s-color-surface-accent-default);
-    color: var(--s-color-content-on-accent);
-  }
-  .loading__text {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    height: 56px;
-    padding: var(--space-inset-sm) var(--space-inset-md);
-    border: var(--border-width-default) solid var(--s-color-border-default);
-    border-left: 0;
-    color: var(--s-color-content-primary);
-    font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--s-typo-body-medium-weight);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
-    white-space: nowrap;
   }
 
   /* Indisponível (Figma 117:5012): bloco centralizado sobre o fundo neutro. */

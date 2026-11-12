@@ -45,6 +45,10 @@
         "$type": "duration",
         "$value": 250
       },
+      "load-progress": {
+        "$type": "duration",
+        "$value": 2500
+      },
       "pin-hover": {
         "$type": "duration",
         "$value": 500
