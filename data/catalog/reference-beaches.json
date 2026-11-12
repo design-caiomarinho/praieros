@@ -9,7 +9,19 @@
       "lat": -13.011314123353797,
       "lng": -38.497019196361066,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Rio Vemelho",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14262204,
+        "osmName": "Rio Vemelho",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia da Preguiça",
@@ -18,7 +30,19 @@
       "lat": -12.978779338938576,
       "lng": -38.5177365878596,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Comércio",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14331567,
+        "osmName": "Comércio",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia da Ribeira",
@@ -27,7 +51,19 @@
       "lat": -12.911034910917346,
       "lng": -38.49784220294175,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Ribeira",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14438357,
+        "osmName": "Ribeira",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia da Sereia",
@@ -36,7 +72,19 @@
       "lat": -13.011333251744983,
       "lng": -38.50400875901295,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Ondina",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14281616,
+        "osmName": "Ondina",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia de Inema",
@@ -45,7 +93,10 @@
       "lat": -12.811750548534272,
       "lng": -38.49165958555633,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodNote": "a posição da praia não cai em nenhum polígono de bairro do OSM"
     },
     {
       "name": "Praia de Ipitanga",
@@ -54,7 +105,19 @@
       "lat": -12.911371521770599,
       "lng": -38.30499516478397,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Stella Maris",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14235188,
+        "osmName": "Stella Maris",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia de Jaguaribe",
@@ -63,7 +126,19 @@
       "lat": -12.957297846922947,
       "lng": -38.389566701738524,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Piatã",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14227469,
+        "osmName": "Piatã",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia de Pedra do Sal",
@@ -72,7 +147,19 @@
       "lat": -12.952897212433825,
       "lng": -38.34712675113649,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Itapuã",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14230801,
+        "osmName": "Itapuã",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia de Santana",
@@ -81,7 +168,19 @@
       "lat": -13.011778887204448,
       "lng": -38.49251169537807,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Rio Vemelho",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14262204,
+        "osmName": "Rio Vemelho",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia Do Alvejado",
@@ -90,7 +189,10 @@
       "lat": -12.900316379564956,
       "lng": -38.49112715634157,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodNote": "a posição da praia não cai em nenhum polígono de bairro do OSM"
     },
     {
       "name": "Praia do Paredão",
@@ -99,7 +201,19 @@
       "lat": -12.937544831702356,
       "lng": -38.50759900761565,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Roma",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14368122,
+        "osmName": "Roma",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia dos Artistas",
@@ -108,7 +222,10 @@
       "lat": -12.975927712082953,
       "lng": -38.41787791968652,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodNote": "a posição da praia não cai em nenhum polígono de bairro do OSM"
     },
     {
       "name": "Praia Jardim de Alah",
@@ -117,7 +234,10 @@
       "lat": -12.998040796332095,
       "lng": -38.4433419648862,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": null,
+      "neighborhoodSource": null,
+      "neighborhoodNote": "a posição da praia não cai em nenhum polígono de bairro do OSM"
     },
     {
       "name": "Praia Terceira Ponte",
@@ -126,7 +246,19 @@
       "lat": -12.960958797411877,
       "lng": -38.39631472148164,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Piatã",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14227469,
+        "osmName": "Piatã",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Prainha da Fonte do Boi",
@@ -135,7 +267,19 @@
       "lat": -13.0157081,
       "lng": -38.485199,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Rio Vemelho",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14262204,
+        "osmName": "Rio Vemelho",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Prainha do Solar do União",
@@ -144,7 +288,19 @@
       "lat": -12.981316685941778,
       "lng": -38.519883861050445,
       "source": "osm",
-      "fetchedAt": "2026-11-12"
+      "fetchedAt": "2026-11-12",
+      "neighborhood": "Centro",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14320001,
+        "osmName": "Centro",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     }
   ]
 }
