@@ -57,7 +57,7 @@ const neighborhoods = suggestNeighborhoods(results);
     <InputText label="Buscar praia" name="q" />
   </header>
 
-  <div class="body">
+  <div class="body" data-scroll-fade>
     <div class="found" data-found hidden>
       <p class="count" aria-hidden="true">
         <strong data-count-n></strong>
@@ -244,6 +244,7 @@ const neighborhoods = suggestNeighborhoods(results);
     flex: 1 1 auto;
     flex-direction: column;
     gap: var(--space-stack-xl);
+    --fade-gap: var(--space-stack-xl);
     min-height: 0;
     overflow-y: auto;
     padding: var(--space-inset-lg);

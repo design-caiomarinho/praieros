@@ -91,7 +91,13 @@ const sourceBulletin = site.current
       )}
       <!-- Ficha: escondida até um marcador ser escolhido. Desktop e mobile são o mesmo
            conteúdo; o CSS mostra só uma versão. -->
-      <aside class="panel" id="panel" aria-label="Ficha da praia" hidden>
+      <aside
+        class="panel"
+        id="panel"
+        aria-label="Ficha da praia"
+        data-scroll-fade
+        hidden
+      >
         {panels.map(({ slug, data, classification }) => (
           <div data-beach={slug} hidden>
             <div class="layout-desktop">
@@ -125,7 +131,7 @@ const sourceBulletin = site.current
         />
       </div>
       <!-- Fonte e como ler: só desktop; ocupa o lugar da ficha/busca enquanto está aberta. -->
-      <div class="source-slot" id="source-slot" hidden>
+      <div class="source-slot" id="source-slot" data-scroll-fade hidden>
         <SourcePanel bulletin={sourceBulletin} />
       </div>
     </div>
@@ -133,6 +139,9 @@ const sourceBulletin = site.current
 </BaseLayout>
 
 <script>
+  import { initScrollFade } from '../lib/ui/scroll-fade.ts';
+
+  initScrollFade();
   const map = document.getElementById('beach-map')!;
   const panel = document.getElementById('panel')!;
   let lastSlug: string | null = null;

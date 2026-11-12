@@ -32,3 +32,4 @@ Tabela a preencher quando o motion for implementado:
 ### Pendente de motion
 
 - **Skeleton de carregamento da busca mobile** (sessão 18): fora do escopo da sessão; implementar na fase de motion, sem inventar valores.
+- **Degradê de rolagem (sessão 18)**: aparecer e sumir com suavidade (fade de opacidade). Hoje liga e desliga direto; falta duração e curva do Figma, e comportamento com movimento reduzido.
