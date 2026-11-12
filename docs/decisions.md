@@ -630,3 +630,5 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - Ao soltar: mais de 6% da altura acima do ponto de partida → completa até a tela toda; mais de 6% abaixo → volta aos 60%; menos que isso → mantém o estado; folha abaixo de 45% do palco → fecha o painel (mesmo efeito do X).
 - O resto do movimento é animado (curva e tempo do painel) e a rolagem do conteúdo só libera quando termina (`data-moving`), subindo ou descendo.
 - Limiares são constantes em `sidebar-sheet.ts` (`INTENT`, `DISMISS_BELOW`); valores assumidos, ajustáveis.
+
+Correção (25b): ao fechar soltando muito abaixo, a folha fecha na altura em que foi solta (a altura não anima de volta aos 60%, o que embolava com a saída). O tamanho inicial volta quando o sidebar sai de cena.

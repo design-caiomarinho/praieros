@@ -144,6 +144,27 @@ export function initSidebarSheet(): void {
     else if (d.startH - h > H * INTENT) target = 'collapsed';
     else target = d.startExpanded ? 'expanded' : 'collapsed';
 
+    if (target === 'dismiss') {
+      // Fecha na altura em que foi solta (sem animar a altura de volta aos 60%, o que embolava com
+      // a saída). O tamanho inicial só volta depois que o sidebar sai de cena (ou reabre).
+      expanded = false;
+      shell!.removeAttribute('data-expanded');
+      label();
+      const restore = new MutationObserver(() => {
+        if (shell!.hasAttribute('data-active')) return;
+        restore.disconnect();
+        shell!.style.height = '';
+        shell!.style.transition = '';
+        settle();
+      });
+      restore.observe(shell!, {
+        attributes: true,
+        attributeFilter: ['data-active', 'data-open'],
+      });
+      dismiss();
+      return;
+    }
+
     // Devolve a transição e troca o estilo inline pelo estado final: a altura anima daqui até lá.
     shell!.style.transition = '';
     shell!.style.height = `${h}px`;
@@ -152,12 +173,6 @@ export function initSidebarSheet(): void {
     expanded = target === 'expanded';
     shell!.toggleAttribute('data-expanded', expanded);
     label();
-    if (target === 'dismiss') {
-      expanded = false;
-      shell!.removeAttribute('data-expanded');
-      label();
-      dismiss();
-    }
     lockUntilSettled();
   }
 
