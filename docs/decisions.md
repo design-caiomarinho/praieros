@@ -592,3 +592,10 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Zoom out:** o mapa nasce 1 nível de zoom acima do enquadramento (metade da área visível; "50%" interpretado assim, `INTRO_ZOOM = 1` em `controller.ts`) e vai ao enquadramento com `fit()`: tempo e curva da câmera (1500 ms, curva do painel). Com movimento reduzido: sem animação (a faixa fica estática a 90% e some; o mapa já abre no enquadramento).
 - O esqueleto da busca continua ligado ao `#map-loading` (some junto com a faixa).
 - **Mapa só aparece com a faixa em 100% (sessão 23o):** o canvas fica invisível durante todo o avanço e é revelado (`data-revealed`) no instante em que a faixa completa, junto com o início do zoom out. A faixa sai subindo (até -200%) para trás da navbar.
+
+### Sessão 24: publicação no GitHub Pages
+
+- **Workflow** `.github/workflows/deploy-pages.yml`: a cada push na `main` (e manual) faz `npm ci`, `npm run build` e publica `dist/` com `actions/deploy-pages`. Endereço: `https://design-caiomarinho.github.io/praieros/`.
+- **Base:** `astro.config.mjs` usa `base: '/praieros'` só quando `GITHUB_ACTIONS` está definido; em desenvolvimento e em build local o site continua na raiz. Favicon e link do logotipo usam `BASE_URL`; as fontes (`/fonts/…`) o Vite já prefixa.
+- **Antes de divulgar (pendências do CLAUDE.md):** ler os Termos do OpenFreeMap e confirmar os termos de uso do site do Inema.
+- **Ativação:** precisa ligar em Settings → Pages → Source: GitHub Actions (o token do workflow não consegue ativar sozinho). O repositório parece privado (a API pública devolve 404); Pages em repositório privado exige plano pago.

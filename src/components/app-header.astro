@@ -12,7 +12,8 @@ interface Props {
   searchId?: string;
 }
 
-const { homeHref = '/', infoHref = '#fonte', searchId } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
 ---
 
 <header class="header">
