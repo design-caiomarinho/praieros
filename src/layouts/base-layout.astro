@@ -52,6 +52,8 @@ const { title, description } = Astro.props;
   }
   *::-webkit-scrollbar-track {
     background: var(--sb-track-color);
+    /* Recuo de 4px no topo e na base: a trilha e o polegar não encostam nas bordas. */
+    margin-block: var(--primitives-spacing-4);
   }
   *::-webkit-scrollbar-thumb {
     background: var(--sb-thumb-color);
