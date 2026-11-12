@@ -146,10 +146,8 @@ const sourceBulletin = site.current
 
 <script>
   import { initSidebarShell } from '../lib/site/sidebar-shell.ts';
-  import { initSidebarScrollbar } from '../lib/site/sidebar-scrollbar.ts';
 
   initSidebarShell();
-  initSidebarScrollbar();
   const map = document.getElementById('beach-map')!;
   const panel = document.getElementById('panel')!;
   let lastSlug: string | null = null;
@@ -495,45 +493,6 @@ const sourceBulletin = site.current
       .sidebar[data-open] .sidebar__viewport {
         transition: none;
       }
-    }
-  }
-  /* Barra de rolagem do sidebar (sidebar-scrollbar.ts): a nativa some e a trilha (contêiner de 4px)
-     fica a 8px da lateral, com recuo no topo e na base de 24px (16px no mobile). Cores por tokens. */
-  .sidebar__viewport :global(*) {
-    scrollbar-width: none;
-  }
-  .sidebar__viewport :global(*::-webkit-scrollbar) {
-    display: none;
-  }
-  .sidebar__viewport :global(.sidebar__scrollbar) {
-    position: absolute;
-    z-index: 2;
-    top: var(--space-inset-lg);
-    right: var(--primitives-spacing-8);
-    bottom: var(--space-inset-lg);
-    width: var(--primitives-spacing-4);
-    background: var(--primitives-color-neutral-200);
-  }
-  .sidebar__viewport :global(.sidebar__scrollbar[hidden]) {
-    display: none;
-  }
-  /* Área de toque maior que os 4px visíveis. */
-  .sidebar__viewport :global(.sidebar__scrollbar::before) {
-    content: '';
-    position: absolute;
-    inset: 0 calc(var(--primitives-spacing-8) * -1);
-  }
-  .sidebar__viewport :global(.sidebar__scrollbar-thumb) {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: var(--primitives-color-neutral-300);
-  }
-  @media (max-width: 1023.98px) {
-    .sidebar__viewport :global(.sidebar__scrollbar) {
-      top: var(--space-inset-md);
-      bottom: var(--space-inset-md);
     }
   }
   .sidebar__ghosts {

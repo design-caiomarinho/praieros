@@ -40,4 +40,38 @@ const { title, description } = Astro.props;
     font-size: var(--s-typo-body-medium-size);
     line-height: var(--s-typo-body-medium-line);
   }
+  /* Barra de rolagem fina (4px) em todas as áreas roláveis (painéis, busca, ficha), não só no body. */
+  * {
+    --sb-track-color: var(--primitives-color-neutral-200);
+    --sb-thumb-color: var(--primitives-color-neutral-300);
+    --sb-size: var(--primitives-spacing-4);
+    --sb-offset: var(--primitives-spacing-8);
+  }
+  /* Afastada 8px da lateral: a área da barra é 8px mais larga e esse vão é uma borda transparente
+     (o fundo é recortado no padding), pois o WebKit não aceita margem horizontal na barra. */
+  *::-webkit-scrollbar {
+    width: calc(var(--sb-size) + var(--sb-offset));
+    height: var(--sb-size);
+  }
+  *::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    background-clip: padding-box;
+    border-right: var(--sb-offset) solid transparent;
+    /* Recuo no topo e na base: 24px no desktop, 16px no mobile (abaixo de 1024px, como a página). */
+    margin-block: var(--space-inset-lg);
+  }
+  @media (max-width: 1023.98px) {
+    *::-webkit-scrollbar-track {
+      margin-block: var(--space-inset-md);
+    }
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+  }
+  @supports not selector(::-webkit-scrollbar) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    }
+  }
 </style>
