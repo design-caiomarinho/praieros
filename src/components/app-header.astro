@@ -62,7 +62,8 @@ const { homeHref = '/', infoHref = '/fonte', searchId } = Astro.props;
     position: absolute;
     left: 0;
     right: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
-    bottom: 0;
+    /* Sobre a linha da borda (que fica fora da caixa de padding), não 1px acima. */
+    bottom: calc(var(--border-width-default) * -1);
     height: var(--border-width-default);
     background: var(--s-color-border-default);
   }

@@ -195,6 +195,13 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     /* Contexto próprio: a ficha (folha inferior) fica acima dos controles do MapLibre. */
     isolation: isolate;
   }
+  /* O canvas do MapLibre é focável (tabindex 0): sem anel do navegador na borda do mapa, que
+     aparecia como uma faixa azul grossa junto ao painel. Os marcadores têm o próprio foco. */
+  :global(.maplibregl-canvas:focus),
+  :global(.maplibregl-canvas:focus-visible),
+  :global(.maplibregl-canvas-container:focus-visible) {
+    outline: none;
+  }
   .canvas {
     position: absolute;
     inset: 0;
