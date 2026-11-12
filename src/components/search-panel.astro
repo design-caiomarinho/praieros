@@ -409,9 +409,11 @@ const neighborhoods = suggestNeighborhoods(results);
     background: var(--s-color-surface-warning-default);
     border-color: var(--s-color-border-warning);
   }
+  /* Desconhecido (Figma 117:6459): círculo cheio #8EA9B3 (surface/unknown/default), sem borda
+     visível; antes era surface clara com borda. */
   .dot--no-result {
-    background: var(--s-color-surface-unknown-soft);
-    border-color: var(--s-color-border-strong);
+    background: var(--s-color-surface-unknown-default);
+    border-color: var(--s-color-surface-unknown-default);
   }
 
   /* Sem resultado de busca: mesmo desenho do erro do mapa, centrado no corpo. */
