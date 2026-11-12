@@ -456,6 +456,17 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     background: var(--s-color-surface-default);
     color: var(--s-color-content-primary);
     white-space: nowrap;
+    transition: top var(--motion-duration-pin-select)
+      var(--motion-easing-pin-hover);
+  }
+  /* Selecionado: a ponta do pino fica sobre o ponto (12px acima da base do círculo) e a cabeça
+     dele, 14,6px acima do centro do círculo. O selo acompanha a cabeça (centrado nela) e o nome
+     sobe os mesmos 12px, para manter a mesma distância até o pino. */
+  :global(.marker--selected .marker__tag) {
+    top: -15px;
+  }
+  :global(.marker--selected .marker__label) {
+    top: calc(100% - 12px);
   }
   /* Nome (Figma 204:7892): fica sob o ícone, fora do fluxo (o marcador mede só o ícone, sem
      aumentar a área de clique sobre os vizinhos). Aparece com opacidade 0 → 1 e a distância ao
@@ -473,6 +484,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     transition:
       opacity var(--motion-duration-pin-label) var(--motion-easing-pin-label),
       margin-top var(--motion-duration-pin-label) var(--motion-easing-pin-label),
+      top var(--motion-duration-pin-select) var(--motion-easing-pin-hover),
       visibility 0s linear var(--motion-duration-pin-label);
   }
   :global(.marker[data-label='shown'] .marker__label),
