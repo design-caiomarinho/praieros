@@ -277,6 +277,10 @@ const sourceBulletin = site.current
             detail: { slug, pointId: card.dataset.pointId },
           }),
         );
+        // Sempre enquadra as localizações da praia ao escolher um ponto (pedido de Caio).
+        map.dispatchEvent(
+          new CustomEvent('map-fit', { detail: { slugs: [slug] } }),
+        );
       }
     } else if (target.closest('[data-open-classification]')) {
       setView('classification');

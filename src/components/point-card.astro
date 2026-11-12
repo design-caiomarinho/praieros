@@ -71,9 +71,14 @@ const Tag = pointId ? 'button' : 'article';
   .card--no-result {
     border-left-color: var(--s-color-border-unknown);
   }
-  /* Com um pin escolhido no mapa, os outros pontos ficam a 50%. */
+  /* Com um pin escolhido no mapa, os outros pontos ficam a 80% (são clicáveis, então não podem
+     parecer apagados); no hover ou no foco voltam a 100%. */
   .card[data-dimmed] {
-    opacity: 0.5;
+    opacity: 0.8;
+  }
+  .card[data-dimmed]:hover,
+  .card[data-dimmed]:focus-visible {
+    opacity: 1;
   }
   .body {
     display: flex;

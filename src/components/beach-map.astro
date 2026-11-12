@@ -175,13 +175,16 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   // de baixo do mapa, então o enquadramento ganha essa folga embaixo.
   root.addEventListener('map-fit', (e) => {
     const { slugs } = (e as CustomEvent<{ slugs: string[] }>).detail;
-    const sheet = document.getElementById('search');
     const m = root.getBoundingClientRect();
-    const s = sheet && !sheet.hidden ? sheet.getBoundingClientRect() : null;
-    const covered =
-      s && s.width >= m.width - 1 && s.top > m.top
-        ? Math.max(0, m.bottom - s.top)
-        : 0;
+    // Folha aberta (busca ou ficha) que cobre a parte de baixo do mapa, de lado a lado.
+    const covered = ['search', 'panel'].reduce((max, id) => {
+      const el = document.getElementById(id);
+      if (!el || el.hidden) return max;
+      const s = el.getBoundingClientRect();
+      return s.width >= m.width - 1 && s.top > m.top
+        ? Math.max(max, m.bottom - s.top)
+        : max;
+    }, 0);
     controller?.fitBeaches(slugs, covered);
   });
   root.addEventListener('marker-set', (e) => {
