@@ -1,20 +1,13 @@
-// Folha inferior do mobile (abaixo de 1024px): começa com 60% do palco (como hoje). Rolando o
-// conteúdo para baixo, ela cresce para cima até preencher a tela toda (mais espaço para ler, o
-// mapa fica em segundo plano); rolando de volta ao topo, volta ao tamanho inicial. A altura é
-// CSS (`data-expanded` no #sidebar, ver index.astro); aqui só se decide quando mudar.
-//
-// A decisão vem de gestos do usuário (roda, arrastar), não só da posição da rolagem: ao crescer,
-// um conteúdo que passa a caber inteiro zera o scrollTop sozinho, e isso não pode fechar a folha.
+// Folha inferior do mobile (abaixo de 1024px): começa com 60% do palco. Um gesto para cima (arrastar,
+// roda) primeiro dá destaque à folha: ela cresce até a tela toda SEM rolar o conteúdo (rolagem
+// travada enquanto está recolhida, ver index.astro); só então o usuário rola. Com o conteúdo no topo,
+// um gesto para baixo recolhe a folha (de volta aos 60%, mapa à vista). A alça (drag handle) no
+// topo faz o mesmo: toque alterna, arrastar para cima expande e para baixo recolhe.
+// A altura é CSS (`data-expanded` no #sidebar, ver index.astro); aqui só se decide quando mudar.
 
 const PANE_IDS = ['search', 'panel', 'source-slot'];
-/** Rolagem (px) a partir da qual a folha cresce. */
-const EXPAND_AT = 8;
-/** Perto do topo (px): rolar para cima aqui devolve a folha ao tamanho inicial. */
-const COLLAPSE_AT = 24;
 /** Arrasto mínimo (px) do dedo para valer como gesto. */
 const DRAG = 10;
-/** Quanto tempo (ms) uma rolagem conta como feita pelo usuário depois do último gesto. */
-const GESTURE_MS = 200;
 
 export function initSidebarSheet(): void {
   const shell = document.getElementById('sidebar');
@@ -26,87 +19,86 @@ export function initSidebarSheet(): void {
   const mobile = window.matchMedia('(max-width: 1023.98px)');
   const current = () => panes.find((p) => !p.hidden) ?? null;
 
-  let expanded = false;
-  let lastTop = 0;
-  let lastGesture = 0;
+  // Alça: botão no topo da folha (só aparece no mobile, CSS).
+  const handle = document.createElement('button');
+  handle.type = 'button';
+  handle.className = 'sidebar__handle';
+  handle.append(document.createElement('span'));
+  viewport.append(handle);
 
+  let expanded = false;
   function set(value: boolean) {
-    if (expanded === value) return;
     expanded = value;
     shell!.toggleAttribute('data-expanded', value);
+    handle.setAttribute('aria-expanded', String(value));
+    handle.setAttribute(
+      'aria-label',
+      value ? 'Recolher o painel (ver o mapa)' : 'Expandir o painel',
+    );
   }
-  const reset = () => {
-    set(false);
-    lastTop = 0;
-  };
+  set(false);
 
   const overflows = (p: HTMLElement) => p.scrollHeight > p.clientHeight + 1;
-  const nearTop = (p: HTMLElement) => p.scrollTop <= COLLAPSE_AT;
 
-  panes.forEach((p) =>
-    p.addEventListener(
-      'scroll',
-      () => {
-        if (!mobile.matches || p !== current()) return;
-        const top = p.scrollTop;
-        const up = top < lastTop;
-        lastTop = top;
-        if (!expanded && top > EXPAND_AT && !up) set(true);
-        else if (
-          expanded &&
-          up &&
-          top <= COLLAPSE_AT &&
-          performance.now() - lastGesture < GESTURE_MS
-        )
-          set(false);
-      },
-      { passive: true },
-    ),
-  );
-
-  // Gestos: roda do mouse e arrastar com o dedo.
+  // Roda do mouse: para baixo expande (sem rolar); com o conteúdo no topo, para cima recolhe.
   viewport.addEventListener(
     'wheel',
     (e) => {
       if (!mobile.matches) return;
       const p = current();
       if (!p) return;
-      lastGesture = performance.now();
-      if (e.deltaY > 0 && !expanded && overflows(p)) set(true);
-      else if (e.deltaY < 0 && expanded && nearTop(p)) set(false);
+      if (!expanded && e.deltaY > 0 && overflows(p)) set(true);
+      else if (expanded && e.deltaY < 0 && p.scrollTop <= 0) set(false);
     },
     { passive: true },
   );
+
+  // Dedo: o gesto vale pela posição inicial. Recolhida, arrastar para cima expande; expandida e
+  // com o conteúdo no topo no início do gesto, arrastar para baixo recolhe.
   let startY = 0;
+  let startTop = 0;
+  let handled = false;
   viewport.addEventListener(
     'touchstart',
     (e) => {
       startY = e.touches[0]?.clientY ?? 0;
-      lastGesture = performance.now();
+      startTop = current()?.scrollTop ?? 0;
+      handled = false;
     },
     { passive: true },
   );
   viewport.addEventListener(
     'touchmove',
     (e) => {
-      if (!mobile.matches) return;
+      if (!mobile.matches || handled) return;
       const p = current();
       if (!p) return;
-      lastGesture = performance.now();
       const dy = (e.touches[0]?.clientY ?? 0) - startY;
-      if (dy < -DRAG && !expanded && overflows(p)) set(true);
-      else if (dy > DRAG && expanded && nearTop(p)) set(false);
+      const onHandle = (e.target as Element).closest('.sidebar__handle');
+      if (!expanded && dy < -DRAG && (onHandle || overflows(p))) {
+        handled = true;
+        set(true);
+      } else if (expanded && dy > DRAG && (onHandle || startTop <= 0)) {
+        handled = true;
+        set(false);
+      }
     },
     { passive: true },
   );
 
+  // Toque (ou teclado) na alça alterna.
+  handle.addEventListener('click', () => {
+    const p = current();
+    if (expanded || (p && overflows(p))) set(!expanded);
+  });
+
   // Fechou o sidebar ou trocou de painel: volta ao tamanho inicial.
   new MutationObserver(() => {
-    if (!shell.hasAttribute('data-open')) reset();
+    if (!shell.hasAttribute('data-open')) set(false);
   }).observe(shell, { attributes: true, attributeFilter: ['data-open'] });
-  const swap = new MutationObserver(reset);
+  const swap = new MutationObserver(() => set(false));
   panes.forEach((p) =>
     swap.observe(p, { attributes: true, attributeFilter: ['hidden'] }),
   );
-  mobile.addEventListener('change', reset);
+  mobile.addEventListener('change', () => set(false));
 }

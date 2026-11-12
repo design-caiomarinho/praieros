@@ -505,6 +505,10 @@ const sourceBulletin = site.current
   .layout-desktop {
     display: none;
   }
+  /* A alça só existe no mobile (folha inferior). */
+  .sidebar__viewport :global(.sidebar__handle) {
+    display: none;
+  }
   /* Busca: o espaço só existe enquanto o painel está aberto. */
   .search-slot {
     display: contents;
@@ -532,6 +536,38 @@ const sourceBulletin = site.current
     }
     .sidebar[data-expanded] {
       height: 100%;
+    }
+    /* Recolhida, a rolagem fica travada: o primeiro gesto para cima só expande a folha. */
+    .sidebar:not([data-expanded])
+      .sidebar__viewport
+      :is(.panel, .search, .source-slot) {
+      overflow-y: hidden;
+    }
+    /* Alça (drag handle) no topo da folha: faixa de toque de 24 px com a barra de 32×4 px. */
+    .sidebar__viewport :global(.sidebar__handle) {
+      position: absolute;
+      z-index: 4;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      height: var(--space-inset-lg);
+      padding: var(--primitives-spacing-8) 0 0;
+      border: 0;
+      background: var(--s-color-surface-default);
+      cursor: pointer;
+    }
+    .sidebar__viewport :global(.sidebar__handle span) {
+      width: var(--primitives-spacing-32);
+      height: var(--primitives-spacing-4);
+      border-radius: var(--radius-full);
+      background: var(--primitives-color-neutral-300);
+    }
+    .sidebar__viewport :global(.sidebar__handle:focus-visible) {
+      outline: var(--border-width-default) solid var(--s-color-border-focus);
+      outline-offset: calc(var(--border-width-default) * -1);
     }
     .sidebar[data-active] {
       display: block;
