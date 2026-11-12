@@ -588,6 +588,7 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 ### Sessão 23o: faixa de carregamento do mapa
 
 - **Substitui a pílula "Carregando o mapa…"** (Figma 117:4900) por uma faixa de 4px (`spacing-4`) de ponta a ponta, logo abaixo da navbar, com o azul de `surface-accent-default` avançando da esquerda para a direita. O texto vira só `aria-label` (leitor de tela). Pedido de Caio.
-- **Avanço:** chega a 90% em 2500 ms (novo token `duration-load-progress`, curva do painel: rápida no começo, longa no fim) e espera o mapa; com o mapa pronto completa os 100% (300 ms, tempo e curva do hover), esmaece (300 ms) e o mapa faz o zoom out.
+- **Avanço:** chega a 90% em 2500 ms (novo token `duration-load-progress`, curva do painel: rápida no começo, longa no fim) e espera o mapa; com o mapa pronto completa os 100% (300 ms, tempo e curva do hover), sobe para trás da navbar (1000 ms, curva da saída da faixa de aviso: até -200%, em vez de fade) e, junto, o mapa faz o zoom out.
 - **Zoom out:** o mapa nasce 1 nível de zoom acima do enquadramento (metade da área visível; "50%" interpretado assim, `INTRO_ZOOM = 1` em `controller.ts`) e vai ao enquadramento com `fit()`: tempo e curva da câmera (1500 ms, curva do painel). Com movimento reduzido: sem animação (a faixa fica estática a 90% e some; o mapa já abre no enquadramento).
 - O esqueleto da busca continua ligado ao `#map-loading` (some junto com a faixa).
+- **Mapa só aparece com a faixa em 100% (sessão 23o):** o canvas fica invisível durante todo o avanço e é revelado (`data-revealed`) no instante em que a faixa completa, junto com o início do zoom out. A faixa sai subindo (até -200%) para trás da navbar.

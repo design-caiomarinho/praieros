@@ -169,7 +169,10 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   function finishBar(zoomOut: boolean) {
     if (reduceMotion.matches || !zoomOut) {
       loading.hidden = true;
-      if (zoomOut) controller?.fit();
+      if (zoomOut) {
+        root.setAttribute('data-revealed', '');
+        controller?.fit();
+      }
       return;
     }
     const finish = parseFloat(token('--motion-duration-hover')) || 0;
@@ -180,17 +183,23 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     fill.style.transition = `transform ${finish}ms var(--motion-easing-hover)`;
     fill.style.transform = 'scaleX(1)';
     loadingTimer = window.setTimeout(() => {
+      root.setAttribute('data-revealed', ''); // faixa em 100%: o mapa aparece
+      fill.style.animation = ''; // a saída (CSS) assume: sobe para trás da navbar
       loading.setAttribute('data-leaving', '');
       controller?.fit(); // zoom out: 1 nível acima → enquadramento, com o tempo e a curva da câmera
-      loadingTimer = window.setTimeout(() => {
-        loading.hidden = true;
-        loading.removeAttribute('data-leaving');
-      }, finish);
+      loadingTimer = window.setTimeout(
+        () => {
+          loading.hidden = true;
+          loading.removeAttribute('data-leaving');
+        },
+        parseFloat(token('--motion-duration-pin-label')) || 0,
+      );
     }, finish);
   }
   function show(state: 'loading' | 'ready' | 'error') {
     root.toggleAttribute('data-ready', state === 'ready');
     if (state === 'loading') {
+      root.removeAttribute('data-revealed');
       resetBar();
       loading.hidden = false;
     } else if (!loading.hidden) {
@@ -304,7 +313,8 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     /* Escondido até o primeiro desenho: mostra o fundo do mar, não o terreno sem tiles. */
     opacity: 0;
   }
-  .map-root[data-ready] .canvas {
+  /* O mapa só aparece quando a faixa de carregamento chega a 100% (data-revealed). */
+  .map-root[data-revealed] .canvas {
     opacity: 1;
   }
 
@@ -317,10 +327,21 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     right: 0;
     z-index: 3;
     height: var(--primitives-spacing-4);
-    transition: opacity var(--motion-duration-hover) var(--motion-easing-hover);
+    /* Recorta: a faixa sobe para trás da navbar ao completar. */
+    overflow: clip;
   }
-  .loadbar[data-leaving] {
-    opacity: 0;
+  /* Saída: sobe além do topo (-200%) com a curva e o tempo da saída da faixa de aviso. */
+  .loadbar[data-leaving] .loadbar__fill {
+    animation: loadbar-out var(--motion-duration-pin-label)
+      var(--motion-easing-pin-label) both;
+  }
+  @keyframes loadbar-out {
+    from {
+      translate: 0 0;
+    }
+    to {
+      translate: 0 -200%;
+    }
   }
   .loadbar__fill {
     display: block;
