@@ -406,7 +406,8 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 ## Sessão 17: home mobile (nós 117:4916, 117:4762, 117:5022)
 
 - **Auditoria:** cabeçalho, marcadores, estado de erro e fundo já batiam com o Figma. Ajustado só o mapa abaixo de 1024px (desktop intacto).
-- **Zoom e pílula "Carregando o mapa…":** a 16px (`space-inset-md`) das bordas, como no Figma (antes 24px). A pílula tem largura útil (`100% − 2 × 16px`): o Figma usa 370px fixos em tela de 390px, sem token; usamos o token mais próximo da margem. O texto ocupa o resto da pílula.
+- **Zoom:** a 16px (`space-inset-md`) das bordas no mobile, como no Figma (antes 24px).
+- **Pílula "Carregando o mapa…":** igual à do desktop (largura do conteúdo, centralizada, a 24px do topo). Decisão de Caio, que substitui o ajuste inicial (largura útil, 16px do topo) e os 370px fixos do Figma.
 - **Áreas seguras:** o zoom usa `max(16px, env(safe-area-inset-*))` (entalhes e barra do sistema). Não definido no Figma; derivado.
 - **Alvos de toque:** os botões de 56px já passam de 44px; nada a mudar.
 - **Rótulo cortado na borda / rotação:** o mapa tem `overflow: clip` e `maxBounds`; em paisagem o layout continua o mesmo abaixo de 1024px. Sem tratamento extra.
