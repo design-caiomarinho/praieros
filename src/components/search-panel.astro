@@ -197,12 +197,12 @@ const neighborhoods = suggestNeighborhoods(results);
     }
   }
 
-  /* Cabeçalho (Figma 117:6362): padding 24, 32 entre o bloco do título e o campo, borda inferior. */
+  /* Cabeçalho (Figma 117:5179): padding 24, 24 entre o bloco do título e o campo, borda inferior. */
   .head {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    gap: var(--space-stack-xl);
+    gap: var(--space-stack-lg);
     padding: var(--space-inset-lg);
     border-bottom: var(--border-width-default) solid
       var(--s-color-border-default);
@@ -211,7 +211,7 @@ const neighborhoods = suggestNeighborhoods(results);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-stack-sm);
+    gap: var(--space-stack-xs);
   }
   .top {
     display: flex;
@@ -451,16 +451,20 @@ const neighborhoods = suggestNeighborhoods(results);
     letter-spacing: var(--s-typo-body-medium-spacing);
   }
 
-  /* Mobile (abaixo de 1024px): padding lateral 16 e vertical 24 (Figma 117:5312 e 117:5329);
-     o corpo respeita a área segura de baixo (derivado, ver docs/decisions.md). */
+  /* Mobile (abaixo de 1024px, folha inferior): padding 16 em todos os lados (Figma 117:5312 e
+     117:5329); o corpo respeita a área segura de baixo (derivado, ver docs/decisions.md). */
   @media (max-width: 1023px) {
+    .search {
+      border-top: var(--border-width-default) solid
+        var(--s-color-border-default);
+    }
     .head {
-      padding: var(--space-inset-lg) var(--space-inset-md);
+      padding: var(--space-inset-md);
     }
     .body {
-      padding: var(--space-inset-lg) var(--space-inset-md);
+      padding: var(--space-inset-md);
       padding-bottom: calc(
-        var(--space-inset-lg) + env(safe-area-inset-bottom, 0px)
+        var(--space-inset-md) + env(safe-area-inset-bottom, 0px)
       );
     }
     .search {

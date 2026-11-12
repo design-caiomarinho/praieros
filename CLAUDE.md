@@ -130,5 +130,5 @@ Fase 3, sessão 13: bairro automático por polígono do OSM (`npm run catalog:ne
 Fase 3, sessão 14: painel Classificação (desktop, só Própria; Imprópria pendente de texto), aberto por "Ver detalhes" na ficha. Ver `docs/decisions.md`.
 Fase 3, sessão 15: painel Fonte e como ler (desktop, `source-panel.astro`, aberto pelo cabeçalho e pela ficha, créditos do mapa provisórios). Ver `docs/decisions.md`.
 Sessão 16 (escopo, só docs): Resumo do boletim sai do escopo; Compartilhar praia/site ficam pendentes (R6 mantida); ver `docs/decisions.md`.
-Sessão 18: busca mobile em tela cheia (Figma 117:5257), bairro selecionado, alvos de 44px; ver `docs/decisions.md`.
+Sessões 18–19: busca em folha inferior no mobile (Figma 117:5257), vista de um bairro (seta, nome, sem campo), spacings novos, degradê de rolagem; ver `docs/decisions.md`.
 Próxima: refinar o mobile (folha inferior, Classificação e Fonte no mobile) e depois o motion (`docs/motion.md`). Pendentes: ler os Termos do OpenFreeMap antes de publicar; termos de uso do site do Inema.
