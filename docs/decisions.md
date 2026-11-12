@@ -636,3 +636,5 @@ Correção (25b): ao fechar soltando muito abaixo, a folha fecha na altura em qu
 Regra (25b): sem rolagem interna na posição de origem (60%) nem durante a animação, em todos os painéis (ficha, busca, Classificação, Fonte). O conteúdo só rola com a folha na tela toda e já fixada; voltando à origem, o conteúdo volta ao topo. (O seletor usa `:global`, pois os painéis são de outros componentes.)
 
 Regra (25b): no mobile, com a folha na tela toda e já fixada, o cabeçalho ganha `data-sheet-top` e a linha de baixo some sob o botão ativo (busca ou Fonte), como no desktop, mas sem animação (encostou, sumiu). Ao começar a descer, a linha volta na hora.
+
+Regra (25b): na origem (60%), um gesto para cima em qualquer ponto da folha (dedo, mouse ou roda para baixo) também pede a folha inteira: ela segue o dedo e completa, como pela alça. Gesto para baixo a partir do conteúdo não faz nada na origem. Com a folha inteira e fixada, fora da zona de arraste vale a rolagem normal. O clique gerado depois de arrastar a partir do conteúdo é ignorado.

@@ -123,14 +123,29 @@ export function initSidebarSheet(): void {
 
   // Arraste em tempo real: a altura da folha segue o ponteiro (sem transição). Ao soltar, o estilo
   // inline sai e o CSS anima da altura atual até a do estado escolhido.
-  let drag: { y0: number; startH: number; startExpanded: boolean } | null =
-    null;
+  let drag: {
+    y0: number;
+    startH: number;
+    startExpanded: boolean;
+    /** Começou no conteúdo (não na zona): só vale se o gesto for para cima. */
+    fromContent: boolean;
+  } | null = null;
   let dragged = false;
-  function dragStart(y: number) {
+  /** Na origem, um gesto para cima em qualquer ponto da folha também pede a folha inteira. */
+  function openable(target: EventTarget | null) {
+    return (
+      mobile.matches &&
+      !expanded &&
+      !!current() &&
+      !(target instanceof Element && target.closest('.sidebar__handle'))
+    );
+  }
+  function dragStart(y: number, fromContent = false) {
     drag = {
       y0: y,
       startH: shell!.getBoundingClientRect().height,
       startExpanded: expanded,
+      fromContent,
     };
     dragged = false;
   }
@@ -138,6 +153,10 @@ export function initSidebarSheet(): void {
     if (!drag) return;
     const dy = drag.y0 - y; // para cima é positivo
     if (!dragged && Math.abs(dy) < DRAG) return;
+    if (!dragged && drag.fromContent && dy < 0) {
+      drag = null; // para baixo, a partir do conteúdo, não é da folha
+      return;
+    }
     if (!dragged) {
       dragged = true;
       window.clearTimeout(settleTimer);
@@ -200,6 +219,7 @@ export function initSidebarSheet(): void {
     (e) => {
       const y = e.touches[0]?.clientY ?? 0;
       if (inZone(e.target, y)) dragStart(y);
+      else if (openable(e.target)) dragStart(y, true);
       else drag = null;
     },
     { passive: true },
@@ -219,8 +239,15 @@ export function initSidebarSheet(): void {
   // Mouse (janela estreita no desktop): mesmo arraste, por eventos de ponteiro.
   let suppressClick = false;
   viewport.addEventListener('pointerdown', (e) => {
-    if (e.pointerType !== 'mouse' || !inZone(e.target, e.clientY)) return;
-    dragStart(e.clientY);
+    if (e.pointerType !== 'mouse') return;
+    const inside = inZone(e.target, e.clientY);
+    const content =
+      !inside &&
+      openable(e.target) &&
+      !(e.target instanceof Element && e.target.closest(INTERACTIVE));
+    if (!inside && !content) return;
+    suppressClick = false;
+    dragStart(e.clientY, content);
     const move = (ev: PointerEvent) => dragMove(ev.clientY);
     const up = () => {
       window.removeEventListener('pointermove', move);
@@ -232,11 +259,27 @@ export function initSidebarSheet(): void {
     window.addEventListener('pointerup', up);
   });
 
-  // Roda do mouse sobre a zona: para baixo expande, para cima recolhe. Fora dela, rolagem normal.
+  // Depois de arrastar a partir do conteúdo, o clique que o navegador gera não vale.
+  viewport.addEventListener(
+    'click',
+    (e) => {
+      if (!suppressClick) return;
+      if (e.target instanceof Element && e.target.closest('.sidebar__handle'))
+        return;
+      suppressClick = false;
+      e.stopPropagation();
+      e.preventDefault();
+    },
+    true,
+  );
+
+  // Roda do mouse: na zona, para baixo expande e para cima recolhe; na origem, rolar para baixo em
+  // qualquer ponto expande. Fora disso (folha inteira), rolagem normal.
   viewport.addEventListener(
     'wheel',
     (e) => {
-      if (!inZone(e.target, e.clientY)) return;
+      if (!inZone(e.target, e.clientY) && !(openable(e.target) && e.deltaY > 0))
+        return;
       if (e.cancelable) e.preventDefault();
       set(e.deltaY > 0);
     },
