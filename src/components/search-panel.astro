@@ -39,7 +39,17 @@ const neighborhoods = suggestNeighborhoods(results);
   <header class="head">
     <div class="head-top">
       <div class="top">
-        <h2>Buscar</h2>
+        <div class="title">
+          <div class="back" data-search-back hidden>
+            <ButtonIcon
+              variant="ghost"
+              size="xsmall"
+              icon="arrow-left"
+              label="Voltar"
+            />
+          </div>
+          <h2 data-title>Buscar</h2>
+        </div>
         <div class="close" data-search-close>
           <ButtonIcon
             variant="ghost"
@@ -55,7 +65,9 @@ const neighborhoods = suggestNeighborhoods(results);
         </span>
       )}
     </div>
-    <InputText label="Buscar praia" name="q" />
+    <div class="field" data-field>
+      <InputText label="Buscar praia" name="q" />
+    </div>
   </header>
 
   <div class="body">
@@ -208,8 +220,16 @@ const neighborhoods = suggestNeighborhoods(results);
     gap: var(--space-gap-md);
     width: 100%;
   }
-  .close {
+  .close,
+  .back {
     display: contents;
+  }
+  /* Título (com a seta de voltar na vista de um bairro, como em Fonte e como ler). */
+  .title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+    min-width: 0;
   }
   h2 {
     margin: 0;
@@ -505,6 +525,11 @@ const neighborhoods = suggestNeighborhoods(results);
     }
 
     // Os bairros ficam sempre visíveis (Figma 117:6342): só os resultados e o vazio mudam.
+    const back = root.querySelector<HTMLElement>('[data-search-back]')!;
+    const field = root.querySelector<HTMLElement>('[data-field]')!;
+    const title = root.querySelector<HTMLElement>('[data-title]')!;
+    let hoodName = '';
+
     // Bairro "ligado" quando o campo traz exatamente o nome dele (Figma 117:5257, 2º quadro).
     const hoodButtons = [...root.querySelectorAll<HTMLElement>('.hood')].map(
       (el) => ({ el, button: el.querySelector<HTMLButtonElement>('button')! }),
@@ -523,7 +548,16 @@ const neighborhoods = suggestNeighborhoods(results);
     // Bairro escolhido pelo botão: a seção "Bairros" sai e ficam só as praias encontradas.
     let hoodPicked = false;
 
+    // Vista de um bairro (concept): seta de voltar e nome do bairro no lugar de "Buscar", sem o
+    // campo; só o chip do boletim, a contagem e a lista.
+    function syncView() {
+      back.hidden = !hoodPicked;
+      field.hidden = hoodPicked;
+      title.textContent = hoodPicked ? hoodName : 'Buscar';
+    }
+
     function render() {
+      syncView();
       syncHoods();
       const searching = queryTokens(input.value).length > 0;
       items.forEach((i) => (i.li.hidden = true));
@@ -605,9 +639,20 @@ const neighborhoods = suggestNeighborhoods(results);
       const hood = target.closest<HTMLElement>('.hood');
       if (hood) {
         input.value = hood.dataset.hood!;
+        hoodName = hood.dataset.hood!;
         hoodPicked = true;
         render();
-        if (!mobile.matches) input.focus();
+        // O campo sai da vista: o foco vai para a seta de voltar.
+        back.querySelector<HTMLElement>('button')?.focus();
+        return;
+      }
+      if (target.closest('[data-search-back]')) {
+        // Volta à busca inicial (campo vazio, bairros), com o foco no bairro que estava aberto.
+        const name = hoodName;
+        input.value = '';
+        hoodPicked = false;
+        render();
+        hoodButtons.find(({ el }) => el.dataset.hood === name)?.button.focus();
         return;
       }
       choose(target.closest<HTMLElement>('.result') ?? undefined);
