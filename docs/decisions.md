@@ -574,3 +574,10 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - (Sessão 23j, Caio) Clique no terreno do mapa com a busca aberta também a fecha, como os outros painéis (evento `search-outside`; saída animada).
 
 - (Sessão 23j, correção de Caio) Cartão do ponto escolhido: sem opacidade reduzida (todos a 100%); a borda cinza vira a borda do status (token de cada um, 300 ms), sem hover e sem clique (`data-current`, `pointer-events: none`). Substitui o item "50% e sem hover" acima.
+
+### Sessão 23l: faixa de aviso, dissolve e zoom (motion)
+
+- **Faixa de aviso (Sem resultado / Desatualizada):** desce de trás do cabeçalho (a faixa recorta no topo do palco), sem opacidade, 1000 ms na curva do nome do pin. Origem 8px acima da altura da faixa (a borda tracejada aparecia no começo). No desktop só entra depois do painel chegar (atraso 300 ms + 1500 ms); no mobile (faixa no topo, painel embaixo) entra junto com o painel.
+- **Saída:** a faixa sobe até -200% da altura (mesma curva); no desktop o painel começa a sair quando ela some atrás do cabeçalho (50% do trajeto, `halfwayTime`), sem esperar o fim. No mobile, saem juntos.
+- **Dissolve da troca de conteúdo:** 300 → 150 ms (`duration-dissolve`), e passa a valer também para os estados da busca (sugestões, resultados, sem resultado, vista de bairro).
+- **Zoom +/−:** suave, com o tempo e a curva da câmera (1500 ms, curva do painel).

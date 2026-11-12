@@ -35,7 +35,7 @@
       },
       "dissolve": {
         "$type": "duration",
-        "$value": 300
+        "$value": 150
       },
       "pin-label": {
         "$type": "duration",

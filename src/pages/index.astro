@@ -171,6 +171,7 @@ const sourceBulletin = site.current
   }
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const mobile = window.matchMedia('(max-width: 1023.98px)');
   /** Mostra a faixa da praia aberta. Ela desce de trás do cabeçalho (como o nome do pin) e, ao
    *  fechar sem outra faixa no lugar, sobe de volta; com outra faixa, a troca é direta. */
   function syncBanner(slug: string | null) {
@@ -185,9 +186,10 @@ const sourceBulletin = site.current
         el.removeAttribute('data-leaving');
         if (el.hidden) {
           // Sidebar ainda fechado: a faixa espera o painel chegar (atraso + duração do painel).
-          const opening = !document
-            .getElementById('sidebar')
-            ?.hasAttribute('data-open');
+          // No mobile a faixa (no topo) e o painel (embaixo) não se cruzam: entram juntos.
+          const opening =
+            !mobile.matches &&
+            !document.getElementById('sidebar')?.hasAttribute('data-open');
           el.style.setProperty(
             '--banner-delay',
             opening
@@ -564,12 +566,24 @@ const sourceBulletin = site.current
   }
   /* Saída: começa na hora, antes do painel (que tem os próprios atrasos de saída). */
   .map-banner[data-leaving] > :global(*) {
-    animation-delay: 0ms;
-    animation-direction: reverse;
+    animation: banner-out var(--motion-duration-pin-label)
+      var(--motion-easing-pin-label) both;
   }
+  @keyframes banner-out {
+    from {
+      translate: 0 0;
+    }
+    /* Vai além do topo (-200%): aos 50% do trajeto a faixa já sumiu atrás do cabeçalho (-100%),
+       e é aí que o painel começa a sair (sidebar-shell.ts). */
+    to {
+      translate: 0 -200%;
+    }
+  }
+  /* Origem um pouco acima do topo (-8px além da altura da faixa): sem isso a borda (tracejada, na
+     faixa de Sem resultado) aparecia no começo. O percurso a mais é curto: não muda o ritmo. */
   @keyframes banner-in {
     from {
-      translate: 0 -100%;
+      translate: 0 calc(-100% - var(--space-stack-xs));
     }
     to {
       translate: 0 0;
@@ -716,7 +730,7 @@ const sourceBulletin = site.current
 
 <style is:global>
   /* Fantasma do conteúdo que saiu (clone criado por sidebar-shell.ts): dissolve por cima do novo
-     conteúdo (300 ms, ver docs/motion.md); ao fechar o sidebar, fica parado até a saída acabar. */
+     conteúdo (150 ms, ver docs/motion.md); ao fechar o sidebar, fica parado até a saída acabar. */
   .sidebar__ghost {
     position: absolute !important;
     inset: 0 !important;

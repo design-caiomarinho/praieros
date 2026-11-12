@@ -450,9 +450,9 @@ export async function createBeachMap(
   });
 
   return {
-    // Sem animação de câmera: movimento instantâneo (motion fica para depois da Fase 3).
-    zoomIn: () => map.zoomIn({ duration: 0 }),
-    zoomOut: () => map.zoomOut({ duration: 0 }),
+    // Zoom dos botões: suave, com o tempo e a curva da câmera (e do painel).
+    zoomIn: () => map.zoomIn({ ...motion() }),
+    zoomOut: () => map.zoomOut({ ...motion() }),
     fit() {
       if (bounds) map.fitBounds(bounds, { padding: pad(), ...motion() });
       else

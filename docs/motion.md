@@ -42,7 +42,7 @@ Tokens (`tokens/extra.json`, `--motion-*`): `duration-{panel,panel-surface,heade
 | Botão de busca do cabeçalho (derivado) | Abrir/fechar a busca | Troca `filled` ↔ aparência desabilitada, com a transição do hover | Liga a 50% da entrada do painel (atraso 300 ms + o instante em que a curva chega a 50%); desliga na saída, também a 50% do painel em cena (curva de saída) | `easing-hover` | Muda na hora |
 
 | Sidebar único (`#sidebar`: busca, ficha, Classificação e Fonte, desktop) | Abrir/fechar | Os mesmos tempos do painel e da camada azul acima, para todos os conteúdos; origem **fora da tela** (largura 0, painel `translateX(100%)`) | 1300/1500 ms | `easing-panel` | Sem transição |
-| Troca de conteúdo com o sidebar aberto (derivado) | Busca → ficha, ficha → Classificação, → Fonte, outra praia | Não fecha nem reabre: o conteúdo que saiu (clone) dissolve por cima do novo | 300 ms (`duration-dissolve`) | `easing-dissolve` | Troca na hora |
+| Troca de conteúdo com o sidebar aberto (derivado) | Busca → ficha, ficha → Classificação, → Fonte, outra praia | Não fecha nem reabre: o conteúdo que saiu (clone) dissolve por cima do novo | 150 ms (`duration-dissolve`) | `easing-dissolve` | Troca na hora |
 | Câmera do mapa (derivado) | Clique no pin, escolher praia, cartão de ponto, ajustar, bairro | `easeTo`/`fitBounds` suaves até a área visível | duração do painel (1500 ms), sem atraso | `easing-panel` | Sem animação |
 
 | Botão de informação (Fonte e como ler, desktop) | Abrir/fechar a Fonte | Aparência de desabilitado (`data-engaged`) como o de busca: liga a 50% do painel na entrada e desliga a 50% na saída; trocando de painel com o sidebar aberto, na hora | transição do hover (300 ms) | `easing-hover` | Muda na hora |

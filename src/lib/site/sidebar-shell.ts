@@ -59,6 +59,11 @@ export function initSidebarShell(): void {
   // O que identifica "o conteúdo mostrado": o painel e, na ficha, a praia e a vista.
   function keyOf(p: HTMLElement | null): string | null {
     if (!p) return null;
+    if (p.id === 'search') {
+      // Estados da busca (sem digitação): sugestões, resultados, sem resultado, vista de bairro.
+      const on = (sel: string) => !p.querySelector<HTMLElement>(sel)?.hidden;
+      return `search:${on('[data-found]')}:${on('[data-empty]')}:${on('[data-hoods]')}:${on('[data-search-back]')}`;
+    }
     if (p.id !== 'panel') return p.id;
     const beach = p.querySelector<HTMLElement>('[data-beach]:not([hidden])');
     return `panel:${beach?.dataset.beach ?? ''}:${beach?.dataset.view ?? ''}`;
@@ -92,6 +97,8 @@ export function initSidebarShell(): void {
 
   function open() {
     window.clearTimeout(closeTimer);
+    window.clearTimeout(pendingClose);
+    pendingClose = undefined;
     if (shell!.hasAttribute('data-open')) return;
     shell!.setAttribute('data-active', '');
     void shell!.offsetWidth; // fixa o estado de partida (fora da tela) antes de abrir
@@ -99,8 +106,31 @@ export function initSidebarShell(): void {
     document.dispatchEvent(new CustomEvent('sidebar-open'));
   }
 
-  function close() {
+  let pendingClose: number | undefined;
+  function close(afterBanner = false) {
     if (!shell!.hasAttribute('data-open')) return;
+    // A faixa de aviso sai primeiro (index.astro): o painel começa a sair quando ela some atrás do
+    // cabeçalho (50% do trajeto, que vai além do topo).
+    if (
+      !afterBanner &&
+      document.querySelector('.map-banner[data-leaving]') &&
+      !reduce.matches &&
+      !window.matchMedia('(max-width: 1023.98px)').matches
+    ) {
+      if (pendingClose === undefined)
+        pendingClose = window.setTimeout(
+          () => {
+            pendingClose = undefined;
+            if (!visible()) close(true);
+          },
+          halfwayTime(
+            getComputedStyle(shell!).getPropertyValue(
+              '--motion-easing-pin-label',
+            ),
+          ) * ms('--motion-duration-pin-label'),
+        );
+      return;
+    }
     shell!.removeAttribute('data-open');
     const finish = () => {
       shell!.removeAttribute('data-active');
