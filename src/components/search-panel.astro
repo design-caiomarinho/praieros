@@ -210,35 +210,9 @@ const neighborhoods = suggestNeighborhoods(results);
     }
   }
 
-  /* Motion de abrir/fechar (Figma 187:3839; ver docs/motion.md). Só transform. Estado fechado =
-     fora da tela, com os tempos de SAÍDA (inverso da entrada); `data-open` = em cena, com os
-     tempos de ENTRADA. Desktop: o painel e a camada azul de fundo (::before do espaço) entram
-     da direita. Mobile (derivado): a folha sobe de baixo, sem a camada azul. */
-  .search {
-    transform: translateY(100%);
-    transition: transform var(--motion-duration-panel)
-      var(--motion-easing-panel);
-  }
-  .search[data-open] {
-    transform: none;
-    transition-delay: var(--motion-delay-panel);
-    transition-timing-function: var(--motion-easing-panel);
-  }
-  /* Desktop: quem entra e sai é o sidebar da página (camada azul + painel; ver index e
-     docs/motion.md); o painel em si não desliza, só aparece e some (a troca de conteúdo dissolve). */
-  @media (min-width: 1024px) {
-    .search,
-    .search[data-open] {
-      transform: none;
-      transition: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .search,
-    .search[data-open] {
-      transition: none;
-    }
-  }
+  /* Motion de abrir/fechar: quem entra e sai é o sidebar da página (camada azul + painel; no
+     desktop pela direita, no mobile por baixo; ver index e docs/motion.md). O painel em si não
+     desliza, só aparece e some (a troca de conteúdo dissolve). */
 
   /* Cabeçalho (Figma 117:5179): padding 24, 24 entre o bloco do título e o campo, borda inferior. */
   .head {
@@ -705,13 +679,6 @@ const neighborhoods = suggestNeighborhoods(results);
     // Motion: entrada e saída animadas por CSS (transform); a saída só esconde o painel depois
     // do fim da transição. Reabrir durante a saída reverte a partir da posição atual.
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let hideTimer: number | undefined;
-    function exitMs() {
-      const v = getComputedStyle(root).getPropertyValue(
-        '--motion-duration-panel-surface',
-      );
-      return parseFloat(v) || 0;
-    }
 
     // Aparência "desabilitada" do botão (data-engaged), no tempo da animação: liga quando o
     // painel (superfície branca) está 50% em cena e desliga na saída quando ele está de novo a 50%.
@@ -727,7 +694,6 @@ const neighborhoods = suggestNeighborhoods(results);
       else engageTimer = window.setTimeout(apply, after);
     }
 
-    const desktop = window.matchMedia('(min-width: 1024px)');
     // Instante em que o painel está a 50% em cena (fração da duração), na entrada e na saída:
     // a curva do Figma não é simétrica, então não é metade do tempo.
     const halfway = {
@@ -742,12 +708,11 @@ const neighborhoods = suggestNeighborhoods(results);
       return getComputedStyle(root).getPropertyValue(name);
     }
     function setOpen(open: boolean, animate = true) {
-      window.clearTimeout(hideTimer);
       // Sidebar já aberto por outro painel (ficha, Fonte): o painel da busca só entra no lugar,
       // então o botão já fica desativado na hora.
-      const shellOpen =
-        desktop.matches &&
-        !!document.getElementById('sidebar')?.hasAttribute('data-open');
+      const shellOpen = !!document
+        .getElementById('sidebar')
+        ?.hasAttribute('data-open');
       trigger?.setAttribute('aria-expanded', String(open));
       trigger?.setAttribute('aria-disabled', String(open));
       setEngaged(
@@ -769,18 +734,8 @@ const neighborhoods = suggestNeighborhoods(results);
         return;
       }
       root.removeAttribute('data-open');
-      if (root.hidden) return;
-      // Desktop: o sidebar da página anima a saída (com um fantasma do conteúdo): some na hora.
-      if (!animate || reduceMotion.matches || desktop.matches) {
-        root.hidden = true;
-        return;
-      }
-      // Saindo: sem foco nem leitura dentro até sumir (o foco já foi devolvido ao botão).
-      root.inert = true;
-      hideTimer = window.setTimeout(() => {
-        root.hidden = true;
-        root.inert = false;
-      }, exitMs());
+      // O sidebar da página anima a saída (com um fantasma do conteúdo): o painel some na hora.
+      root.hidden = true;
     }
 
     function open() {

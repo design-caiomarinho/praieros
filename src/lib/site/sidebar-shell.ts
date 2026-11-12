@@ -9,7 +9,7 @@
 // O botão de informação do cabeçalho (Fonte e como ler) fica com a aparência de desabilitado
 // (`data-engaged`) como o de busca: liga quando o painel está a 50% em cena e desliga também a
 // 50% na saída; trocando de painel com o sidebar aberto, na hora.
-// No mobile (folhas inferiores) não faz nada.
+// No mobile é o mesmo sidebar, na vertical (folha inferior): só o CSS muda.
 
 import { halfwayTime } from '../map/cubic-bezier.ts';
 
@@ -22,7 +22,6 @@ export function initSidebarShell(): void {
   const panes = PANE_IDS.map((id) => document.getElementById(id)).filter(
     (el): el is HTMLElement => !!el,
   );
-  const desktop = window.matchMedia('(min-width: 1024px)');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const ms = (name: string) =>
     parseFloat(getComputedStyle(shell).getPropertyValue(name)) || 0;
@@ -121,12 +120,6 @@ export function initSidebarShell(): void {
   function sync() {
     const pane = visible();
     const key = keyOf(pane);
-    if (!desktop.matches) {
-      ghosts!.replaceChildren();
-      snap = null;
-      prevKey = key;
-      return;
-    }
     if (key !== prevKey && snap) {
       ghosts!.append(snap.el);
       snap.el.scrollTop = snap.scroll;

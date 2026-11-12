@@ -414,44 +414,83 @@ const sourceBulletin = site.current
     flex: 1;
     min-height: 0;
   }
-  /* Mobile: folha inferior sobre o mapa, no mesmo padrão da busca (Figma 125:3460: 450px de
-     756px de palco, ~60%); o conteúdo rola por dentro. */
+  /* Mobile: folha inferior sobre o mapa (Figma 125:3460 e 117:5257: 450px de 756px de palco,
+     ~60%); o conteúdo rola por dentro. A folha é o mesmo sidebar do desktop, na vertical: a
+     camada azul e o painel branco sobem de baixo, com os mesmos tempos e curva (pedido de Caio). */
   .panel {
     position: absolute;
-    inset: auto 0 0;
-    height: 60%;
-    max-height: 100%;
+    inset: 0;
     overflow-y: auto;
     background: var(--s-color-surface-default);
   }
   .layout-desktop {
     display: none;
   }
-  /* Busca: o espaço só existe enquanto o painel está aberto. Mobile: folha inferior sobre o
-     mapa (Figma 117:5257: 450px de 756px de palco, ~60%), que rola inteira por dentro. */
+  /* Busca: o espaço só existe enquanto o painel está aberto. */
   .search-slot {
     display: contents;
   }
   .search-slot :global(.search) {
     position: absolute;
-    inset: auto 0 0;
-    height: 60%;
-    z-index: 3;
-  }
-  /* Sem resultado: a folha se ajusta ao conteúdo (mensagem e botão sem rolar). */
-  .search-slot :global(.search:has(.empty:not([hidden]))) {
+    inset: 0;
     height: auto;
-    max-height: 100%;
   }
-  /* Mobile: o sidebar não existe como caixa; as folhas continuam sobre o mapa. */
   @media (max-width: 1023.98px) {
-    .sidebar,
-    .sidebar__viewport {
-      display: contents;
-    }
-    .sidebar__ghosts {
+    .sidebar {
       display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 60%;
+      z-index: 3;
+      overflow: clip;
+      pointer-events: none;
     }
+    .sidebar[data-active] {
+      display: block;
+    }
+    /* Camada azul: sobe de baixo (origem fora da tela). Entra antes do painel branco e, na saída,
+       sai depois dele (atrasos do Figma 187:3839). */
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--s-color-surface-accent-default);
+      transform: translateY(100%);
+      transition: transform var(--motion-duration-panel-surface)
+        var(--motion-easing-panel) var(--motion-delay-panel-surface-close);
+    }
+    .sidebar[data-open]::before {
+      transform: none;
+      transition-delay: var(--motion-delay-panel-surface);
+    }
+    .sidebar__viewport {
+      position: absolute;
+      inset: 0;
+      pointer-events: auto;
+      transform: translateY(100%);
+      transition: transform var(--motion-duration-panel)
+        var(--motion-easing-panel);
+    }
+    .sidebar[data-open] .sidebar__viewport {
+      transform: none;
+      transition-delay: var(--motion-delay-panel);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .sidebar::before,
+      .sidebar[data-open]::before,
+      .sidebar__viewport,
+      .sidebar[data-open] .sidebar__viewport {
+        transition: none;
+      }
+    }
+  }
+  .sidebar__ghosts {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
   }
   /* Faixa de aviso da praia aberta: no topo do mapa, no desktop e no mobile (Figma 125:3460). */
   .map-banner:not([hidden]) {
@@ -511,13 +550,6 @@ const sourceBulletin = site.current
         transition: none;
       }
     }
-    .panel {
-      position: absolute;
-      inset: 0;
-      width: auto;
-      height: auto;
-      max-height: none;
-    }
     /* Corpo da ficha ocupa a altura toda (links e crédito no rodapé); rola se for alta. */
     .panel:not([hidden]) {
       display: flex;
@@ -530,11 +562,7 @@ const sourceBulletin = site.current
       flex-direction: column;
     }
     .search-slot :global(.search) {
-      position: absolute;
-      inset: 0;
       width: auto;
-      height: auto;
-      z-index: auto;
     }
     .map-banner:not([hidden]) {
       right: var(--size-panel-width);
@@ -591,28 +619,15 @@ const sourceBulletin = site.current
   .source-slot:not([hidden]) {
     display: block;
     position: absolute;
-    inset: auto 0 0;
-    height: 60%;
-    z-index: 3;
+    inset: 0;
     overflow-y: auto;
     background: var(--s-color-surface-default);
   }
   @media (min-width: 1024px) {
     .source-slot:not([hidden]) {
-      position: absolute;
-      inset: 0;
-      height: auto;
-      z-index: auto;
       display: flex;
       flex-direction: column;
       width: auto;
-      overflow-y: auto;
-    }
-    .sidebar__ghosts {
-      position: absolute;
-      inset: 0;
-      z-index: 5;
-      pointer-events: none;
     }
     .source-slot :global(section) {
       flex: 1 0 auto;

@@ -190,9 +190,6 @@ export async function createBeachMap(
 
   function refresh(e: Entry) {
     setMarkerState(e.el, e.status, e.selected);
-    e.marker.setOffset([
-      ...(e.selected ? MARKER_OFFSET.selected : MARKER_OFFSET.normal),
-    ]);
     e.el.style.zIndex = e.selected || e.hovered || e.focused ? '1' : '';
     const visible = isLabelVisible(
       {
@@ -220,7 +217,7 @@ export async function createBeachMap(
       marker: new maplibregl.Marker({
         element: el,
         anchor: 'top',
-        offset: [...MARKER_OFFSET.normal],
+        offset: [...MARKER_OFFSET],
       })
         .setLngLat([pos.lng, pos.lat])
         .addTo(map),

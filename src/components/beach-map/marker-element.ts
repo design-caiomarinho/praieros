@@ -39,6 +39,13 @@ export function createMarkerElement(view: MarkerView): HTMLButtonElement {
   const badge = document.createElement('span');
   badge.className = 'marker__badge';
   badge.setAttribute('aria-hidden', 'true');
+  // Duas camadas que trocam por fusão: o círculo do status e o pino azul de selecionado.
+  const disc = document.createElement('span');
+  disc.className = 'marker__disc';
+  const pin = document.createElement('span');
+  pin.className = 'marker__pin';
+  pin.innerHTML = selectedSvg;
+  badge.append(disc, pin);
   el.append(badge);
 
   if (view.tag) {
@@ -71,14 +78,18 @@ export function setMarkerState(
   const key = `${tone}:${selected}`;
   if (el.dataset.state === key) return;
   el.dataset.state = key;
-  const badge = el.querySelector('.marker__badge')!;
   // Troca só a variante: as classes do MapLibre (`maplibregl-marker`, âncora) posicionam o marcador.
+  // O círculo mantém a cor do status também selecionado, para sumir sem trocar de cor.
   el.classList.remove(
     ...[...el.classList].filter((c) => c.startsWith('marker--')),
   );
-  el.classList.add('marker', `marker--${selected ? 'selected' : tone}`);
+  el.classList.add('marker', `marker--${tone}`);
+  el.classList.toggle('marker--selected', selected);
   el.setAttribute('aria-pressed', String(selected));
-  badge.innerHTML = selected ? selectedSvg : svg;
+  if (el.dataset.tone !== tone) {
+    el.dataset.tone = tone;
+    el.querySelector('.marker__disc')!.innerHTML = svg;
+  }
 }
 
 /** Mostra ou esconde só o texto do nome (sem animação). Ícone, número e selo ficam. */
@@ -89,5 +100,8 @@ export function setLabelVisible(
   el.dataset.label = mode;
 }
 
-/** Deslocamento para ancorar o ponto no centro do círculo (24px) ou na ponta do pino. */
-export const MARKER_OFFSET = { normal: [0, -12], selected: [0, -24] } as const;
+/**
+ * Deslocamento fixo: ancora a ponta do pino (24px) no ponto. Normal, o círculo (24px) fica 12px
+ * mais baixo, no centro do ponto: esse ajuste é CSS (`translate` do marcador) e anima na troca.
+ */
+export const MARKER_OFFSET = [0, -24] as const;
