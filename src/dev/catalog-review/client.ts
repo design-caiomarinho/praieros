@@ -1,3 +1,4 @@
+import { neighborhoodOriginText } from '../../lib/catalog/neighborhood.ts';
 import { beachState, type BeachState } from '../../lib/catalog/review.ts';
 import type {
   Catalog,
@@ -66,6 +67,7 @@ const CONFIDENCE_TEXT = {
 function sourceText(s: CatalogSource | null): string {
   if (!s) return 'sem origem';
   if (s.provider === 'manual') return 'manual';
+  if (s.method === 'polygon') return neighborhoodOriginText(s);
   if (s.provider === 'auto') {
     return `automático (nível ${s.level ?? 'g'}) · confiança ${CONFIDENCE_TEXT[s.confidence]}`;
   }
@@ -163,7 +165,7 @@ function beachDetails(b: CatalogEntry) {
       </label>
       <button type="submit" class="btn">Salvar bairro</button>
     </form>
-    <p class="note">Origem do bairro: ${esc(sourceText(b.neighborhoodSource))}${b.neighborhoodVerified ? ' · verificado' : ''}</p>
+    <p class="note">Origem do bairro: ${esc(neighborhoodOriginText(b.neighborhoodSource, { verified: b.neighborhoodVerified, note: b.neighborhoodNote }))}</p>
     ${
       sug && sug !== 'none'
         ? `<p class="note">Sugestão do OSM: <strong>${esc(sug.neighborhood)}</strong> <button type="button" class="btn" data-act="use-suggestion" data-beach="${esc(b.name)}">Usar</button></p>`

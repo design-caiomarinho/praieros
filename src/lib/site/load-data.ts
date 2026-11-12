@@ -56,12 +56,17 @@ export async function loadSalvadorInputs(dataDir = DATA) {
     'beach-aliases.json',
     {},
   );
+  const neighborhoodNames = await optional<Record<string, string>>(
+    'neighborhood-names.json',
+    {},
+  );
   return {
     bulletins,
     catalog,
     references: references.beaches,
     referenceExclude,
     aliases,
+    neighborhoodNames,
   };
 }
 
@@ -70,13 +75,20 @@ export async function loadSalvadorModel(
   options: BuildOptions = {},
   dataDir?: string,
 ): Promise<SiteModel> {
-  const { bulletins, catalog, references, referenceExclude, aliases } =
-    await loadSalvadorInputs(dataDir);
+  const {
+    bulletins,
+    catalog,
+    references,
+    referenceExclude,
+    aliases,
+    neighborhoodNames,
+  } = await loadSalvadorInputs(dataDir);
   return buildSiteModel(bulletins, catalog, {
     excluded: NOT_BEACHES,
     references,
     referenceExclude,
     aliases,
+    neighborhoodNames,
     ...options,
   });
 }

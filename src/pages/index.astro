@@ -17,14 +17,21 @@ import {
 } from '../lib/site/panel-props.ts';
 
 // Pontos com verified: false só aparecem em desenvolvimento; em produção, nenhum.
-const { bulletins, catalog, references, referenceExclude, aliases } =
-  await loadSalvadorInputs();
+const {
+  bulletins,
+  catalog,
+  references,
+  referenceExclude,
+  aliases,
+  neighborhoodNames,
+} = await loadSalvadorInputs();
 const site = buildSiteModel(bulletins, catalog, {
   includeUnverified: import.meta.env.DEV,
   excluded: NOT_BEACHES,
   references,
   referenceExclude,
   aliases,
+  neighborhoodNames,
 });
 
 const markers = toMarkers(site.beaches);

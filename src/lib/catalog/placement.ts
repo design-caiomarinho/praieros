@@ -414,6 +414,7 @@ export function applyPlans(
           const old = p.source;
           const keepOld =
             old?.provider === 'osm' &&
+            old.method !== 'polygon' &&
             !p.proposals.some((x) => JSON.stringify(x) === JSON.stringify(old));
           const proposals = keepOld ? [...p.proposals, old] : p.proposals;
           if (plan.kind === 'placed') {

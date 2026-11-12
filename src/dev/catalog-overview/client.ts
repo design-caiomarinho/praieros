@@ -1,6 +1,10 @@
 import { migrateCatalog } from '../../lib/catalog/review.ts';
 import { pointState, type PointState } from '../../lib/catalog/placement.ts';
-import type { CatalogPoint } from '../../lib/catalog/types.ts';
+import type { CatalogPoint, CatalogSource } from '../../lib/catalog/types.ts';
+import {
+  displayNeighborhood,
+  neighborhoodOriginText,
+} from '../../lib/catalog/neighborhood.ts';
 import {
   createReviewMap,
   type ReviewPin,
@@ -16,6 +20,22 @@ interface Ref {
   lng: number;
   osmType: string;
   osmId: number;
+  neighborhood?: string | null;
+  neighborhoodSource?: CatalogSource | null;
+  neighborhoodNote?: string | null;
+}
+const names: Record<string, string> = raw.neighborhoodNames ?? {};
+
+/** Bairro exibido (com a tabela de nomes) e a origem: método, confiança e motivo. */
+function hoodLine(
+  name: string | null | undefined,
+  source: CatalogSource | null | undefined,
+  verified: boolean,
+  note: string | null | undefined,
+) {
+  const shown = name ? displayNeighborhood(name, names) : null;
+  const alias = name && shown !== name ? ` (OSM: ${name})` : '';
+  return `Bairro: ${shown ?? '—'}${alias} · ${neighborhoodOriginText(source ?? null, { verified, note })}`;
 }
 const refs: Ref[] = raw.references ?? [];
 
@@ -138,6 +158,7 @@ function render() {
       return `<h2 class="ov__group">${TITLES[s]} · ${list.length}</h2>${list
         .map((r) => {
           const where = locations[r.point.code] ?? '';
+          const beach = catalog.beaches.find((x) => x.name === r.beach);
           const detail =
             s === 'unplaced'
               ? (r.point.placementNote ?? 'sem tentativa de posicionamento')
@@ -146,6 +167,7 @@ function render() {
           <strong>${esc(r.beach)} · ponto ${r.number}</strong>
           <span class="ov__note">${esc(r.point.code)}${where ? ` · ${esc(where)}` : ''}</span>
           <span class="ov__note">${esc(detail)}</span>
+          <span class="ov__note">${esc(beach ? hoodLine(beach.neighborhood, beach.neighborhoodSource, beach.neighborhoodVerified, beach.neighborhoodNote) : '')}</span>
         </button>`;
         })
         .join('')}`;
@@ -154,7 +176,7 @@ function render() {
       ? `<h2 class="ov__group">◇ Praias de referência (OSM) · ${refs.length}</h2>${refs
           .map(
             (r) =>
-              `<button type="button" class="ov__item" data-id="${esc(`ref|${r.name}`)}" aria-pressed="${selected === `ref|${r.name}`}"><strong>${esc(r.name)}</strong><span class="ov__note">${esc(r.osmType)}/${r.osmId}</span></button>`,
+              `<button type="button" class="ov__item" data-id="${esc(`ref|${r.name}`)}" aria-pressed="${selected === `ref|${r.name}`}"><strong>${esc(r.name)}</strong><span class="ov__note">${esc(r.osmType)}/${r.osmId}</span><span class="ov__note">${esc(hoodLine(r.neighborhood, r.neighborhoodSource, false, r.neighborhoodNote))}</span></button>`,
           )
           .join('')}`
       : '');

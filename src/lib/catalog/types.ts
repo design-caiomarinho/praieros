@@ -57,7 +57,28 @@ export interface AutoSource {
   placedAt: string;
 }
 
-export type CatalogSource = OsmSource | ManualSource | AutoSource;
+/**
+ * Bairro achado por ponto-em-polígono (`npm run catalog:neighborhoods`): polígono de bairro
+ * (admin_level 10) do OpenStreetMap que contém a posição dos pontos de maior confiança.
+ */
+export interface PolygonSource {
+  provider: 'osm';
+  method: 'polygon';
+  /** high: todos os pontos da praia são de nível g, a ou b e concordam; medium: o resto. */
+  confidence: 'high' | 'medium';
+  /** Relação do polígono escolhido no OSM. */
+  osmType: 'relation';
+  osmId: number;
+  /** Nome do bairro no OSM, sem a tabela de nomes (`neighborhood-names.json`). */
+  osmName: string;
+  /** Como a decisão foi tomada (ex.: "2 de 2 pontos de nível a ou b dentro do polígono"). */
+  reason: string;
+  /** AAAA-MM-DD da geração. */
+  fetchedAt: string;
+}
+
+export type CatalogSource =
+  OsmSource | ManualSource | AutoSource | PolygonSource;
 
 /** Propostas guardadas quando uma edição substitui a posição. */
 export type ProposalSource = OsmSource | AutoSource;
@@ -107,6 +128,8 @@ export interface CatalogEntry {
   /** Propostas de bairro substituídas por edição manual (só cresce). */
   neighborhoodProposals: OsmSource[];
   neighborhoodVerified: boolean;
+  /** Por que o automático não preencheu o bairro (null se preencheu ou não tentou). */
+  neighborhoodNote?: string | null;
   /** Motivo de a proposta automática ter descartado a praia (null se não houve descarte). */
   proposalNote: string | null;
   points: CatalogPoint[];

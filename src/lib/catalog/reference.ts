@@ -1,4 +1,4 @@
-import type { OsmSource } from './types.ts';
+import type { OsmSource, PolygonSource } from './types.ts';
 import { normalizeBeachName } from '../rules/group.ts';
 import {
   distanceM,
@@ -32,7 +32,9 @@ export interface ReferenceBeach {
   fetchedAt: string;
   /** Bairro por consulta inversa do OSM (`npm run catalog:neighborhoods`); opcional. */
   neighborhood?: string | null;
-  neighborhoodSource?: OsmSource | null;
+  neighborhoodSource?: OsmSource | PolygonSource | null;
+  /** Por que o automático não preencheu o bairro. */
+  neighborhoodNote?: string | null;
 }
 
 export interface ReferenceFile {

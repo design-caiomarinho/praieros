@@ -5,7 +5,7 @@ import { loadSalvadorInputs } from '../lib/site/load-data.ts';
 
 // Visão geral do catálogo (só em `astro dev`; registrada em astro.config.mjs, fora do build).
 // Todos os pontos num único mapa, por estado, para conferência visual rápida.
-const { bulletins, catalog, references, referenceExclude } =
+const { bulletins, catalog, references, referenceExclude, neighborhoodNames } =
   await loadSalvadorInputs();
 const shownReferences = references.filter(
   (r) =>
@@ -20,6 +20,7 @@ const dataJson = JSON.stringify({
   catalog,
   locations,
   references: shownReferences,
+  neighborhoodNames,
 }).replace(/</g, '\\u003c');
 ---
 

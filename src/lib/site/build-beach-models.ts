@@ -3,6 +3,11 @@ import {
   shownInProduction,
   type Accuracy,
 } from '../catalog/placement.ts';
+import {
+  displayNeighborhood,
+  isAutoNeighborhood,
+  type NeighborhoodNames,
+} from '../catalog/neighborhood.ts';
 import type { Catalog } from '../catalog/types.ts';
 import { evaluateBeaches, summarize } from '../rules/evaluate.ts';
 import { beachKey } from '../rules/group.ts';
@@ -88,7 +93,11 @@ export interface BuildOptions {
     lng: number;
     /** Bairro do OSM (não conferido): só em desenvolvimento, como o do catálogo. */
     neighborhood?: string | null;
+    /** Origem do bairro: só `polygon` (automático) aparece em produção. */
+    neighborhoodSource?: { method: string } | null;
   }[];
+  /** Tabela de nomes de bairro aprovada (nome no OSM -> nome exibido). Só para bairro automático. */
+  neighborhoodNames?: NeighborhoodNames;
   /** Nomes de referência a ignorar (`data/catalog/reference-exclude.json`). */
   referenceExclude?: readonly string[];
 }
@@ -116,6 +125,7 @@ export function buildSiteModel(
     excluded = [],
     references: allReferences = [],
     referenceExclude = [],
+    neighborhoodNames = {},
   } = options;
   const skipped = new Set(referenceExclude.map((n) => beachKey(n, aliases)));
   const references = allReferences.filter(
@@ -125,8 +135,24 @@ export function buildSiteModel(
     references.map((r) => [beachKey(r.name, aliases), r]),
   );
   const hidden = new Set(excluded.map((n) => beachKey(n, aliases)));
-  const shownNeighborhood = (b: Catalog['beaches'][number]) =>
-    b.neighborhoodVerified || includeUnverified ? b.neighborhood : null;
+  // Bairro conferido (ou corrigido à mão) aparece sempre; o automático por polígono também.
+  // O `reverse` antigo (não conferido) só em desenvolvimento. A tabela de nomes aprovada vale
+  // só para o bairro automático: o texto de quem conferiu à mão não é alterado.
+  const shownNeighborhood = (b: Catalog['beaches'][number]) => {
+    if (!b.neighborhood) return null;
+    if (b.neighborhoodVerified) return b.neighborhood;
+    if (isAutoNeighborhood(b.neighborhoodSource) || includeUnverified)
+      return displayNeighborhood(b.neighborhood, neighborhoodNames);
+    return null;
+  };
+  const shownReferenceNeighborhood = (r: {
+    neighborhood?: string | null;
+    neighborhoodSource?: { method: string } | null;
+  }) =>
+    r.neighborhood &&
+    (includeUnverified || isAutoNeighborhood(r.neighborhoodSource))
+      ? displayNeighborhood(r.neighborhood, neighborhoodNames)
+      : null;
 
   const evaluation = evaluateBeaches(bulletins, {
     aliases,
@@ -185,7 +211,7 @@ export function buildSiteModel(
       name: state.name,
       neighborhood:
         (entry ? shownNeighborhood(entry) : null) ??
-        (includeUnverified ? reference?.neighborhood : null) ??
+        (reference ? shownReferenceNeighborhood(reference) : null) ??
         null,
       kind: state.kind,
       points,
