@@ -132,6 +132,7 @@ export function initSidebarShell(): void {
       return;
     }
     shell!.removeAttribute('data-open');
+    document.dispatchEvent(new CustomEvent('sidebar-close'));
     const finish = () => {
       shell!.removeAttribute('data-active');
       ghosts!.replaceChildren();

@@ -76,6 +76,8 @@ export interface BeachMapController {
    * visível (mesma duração e curva do painel). Não mexe se ela já aparece.
    */
   revealSelected(): void;
+  /** Sidebar fechado: centraliza o ponto marcado na área toda do mapa (sem o recuo do painel). */
+  recenterSelected(): void;
   /** Para testes e depuração. */
   getMap(): maplibregl.Map;
   destroy(): void;
@@ -527,6 +529,13 @@ export async function createBeachMap(
         offset: shift(),
         ...motion(),
       });
+    },
+    recenterSelected() {
+      const entry = beaches.find((b) => b.slug === selectedSlug);
+      const m =
+        entry?.points.find((p) => p.id === selectedPointId) ?? entry?.points[0];
+      if (!m || map.isMoving()) return;
+      map.easeTo({ center: [m.lng, m.lat], offset: [0, 0], ...motion() });
     },
     getMap: () => map,
     destroy: () => {

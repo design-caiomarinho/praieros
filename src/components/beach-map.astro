@@ -146,6 +146,10 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   };
   // O sidebar abre: leva a praia selecionada para a área visível, se ela ficar escondida.
   document.addEventListener('sidebar-open', () => controller?.revealSelected());
+  // Painel fechado com o pin ainda marcado: a câmera volta a centralizá-lo na área toda.
+  document.addEventListener('sidebar-close', () =>
+    controller?.recenterSelected(),
+  );
 
   let controller: BeachMapController | null = null;
   let selectedSlug: string | null = null;

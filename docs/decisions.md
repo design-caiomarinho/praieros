@@ -583,3 +583,4 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Zoom +/−:** suave, com o tempo e a curva da câmera (1500 ms, curva do painel).
 - **Camada azul na faixa de aviso (sessão 23m):** como a do sidebar, atrás da faixa, com a mesma animação (cor `surface-accent-default`). Entra 100 ms à frente da faixa branca (300 − 200 ms, como no painel) e, na saída, vai embora 100 ms depois (atraso de saída da camada).
 - **Largura da faixa (sessão 23n, desktop):** a faixa acompanha a largura do painel durante o movimento (transição de `right` com os tempos e a curva da camada azul do sidebar), em vez de pular para a largura final.
+- **Fechar o painel com o pin marcado (sessão 23n):** o sidebar dispara `sidebar-close` e a câmera centraliza o pin na área toda do mapa (sem o recuo do painel), com o tempo e a curva da câmera. Clicar no terreno desmarca o pin, então não há movimento.
