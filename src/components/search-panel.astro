@@ -736,7 +736,7 @@ const neighborhoods = suggestNeighborhoods(results);
     }
 
     // Aparência "desabilitada" do botão (data-engaged), no tempo da animação: liga quando o
-    // painel (superfície branca) está 50% em cena e só desliga depois da saída completa.
+    // painel (superfície branca) está 50% em cena e desliga na saída quando ele está de novo a 50%.
     // O estado para leitores de tela (aria-expanded) muda na hora.
     let engageTimer: number | undefined;
     function motionMs(name: string) {
@@ -759,7 +759,7 @@ const neighborhoods = suggestNeighborhoods(results);
           ? motionMs('--motion-delay-panel') +
               motionMs('--motion-duration-panel') / 2
           : animate && !root.hidden
-            ? exitMs()
+            ? motionMs('--motion-duration-panel') / 2
             : 0,
       );
       if (open) {

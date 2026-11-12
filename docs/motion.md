@@ -39,7 +39,7 @@ Tabela a preencher quando o motion for implementado:
 Tokens (`tokens/extra.json`, `--motion-*`): `duration-{panel,panel-surface,header-line,hover}`, `delay-{panel,panel-surface,header-line,header-line-close}`, `easing-{panel,header-line,header-line-close,hover}`. Valores do Figma 187:3839; derivações em `docs/decisions.md`.
 
 | Botões (`Button`, `ButtonIcon`) | Hover, foco, selecionado, painel aberto | `background-color`, `border-color`, `color` | 300 ms (`duration-hover`) | `easing-hover` = `0.42, 0, 0.58, 1` (dado por Caio) | Sem transição |
-| Botão de busca do cabeçalho (derivado) | Abrir/fechar a busca | Troca `filled` ↔ aparência desabilitada, com a transição do hover | Liga a 50% da entrada do painel (atraso 400 ms + metade de 1300 ms); desliga só depois da saída completa (1500 ms) | `easing-hover` | Muda na hora |
+| Botão de busca do cabeçalho (derivado) | Abrir/fechar a busca | Troca `filled` ↔ aparência desabilitada, com a transição do hover | Liga a 50% da entrada do painel (atraso 400 ms + metade de 1300 ms); desliga na saída, também a 50% do painel em cena (metade de 1300 ms) | `easing-hover` | Muda na hora |
 
 Comportamento: `transform` e `clip-path` (a coluna anima `width` sobre o mapa; o mapa não é redimensionado, e a câmera usa só a área visível à esquerda: `padding.right` e `offset` do MapLibre = largura do painel); interrompível (reabrir durante a saída reverte a partir da posição atual); o foco vai ao campo ao abrir e volta ao botão ao fechar, sem esperar a animação; durante a saída o painel fica `inert`. Troca de painel (marcador, escolher praia, abrir Fonte) tira a busca na hora, sem animar.
 
