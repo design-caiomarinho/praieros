@@ -34,7 +34,7 @@ Uma praia pode ter 1 ou mais pontos. A posição no mapa é aproximada (informar
 - **R4** **Sem resultado:** o boletim não traz informação utilizável da praia. Não exibir status nem faixa. Há **dois casos**: (a) a praia **nunca apareceu** em nenhum boletim lido; (b) a praia já teve resultado, mas **passou do limite D3** (antigo demais). No caso (b) mostrar só a **data da última análise**, nunca o status antigo.
 - **R5** Cada **ponto de coleta** tem seu próprio badge no mapa (3 pontos = 3 badges) quando o grupo da praia está aberto (clique/seleção ou zoom aproximado). Fechado, a praia de 2+ pontos mostra um marcador só (pior status: Imprópria > Sem resultado > Própria; selo redondo com o total de pontos, igual para todos). Critério e constantes em `docs/decisions.md`.
 - **R6** **Link compartilhado:** abre sempre o estado atual. A mensagem enviada (WhatsApp) fica como estava; a prévia leva status + data do boletim do momento do envio.
-- **D1** Em listas e busca, a praia mostra o **pior status** dos pontos ("1 de 3 pontos impróprios"). No mapa, cada ponto mantém o seu badge.
+- **D1** Em listas e busca, a praia mostra o **pior status** dos pontos (sem o texto "N de M pontos impróprios", removido por decisão de Caio; ver `docs/decisions.md`, sessão 18). No mapa, cada ponto mantém o seu badge.
 - **D2** O resumo (próprias / impróprias / sem resultado) conta **pontos**, e o rótulo deve dizer isso.
 - **D3** Praia desatualizada por mais de **N boletins** consecutivos sem aparecer vira "Sem resultado". `N = 3`, constante configurável (`STALE_BULLETINS_LIMIT`). Valor a confirmar.
 - **D4** Falha ou mudança de formato na leitura do PDF: manter o último boletim válido, registrar o erro e exibir aviso discreto. Não bloquear o site.

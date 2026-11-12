@@ -232,17 +232,16 @@ const sourceBulletin = site.current
     else if (marked) clearMark();
   });
 
-  // Busca: abre no lugar da ficha. Fechar sem escolher devolve a ficha que estava aberta.
-  let panelWasOpen = false;
+  // Busca: abre no lugar da ficha e a encerra de vez (a ficha não fica "viva" por baixo).
+  // Fechar a busca sem escolher volta ao mapa, nunca a uma ficha anterior. O marcador
+  // clicado continua marcado.
   document.addEventListener('search-open', () => {
-    panelWasOpen = !panel.hidden;
+    setView('beach');
     panel.hidden = true;
+    panel.querySelectorAll('[data-beach]').forEach((el) => {
+      (el as HTMLElement).hidden = true;
+    });
     syncBanner(null);
-  });
-  document.addEventListener('search-close', () => {
-    if (!panelWasOpen || !lastSlug) return;
-    panel.hidden = false;
-    syncBanner(lastSlug);
   });
   document.addEventListener('search-select', (e) => {
     const { slug } = (e as CustomEvent<{ slug: string }>).detail;
