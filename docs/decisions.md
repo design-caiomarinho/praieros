@@ -644,3 +644,5 @@ Ajuste (25b): (1) na origem, o gesto de rolar para cima no conteúdo dispara a s
 Ajuste (25b): gestos da folha não podem virar "puxar para atualizar" do navegador. `overscroll-behavior: none` em `html` e `body`; `contain` nos painéis; `touch-action: none` na alça, na folha inteira na origem e durante o movimento. Com a folha inteira, o conteúdo rola normalmente (`auto`) e a zona do título é tratada por `preventDefault` em `sidebar-sheet.ts`. Verificado pelos estilos calculados; o comportamento real de toque precisa de conferência em aparelho.
 
 Tempos (25c): animações das folhas (painel, camada azul e câmera) passam a 1000 ms. A altura da folha mobile (subir/descer pela alça e pelo gesto) fica em 800 ms, no novo token `motion.duration.sheet-drag`. Banner e faixa de carregamento seguem em 800 ms (o banner ainda acompanha a largura do painel).
+
+Tempos (25d): painel, camada azul e câmera voltam ao valor anterior à padronização, 1500 ms (não 1400: era 1500 nos tokens). A altura da folha mobile no arraste segue em 800 ms (`sheet-drag`); banner e faixa de carregamento, 800 ms.
