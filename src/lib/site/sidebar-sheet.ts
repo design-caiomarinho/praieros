@@ -62,7 +62,7 @@ export function initSidebarSheet(): void {
     syncTop();
   }
   shell.addEventListener('transitionend', (e) => {
-    if (e.target === shell && e.propertyName === 'height') settle();
+    if (e.target === shell && e.propertyName === 'transform') settle();
   });
   /** A folha vai se mover (CSS anima até a altura do estado): trava a rolagem até acabar. */
   function lockUntilSettled() {
@@ -117,6 +117,13 @@ export function initSidebarSheet(): void {
   } | null = null;
   let dragged = false;
   let suppressClick = false;
+  /** Deslocamento atual da folha em relação ao topo do palco (0 = tela toda; origem = 40%). */
+  function offsetY() {
+    return (
+      shell!.getBoundingClientRect().top -
+      (shell!.parentElement?.getBoundingClientRect().top ?? 0)
+    );
+  }
   /** Na origem, um gesto para cima em qualquer ponto da folha também pede a folha inteira. */
   function openable(target: EventTarget | null) {
     return (
@@ -129,7 +136,7 @@ export function initSidebarSheet(): void {
   function dragStart(y: number, fromContent = false) {
     drag = {
       y0: y,
-      startH: shell!.getBoundingClientRect().height,
+      startH: offsetY(),
       startExpanded: expanded,
       fromContent,
     };
@@ -156,7 +163,8 @@ export function initSidebarSheet(): void {
       shell!.style.transition = 'none';
     }
     const H = stageHeight();
-    shell!.style.height = `${Math.min(Math.max(drag.startH + dy, H * SHEET_RATIO), H)}px`;
+    const o = Math.min(Math.max(drag.startH - dy, 0), H * (1 - SHEET_RATIO));
+    shell!.style.transform = `translateY(${o}px)`;
   }
   function dragEnd() {
     if (!drag) return;
@@ -164,17 +172,19 @@ export function initSidebarSheet(): void {
     drag = null;
     if (!dragged) return;
     const H = stageHeight();
-    const h = shell!.getBoundingClientRect().height;
+    const o = offsetY();
+    const h = -o; // quanto subiu (negativo = desceu), para comparar com o ponto de partida
+    const startUp = -d.startH;
     let target: 'expanded' | 'collapsed';
-    if (h - d.startH > H * INTENT) target = 'expanded';
-    else if (d.startH - h > H * INTENT) target = 'collapsed';
+    if (h - startUp > H * INTENT) target = 'expanded';
+    else if (startUp - h > H * INTENT) target = 'collapsed';
     else target = d.startExpanded ? 'expanded' : 'collapsed';
 
     // Devolve a transição e troca o estilo inline pelo estado final: a altura anima daqui até lá.
     shell!.style.transition = '';
-    shell!.style.height = `${h}px`;
+    shell!.style.transform = `translateY(${o}px)`;
     void shell!.offsetHeight;
-    shell!.style.height = '';
+    shell!.style.transform = '';
     expanded = target === 'expanded';
     shell!.toggleAttribute('data-expanded', expanded);
     if (!expanded) resetScroll();

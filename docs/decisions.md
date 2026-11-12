@@ -646,3 +646,5 @@ Ajuste (25b): gestos da folha não podem virar "puxar para atualizar" do navegad
 Tempos (25c): animações das folhas (painel, camada azul e câmera) passam a 1000 ms. A altura da folha mobile (subir/descer pela alça e pelo gesto) fica em 800 ms, no novo token `motion.duration.sheet-drag`. Banner e faixa de carregamento seguem em 800 ms (o banner ainda acompanha a largura do painel).
 
 Tempos (25d): painel, camada azul e câmera voltam ao valor anterior à padronização, 1500 ms (não 1400: era 1500 nos tokens). A altura da folha mobile no arraste segue em 800 ms (`sheet-drag`); banner e faixa de carregamento, 800 ms.
+
+Desempenho no celular (25e): subir/descer a folha mobile animava `height` (recalcula o layout do conteúdo a cada quadro, o que travava em aparelhos reais). Agora a folha tem sempre a altura do palco e a origem (60% visível) é `translateY(40%)`; subir e descer anima só `transform`, com `will-change`, e o arraste também (`sidebar-sheet.ts`). `.stage` recorta a parte fora do palco no mobile. Mesmo tempo (`sheet-drag`, 800 ms) e mesma curva. Verificado no emulador; o ganho em aparelho real precisa de conferência.

@@ -523,17 +523,20 @@ const sourceBulletin = site.current
       left: 0;
       right: 0;
       bottom: 0;
-      height: 60%;
+      height: 100%;
       z-index: 3;
       overflow: clip;
       pointer-events: none;
-      /* Rolando o conteúdo a folha cresce até a tela toda; de volta ao topo, volta (sidebar-sheet.ts).
-         Mesmo tempo e curva da camada azul do sidebar. */
-      transition: height var(--motion-duration-sheet-drag)
+      /* A folha tem sempre a altura do palco e a origem (60% visível) é um deslocamento: subir e
+         descer anima só transform (composição, sem recalcular layout a cada quadro, o que travava
+         no celular). A parte de baixo fica fora do palco (recortada por .stage). */
+      transform: translateY(40%);
+      will-change: transform;
+      transition: transform var(--motion-duration-sheet-drag)
         var(--motion-easing-panel);
     }
     .sidebar[data-expanded] {
-      height: 100%;
+      transform: none;
     }
     /* Sem rolagem interna na posição de origem nem enquanto a folha se move: o conteúdo só rola com a
        folha na tela toda e já fixada (data-expanded sem data-moving, sidebar-sheet.ts). */
@@ -589,6 +592,9 @@ const sourceBulletin = site.current
     }
     .sidebar[data-active] {
       display: block;
+    }
+    .stage {
+      overflow: clip;
     }
     /* Camada azul: sobe de baixo (origem fora da tela). Entra antes do painel branco e, na saída,
        sai depois dele (atrasos do Figma 187:3839). */
