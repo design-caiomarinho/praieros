@@ -56,7 +56,8 @@ Implementar R1–R4 e D1–D3 como **funções puras** (sem I/O), com testes uni
 
 ## Telas (escopo)
 
-Mapa + painel · Busca (sugestões antes de digitar; resultados ao digitar) · Ficha da praia · Classificação · Fonte e como ler · Compartilhar praia · Compartilhar site · Resumo do boletim (desktop) · Estados: carregando, erro, mapa indisponível, sem resultado de busca, praia não encontrada, desatualizada.
+Mapa + painel · Busca (sugestões antes de digitar; resultados ao digitar) · Ficha da praia · Classificação · Fonte e como ler · Estados: carregando, erro, mapa indisponível, sem resultado de busca, praia não encontrada, desatualizada.
+**Fora do escopo:** Resumo do boletim (desktop), não será feito. **Pendentes, para depois:** Compartilhar praia e Compartilhar site (botões já existem sem ação; a R6 vale quando forem feitos).
 Layout: desktop = mapa + painel lateral; mobile = mapa + folha inferior. Medidas e detalhes vêm do Figma e de `tokens/tokens.json`.
 **Design é a fonte visual.** O Figma é a referência; o wireframe antigo não é. Onde o design não define algo, decidir com bom senso e **registrar a decisão em `docs/decisions.md`**.
 
@@ -128,4 +129,5 @@ Fase 3, sessão 12: busca desktop (`search-panel`, `src/lib/search/` com testes)
 Fase 3, sessão 13: bairro automático por polígono do OSM (`npm run catalog:neighborhoods`, níveis g/a/b, nunca grava `verified`); aparece em produção, com a tabela de nomes aprovada `data/catalog/neighborhood-names.json` (ver `docs/decisions.md`).
 Fase 3, sessão 14: painel Classificação (desktop, só Própria; Imprópria pendente de texto), aberto por "Ver detalhes" na ficha. Ver `docs/decisions.md`.
 Fase 3, sessão 15: painel Fonte e como ler (desktop, `source-panel.astro`, aberto pelo cabeçalho e pela ficha, créditos do mapa provisórios). Ver `docs/decisions.md`.
-Próxima: folha inferior (mobile) e busca mobile. Pendentes: ler os Termos do OpenFreeMap antes de publicar; termos de uso do site do Inema.
+Sessão 16 (escopo, só docs): Resumo do boletim sai do escopo; Compartilhar praia/site ficam pendentes (R6 mantida); ver `docs/decisions.md`.
+Próxima: refinar o mobile (folha inferior, busca mobile, Classificação e Fonte no mobile) e depois o motion (`docs/motion.md`). Pendentes: ler os Termos do OpenFreeMap antes de publicar; termos de uso do site do Inema.

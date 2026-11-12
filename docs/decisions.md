@@ -396,3 +396,9 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Boletim:** "nº 36 / 29/10/2026" é exemplo; número (formato `37/2026`, como na ficha), data e PDF vêm do boletim atual. Sem boletim atual: a linha fica "Inema, Boletim de Balneabilidade." e o botão some.
 - **Créditos do mapa:** uma linha, sem prosa, com os links das licenças, em nova aba (com "(abre em nova aba)" só para leitor de tela). Provisória: não está no design. Sem link para a página oficial do Inema (o design só traz "Boletim original"). Decisão do Caio.
 - **Tokens:** o negrito dos rótulos ("Fonte:" etc.) é Bold no Figma; os tokens só têm 400/500/600, usamos 600 (o maior). Créditos do mapa no mesmo texto dos demais itens (`body-medium`), com sublinhado nos links.
+
+## Sessão 16: ajuste de escopo (só docs)
+
+- **Resumo do boletim (desktop):** sai do escopo; não será feito.
+- **Compartilhar praia e Compartilhar site:** ficam **pendentes, para depois**. Os botões existentes (ficha, Classificação, cabeçalho) continuam sem ação. A **R6** (link compartilhado abre sempre o estado atual; prévia com status + data do boletim do momento do envio) permanece válida para quando forem feitos.
+- **Próxima etapa:** refinar o mobile (folha inferior, busca mobile, Classificação e Fonte e como ler no mobile) e depois o motion (`docs/motion.md`).
