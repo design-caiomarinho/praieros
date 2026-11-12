@@ -287,7 +287,7 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Limite de navegação:** folga em torno de Salvador de 0,02° para 0,05° (~5,5 km), para o zoom mínimo mostrar mais terreno fora da cidade.
 
 - **Fora do site (não são praia):** Santa Maria, Lagoa de Pituaçu e Lagoa de Abaete (`NOT_BEACHES` em `src/lib/site/load-data.ts`). O Inema as lista no boletim, mas o Praieros mostra só praias: ficam fora do mapa, da busca e do resumo. Os boletins gravados e o catálogo não mudam; é decisão de exibição.
-- **Nomes nos pins abertos:** todos os pins seguem a mesma regra de nome do zoom 13 (antes só o pin 1 mostrava).
+- **Nomes nos pins abertos (revisto em 2026-11-11):** só o pin selecionado mostra o nome (em qualquer zoom); os outros pins do grupo mostram só o número, e o nome aparece neles apenas com foco ou hover. Praias de um ponto seguem a regra do zoom 13.
 - **Clique no marcador:** vale para o marcador todo (ícone, selo e nome); o SVG interno não recebe clique e o estado visual só é refeito quando muda.
 - **Fechar a ficha mantém a marca:** ao fechar a ficha (X ou Esc), o último marcador clicado continua no estado selecionado (pino azul) e recebe o foco, para o usuário não perder a referência. Depois disso, clique no mapa vazio ou Esc tira a marca. Antes, fechar a ficha limpava a seleção.
 

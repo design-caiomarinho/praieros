@@ -299,11 +299,11 @@ export async function createBeachMap(
               slug: m.slug,
               status: m.status,
               ariaLabel: m.ariaLabel,
-              // Todos os pins seguem a mesma regra de nome (zoom, seleção, foco ou hover).
+              // Nome só no pin selecionado (ou com foco/hover); em qualquer zoom.
               label: m.beachName,
               tag: { text: String(m.number) },
             },
-            LABEL_MIN_ZOOM,
+            Infinity,
             m.id,
             () => onSelect({ slug: g.slug, pointId: m.id }),
           );
