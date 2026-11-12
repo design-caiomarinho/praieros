@@ -40,4 +40,26 @@ const { title, description } = Astro.props;
     font-size: var(--s-typo-body-medium-size);
     line-height: var(--s-typo-body-medium-line);
   }
+  /* Barra de rolagem fina (4px) em todas as áreas roláveis (painéis, busca, ficha), não só no body. */
+  * {
+    --sb-track-color: var(--primitives-color-neutral-200);
+    --sb-thumb-color: var(--primitives-color-neutral-300);
+    --sb-size: var(--primitives-spacing-4);
+  }
+  *::-webkit-scrollbar {
+    width: var(--sb-size);
+    height: var(--sb-size);
+  }
+  *::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+  }
+  @supports not selector(::-webkit-scrollbar) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    }
+  }
 </style>
