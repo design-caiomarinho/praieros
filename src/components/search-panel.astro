@@ -735,10 +735,33 @@ const neighborhoods = suggestNeighborhoods(results);
       return parseFloat(v) || 0;
     }
 
+    // Aparência "desabilitada" do botão (data-engaged), no tempo da animação: liga quando o
+    // painel (superfície branca) está 50% em cena e só desliga depois da saída completa.
+    // O estado para leitores de tela (aria-expanded) muda na hora.
+    let engageTimer: number | undefined;
+    function motionMs(name: string) {
+      return parseFloat(getComputedStyle(root).getPropertyValue(name)) || 0;
+    }
+    function setEngaged(on: boolean, after: number) {
+      window.clearTimeout(engageTimer);
+      const apply = () => trigger?.toggleAttribute('data-engaged', on);
+      if (after <= 0 || reduceMotion.matches) apply();
+      else engageTimer = window.setTimeout(apply, after);
+    }
+
     function setOpen(open: boolean, animate = true) {
       window.clearTimeout(hideTimer);
       trigger?.setAttribute('aria-expanded', String(open));
       trigger?.setAttribute('aria-disabled', String(open));
+      setEngaged(
+        open,
+        open
+          ? motionMs('--motion-delay-panel') +
+              motionMs('--motion-duration-panel') / 2
+          : animate && !root.hidden
+            ? exitMs()
+            : 0,
+      );
       if (open) {
         root.inert = false;
         root.hidden = false;

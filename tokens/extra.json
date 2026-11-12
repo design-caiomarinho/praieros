@@ -19,7 +19,8 @@
     "duration": {
       "panel": { "$type": "duration", "$value": 1300 },
       "panel-surface": { "$type": "duration", "$value": 1500 },
-      "header-line": { "$type": "duration", "$value": 418 }
+      "header-line": { "$type": "duration", "$value": 418 },
+      "hover": { "$type": "duration", "$value": 300 }
     },
     "delay": {
       "panel": { "$type": "duration", "$value": 400 },
@@ -36,7 +37,8 @@
       "header-line-close": {
         "$type": "cubicBezier",
         "$value": "0.65, 0, 0.36, 0.95"
-      }
+      },
+      "hover": { "$type": "cubicBezier", "$value": "0.42, 0, 0.58, 1" }
     }
   },
   "size": {

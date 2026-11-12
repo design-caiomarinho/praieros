@@ -245,6 +245,7 @@
   --motion-duration-panel: 1300ms;
   --motion-duration-panel-surface: 1500ms;
   --motion-duration-header-line: 418ms;
+  --motion-duration-hover: 300ms;
   --motion-delay-panel: 400ms;
   --motion-delay-panel-surface: 200ms;
   --motion-delay-header-line: 304ms;
@@ -252,6 +253,7 @@
   --motion-easing-panel: cubic-bezier(0.645, 0.045, 0.355, 1);
   --motion-easing-header-line: cubic-bezier(0.64, 0.05, 0.35, 1);
   --motion-easing-header-line-close: cubic-bezier(0.65, 0, 0.36, 0.95);
+  --motion-easing-hover: cubic-bezier(0.42, 0, 0.58, 1);
 
   --size-panel-width: 477px;
 }

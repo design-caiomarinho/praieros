@@ -77,6 +77,16 @@ const attrs = asLink
     white-space: nowrap;
     text-decoration: none;
     cursor: pointer;
+    /* Troca de estado (hover, foco, selecionado) suave; tempo e curva do Figma via Caio. */
+    transition:
+      background-color var(--motion-duration-hover) var(--motion-easing-hover),
+      border-color var(--motion-duration-hover) var(--motion-easing-hover),
+      color var(--motion-duration-hover) var(--motion-easing-hover);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn {
+      transition: none;
+    }
   }
   /* Alturas do Figma (56 e 48) = 2 x inset + 24, sem token próprio. */
   .btn--medium {
