@@ -170,9 +170,40 @@ const sourceBulletin = site.current
     });
   }
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  /** Mostra a faixa da praia aberta. Ela desce de trás do cabeçalho (como o nome do pin) e, ao
+   *  fechar sem outra faixa no lugar, sobe de volta; com outra faixa, a troca é direta. */
   function syncBanner(slug: string | null) {
-    document.querySelectorAll<HTMLElement>('[data-banner]').forEach((el) => {
-      el.hidden = el.getAttribute('data-banner') !== slug;
+    const banners = [
+      ...document.querySelectorAll<HTMLElement>('[data-banner]'),
+    ];
+    const next = banners.find((el) => el.getAttribute('data-banner') === slug);
+    banners.forEach((el) => {
+      window.clearTimeout(Number(el.dataset.timer) || undefined);
+      el.removeAttribute('data-timer');
+      if (el === next) {
+        el.removeAttribute('data-leaving');
+        el.hidden = false;
+      } else if (el.hidden) {
+        el.removeAttribute('data-leaving');
+      } else if (next || reduceMotion.matches) {
+        el.removeAttribute('data-leaving');
+        el.hidden = true;
+      } else if (!el.hasAttribute('data-leaving')) {
+        el.setAttribute('data-leaving', '');
+        const ms =
+          parseFloat(
+            getComputedStyle(el).getPropertyValue(
+              '--motion-duration-pin-label',
+            ),
+          ) || 1000;
+        el.dataset.timer = String(
+          window.setTimeout(() => {
+            el.hidden = true;
+            el.removeAttribute('data-leaving');
+          }, ms),
+        );
+      }
     });
   }
 
@@ -509,6 +540,31 @@ const sourceBulletin = site.current
     left: 0;
     right: 0;
     z-index: 2;
+    /* Recorta no topo do palco: a faixa sai de trás do cabeçalho. */
+    overflow: clip;
+  }
+  /* Entrada como o nome do pin e o aviso Carregando (Figma 204:7892): de cima para baixo, 1000 ms
+     na curva do nome; aqui sem opacidade (sai de trás do cabeçalho, 100% de altura → 0). A saída é
+     o inverso. */
+  .map-banner > :global(*) {
+    animation: banner-in var(--motion-duration-pin-label)
+      var(--motion-easing-pin-label) both;
+  }
+  .map-banner[data-leaving] > :global(*) {
+    animation-direction: reverse;
+  }
+  @keyframes banner-in {
+    from {
+      translate: 0 -100%;
+    }
+    to {
+      translate: 0 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .map-banner > :global(*) {
+      animation: none;
+    }
   }
   /* Desktop: painel lateral à direita, com a largura do BeachPanel. */
   @media (min-width: 1024px) {
