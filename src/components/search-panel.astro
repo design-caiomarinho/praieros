@@ -7,7 +7,6 @@ import { pointsLabel } from '../lib/format/points-label.ts';
 import { STATUS_LABELS } from '../lib/rules/status.ts';
 import { abbreviateLabel } from '../lib/search/abbreviate.ts';
 import {
-  improperSummary,
   suggestNeighborhoods,
   type SearchResult,
 } from '../lib/search/search.ts';
@@ -72,7 +71,6 @@ const neighborhoods = suggestNeighborhoods(results);
           ]
             .filter(Boolean)
             .join(' · ');
-          const improper = improperSummary(r);
           return (
             <li
               data-result
@@ -93,7 +91,6 @@ const neighborhoods = suggestNeighborhoods(results);
                     <span class="sr-only">{STATUS_LABELS[r.status]}</span>
                     <span class="sub">{meta}</span>
                   </span>
-                  {improper && <span class="sub">{improper}</span>}
                   {r.outdated && <span class="sub">Boletim desatualizado</span>}
                 </span>
                 <Icon name="chevron-right" size={20} />
