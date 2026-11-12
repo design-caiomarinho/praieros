@@ -69,22 +69,23 @@ Sessão 11: "Posição aproximada" e "Posição muito aproximada" (linhas acima)
 
 ## Busca (Figma 117:5075, 2026-11-12)
 
-| Onde                                     | Texto                                                                         | Observação                                                  |
-| ---------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| Título do painel                         | Buscar                                                                        | Figma                                                       |
-| Chip do boletim                          | Boletim nº X · emitido em dd/mm/aaaa                                          | Figma; número e data do boletim atual                       |
-| Campo (placeholder e rótulo acessível)   | Buscar praia                                                                  | Figma                                                       |
-| Rótulo da seção de sugestões             | Bairros                                                                       | Figma; os bairros vêm do catálogo (ver `docs/decisions.md`) |
-| Fechar (rótulo acessível)                | Fechar busca                                                                  | Provisório                                                  |
-| Lista de resultados (rótulo acessível)   | Resultados da busca                                                           | Provisório                                                  |
-| Item de resultado                        | Nome · bairro · "N ponto(s) de coleta" · chip de status                       | Derivado. Praia sem ponto: sem contagem                     |
-| Item de resultado, D1                    | N de M pontos impróprios                                                      | Só com 2+ pontos e ao menos um impróprio                    |
-| Item de resultado, desatualizada         | Boletim desatualizado                                                         | Texto existente; chip mostra o último status conhecido      |
-| Sem resultado de busca, título           | Não encontramos praias para “termo digitado”                                  | Figma (imagem enviada por Caio); usa o texto digitado       |
-| Sem resultado de busca, texto            | Tente outro nome ou busque pelo bairro. Você também pode ver todas as praias. | Figma                                                       |
-| Sem resultado de busca, botão            | Tente novamente                                                               | Limpa o campo e volta aos bairros                           |
-| Anúncio para leitor de tela              | "N praias encontradas" / "1 praia encontrada" / "Nenhuma praia encontrada"    | Provisório                                                  |
-| "Perto de você · Usar minha localização" | Não implementado                                                              | Pendente do design (ver `docs/decisions.md`)                |
+| Onde                                      | Texto                                                                         | Observação                                                  |
+| ----------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| Título do painel                          | Buscar                                                                        | Figma                                                       |
+| Chip do boletim                           | Boletim nº X · emitido em dd/mm/aaaa                                          | Figma; número e data do boletim atual                       |
+| Campo (placeholder e rótulo acessível)    | Buscar praia                                                                  | Figma                                                       |
+| Rótulo da seção de sugestões              | Bairros                                                                       | Figma; os bairros vêm do catálogo (ver `docs/decisions.md`) |
+| Praia sem ponto de coleta (item da busca) | Sem ponto de coleta                                                           | Decisão de Caio (sessão 19b)                                |
+| Fechar (rótulo acessível)                 | Fechar busca                                                                  | Provisório                                                  |
+| Lista de resultados (rótulo acessível)    | Resultados da busca                                                           | Provisório                                                  |
+| Item de resultado                         | Nome · bairro · "N ponto(s) de coleta" · chip de status                       | Derivado. Praia sem ponto: sem contagem                     |
+| Item de resultado, D1                     | N de M pontos impróprios                                                      | Só com 2+ pontos e ao menos um impróprio                    |
+| Item de resultado, desatualizada          | Boletim desatualizado                                                         | Texto existente; chip mostra o último status conhecido      |
+| Sem resultado de busca, título            | Não encontramos praias para “termo digitado”                                  | Figma (imagem enviada por Caio); usa o texto digitado       |
+| Sem resultado de busca, texto             | Tente outro nome ou busque pelo bairro. Você também pode ver todas as praias. | Figma                                                       |
+| Sem resultado de busca, botão             | Tente novamente                                                               | Limpa o campo e volta aos bairros                           |
+| Anúncio para leitor de tela               | "N praias encontradas" / "1 praia encontrada" / "Nenhuma praia encontrada"    | Provisório                                                  |
+| "Perto de você · Usar minha localização"  | Não implementado                                                              | Pendente do design (ver `docs/decisions.md`)                |
 
 ## Classificação (Figma 125:3895, 2026-11-12)
 

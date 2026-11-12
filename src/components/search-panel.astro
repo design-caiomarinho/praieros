@@ -92,7 +92,7 @@ const neighborhoods = suggestNeighborhoods(results);
       </p>
       <ul class="results" data-results aria-label="Resultados da busca">
         {results.map((r) => {
-          // Praia sem ponto de coleta (informação desconhecida) mostra "Nenhum ponto de coleta", como
+          // Praia sem ponto de coleta (informação desconhecida) mostra "Sem ponto de coleta", como
           // no concept da busca.
           const meta = [r.neighborhood, pointsLabel(r.pointCount)]
             .filter(Boolean)
