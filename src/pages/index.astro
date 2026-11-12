@@ -456,8 +456,10 @@ const sourceBulletin = site.current
       flex-direction: column;
     }
     .search-slot :global(.search) {
-      position: static;
-      flex-shrink: 0;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
       height: auto;
       z-index: auto;
     /* Ancorada à direita da coluna (que cresce na abertura); ver motion em search-panel. */
