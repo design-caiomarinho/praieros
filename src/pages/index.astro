@@ -145,6 +145,7 @@ const sourceBulletin = site.current
 </BaseLayout>
 
 <script>
+  import { halfwayTime } from '../lib/map/cubic-bezier.ts';
   import { initSidebarShell } from '../lib/site/sidebar-shell.ts';
 
   initSidebarShell();
@@ -172,6 +173,17 @@ const sourceBulletin = site.current
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const mobile = window.matchMedia('(max-width: 1023.98px)');
+  /** Quando o painel chega a 50% do trajeto (a curva é rápida no começo e longa no fim): a faixa
+   *  entra daí, sem esperar o painel terminar de chegar. */
+  function panelHalfway(): number {
+    const cs = getComputedStyle(document.documentElement);
+    const n = (name: string) => parseFloat(cs.getPropertyValue(name)) || 0;
+    return (
+      n('--motion-delay-panel') +
+      halfwayTime(cs.getPropertyValue('--motion-easing-panel')) *
+        n('--motion-duration-panel')
+    );
+  }
   /** Mostra a faixa da praia aberta. Ela desce de trás do cabeçalho (como o nome do pin) e, ao
    *  fechar sem outra faixa no lugar, sobe de volta; com outra faixa, a troca é direta. */
   function syncBanner(slug: string | null) {
@@ -196,9 +208,7 @@ const sourceBulletin = site.current
             !document.getElementById('sidebar')?.hasAttribute('data-open');
           el.style.setProperty(
             '--banner-delay',
-            opening
-              ? 'calc(var(--motion-delay-panel) + var(--motion-duration-panel))'
-              : '0ms',
+            `${opening ? panelHalfway() : 0}ms`,
           );
         }
         el.hidden = false;
