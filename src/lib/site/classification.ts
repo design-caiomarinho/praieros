@@ -21,8 +21,8 @@ export interface ClassificationContent {
 }
 
 /**
- * Textos por status. `null` = texto pendente (não há copy aprovada): a Classificação
- * não é oferecida. Só Própria tem texto no design; ver docs/copy.md.
+ * Textos por status. `null` = sem texto: a Classificação não é oferecida (Sem resultado).
+ * Própria vem do design; Imprópria foi escrita no mesmo tom (provisória, ver docs/copy.md).
  */
 export const CLASSIFICATION_CONTENT: Record<
   Status,
@@ -37,7 +37,15 @@ export const CLASSIFICATION_CONTENT: Record<
     statusText:
       'A água ficou dentro do limite definido para o banho neste ponto, de acordo com a análise feita na coleta mais recente do boletim.',
   },
-  unsuitable: null,
+  unsuitable: {
+    status: 'unsuitable',
+    source:
+      'Águas consideradas impróprias são aquelas que não atendem aos critérios definidos para o uso de recreação de contato primário.',
+    plain:
+      'A análise mede a quantidade de bactérias de origem fecal na água. Neste ponto, o resultado não atendeu ao critério no dia da coleta. O resultado pode mudar nos próximos boletins.',
+    statusText:
+      'A água não atendeu ao critério definido para o banho neste ponto, de acordo com a análise feita na coleta mais recente do boletim.',
+  },
   'no-result': null,
 };
 

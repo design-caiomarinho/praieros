@@ -14,13 +14,13 @@ describe('classificationFor', () => {
       classificationFor({ kind: 'stale', worstStatus: 'suitable' }),
     ).not.toBeNull();
   });
-  it('não oferece Imprópria (texto pendente)', () => {
+  it('oferece para Imprópria, no boletim atual e desatualizada', () => {
     expect(
       classificationFor({ kind: 'current', worstStatus: 'unsuitable' }),
-    ).toBeNull();
+    ).toMatchObject({ status: 'unsuitable' });
     expect(
       classificationFor({ kind: 'stale', worstStatus: 'unsuitable' }),
-    ).toBeNull();
+    ).toMatchObject({ status: 'unsuitable' });
   });
   it('não oferece quando o pior status é Sem resultado', () => {
     expect(
