@@ -46,7 +46,10 @@ const response = await overpassRaw<{ elements: GeomElement[] }>(
   neighborhoodAreasQuery(B.lat[0], B.lng[0], B.lat[1], B.lng[1]),
 );
 const areas = areasFromElements(response.elements);
-console.log(`Polígonos de bairro (admin_level 10) no OSM: ${areas.length}\n`);
+const closed = areas.filter((x) => x.gapsClosed);
+console.log(
+  `Polígonos de bairro (admin_level 10) no OSM: ${areas.length}; ${closed.length} fechados na montagem (vão de até 150 m): ${closed.map((x) => x.name).join(', ')}\n`,
+);
 
 interface Row {
   kind: 'boletim' | 'referência' | 'conferido';
@@ -80,7 +83,12 @@ for (const b of next.beaches) {
     if ('skipped' in r) skipped.push(r);
     else trusted.push(r);
   }
-  const d: NeighborhoodDecision = decideNeighborhood(trusted, skipped, areas);
+  const d: NeighborhoodDecision = decideNeighborhood(
+    trusted,
+    skipped,
+    areas,
+    b.name,
+  );
   if (d.ok) {
     b.neighborhood = d.area.name;
     b.neighborhoodSource = polygonSource(d, today);

@@ -6,11 +6,11 @@ Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automáti
 
 ## São Tomé de Paripe
 
-- [ ] Conferir bairro (proposta: São Tomé de Paripe)
+- [ ] Bairro
 
 ## Tubarão
 
-- [ ] Conferir bairro (proposta: Vila São Tomé de Paripe)
+- [ ] Bairro
 
 ## Periperi
 
@@ -19,7 +19,7 @@ Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automáti
 ## Penha
 
 - [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: mais de uma candidata (2); descrição (SSA PE 100): não encontrada
-- [ ] Bairro
+- [ ] Conferir bairro (proposta: Ribeira)
 
 ## Bogari
 
@@ -36,11 +36,11 @@ Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automáti
 ## Pedra Furada
 
 - [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA FU 100): não encontrada
-- [ ] Bairro
+- [ ] Conferir bairro (proposta: Monte Serrat)
 
 ## Boa Viagem
 
-- [ ] Conferir bairro (proposta: Boa Viagem)
+- [ ] Conferir bairro (proposta: Monte Serrat)
 
 ## Roma
 
@@ -51,7 +51,7 @@ Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automáti
 ## Canta Galo
 
 - [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA CG 100): não encontrada
-- [ ] Bairro
+- [ ] Conferir bairro (proposta: Calçada)
 
 ## Marina Contorno
 
@@ -66,12 +66,12 @@ Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automáti
 ## Santa Maria
 
 - [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA SM 100): não encontrada
-- [ ] Bairro
+- [ ] Conferir bairro (proposta: Barra)
 
 ## Farol da Barra
 
 - [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA FB 100, SSA FB 200): sem nome próprio na descrição / não encontrada
-- [ ] Bairro
+- [ ] Conferir bairro (proposta: Barra)
 
 ## Ondina
 
@@ -80,7 +80,7 @@ Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automáti
 ## Rio Vermelho
 
 - [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / a praia achada tem outro nome; overpass: nenhuma correspondência de nome; descrição (SSA RV 100, SSA RV 200): não encontrada / sem nome próprio na descrição
-- [ ] Bairro
+- [ ] Conferir bairro (proposta: Rio Vemelho)
 - [ ] Posição muito aproximada de `SSA RV 200` (nível d): Próximo à escada de acesso à praia, em frente à igreja Nossa Senhora de Santana.
 
 ## Buracão
@@ -114,7 +114,7 @@ Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automáti
 ## Lagoa de Pituaçu
 
 - [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA LP 100): sem nome próprio na descrição
-- [ ] Bairro
+- [ ] Conferir bairro (proposta: Imbuí)
 
 ## Piatã
 
@@ -123,7 +123,7 @@ Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automáti
 ## Placafor
 
 - [ ] Proposta descartada: nome: não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA PF 100): não encontrada
-- [ ] Bairro
+- [ ] Conferir bairro (proposta: Piatã)
 
 ## Itapuã
 
@@ -136,12 +136,12 @@ Ponto sem coordenada fica fora do mapa; o motivo vem do posicionamento automáti
 ## Farol de Itapuã
 
 - [ ] Proposta descartada: nome: o OSM não traz uma praia com esse nome / a praia achada tem outro nome / não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA FI 100): não encontrada
-- [ ] Bairro
+- [ ] Conferir bairro (proposta: Itapuã)
 
 ## Stella Mares
 
 - [ ] Proposta descartada: nome: não encontrada; overpass: nenhuma correspondência de nome; descrição (SSA ST 100): não encontrada
-- [ ] Bairro
+- [ ] Conferir bairro (proposta: Stella Maris)
 
 ## Flamengo
 

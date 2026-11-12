@@ -96,7 +96,7 @@
       "fetchedAt": "2026-11-12",
       "neighborhood": null,
       "neighborhoodSource": null,
-      "neighborhoodNote": "a posição da praia não cai em nenhum polígono de bairro do OSM"
+      "neighborhoodNote": "a posição da praia não cai em nenhum polígono de bairro do OSM nem está a até 100 m de um único polígono"
     },
     {
       "name": "Praia de Ipitanga",
@@ -192,7 +192,7 @@
       "fetchedAt": "2026-11-12",
       "neighborhood": null,
       "neighborhoodSource": null,
-      "neighborhoodNote": "a posição da praia não cai em nenhum polígono de bairro do OSM"
+      "neighborhoodNote": "a posição da praia não cai em nenhum polígono de bairro do OSM nem está a até 100 m de um único polígono"
     },
     {
       "name": "Praia do Paredão",
@@ -223,9 +223,18 @@
       "lng": -38.41787791968652,
       "source": "osm",
       "fetchedAt": "2026-11-12",
-      "neighborhood": null,
-      "neighborhoodSource": null,
-      "neighborhoodNote": "a posição da praia não cai em nenhum polígono de bairro do OSM"
+      "neighborhood": "Boca do Rio",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 11326825,
+        "osmName": "Boca do Rio",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia Jardim de Alah",
@@ -235,9 +244,18 @@
       "lng": -38.4433419648862,
       "source": "osm",
       "fetchedAt": "2026-11-12",
-      "neighborhood": null,
-      "neighborhoodSource": null,
-      "neighborhoodNote": "a posição da praia não cai em nenhum polígono de bairro do OSM"
+      "neighborhood": "Costa Azul",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14211739,
+        "osmName": "Costa Azul",
+        "reason": "posição vinda da geometria da praia dentro do polígono",
+        "fetchedAt": "2026-11-12"
+      },
+      "neighborhoodNote": null
     },
     {
       "name": "Praia Terceira Ponte",

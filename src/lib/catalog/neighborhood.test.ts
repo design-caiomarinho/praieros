@@ -201,3 +201,108 @@ describe('isAutoNeighborhood', () => {
     expect(isAutoNeighborhood(null)).toBe(false);
   });
 });
+
+describe('A: contorno com vão pequeno', () => {
+  const toLon = (ps: { lat: number; lng: number }[]) =>
+    ps.map((p) => ({ lat: p.lat, lon: p.lng }));
+  /** Quadrado em dois trechos; `gapDeg` deixa um vão no canto final (0,0001° ~ 11 m). */
+  const rel = (gapDeg: number): GeomElement => {
+    const ring = square(-13.0, -38.5);
+    // trecho 1: do canto 0 até o canto 3; trecho 2: do canto 3 até o fim, mas terminando
+    // `gapDeg` antes de fechar no canto 0.
+    const w1 = ring.slice(0, 4);
+    const w2 = [ring[3]!, { lat: ring[4]!.lat - gapDeg, lng: ring[4]!.lng }];
+    return {
+      type: 'relation',
+      id: 5,
+      tags: { name: 'Com Vão', admin_level: '10' },
+      members: [
+        { type: 'way', role: 'outer', geometry: toLon(w1) },
+        { type: 'way', role: 'outer', geometry: toLon(w2) },
+      ],
+    };
+  };
+  it('fecha vão de até 150 m e conta o fecho', () => {
+    const out = areasFromElements([rel(0.0005)]); // ~55 m
+    expect(out).toHaveLength(1);
+    expect(out[0]!.gapsClosed).toBe(1);
+    expect(areasAt({ lat: -12.995, lng: -38.495 }, out)).toHaveLength(1);
+  });
+  it('vão maior que 150 m: o polígono é descartado', () => {
+    expect(areasFromElements([rel(0.002)])).toEqual([]); // ~220 m
+  });
+  it('contorno que já fecha não conta fecho', () => {
+    expect(areasFromElements([rel(0)])[0]?.gapsClosed).toBeUndefined();
+  });
+});
+
+describe('B: tolerância de 100 m', () => {
+  const E = area(3, 'Longe', -13.0, -38.52);
+  const near = { lat: -12.995, lng: -38.5005 }; // ~54 m de Barra
+  it('ponto fora de todo polígono, a até 100 m do mais próximo e sem empate: usa-o', () => {
+    const d = decideNeighborhood([pt('1', near)], [], [A, E]);
+    expect(d).toMatchObject({ ok: true, confidence: 'medium' });
+    expect(d.ok && d.area.name).toBe('Barra');
+    expect(d.ok && d.reason).toContain('tolerância de 100 m');
+  });
+  it('mais longe que 100 m: não preenche', () => {
+    const far = { lat: -12.995, lng: -38.5015 }; // ~163 m
+    expect(decideNeighborhood([pt('1', far)], [], [A, E]).ok).toBe(false);
+  });
+  it('empate com outro polígono (segundo a menos de 100 m além do primeiro): não preenche', () => {
+    const E2 = area(4, 'Vizinho', -13.0, -38.511);
+    const d = decideNeighborhood([pt('1', near)], [], [A, E2]);
+    expect(d.ok).toBe(false);
+  });
+  it('só vale quando nenhum polígono contém o ponto', () => {
+    const d = decideNeighborhood([pt('1', inA)], [], [A, B]);
+    expect(d).toMatchObject({ ok: true, confidence: 'high' });
+  });
+  it('praia de referência também usa a tolerância (confiança média)', () => {
+    const d = decideReferenceNeighborhood(near, [A, E]);
+    expect(d).toMatchObject({ ok: true, confidence: 'medium' });
+    expect(
+      decideReferenceNeighborhood({ lat: -12.995, lng: -38.5015 }, [A, E]).ok,
+    ).toBe(false);
+  });
+});
+
+describe('C restrita: o nome só desempata', () => {
+  it('empate entre dois polígonos e um tem o nome da praia: ele vence (confiança média)', () => {
+    const d = decideNeighborhood(
+      [pt('1', inA), pt('2', inB)],
+      [],
+      areas,
+      'Ondina',
+    );
+    expect(d).toMatchObject({ ok: true, confidence: 'medium' });
+    expect(d.ok && d.area.name).toBe('Ondina');
+    expect(d.ok && d.reason).toContain('desempatado pelo nome da praia');
+  });
+  it('empate e nenhum polígono tem o nome: continua sem bairro', () => {
+    expect(
+      decideNeighborhood([pt('1', inA), pt('2', inB)], [], areas, 'Outra').ok,
+    ).toBe(false);
+  });
+  it('o nome nunca contraria a posição: sem empate, vence a posição', () => {
+    const d = decideNeighborhood(
+      [pt('1', inA), pt('2', inA), pt('3', inB)],
+      [],
+      areas,
+      'Ondina',
+    );
+    expect(d.ok && d.area.name).toBe('Barra');
+  });
+  it('empate entre três polígonos: não usa o nome', () => {
+    const C = area(5, 'Terceiro', -13.0, -38.48);
+    const inC = { lat: -12.995, lng: -38.475 };
+    expect(
+      decideNeighborhood(
+        [pt('1', inA), pt('2', inB), pt('3', inC)],
+        [],
+        [A, B, C],
+        'Ondina',
+      ).ok,
+    ).toBe(false);
+  });
+});

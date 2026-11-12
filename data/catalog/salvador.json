@@ -56,7 +56,7 @@
         }
       ],
       "neighborhoodProposals": [],
-      "neighborhoodNote": "nenhum dos 1 ponto de alta confiança cai em um polígono de bairro do OSM"
+      "neighborhoodNote": "nenhum dos 1 ponto de alta confiança cai em um polígono de bairro do OSM nem está a até 100 m de um único polígono"
     },
     {
       "name": "Tubarão",
@@ -112,7 +112,7 @@
         }
       ],
       "neighborhoodProposals": [],
-      "neighborhoodNote": "nenhum dos 1 ponto de alta confiança cai em um polígono de bairro do OSM"
+      "neighborhoodNote": "nenhum dos 1 ponto de alta confiança cai em um polígono de bairro do OSM nem está a até 100 m de um único polígono"
     },
     {
       "name": "Periperi",
@@ -124,7 +124,7 @@
         "osmType": "relation",
         "osmId": 15261452,
         "osmName": "Praia Grande",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -181,8 +181,17 @@
     },
     {
       "name": "Penha",
-      "neighborhood": null,
-      "neighborhoodSource": null,
+      "neighborhood": "Ribeira",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "medium",
+        "osmType": "relation",
+        "osmId": 14438357,
+        "osmName": "Ribeira",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono; tolerância de 100 m: SSA PE 100 a 62 m do polígono Ribeira, sem polígono que o contenha",
+        "fetchedAt": "2026-11-12"
+      },
       "neighborhoodVerified": false,
       "proposalNote": "nome: o OSM não traz uma praia com esse nome / não encontrada; overpass: mais de uma candidata (2); descrição (SSA PE 100): não encontrada",
       "points": [
@@ -222,7 +231,7 @@
         }
       ],
       "neighborhoodProposals": [],
-      "neighborhoodNote": "nenhum dos 1 ponto de alta confiança cai em um polígono de bairro do OSM"
+      "neighborhoodNote": null
     },
     {
       "name": "Bogari",
@@ -332,7 +341,7 @@
         "osmType": "relation",
         "osmId": 14364411,
         "osmName": "Monte Serrat",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -394,7 +403,7 @@
         "osmType": "relation",
         "osmId": 14364411,
         "osmName": "Monte Serrat",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -512,7 +521,7 @@
         "osmType": "relation",
         "osmId": 14377470,
         "osmName": "Calçada",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -615,7 +624,7 @@
         "osmType": "relation",
         "osmId": 14285610,
         "osmName": "Barra",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -745,7 +754,7 @@
         "osmType": "relation",
         "osmId": 14285610,
         "osmName": "Barra",
-        "reason": "2 de 2 pontos de nível g, a ou b dentro do polígono",
+        "reason": "2 de 2 pontos de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -849,7 +858,7 @@
         "osmType": "relation",
         "osmId": 14281616,
         "osmName": "Ondina",
-        "reason": "2 de 2 pontos de nível g, a ou b dentro do polígono",
+        "reason": "2 de 2 pontos de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -959,7 +968,7 @@
         "osmType": "relation",
         "osmId": 14262204,
         "osmName": "Rio Vemelho",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono; 1 ponto ignorado (SSA RV 200: nível d)",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono; 1 ponto ignorado (SSA RV 200: nível d)",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -1059,7 +1068,7 @@
         "osmType": "relation",
         "osmId": 14262204,
         "osmName": "Rio Vemelho",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -1124,7 +1133,7 @@
         "osmType": "relation",
         "osmId": 14219288,
         "osmName": "Amaralina",
-        "reason": "2 de 2 pontos de nível g, a ou b dentro do polígono",
+        "reason": "2 de 2 pontos de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -1230,8 +1239,17 @@
     },
     {
       "name": "Pituba",
-      "neighborhood": null,
-      "neighborhoodSource": null,
+      "neighborhood": "Pituba",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "medium",
+        "osmType": "relation",
+        "osmId": 14214774,
+        "osmName": "Pituba",
+        "reason": "1 de 2 pontos de nível g, a ou b no polígono; empate entre Amaralina e Pituba desempatado pelo nome da praia",
+        "fetchedAt": "2026-11-12"
+      },
       "neighborhoodVerified": false,
       "proposalNote": null,
       "points": [
@@ -1327,12 +1345,21 @@
         }
       ],
       "neighborhoodProposals": [],
-      "neighborhoodNote": "empate entre Amaralina e Pituba (1 ponto cada)"
+      "neighborhoodNote": null
     },
     {
       "name": "Armação",
-      "neighborhood": null,
-      "neighborhoodSource": null,
+      "neighborhood": "Jardim Armação",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 14206591,
+        "osmName": "Jardim Armação",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
+        "fetchedAt": "2026-11-12"
+      },
       "neighborhoodVerified": false,
       "proposalNote": null,
       "points": [
@@ -1383,12 +1410,21 @@
         }
       ],
       "neighborhoodProposals": [],
-      "neighborhoodNote": "nenhum dos 1 ponto de alta confiança cai em um polígono de bairro do OSM"
+      "neighborhoodNote": null
     },
     {
       "name": "Boca do Rio",
-      "neighborhood": null,
-      "neighborhoodSource": null,
+      "neighborhood": "Boca do Rio",
+      "neighborhoodSource": {
+        "provider": "osm",
+        "method": "polygon",
+        "confidence": "high",
+        "osmType": "relation",
+        "osmId": 11326825,
+        "osmName": "Boca do Rio",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
+        "fetchedAt": "2026-11-12"
+      },
       "neighborhoodVerified": false,
       "proposalNote": null,
       "points": [
@@ -1439,7 +1475,7 @@
         }
       ],
       "neighborhoodProposals": [],
-      "neighborhoodNote": "nenhum dos 1 ponto de alta confiança cai em um polígono de bairro do OSM"
+      "neighborhoodNote": null
     },
     {
       "name": "Corsário",
@@ -1451,7 +1487,7 @@
         "osmType": "relation",
         "osmId": 14212439,
         "osmName": "Pituaçu",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -1516,7 +1552,7 @@
         "osmType": "relation",
         "osmId": 14212439,
         "osmName": "Pituaçu",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -1634,7 +1670,7 @@
         "osmType": "relation",
         "osmId": 14227469,
         "osmName": "Piatã",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -1699,7 +1735,7 @@
         "osmType": "relation",
         "osmId": 14227469,
         "osmName": "Piatã",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -1753,7 +1789,7 @@
         "osmType": "relation",
         "osmId": 14230801,
         "osmName": "Itapuã",
-        "reason": "2 de 2 pontos de nível g, a ou b dentro do polígono",
+        "reason": "2 de 2 pontos de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -1931,7 +1967,7 @@
         "osmType": "relation",
         "osmId": 14230801,
         "osmName": "Itapuã",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -1993,7 +2029,7 @@
         "osmType": "relation",
         "osmId": 14235188,
         "osmName": "Stella Maris",
-        "reason": "1 de 1 ponto de nível g, a ou b dentro do polígono",
+        "reason": "1 de 1 ponto de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
@@ -2047,7 +2083,7 @@
         "osmType": "relation",
         "osmId": 14235188,
         "osmName": "Stella Maris",
-        "reason": "2 de 2 pontos de nível g, a ou b dentro do polígono",
+        "reason": "2 de 2 pontos de nível g, a ou b no polígono",
         "fetchedAt": "2026-11-12"
       },
       "neighborhoodVerified": false,
