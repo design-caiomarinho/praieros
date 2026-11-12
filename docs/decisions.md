@@ -623,3 +623,10 @@ Ambas são tabelas manuais, aprovadas por uma pessoa; uma não substitui a outra
 - **Pedido de Caio (acelerar):** painel branco, camada azul do sidebar (inclui a altura da folha e a largura do banner) e câmera do mapa passam de 1500 ms para **800 ms**; banner de aviso e subida da faixa de carregamento, de 1000 ms para 800 ms (novo token `duration-banner`, separado do nome do pin, que segue em 1000 ms). A curva não muda.
 - **Linha do cabeçalho:** acompanha o painel, então foi reduzida na mesma proporção (×800/1500): duração 418 → 223 ms, atraso de entrada 304 → 162 ms, atraso de saída 1078 → 575 ms.
 - **Mantidos:** atrasos do painel (300 ms) e da camada azul (200 ms entrada, 100 ms saída), hover 300, dissolve 150, troca do pin 250, hover do pin 500, nome do pin 1000 e avanço da faixa de carregamento até 90% (2500 ms; é espera, não movimento). Os valores do Figma 187:3839 em `docs/motion.md` valem como histórico; os atuais estão em `tokens/extra.json`.
+
+### Sessão 25b: alça de arraste interativa (mobile)
+
+- A folha segue o dedo/mouse em tempo real na zona de arraste (altura entre 30% e 100% do palco, sem transição).
+- Ao soltar: mais de 6% da altura acima do ponto de partida → completa até a tela toda; mais de 6% abaixo → volta aos 60%; menos que isso → mantém o estado; folha abaixo de 45% do palco → fecha o painel (mesmo efeito do X).
+- O resto do movimento é animado (curva e tempo do painel) e a rolagem do conteúdo só libera quando termina (`data-moving`), subindo ou descendo.
+- Limiares são constantes em `sidebar-sheet.ts` (`INTENT`, `DISMISS_BELOW`); valores assumidos, ajustáveis.

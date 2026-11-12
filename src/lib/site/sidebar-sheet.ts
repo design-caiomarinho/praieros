@@ -1,16 +1,23 @@
 // Folha inferior do mobile (abaixo de 1024px): começa com 60% do palco e pode crescer até a tela
 // toda para dar mais espaço de leitura (mapa em segundo plano). Quem controla isso é só a ZONA DE
-// ARRASTE, a parte de cima da folha (alça + área do título): arrastar para cima expande, para
-// baixo recolhe. Fora dela, o gesto é a rolagem normal do conteúdo. A zona não inclui botões
-// (fechar, voltar, campos): neles o toque funciona como sempre.
-// Enquanto a folha se move (sobe ou desce) a rolagem fica travada; libera quando ela fixa.
-// A altura é CSS (`data-expanded` no #sidebar, ver index.astro); aqui só se decide quando mudar.
+// ARRASTE, a parte de cima da folha (alça + área do título); fora dela o gesto é a rolagem normal
+// do conteúdo. A zona não inclui botões (fechar, voltar, campos): neles o toque funciona como sempre.
+//
+// A alça é interativa: ao pressionar e mexer, a folha segue o dedo (ou o mouse) em tempo real. Ao
+// soltar, o movimento se completa pela intenção: soltou um pouco acima de onde começou → sobe até a
+// tela toda; um pouco abaixo → desce à posição de origem (60%); muito abaixo → fecha o painel (o
+// mesmo que o X). O resto do caminho é animado e, até ele acabar, a rolagem do conteúdo fica
+// travada (`data-moving`). A altura final é CSS (`data-expanded` no #sidebar, ver index.astro).
 
 import { cssTimeMs } from '../map/css-time.ts';
 
 const PANE_IDS = ['search', 'panel', 'source-slot'];
-/** Arrasto mínimo (px) do dedo ou do mouse para valer como gesto. */
+/** Arrasto mínimo (px) para valer como arraste (e não toque). */
 const DRAG = 10;
+/** Soltar com esta fração da altura do palco além do ponto de partida já conta como intenção. */
+const INTENT = 0.06;
+/** Soltar com a folha abaixo desta fração da altura do palco fecha o painel. */
+const DISMISS_BELOW = 0.45;
 /** Altura da zona de arraste (alça 24 + título 48 = 3 × spacing-24), medida do topo da folha. */
 const ZONE = 72;
 /** Elementos interativos: dentro deles não começa arraste (fechar, voltar, campos). */
@@ -27,6 +34,7 @@ export function initSidebarSheet(): void {
   const mobile = window.matchMedia('(max-width: 1023.98px)');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const current = () => panes.find((p) => !p.hidden) ?? null;
+  const stageHeight = () => shell.parentElement?.clientHeight ?? 0;
 
   // Alça: botão no topo da folha (só aparece no mobile, CSS).
   const handle = document.createElement('button');
@@ -45,22 +53,17 @@ export function initSidebarSheet(): void {
   shell.addEventListener('transitionend', (e) => {
     if (e.target === shell && e.propertyName === 'height') settle();
   });
-  function set(value: boolean) {
-    if (value === expanded) return;
-    expanded = value;
-    shell!.toggleAttribute('data-expanded', value);
+  /** A folha vai se mover (CSS anima até a altura do estado): trava a rolagem até acabar. */
+  function lockUntilSettled() {
     window.clearTimeout(settleTimer);
-    if (reduce.matches) settle();
-    else {
-      shell!.setAttribute('data-moving', ''); // rolagem travada enquanto a folha se move
-      const ms = cssTimeMs(
-        getComputedStyle(shell!).getPropertyValue(
-          '--motion-duration-panel-surface',
-        ),
-      );
-      settleTimer = window.setTimeout(settle, ms + 100);
-    }
-    label();
+    if (reduce.matches) return settle();
+    shell!.setAttribute('data-moving', '');
+    const ms = cssTimeMs(
+      getComputedStyle(shell!).getPropertyValue(
+        '--motion-duration-panel-surface',
+      ),
+    );
+    settleTimer = window.setTimeout(settle, ms + 100);
   }
   function label() {
     handle.setAttribute('aria-expanded', String(expanded));
@@ -68,6 +71,13 @@ export function initSidebarSheet(): void {
       'aria-label',
       expanded ? 'Recolher o painel (ver o mapa)' : 'Expandir o painel',
     );
+  }
+  function set(value: boolean) {
+    if (value === expanded) return;
+    expanded = value;
+    shell!.toggleAttribute('data-expanded', value);
+    lockUntilSettled();
+    label();
   }
   label();
 
@@ -80,33 +90,114 @@ export function initSidebarSheet(): void {
     return y - viewport!.getBoundingClientRect().top <= ZONE;
   }
 
-  // Dedo: começando na zona, o gesto é da folha (a rolagem não acontece); fora dela é a rolagem.
-  let startY = 0;
-  let dragging = false;
-  let done = false;
+  /** Fecha o painel aberto, como o X dele (ficha, Classificação, Fonte ou busca). */
+  function dismiss() {
+    const p = current();
+    const close = [
+      ...(p?.querySelectorAll<HTMLElement>(
+        '[data-panel-close], [data-search-close]',
+      ) ?? []),
+    ].find((el) => el.offsetParent !== null);
+    if (close) close.click();
+    else
+      document
+        .getElementById('beach-map')
+        ?.dispatchEvent(new CustomEvent('map-clear', { bubbles: true }));
+  }
+
+  // Arraste em tempo real: a altura da folha segue o ponteiro (sem transição). Ao soltar, o estilo
+  // inline sai e o CSS anima da altura atual até a do estado escolhido.
+  let drag: { y0: number; startH: number; startExpanded: boolean } | null =
+    null;
+  let dragged = false;
+  function dragStart(y: number) {
+    drag = {
+      y0: y,
+      startH: shell!.getBoundingClientRect().height,
+      startExpanded: expanded,
+    };
+    dragged = false;
+  }
+  function dragMove(y: number) {
+    if (!drag) return;
+    const dy = drag.y0 - y; // para cima é positivo
+    if (!dragged && Math.abs(dy) < DRAG) return;
+    if (!dragged) {
+      dragged = true;
+      window.clearTimeout(settleTimer);
+      shell!.setAttribute('data-moving', '');
+      shell!.style.transition = 'none';
+    }
+    const H = stageHeight();
+    shell!.style.height = `${Math.min(Math.max(drag.startH + dy, H * 0.3), H)}px`;
+  }
+  function dragEnd() {
+    if (!drag) return;
+    const d = drag;
+    drag = null;
+    if (!dragged) return;
+    const H = stageHeight();
+    const h = shell!.getBoundingClientRect().height;
+    let target: 'dismiss' | 'expanded' | 'collapsed';
+    if (h < H * DISMISS_BELOW) target = 'dismiss';
+    else if (h - d.startH > H * INTENT) target = 'expanded';
+    else if (d.startH - h > H * INTENT) target = 'collapsed';
+    else target = d.startExpanded ? 'expanded' : 'collapsed';
+
+    // Devolve a transição e troca o estilo inline pelo estado final: a altura anima daqui até lá.
+    shell!.style.transition = '';
+    shell!.style.height = `${h}px`;
+    void shell!.offsetHeight;
+    shell!.style.height = '';
+    expanded = target === 'expanded';
+    shell!.toggleAttribute('data-expanded', expanded);
+    label();
+    if (target === 'dismiss') {
+      expanded = false;
+      shell!.removeAttribute('data-expanded');
+      label();
+      dismiss();
+    }
+    lockUntilSettled();
+  }
+
+  // Dedo: começando na zona, o gesto é da folha (o conteúdo não rola junto).
   viewport.addEventListener(
     'touchstart',
     (e) => {
       const y = e.touches[0]?.clientY ?? 0;
-      startY = y;
-      dragging = inZone(e.target, y);
-      done = false;
+      if (inZone(e.target, y)) dragStart(y);
+      else drag = null;
     },
     { passive: true },
   );
   viewport.addEventListener(
     'touchmove',
     (e) => {
-      if (!dragging) return;
-      if (e.cancelable) e.preventDefault(); // sem rolar o conteúdo junto
-      if (done) return;
-      const dy = (e.touches[0]?.clientY ?? 0) - startY;
-      if (Math.abs(dy) < DRAG) return;
-      done = true;
-      set(dy < 0);
+      if (!drag) return;
+      if (e.cancelable) e.preventDefault();
+      dragMove(e.touches[0]?.clientY ?? 0);
     },
     { passive: false },
   );
+  viewport.addEventListener('touchend', dragEnd);
+  viewport.addEventListener('touchcancel', dragEnd);
+
+  // Mouse (janela estreita no desktop): mesmo arraste, por eventos de ponteiro.
+  let suppressClick = false;
+  viewport.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || !inZone(e.target, e.clientY)) return;
+    dragStart(e.clientY);
+    const move = (ev: PointerEvent) => dragMove(ev.clientY);
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      if (dragged) suppressClick = true;
+      dragEnd();
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  });
 
   // Roda do mouse sobre a zona: para baixo expande, para cima recolhe. Fora dela, rolagem normal.
   viewport.addEventListener(
@@ -118,27 +209,6 @@ export function initSidebarSheet(): void {
     },
     { passive: false },
   );
-
-  // Mouse (janela estreita no desktop): arrastar na zona, mesmo critério do dedo.
-  let suppressClick = false;
-  viewport.addEventListener('pointerdown', (e) => {
-    if (e.pointerType !== 'mouse' || !inZone(e.target, e.clientY)) return;
-    const y0 = e.clientY;
-    let moved = false;
-    const move = (ev: PointerEvent) => {
-      const dy = ev.clientY - y0;
-      if (moved || Math.abs(dy) < DRAG) return;
-      moved = true;
-      set(dy < 0);
-    };
-    const up = () => {
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
-      if (moved) suppressClick = true;
-    };
-    window.addEventListener('pointermove', move);
-    window.addEventListener('pointerup', up);
-  });
 
   // Toque (ou teclado) na alça alterna.
   handle.addEventListener('click', () => {
