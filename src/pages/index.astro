@@ -4,6 +4,8 @@ import AppHeader from '../components/app-header.astro';
 import BeachMap from '../components/beach-map.astro';
 import BeachPanel from '../components/beach-panel.astro';
 import SearchPanel from '../components/search-panel.astro';
+import ClassificationPanel from '../components/classification-panel.astro';
+import { classificationFor } from '../lib/site/classification.ts';
 import { toSearchResults } from '../lib/search/search.ts';
 import OutdatedBanner from '../components/outdated-banner.astro';
 import NoResultBanner from '../components/no-result-banner.astro';
@@ -46,7 +48,9 @@ const panels = site.beaches
   .filter((b) => slugsOnMap.has(b.slug))
   .flatMap((beach) => {
     const data = toPanelData(beach, site.current, pdfUrls);
-    return data ? [{ slug: beach.slug, data }] : [];
+    return data
+      ? [{ slug: beach.slug, data, classification: classificationFor(beach) }]
+      : [];
   });
 const searchResults = toSearchResults(site.beaches, slugsOnMap);
 const currentBulletin = site.current
@@ -81,14 +85,27 @@ const currentBulletin = site.current
       <!-- Ficha: escondida até um marcador ser escolhido. Desktop e mobile são o mesmo
            conteúdo; o CSS mostra só uma versão. -->
       <aside class="panel" id="panel" aria-label="Ficha da praia" hidden>
-        {panels.map(({ slug, data }) => (
+        {panels.map(({ slug, data, classification }) => (
           <div data-beach={slug} hidden>
             <div class="layout-desktop">
-              <BeachPanel {...data} layout="desktop" />
+              <BeachPanel
+                {...data}
+                layout="desktop"
+                showDetails={!!classification}
+              />
             </div>
             <div class="layout-mobile">
               <BeachPanel {...data} layout="mobile" />
             </div>
+            {classification && (
+              <div class="layout-classification">
+                <ClassificationPanel
+                  content={classification}
+                  pdfUrl={data.bulletin.pdfUrl}
+                  beachName={data.name}
+                />
+              </div>
+            )}
           </div>
         ))}
       </aside>
@@ -130,7 +147,16 @@ const currentBulletin = site.current
     });
   }
 
+  /** Mostra a ficha ou a Classificação da praia aberta (a vista fica em `data-view`). */
+  function setView(view: 'beach' | 'classification') {
+    panel.querySelectorAll<HTMLElement>('[data-beach]').forEach((el) => {
+      if (view === 'beach') el.removeAttribute('data-view');
+      else if (!el.hidden) el.setAttribute('data-view', view);
+    });
+  }
+
   function close() {
+    setView('beach');
     panel.hidden = true;
     syncBanner(null);
     panel.querySelectorAll('[data-beach]').forEach((el) => {
@@ -165,6 +191,8 @@ const currentBulletin = site.current
       e as CustomEvent<{ slug: string; pointId?: string | null }>
     ).detail;
     const sameBeach = !panel.hidden && lastSlug === slug;
+    // Outra praia: volta para a ficha (a Classificação é de uma praia só).
+    if (!sameBeach) setView('beach');
     lastSlug = slug;
     marked = true;
     panel.querySelectorAll('[data-beach]').forEach((el) => {
@@ -217,8 +245,22 @@ const currentBulletin = site.current
   });
 
   // Os cartões dos pontos são só visualização: quem escolhe o ponto é o pin no mapa.
+  function focusVisible(selector: string) {
+    [...panel.querySelectorAll<HTMLElement>(selector)]
+      .find((el) => el.offsetParent !== null)
+      ?.focus();
+  }
   panel.addEventListener('click', (e) => {
-    if ((e.target as Element).closest('[data-panel-close]')) close();
+    const target = e.target as Element;
+    if (target.closest('[data-panel-close]')) close();
+    else if (target.closest('[data-open-classification]')) {
+      setView('classification');
+      focusVisible('.layout-classification section');
+    } else if (target.closest('[data-classification-back]')) {
+      // Volta à ficha da mesma praia, com o foco no botão que abriu a Classificação.
+      setView('beach');
+      focusVisible('[data-open-classification] button');
+    }
   });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
@@ -306,5 +348,20 @@ const currentBulletin = site.current
     .layout-mobile {
       display: none;
     }
+    /* Classificação: só desktop; no lugar da ficha enquanto estiver aberta. */
+    [data-view='classification'] .layout-desktop {
+      display: none;
+    }
+    [data-view='classification'] .layout-classification {
+      display: flex;
+      flex: 1 0 auto;
+      flex-direction: column;
+    }
+    .layout-classification > :global(section) {
+      flex: 1 0 auto;
+    }
+  }
+  .layout-classification {
+    display: none;
   }
 </style>

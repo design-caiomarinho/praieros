@@ -36,7 +36,8 @@ interface Props {
   /** Nº de pontos de coleta da praia para o subtítulo (padrão: `points.length`). */
   pointCount?: number;
   layout?: 'desktop' | 'mobile';
-  detailsHref?: string;
+  /** Mostra "Ver detalhes", que abre a Classificação (só desktop; ligado em index.astro). */
+  showDetails?: boolean;
   sourceHref?: string;
 }
 
@@ -50,7 +51,7 @@ const {
   rainNotice = false,
   pointCount = points.length,
   layout = 'desktop',
-  detailsHref = '#',
+  showDetails = false,
   sourceHref = '/fonte',
 } = Astro.props;
 
@@ -136,9 +137,11 @@ const noResult = notice === 'no-result';
 
       {!noResult && (
         <div class="buttons">
-          <Button variant="primary" href={detailsHref}>
-            Ver detalhes
-          </Button>
+          {showDetails && layout === 'desktop' && (
+            <div class="details" data-open-classification>
+              <Button variant="primary">Ver detalhes</Button>
+            </div>
+          )}
           <Button variant="secondary">Compartilhar praia</Button>
         </div>
       )}
@@ -338,6 +341,13 @@ const noResult = notice === 'no-result';
     gap: var(--space-stack-xs);
   }
   .buttons > :global(*) {
+    justify-content: center;
+  }
+  .details {
+    display: flex;
+    flex-direction: column;
+  }
+  .details > :global(*) {
     justify-content: center;
   }
   /* Aviso de chuva (Figma 123:2643). */

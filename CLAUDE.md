@@ -126,4 +126,5 @@ Fase 3, sessão 10: praias de referência do OSM (`npm run catalog:reference`, `
 Fase 3, sessão 11: painel lateral fiel ao Figma 123:2440 (aviso de chuva por regra pura, botões-linha), faixa de aviso no topo do mapa, sem texto de posição aproximada (pendência: avisar em "Fonte e como ler"), clique no grupo só dá zoom (ficha abre no pin). Ver `docs/decisions.md`.
 Fase 3, sessão 12: busca desktop (`search-panel`, `src/lib/search/` com testes): sugestões por bairro do catálogo, resultados com D1, sem resultado provisório; "Perto de você" e mobile pendentes (ver `docs/decisions.md`).
 Fase 3, sessão 13: bairro automático por polígono do OSM (`npm run catalog:neighborhoods`, níveis g/a/b, nunca grava `verified`); aparece em produção, com a tabela de nomes aprovada `data/catalog/neighborhood-names.json` (ver `docs/decisions.md`).
-Próxima: ficha completa e busca mobile. Pendentes: ler os Termos do OpenFreeMap antes de publicar; termos de uso do site do Inema.
+Fase 3, sessão 14: painel Classificação (desktop, só Própria; Imprópria pendente de texto), aberto por "Ver detalhes" na ficha. Ver `docs/decisions.md`.
+Próxima: folha inferior (mobile) e busca mobile. Pendentes: ler os Termos do OpenFreeMap antes de publicar; termos de uso do site do Inema.

@@ -1,0 +1,216 @@
+---
+import Button from './button.astro';
+import ButtonIcon from './button-icon.astro';
+import StatusChip from './status-chip.astro';
+import {
+  CLASSIFICATION_INTRO,
+  CONAMA_URL,
+  type ClassificationContent,
+} from '../lib/site/classification.ts';
+
+// Painel Classificação (Figma 125:3895, desktop). Só apresentação: recebe os textos prontos
+// (escolhidos por `classificationFor`). O botão de voltar e o de fechar são ligados em index.astro.
+interface Props {
+  content: ClassificationContent;
+  /** PDF do boletim que já está no modelo da praia. */
+  pdfUrl: string;
+  /** Nome da praia, só para o rótulo acessível do painel. */
+  beachName: string;
+}
+
+const { content, pdfUrl, beachName } = Astro.props;
+---
+
+<section class="panel" aria-label={`Classificação: ${beachName}`} tabindex="-1">
+  <header class="head">
+    <div class="top">
+      <div class="title">
+        <div class="back" data-classification-back>
+          <ButtonIcon
+            variant="ghost"
+            size="xsmall"
+            icon="arrow-left"
+            label="Voltar à ficha da praia"
+          />
+        </div>
+        <h2>Classificação</h2>
+      </div>
+      <div class="close" data-panel-close>
+        <ButtonIcon
+          variant="ghost"
+          size="xsmall"
+          icon="close"
+          label="Fechar classificação"
+        />
+      </div>
+    </div>
+    <p class="intro">{CLASSIFICATION_INTRO}</p>
+  </header>
+
+  <div class="body">
+    <div class="main">
+      <div class="blocks">
+        <div class="block">
+          <h3>Na fonte</h3>
+          <p>{content.source}</p>
+        </div>
+        <div class="block">
+          <h3>Em linguagem simples</h3>
+          <p>{content.plain}</p>
+        </div>
+        <div class="block">
+          <h3>Status</h3>
+          <div class="chip">
+            <StatusChip status={content.status} />
+          </div>
+          <p>{content.statusText}</p>
+        </div>
+      </div>
+      <div class="share">
+        <Button variant="primary">Compartilhar praia</Button>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="links">
+        <Button
+          variant="secondary"
+          href={CONAMA_URL}
+          target="_blank"
+          spread
+          iconRight="external"
+        >
+          Ver resolução
+        </Button>
+        <Button
+          variant="secondary"
+          href={pdfUrl}
+          target="_blank"
+          spread
+          iconRight="external"
+        >
+          Boletim original
+        </Button>
+      </div>
+      <p class="credit">Fonte: Inema · Praieros não é canal oficial</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .panel {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: var(--size-panel-width);
+    max-width: 100%;
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+    border-left: var(--border-width-default) solid var(--s-color-border-default);
+  }
+  /* Recebe o foco ao abrir (sem anel: não é um controle). */
+  .panel:focus {
+    outline: none;
+  }
+  /* Cabeçalho (Figma 125:3915): padding 24, borda inferior. */
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-lg);
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-gap-md);
+  }
+  .title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+    min-width: 0;
+  }
+  .back,
+  .close {
+    display: contents;
+  }
+  h2 {
+    margin: 0;
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-heading-large-family);
+    font-weight: var(--s-typo-heading-large-weight);
+    font-size: var(--s-typo-heading-large-size);
+    line-height: var(--s-typo-heading-large-line);
+    letter-spacing: var(--s-typo-heading-large-spacing);
+  }
+  .intro,
+  .block p {
+    margin: 0;
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  /* Corpo (Figma 125:3921): blocos e botão no topo, links e crédito no rodapé. */
+  .body {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-stack-xl);
+    padding: var(--space-inset-lg);
+  }
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xl);
+  }
+  .blocks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xl);
+  }
+  .block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-gap-md);
+  }
+  h3 {
+    margin: 0;
+    color: var(--s-color-content-muted);
+    font-family: var(--s-typo-body-small-family);
+    font-weight: var(--s-typo-body-small-weight);
+    font-size: var(--s-typo-body-small-size);
+    line-height: var(--s-typo-body-small-line);
+    letter-spacing: var(--s-typo-body-small-spacing);
+  }
+  .share > :global(*) {
+    width: 100%;
+    justify-content: center;
+  }
+  .foot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+  }
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+  }
+  .credit {
+    margin: 0;
+    color: var(--s-color-content-muted);
+    font-family: var(--s-typo-caption-small-family);
+    font-weight: var(--s-typo-caption-small-weight);
+    font-size: var(--s-typo-caption-small-size);
+    line-height: var(--s-typo-caption-small-line);
+    letter-spacing: var(--s-typo-caption-small-spacing);
+  }
+</style>
