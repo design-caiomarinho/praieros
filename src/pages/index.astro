@@ -180,6 +180,10 @@ const sourceBulletin = site.current
     ];
     const next = banners.find((el) => el.getAttribute('data-banner') === slug);
     banners.forEach((el) => {
+      // A saída em andamento segue (syncBanner(null) é chamado várias vezes): só cancela o
+      // fechamento pendente quando a faixa volta ou é trocada.
+      if (el.hasAttribute('data-leaving') && !next && !reduceMotion.matches)
+        return;
       window.clearTimeout(Number(el.dataset.timer) || undefined);
       el.removeAttribute('data-timer');
       if (el === next) {
@@ -215,7 +219,7 @@ const sourceBulletin = site.current
           window.setTimeout(() => {
             el.hidden = true;
             el.removeAttribute('data-leaving');
-          }, ms),
+          }, ms + 100),
         );
       }
     });
@@ -561,13 +565,36 @@ const sourceBulletin = site.current
      na curva do nome; aqui sem opacidade (sai de trás do cabeçalho, 100% de altura → 0). A saída é
      o inverso. */
   .map-banner > :global(*) {
+    position: relative;
+    z-index: 1;
+    /* A faixa branca entra um pouco depois da camada azul (mesma diferença do painel: 300 − 200 ms). */
+    animation: banner-in var(--motion-duration-pin-label)
+      var(--motion-easing-pin-label)
+      calc(
+        var(--banner-delay, 0ms) + var(--motion-delay-panel) -
+          var(--motion-delay-panel-surface)
+      )
+      both;
+  }
+  /* Camada azul atrás da faixa, como a do sidebar: chega à frente (mesma curva e tempo) e, na
+     saída, vai embora depois (atraso de saída da camada, 100 ms). */
+  .map-banner:not([hidden])::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--s-color-surface-accent-default);
     animation: banner-in var(--motion-duration-pin-label)
       var(--motion-easing-pin-label) var(--banner-delay, 0ms) both;
+  }
+  .map-banner[data-leaving]::before {
+    animation: banner-out var(--motion-duration-pin-label)
+      var(--motion-easing-pin-label) var(--motion-delay-panel-surface-close)
+      both;
   }
   /* Saída: começa na hora, antes do painel (que tem os próprios atrasos de saída). */
   .map-banner[data-leaving] > :global(*) {
     animation: banner-out var(--motion-duration-pin-label)
-      var(--motion-easing-pin-label) both;
+      var(--motion-easing-pin-label) 0ms both;
   }
   @keyframes banner-out {
     from {
@@ -590,7 +617,8 @@ const sourceBulletin = site.current
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .map-banner > :global(*) {
+    .map-banner > :global(*),
+    .map-banner::before {
       animation: none;
     }
   }
