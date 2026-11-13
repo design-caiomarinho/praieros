@@ -63,16 +63,24 @@ const Tag = pointId ? 'button' : 'article';
   }
   /* Só no-result vem no Figma; as outras cores seguem os tokens de borda de cada status. */
   .card--suitable {
-    border-left-color: var(--s-color-border-positive);
+    --edge: var(--s-color-border-positive);
   }
   .card--unsuitable {
-    border-left-color: var(--s-color-border-negative);
+    --edge: var(--s-color-border-negative);
   }
   .card--outdated {
-    border-left-color: var(--s-color-border-warning);
+    --edge: var(--s-color-border-warning);
   }
   .card--no-result {
-    border-left-color: var(--s-color-border-unknown);
+    --edge: var(--s-color-border-unknown);
+  }
+  .card {
+    border-left-color: var(--edge);
+  }
+  /* Hover e foco: a borda cinza passa para a cor do status (pedido de Caio). */
+  button.card:hover .body,
+  button.card:focus-visible .body {
+    border-color: var(--edge);
   }
   /* O ponto escolhido (pin ativo no mapa): a borda cinza dá lugar à borda da cor do status, sem
      hover e sem clique (pedido de Caio). Os outros seguem com o hover de sempre. */
@@ -85,17 +93,8 @@ const Tag = pointId ? 'button' : 'article';
     cursor: default;
     pointer-events: none;
   }
-  .card--suitable[data-current] .body {
-    border-color: var(--s-color-border-positive);
-  }
-  .card--unsuitable[data-current] .body {
-    border-color: var(--s-color-border-negative);
-  }
-  .card--outdated[data-current] .body {
-    border-color: var(--s-color-border-warning);
-  }
-  .card--no-result[data-current] .body {
-    border-color: var(--s-color-border-unknown);
+  .card[data-current] .body {
+    border-color: var(--edge);
   }
   @media (prefers-reduced-motion: reduce) {
     .body {
@@ -116,8 +115,11 @@ const Tag = pointId ? 'button' : 'article';
     gap: var(--space-stack-xs);
   }
   /* Indicador (Figma 220:7763): anel de 24 px com a borda cinza do cartão; só o ponto escolhido
-     ganha a borda do status e o miolo de 16 px preenchido (premissa de Caio, ver decisions). */
+     ganha a borda do status e o miolo de 16 px (premissa de Caio, ver decisions). O miolo entra
+     como o nome do pin (opacidade, curva `pin-label`), mas por escala (0 a 1) e mais rápido. */
   .indicator {
+    --dot: var(--s-color-surface-unknown-default);
+    --ring: var(--s-color-border-unknown);
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -127,41 +129,45 @@ const Tag = pointId ? 'button' : 'article';
     height: var(--primitives-spacing-24);
     border: var(--border-width-default) solid var(--s-color-border-default);
     border-radius: var(--radius-full);
-    transition: border-color var(--motion-duration-hover)
-      var(--motion-easing-hover);
+    transition: border-color var(--motion-duration-pin-hover)
+      var(--motion-easing-pin-label);
   }
   .indicator::after {
     content: '';
     width: var(--primitives-spacing-16);
     height: var(--primitives-spacing-16);
     border-radius: var(--radius-full);
-    background: transparent;
-    transition: background-color var(--motion-duration-hover)
-      var(--motion-easing-hover);
+    background: var(--dot);
+    opacity: 0;
+    transform: scale(0);
+    transition:
+      opacity var(--motion-duration-pin-hover) var(--motion-easing-pin-label),
+      transform var(--motion-duration-pin-hover) var(--motion-easing-pin-label);
   }
-  .card--suitable[data-current] .indicator {
-    border-color: var(--s-color-border-positive);
+  .card--suitable .indicator {
+    --dot: var(--s-color-surface-positive-default);
+    --ring: var(--s-color-border-positive);
   }
-  .card--suitable[data-current] .indicator::after {
-    background: var(--s-color-surface-positive-default);
+  .card--unsuitable .indicator {
+    --dot: var(--s-color-surface-negative-default);
+    --ring: var(--s-color-border-negative);
   }
-  .card--unsuitable[data-current] .indicator {
-    border-color: var(--s-color-border-negative);
+  .card--outdated .indicator {
+    --dot: var(--s-color-surface-warning-default);
+    --ring: var(--s-color-border-warning);
   }
-  .card--unsuitable[data-current] .indicator::after {
-    background: var(--s-color-surface-negative-default);
+  .card[data-current] .indicator {
+    border-color: var(--ring);
   }
-  .card--outdated[data-current] .indicator {
-    border-color: var(--s-color-border-warning);
+  .card[data-current] .indicator::after {
+    opacity: 1;
+    transform: scale(1);
   }
-  .card--outdated[data-current] .indicator::after {
-    background: var(--s-color-surface-warning-default);
-  }
-  .card--no-result[data-current] .indicator {
-    border-color: var(--s-color-border-unknown);
-  }
-  .card--no-result[data-current] .indicator::after {
-    background: var(--s-color-surface-unknown-default);
+  @media (prefers-reduced-motion: reduce) {
+    .indicator,
+    .indicator::after {
+      transition: none;
+    }
   }
   .header {
     display: flex;

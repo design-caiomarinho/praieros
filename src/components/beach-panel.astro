@@ -435,6 +435,10 @@ const noResult = notice === 'no-result';
   }
   /* Mobile, folha inferior (Figma 125:3471): padding 16 lateral e 24 vertical no cabeçalho e no
      corpo; 16 entre título + subtítulo e o chip; alvo de toque do fechar de 44px. */
+  /* No mobile os dois links empilham, cada um na largura toda. */
+  .panel--mobile .links {
+    flex-direction: column;
+  }
   .panel--mobile .head {
     padding: var(--space-inset-md);
   }
