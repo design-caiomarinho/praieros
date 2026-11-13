@@ -67,44 +67,48 @@ const noResult = notice === 'no-result';
   tabindex="-1"
 >
   {/* A faixa de aviso fica no topo do mapa (index.astro), fora do painel, no desktop e no mobile. */}
+  {/* Cabeçalho só com o título "Detalhes", como o da busca (Figma 217:6800). */}
   <header class="head">
-    <div class="titles">
-      <div class="top">
-        <div class="title">
-          {/* Só aparece quando a ficha foi aberta pela busca (index.astro). */}
-          <div class="back" data-panel-back hidden>
-            <ButtonIcon
-              variant="ghost"
-              size="xsmall"
-              icon="arrow-left"
-              label="Voltar à busca"
-            />
-          </div>
-          <h2>{name}</h2>
-        </div>
-        <div class="close" data-panel-close>
+    <div class="top">
+      <div class="title">
+        {/* Só aparece quando a ficha foi aberta pela busca (index.astro). */}
+        <div class="back" data-panel-back hidden>
           <ButtonIcon
             variant="ghost"
             size="xsmall"
-            icon="close"
-            label="Fechar ficha da praia"
+            icon="arrow-left"
+            label="Voltar à busca"
           />
         </div>
+        <h2>Detalhes</h2>
       </div>
-      <p class="subtitle">{subtitle}</p>
-    </div>
-    <div class="bulletin">
-      <span class="bulletin-chip">
-        {noResult
-          ? 'Boletim não encontrado'
-          : `Boletim nº ${bulletin.number} · emitido em ${bulletin.date}`}
-      </span>
-      {note && <p class="note">{note}</p>}
+      <div class="close" data-panel-close>
+        <ButtonIcon
+          variant="ghost"
+          size="xsmall"
+          icon="close"
+          label="Fechar ficha da praia"
+        />
+      </div>
     </div>
   </header>
 
   <div class="body">
     <div class="main">
+      <div class="intro">
+        <div class="titles">
+          <h3 class="beach-name">{name}</h3>
+          <p class="subtitle">{subtitle}</p>
+        </div>
+        <div class="bulletin">
+          <span class="bulletin-chip">
+            {noResult
+              ? 'Boletim não encontrado'
+              : `Boletim nº ${bulletin.number} · emitido em ${bulletin.date}`}
+          </span>
+          {note && <p class="note">{note}</p>}
+        </div>
+      </div>
       {noResult && (
         <div class="empty">
           <div class="empty-icon">
@@ -122,7 +126,7 @@ const noResult = notice === 'no-result';
       )}
       {!noResult && points.length > 0 && (
         <div class="points">
-          <h3>Pontos de coleta</h3>
+          <h4>Pontos de coleta</h4>
           <div class="cards">
             {points.map((p) => (
               <PointCard
@@ -150,13 +154,18 @@ const noResult = notice === 'no-result';
               <Button variant="primary">Ver detalhes</Button>
             </div>
           )}
-          <Button variant="secondary" disabled>
-            Compartilhar praia
-          </Button>
+          <ButtonIcon
+            variant="outlined"
+            icon="share"
+            label="Compartilhar praia"
+            disabled
+          />
         </div>
       )}
     </div>
+  </div>
 
+  <footer class="foot-wrap">
     <div class="foot">
       <div class="links">
         <Button
@@ -179,7 +188,7 @@ const noResult = notice === 'no-result';
       </div>
       <p class="credit">Fonte: Inema · Praieros não é canal oficial</p>
     </div>
-  </div>
+  </footer>
 </section>
 
 <style>
@@ -204,19 +213,32 @@ const noResult = notice === 'no-result';
   .panel--mobile {
     border-top: var(--border-width-default) solid var(--s-color-border-default);
   }
-  /* Cabeçalho (Figma 123:2441): padding 24, borda inferior. */
+  /* Cabeçalho (Figma 217:6822): só o título, padding 16 vertical e 24 lateral, borda inferior. */
   .head {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-sm);
-    padding: var(--space-inset-lg);
+    padding: var(--space-inset-md) var(--space-inset-lg);
     border-bottom: var(--border-width-default) solid
       var(--s-color-border-default);
+  }
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
   }
   .titles {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-2xs);
+    gap: var(--space-stack-xs);
+  }
+  .beach-name {
+    margin: 0;
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-heading-large-family);
+    font-weight: var(--s-typo-heading-large-weight);
+    font-size: var(--s-typo-heading-large-size);
+    line-height: var(--s-typo-heading-large-line);
+    letter-spacing: var(--s-typo-heading-large-spacing);
   }
   .top {
     display: flex;
@@ -279,13 +301,11 @@ const noResult = notice === 'no-result';
     letter-spacing: var(--s-typo-body-small-spacing);
     white-space: nowrap;
   }
-  /* Corpo (Figma 123:2456): padding 24; ações no topo, links e crédito no rodapé. */
+  /* Corpo (Figma 217:6826): padding 24; título, pontos e ações. */
   .body {
     flex: 1 0 auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: var(--space-stack-xl);
     padding: var(--space-inset-lg);
   }
   .main,
@@ -294,15 +314,24 @@ const noResult = notice === 'no-result';
     flex-direction: column;
     gap: var(--space-stack-md);
   }
+  .main {
+    gap: var(--space-stack-xl);
+  }
+  /* Rodapé (Figma 217:6997): borda no topo, padding 24, links e crédito. */
+  .foot-wrap {
+    padding: var(--space-inset-lg);
+    border-top: var(--border-width-default) solid var(--s-color-border-default);
+  }
   /* Estado vazio (Figma 173:2510): centralizado no espaço entre o cabeçalho e os links. */
   .main:has(.empty) {
     flex: 1;
-    justify-content: center;
   }
   .empty {
     display: flex;
+    flex: 1;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: var(--space-gap-xl);
   }
   .empty-icon {
@@ -344,7 +373,7 @@ const noResult = notice === 'no-result';
     flex-direction: column;
     gap: var(--space-stack-md);
   }
-  h3 {
+  h4 {
     margin: 0;
     color: var(--s-color-content-muted);
     font-family: var(--s-typo-body-small-family);
@@ -354,10 +383,21 @@ const noResult = notice === 'no-result';
     letter-spacing: var(--s-typo-body-small-spacing);
   }
   .cards,
-  .buttons,
   .links {
     display: flex;
     flex-direction: column;
+    gap: var(--space-stack-xs);
+  }
+  /* "Ver detalhes" ocupa o que sobra; compartilhar é o botão de ícone ao lado (Figma 217:6966). */
+  .links {
+    flex-direction: row;
+  }
+  .links > :global(*) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .buttons {
+    display: flex;
     gap: var(--space-stack-xs);
   }
   .buttons > :global(*) {
@@ -365,7 +405,9 @@ const noResult = notice === 'no-result';
   }
   .details {
     display: flex;
+    flex: 1 1 0;
     flex-direction: column;
+    min-width: 0;
   }
   .details > :global(*) {
     justify-content: center;
@@ -394,10 +436,12 @@ const noResult = notice === 'no-result';
   /* Mobile, folha inferior (Figma 125:3471): padding 16 lateral e 24 vertical no cabeçalho e no
      corpo; 16 entre título + subtítulo e o chip; alvo de toque do fechar de 44px. */
   .panel--mobile .head {
-    gap: var(--space-stack-md);
-    padding: var(--space-inset-lg) var(--space-inset-md);
+    padding: var(--space-inset-md);
   }
   .panel--mobile .body {
+    padding: var(--space-inset-lg) var(--space-inset-md);
+  }
+  .panel--mobile .foot-wrap {
     padding: var(--space-inset-lg) var(--space-inset-md);
     padding-bottom: calc(
       var(--space-inset-lg) + env(safe-area-inset-bottom, 0px)

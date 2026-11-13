@@ -384,8 +384,12 @@ const neighborhoods = suggestNeighborhoods(results);
       border-top: var(--border-width-default) solid
         var(--s-color-border-default);
     }
-    /* Paddings do cabeçalho e do corpo iguais aos do desktop (Figma 213:3802: 16/24 e 24). */
+    /* Inset lateral de 16 (--space-inset-md) no cabeçalho e no corpo; o resto segue o desktop. */
+    .head {
+      padding-inline: var(--space-inset-md);
+    }
     .body {
+      padding-inline: var(--space-inset-md);
       padding-bottom: calc(
         var(--space-inset-lg) + env(safe-area-inset-bottom, 0px)
       );

@@ -25,10 +25,13 @@ const Tag = pointId ? 'button' : 'article';
 >
   <span class="body">
     <span class="header">
-      <span class="name">{name}</span>
       <StatusChip status={status} />
+      <span class="indicator" aria-hidden="true"></span>
     </span>
-    {location && <span class="location">{location}</span>}
+    <span class="text">
+      <span class="name">{name}</span>
+      {location && <span class="location">{location}</span>}
+    </span>
   </span>
 </Tag>
 
@@ -102,10 +105,63 @@ const Tag = pointId ? 'button' : 'article';
   .body {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-xs);
+    gap: var(--space-stack-md);
     padding: var(--space-inset-md);
     border: var(--border-width-default) solid var(--s-color-border-default);
     border-left: 0;
+  }
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+  }
+  /* Indicador (Figma 220:7763): anel de 24 px com a borda cinza do cartão; só o ponto escolhido
+     ganha a borda do status e o miolo de 16 px preenchido (premissa de Caio, ver decisions). */
+  .indicator {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--primitives-spacing-24);
+    height: var(--primitives-spacing-24);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    border-radius: var(--radius-full);
+    transition: border-color var(--motion-duration-hover)
+      var(--motion-easing-hover);
+  }
+  .indicator::after {
+    content: '';
+    width: var(--primitives-spacing-16);
+    height: var(--primitives-spacing-16);
+    border-radius: var(--radius-full);
+    background: transparent;
+    transition: background-color var(--motion-duration-hover)
+      var(--motion-easing-hover);
+  }
+  .card--suitable[data-current] .indicator {
+    border-color: var(--s-color-border-positive);
+  }
+  .card--suitable[data-current] .indicator::after {
+    background: var(--s-color-surface-positive-default);
+  }
+  .card--unsuitable[data-current] .indicator {
+    border-color: var(--s-color-border-negative);
+  }
+  .card--unsuitable[data-current] .indicator::after {
+    background: var(--s-color-surface-negative-default);
+  }
+  .card--outdated[data-current] .indicator {
+    border-color: var(--s-color-border-warning);
+  }
+  .card--outdated[data-current] .indicator::after {
+    background: var(--s-color-surface-warning-default);
+  }
+  .card--no-result[data-current] .indicator {
+    border-color: var(--s-color-border-unknown);
+  }
+  .card--no-result[data-current] .indicator::after {
+    background: var(--s-color-surface-unknown-default);
   }
   .header {
     display: flex;
@@ -121,6 +177,10 @@ const Tag = pointId ? 'button' : 'article';
     font-size: var(--s-typo-body-large-size);
     line-height: var(--s-typo-body-large-line);
     letter-spacing: var(--s-typo-body-large-spacing);
+  }
+  .name,
+  .location {
+    display: block;
   }
   .location {
     display: block;

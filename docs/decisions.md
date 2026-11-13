@@ -690,3 +690,11 @@ Ajuste (28): sem recorte no texto revelado (sem `overflow: hidden`): ele não fi
 
 - Duração do painel (`motion.duration.panel` e `panel-surface`) de 1500 para 800 ms; curva mantida (`easing-panel`).
 - Desktop: o sidebar é um só elemento que desliza (translateX 100% → 0) e leva todo o conteúdo junto; antes eram duas animações (largura da coluna + deslize do conteúdo), que podiam se desencontrar. Zoom e faixa seguem com o mesmo tempo.
+- Mobile (busca): inset lateral de 16 px (`--space-inset-md`) no cabeçalho e no corpo, a pedido de Caio; desktop segue em 24 px (sessão 31).
+
+## Sessão 32 — Tela de detalhes da praia (Figma 217:6800)
+
+- Ficha com o cabeçalho da busca: só seta (quando aberta pela busca), "Detalhes" e fechar. Nome, subtítulo e chip do boletim descem para o corpo; o rodapé (Como ler e fonte, Boletim original, crédito) fica fora do corpo, com borda no topo. Desktop e mobile compartilham a estrutura; no mobile os insets laterais seguem em 16 px.
+- PointCard: chip à esquerda e **indicador** à direita (anel de 24 px com miolo de 16 px), depois nome e descrição. Pedido de Caio: nos cartões não escolhidos o anel tem a borda cinza do cartão e fica vazio; só o ponto escolhido (`data-current`) ganha a borda e o miolo na cor do status. Cores dos outros status derivadas dos tokens (`surface-*-default` e `border-*`), pois o Figma só mostra o positivo.
+- Nome do ponto: o Figma usa Switzer Bold (700); não há token de peso 700, então fica 600 (token mais próximo).
+- "Ver detalhes" ocupa a largura e "Compartilhar praia" vira botão de ícone de 48 px ao lado, ainda desabilitado até a R6. Sem "Ver detalhes" (dev), só o ícone aparece.
