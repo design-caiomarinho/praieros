@@ -13,6 +13,9 @@ interface Props {
   disabled?: boolean;
   /** Botão que abre um painel: id do painel (aria-controls, com aria-expanded). */
   controls?: string;
+  /** Texto revelado ao lado do ícone no hover e no foco do teclado (Figma 214:2880, ex.: "Busca").
+   *  Só visual (aria-hidden): o nome acessível continua em `label`. */
+  reveal?: string;
   /** Só para a vitrine (/dev/components): força o visual de hover/foco. */
   state?: 'hover' | 'focus';
 }
@@ -26,6 +29,7 @@ const {
   type = 'button',
   disabled = false,
   controls,
+  reveal,
   state,
 } = Astro.props;
 
@@ -43,10 +47,20 @@ const attrs = asLink
 
 <Tag
   class={`btn-icon btn-icon--${variant} btn-icon--${size}`}
+  data-reveal={reveal ? '' : undefined}
   data-state={state}
   {...attrs}
 >
   <Icon name={icon} size={20} label={label} />
+  {
+    reveal && (
+      <span class="btn-icon__reveal" aria-hidden="true">
+        <span class="btn-icon__reveal-clip">
+          <span class="btn-icon__reveal-text">{reveal}</span>
+        </span>
+      </span>
+    )
+  }
 </Tag>
 
 <style>
@@ -80,6 +94,82 @@ const attrs = asLink
     padding: 0;
     width: calc(var(--space-inset-xs) * 2 + var(--primitives-spacing-24));
     height: calc(var(--space-inset-xs) * 2 + var(--primitives-spacing-24));
+  }
+
+  /* Revelar o texto (Figma 214:2880): a largura cresce da esquerda do botão (ancorado à direita
+     no cabeçalho) de 48 px até a do conteúdo. A coluna do texto vai de 0fr a 1fr (sem medir
+     nada em JS); o texto entra por opacidade, um pouco depois, e sai primeiro. Larguras e
+     tempos reaproveitam os tokens do pin (500 ms, curva pin-hover) e do dissolve (150 ms). */
+  .btn-icon[data-reveal] {
+    width: auto;
+    min-width: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
+    /* 48 fechado = borda + padding + ícone de 20: o padding lateral é o que sobra. */
+    padding-inline: calc(
+      (
+          var(--space-inset-sm) * 2 + var(--primitives-spacing-24) -
+            var(--primitives-spacing-20)
+        ) / 2 - var(--border-width-default)
+    );
+  }
+  .btn-icon__reveal {
+    display: grid;
+    grid-template-columns: 0fr;
+    transition: grid-template-columns var(--motion-duration-pin-hover)
+      var(--motion-easing-pin-hover);
+  }
+  .btn-icon__reveal-clip {
+    min-width: 0;
+    overflow: hidden;
+  }
+  .btn-icon__reveal-text {
+    display: block;
+    padding-left: var(--space-gap-xs);
+    white-space: nowrap;
+    opacity: 0;
+    font-family: var(--s-typo-label-medium-family);
+    font-weight: var(--s-typo-label-medium-weight);
+    font-size: var(--s-typo-label-medium-size);
+    line-height: var(--s-typo-label-medium-line);
+    letter-spacing: var(--s-typo-label-medium-spacing);
+    transition: opacity var(--motion-duration-dissolve)
+      var(--motion-easing-dissolve);
+  }
+  /* Revela no hover (só com mouse) e no foco do teclado; não com o painel aberto nem desabilitado. */
+  @media (hover: hover) {
+    .btn-icon[data-reveal]:hover:not(:disabled):not([aria-expanded='true']):not(
+        [data-engaged]
+      )
+      .btn-icon__reveal {
+      grid-template-columns: 1fr;
+    }
+    .btn-icon[data-reveal]:hover:not(:disabled):not([aria-expanded='true']):not(
+        [data-engaged]
+      )
+      .btn-icon__reveal-text {
+      opacity: 1;
+      transition-delay: 100ms;
+    }
+  }
+  .btn-icon[data-reveal]:focus-visible:not([aria-expanded='true']):not(
+      [data-engaged]
+    )
+    .btn-icon__reveal,
+  .btn-icon[data-reveal][data-state]:not([data-engaged]) .btn-icon__reveal {
+    grid-template-columns: 1fr;
+  }
+  .btn-icon[data-reveal]:focus-visible:not([aria-expanded='true']):not(
+      [data-engaged]
+    )
+    .btn-icon__reveal-text,
+  .btn-icon[data-reveal][data-state]:not([data-engaged]) .btn-icon__reveal-text {
+    opacity: 1;
+    transition-delay: 100ms;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-icon__reveal,
+    .btn-icon__reveal-text {
+      transition: none;
+    }
   }
 
   .btn-icon:focus-visible,
