@@ -3,8 +3,8 @@ import Button from './button.astro';
 import ButtonIcon from './button-icon.astro';
 import Icon from './icon.astro';
 import InputText from './input-text.astro';
+import ResultCard from './result-card.astro';
 import { pointsLabel } from '../lib/format/points-label.ts';
-import { STATUS_LABELS } from '../lib/rules/status.ts';
 import { abbreviateLabel } from '../lib/search/abbreviate.ts';
 import {
   suggestNeighborhoods,
@@ -107,22 +107,13 @@ const neighborhoods = suggestNeighborhoods(results);
               data-hood={r.neighborhood ?? ''}
               hidden
             >
-              <button
-                type="button"
-                class="result"
-                aria-disabled={r.selectable ? undefined : 'true'}
-              >
-                <span class="text">
-                  <span class="name">{r.name}</span>
-                  <span class="meta">
-                    <span class={`dot dot--${r.status}`} aria-hidden="true" />
-                    <span class="sr-only">{STATUS_LABELS[r.status]}</span>
-                    <span class="sub">{meta}</span>
-                  </span>
-                  {r.outdated && <span class="sub">Boletim desatualizado</span>}
-                </span>
-                <Icon name="chevron-right" size={20} />
-              </button>
+              <ResultCard
+                name={r.name}
+                meta={meta}
+                status={r.status}
+                outdated={r.outdated}
+                disabled={!r.selectable}
+              />
             </li>
           );
         })}
@@ -140,14 +131,8 @@ const neighborhoods = suggestNeighborhoods(results);
             Não encontramos praias para “<span data-empty-q></span>”
           </h3>
           <p class="empty-body">
-            Tente outro nome ou busque pelo bairro. Você também pode ver todas
-            as praias.
+            Tente outro nome ou escolha um bairro para ver as praias.
           </p>
-        </div>
-        <div class="empty-action" data-search-retry>
-          <Button variant="primary" size="small">
-            Tente novamente
-          </Button>
         </div>
       </div>
     </div>
@@ -340,97 +325,6 @@ const neighborhoods = suggestNeighborhoods(results);
     padding: 0;
     list-style: none;
   }
-  .result {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    gap: var(--space-gap-md);
-    width: 100%;
-    padding: var(--space-inset-md);
-    border: var(--border-width-default) solid var(--s-color-border-default);
-    background: var(--s-color-surface-default);
-    color: var(--s-color-content-primary);
-    font: inherit;
-    text-align: left;
-    cursor: pointer;
-  }
-  /* Mesmo padrão do botão secundário (outlined), como os bairros: hover e foco trocam a
-     superfície; foco (teclado) ganha o anel. */
-  .result:hover:not([aria-disabled='true']),
-  .result:focus-visible {
-    background: var(--s-color-surface-hover);
-  }
-  .result:focus-visible {
-    outline: var(--border-width-default) solid var(--s-color-border-focus);
-    outline-offset: var(--primitives-spacing-4);
-  }
-  /* Desabilitado (sem marcador no mapa): igual ao botão secundário desabilitado. */
-  .result[aria-disabled='true'] {
-    background: transparent;
-    border-color: var(--s-color-surface-hover);
-    color: var(--s-color-content-disabled);
-    cursor: not-allowed;
-  }
-  .text {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-width: 0;
-  }
-  .name {
-    font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--primitives-font-weight-600);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
-  }
-  .meta {
-    display: flex;
-    align-items: center;
-    gap: var(--space-gap-xs);
-  }
-  .sub {
-    color: var(--s-color-content-muted);
-    font-family: var(--s-typo-body-small-family);
-    font-weight: var(--s-typo-body-small-weight);
-    font-size: var(--s-typo-body-small-size);
-    line-height: var(--s-typo-body-small-line);
-    letter-spacing: var(--s-typo-body-small-spacing);
-  }
-  .result[aria-disabled='true'] .sub {
-    color: var(--s-color-content-disabled);
-  }
-  .result > :global(svg) {
-    flex-shrink: 0;
-  }
-  /* Ponto de status (8px). Sempre acompanhado do texto do status ao lado (princípio 3). */
-  .dot {
-    box-sizing: border-box;
-    flex-shrink: 0;
-    width: var(--primitives-spacing-8);
-    height: var(--primitives-spacing-8);
-    border: var(--border-width-default) solid;
-    border-radius: var(--radius-full);
-  }
-  .dot--suitable {
-    background: var(--s-color-surface-positive-default);
-    border-color: var(--s-color-border-positive);
-  }
-  .dot--unsuitable {
-    background: var(--s-color-surface-negative-default);
-    border-color: var(--s-color-border-negative);
-  }
-  .dot--outdated {
-    background: var(--s-color-surface-warning-default);
-    border-color: var(--s-color-border-warning);
-  }
-  /* Desconhecido (Figma 117:6459): círculo cheio #8EA9B3 (surface/unknown/default), sem borda
-     visível; antes era surface clara com borda. */
-  .dot--no-result {
-    background: var(--s-color-surface-unknown-default);
-    border-color: var(--s-color-surface-unknown-default);
-  }
-
   /* Sem resultado de busca: mesmo desenho do erro do mapa, centrado no corpo. */
   .body:has(.empty:not([hidden])) {
     justify-content: center;
@@ -461,9 +355,6 @@ const neighborhoods = suggestNeighborhoods(results);
     align-items: center;
     gap: var(--space-gap-md);
     text-align: center;
-  }
-  .empty-action :global(.btn) {
-    width: 100%;
   }
   .empty-title,
   .empty-body {
@@ -695,9 +586,13 @@ const neighborhoods = suggestNeighborhoods(results);
     function motionMs(name: string) {
       return cssTimeMs(getComputedStyle(root).getPropertyValue(name));
     }
+    const mapFailed = () =>
+      document.getElementById('map-error')?.hidden === false;
     function setEngaged(on: boolean, after: number) {
       window.clearTimeout(engageTimer);
-      const apply = () => trigger?.toggleAttribute('data-engaged', on);
+      // Mapa com erro (concept da busca): o botão fica ativo (azul) mesmo com o painel aberto.
+      const apply = () =>
+        trigger?.toggleAttribute('data-engaged', on && !mapFailed());
       if (after <= 0 || reduceMotion.matches) apply();
       else engageTimer = window.setTimeout(apply, after);
     }
@@ -800,6 +695,15 @@ const neighborhoods = suggestNeighborhoods(results);
     trigger?.addEventListener('click', () => {
       if (!root.hasAttribute('data-open')) open();
     });
+    // O erro do mapa pode aparecer (ou sumir) com a busca aberta: o botão acompanha.
+    const errorBox = document.getElementById('map-error');
+    if (errorBox)
+      new MutationObserver(() =>
+        trigger?.toggleAttribute(
+          'data-engaged',
+          root.hasAttribute('data-open') && !mapFailed(),
+        ),
+      ).observe(errorBox, { attributes: true, attributeFilter: ['hidden'] });
     input.addEventListener('input', () => {
       hoodPicked = false;
       render();
@@ -808,13 +712,6 @@ const neighborhoods = suggestNeighborhoods(results);
     root.addEventListener('click', (e) => {
       const target = e.target as Element;
       if (target.closest('[data-search-close]')) return close();
-      if (target.closest('[data-search-retry]')) {
-        input.value = '';
-        hoodPicked = false;
-        render();
-        input.focus();
-        return;
-      }
       const hood = target.closest<HTMLElement>('.hood');
       if (hood) {
         input.value = hood.dataset.hood!;

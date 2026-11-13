@@ -689,9 +689,9 @@ const sourceBulletin = site.current
   }
   /* Desktop: painel lateral à direita, com a largura do BeachPanel. */
   @media (min-width: 1024px) {
-    /* Sidebar: a camada azul (largura 0 → 477px, ancorada à direita) sobrepõe o mapa e o painel
-       (477px) desliza por cima, recortado por ela. Origem fora da tela (abertura e fechamento).
-       Tempos do Figma 187:3839 (ver docs/motion.md). */
+    /* Sidebar (Figma 213:3706): o contêiner e todo o conteúdo são um só elemento que desliza
+       da direita (translateX 100% → 0), então o painel e o que está dentro dele entram e saem
+       juntos, sem camada azul. Tempos e curva do Figma 187:3839 (ver docs/motion.md). */
     .sidebar {
       display: none;
       position: absolute;
@@ -699,41 +699,26 @@ const sourceBulletin = site.current
       right: 0;
       bottom: 0;
       z-index: 3;
-      width: 0;
+      width: var(--size-panel-width);
       overflow: clip;
-      /* Sem camada azul (Figma 213:3706): a coluna só recorta o painel, que acompanha a largura
-         (mesma duração, curva e atraso zero: sem vão entre a borda da coluna e o painel). */
-      transition: width var(--motion-duration-panel-surface)
+      transform: translateX(100%);
+      transition: transform var(--motion-duration-panel)
         var(--motion-easing-panel) var(--motion-delay-panel-surface-close);
     }
     .sidebar[data-active] {
       display: block;
     }
     .sidebar[data-open] {
-      width: var(--size-panel-width);
+      transform: none;
       transition-delay: var(--motion-delay-panel-surface);
-      transition-timing-function: var(--motion-easing-panel);
     }
     .sidebar__viewport {
       position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: var(--size-panel-width);
-      transform: translateX(100%);
-      transition: transform var(--motion-duration-panel)
-        var(--motion-easing-panel);
-    }
-    .sidebar[data-open] .sidebar__viewport {
-      transform: none;
-      transition-delay: var(--motion-delay-panel);
-      transition-timing-function: var(--motion-easing-panel);
+      inset: 0;
     }
     @media (prefers-reduced-motion: reduce) {
       .sidebar,
-      .sidebar[data-open],
-      .sidebar__viewport,
-      .sidebar[data-open] .sidebar__viewport {
+      .sidebar[data-open] {
         transition: none;
       }
     }

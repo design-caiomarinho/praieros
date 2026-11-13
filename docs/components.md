@@ -49,3 +49,4 @@ Ficha desktop (sessão 11): **pendentes de componentizar no Figma**: (1) aviso d
 - Sessão 17 (home mobile): nenhum componente novo; só ajuste de posição em BeachMap (já listado acima como pendente de componentizar).
 
 - ButtonIcon: prop `revealEngaged` (texto visível com o painel aberto, desktop). Pendente de componentizar no Figma: variação "revelar texto" e o estado "ligado".
+- ResultCard (busca): pendente de componentizar no Figma (cartão de resultado com ponto de status e seta).

@@ -167,10 +167,24 @@ export async function createBeachMap(
         }),
   });
   if (bounds) map.jumpTo({ zoom: map.getZoom() + INTRO_ZOOM });
-  // Atribuição visível (OpenStreetMap e OpenMapTiles vêm do estilo), à esquerda para não
-  // colidir com os controles de zoom.
+  // Crédito no mapa: só "OpenFreeMap ©" (pedido de Caio). O texto completo (OpenStreetMap
+  // contributors, OpenMapTiles) fica no painel Fonte e como ler. À esquerda para não colidir
+  // com os controles de zoom. Usa as classes do próprio MapLibre para herdar o visual.
   map.addControl(
-    new maplibregl.AttributionControl({ compact: true }),
+    {
+      onAdd() {
+        const el = document.createElement('div');
+        el.className = 'maplibregl-ctrl maplibregl-ctrl-attrib';
+        const a = document.createElement('a');
+        a.href = 'https://openfreemap.org';
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = 'OpenFreeMap ©';
+        el.append(a);
+        return el;
+      },
+      onRemove() {},
+    },
     'bottom-left',
   );
 

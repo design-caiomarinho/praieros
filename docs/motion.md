@@ -41,7 +41,7 @@ Tabela a preencher quando o motion for implementado:
 Tokens (`tokens/extra.json`, `--motion-*`): `duration-{panel,panel-surface,header-line,hover,dissolve,pin-label,pin-hover}`, `delay-{panel,panel-surface,panel-surface-close,header-line,header-line-close}`, `easing-{panel,header-line,hover,dissolve,pin-label,pin-hover}`. Valores do Figma 187:3839; derivações em `docs/decisions.md`.
 
 | Botões (`Button`, `ButtonIcon`) | Hover, foco, selecionado, painel aberto | `background-color`, `border-color`, `color` | 300 ms (`duration-hover`) | `easing-hover` = `0.42, 0, 0.58, 1` (dado por Caio) | Sem transição |
-| Botão de busca: revelar o texto "Busca" (Figma 214:2880) | Hover (mouse) e foco do teclado; não com o painel aberto | Largura 48 → ~96 px (coluna 0fr → 1fr); texto por opacidade, com atraso de 100 ms na entrada; sai primeiro | 500 ms (`duration-pin-hover`); texto 150 ms (`duration-dissolve`) | `easing-pin-hover`; texto `easing-dissolve` | Sem transição |
+| Botão de busca: revelar o texto "Buscar" (Figma 214:2880) | Hover (mouse) e foco do teclado; não com o painel aberto | Largura 48 → ~96 px (coluna 0fr → 1fr); texto por opacidade, com atraso de 100 ms na entrada e na saída (espelhadas) | 500 ms (`duration-pin-hover`); texto 150 ms (`duration-dissolve`) | `easing-pin-hover`; texto `easing-dissolve` | Sem transição |
 | Botão de busca do cabeçalho (derivado) | Abrir/fechar a busca | Troca `filled` ↔ aparência desabilitada, com a transição do hover | Liga a 50% da entrada do painel (atraso 300 ms + o instante em que a curva chega a 50%); desliga na saída, também a 50% do painel em cena (curva de saída) | `easing-hover` | Muda na hora |
 
 | Sidebar único (`#sidebar`: busca, ficha, Classificação e Fonte, desktop) | Abrir/fechar | Os mesmos tempos do painel e da camada azul acima, para todos os conteúdos; origem **fora da tela** (largura 0, painel `translateX(100%)`) | 1300/1500 ms | `easing-panel` | Sem transição |
@@ -64,3 +64,4 @@ Comportamento: `transform` e `clip-path` (a coluna anima `width` sobre o mapa; o
 - **Brilho/pulso do skeleton da busca** (sessão 19): os blocos já existem, estáticos; falta duração, curva e movimento reduzido do Figma.
 
 - Botão que abre painel (busca/Fonte): dissolve de 700 ms (`--motion-duration-engage`, curva dissolve) ao ligar e desligar `data-engaged`. Camada azul removida; atrasos do painel = 0.
+- Painel lateral (desktop): um só deslize de 800 ms (`duration-panel`), contêiner e conteúdo juntos (sessão 31).

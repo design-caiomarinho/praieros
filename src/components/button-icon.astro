@@ -153,8 +153,9 @@ const attrs = asLink
     font-size: var(--s-typo-label-medium-size);
     line-height: var(--s-typo-label-medium-line);
     letter-spacing: var(--s-typo-label-medium-spacing);
+    /* Entrada e saída com o mesmo tempo e atraso (espelhadas). */
     transition: opacity var(--motion-duration-dissolve)
-      var(--motion-easing-dissolve);
+      var(--motion-easing-dissolve) 100ms;
   }
   .btn-icon__reveal-text::before {
     content: attr(data-text);

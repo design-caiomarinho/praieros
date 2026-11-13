@@ -678,3 +678,15 @@ Ajuste (28): sem recorte no texto revelado (sem `overflow: hidden`): ele não fi
 - Botão azul ao abrir/fechar o painel: dissolve lento, novo token `motion.duration.engage` (700 ms, curva dissolve), também no texto.
 - Mobile: alça flutuante de 64×5 (opacidade .3), 13 px acima da borda da folha. Tela cheia deixa 20 px de mapa no topo (`EXPANDED_GAP`), com o padding inferior compensado.
 - Zoom no desktop: 24 px à esquerda do painel.
+
+## Sessão 30 — Organização do fluxo de busca (concept de Caio)
+
+- Cartão de resultado extraído para `src/components/result-card.astro` (nome, ponto de status + "bairro · N pontos de coleta", seta; estado desabilitado). Pendente de componentizar no Figma.
+- "Sem resultado" da busca: texto "Tente outro nome ou escolha um bairro para ver as praias." e sem botão "Tente novamente" (concept não tem).
+- Mapa com erro e busca aberta: o botão de busca do cabeçalho fica ativo (azul), não desabilitado (concept). Premissa: escolher praia sem mapa abre a ficha no painel, sem mexer na câmera.
+- Crédito no mapa: só "OpenFreeMap ©" (link), controle próprio no lugar do `AttributionControl`. O texto completo (OpenStreetMap, OpenMapTiles, OpenFreeMap) fica em Fonte e como ler (`source-panel.astro`). Pendente: confirmar nos Termos do OpenFreeMap que o crédito curto basta antes de publicar.
+
+## Sessão 31 — Entrada e saída do painel
+
+- Duração do painel (`motion.duration.panel` e `panel-surface`) de 1500 para 800 ms; curva mantida (`easing-panel`).
+- Desktop: o sidebar é um só elemento que desliza (translateX 100% → 0) e leva todo o conteúdo junto; antes eram duas animações (largura da coluna + deslize do conteúdo), que podiam se desencontrar. Zoom e faixa seguem com o mesmo tempo.

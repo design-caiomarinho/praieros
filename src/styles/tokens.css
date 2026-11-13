@@ -247,8 +247,8 @@
   --border-width-default: 1px;
   --border-width-accent: 4px;
 
-  --motion-duration-panel: 1500ms;
-  --motion-duration-panel-surface: 1500ms;
+  --motion-duration-panel: 800ms;
+  --motion-duration-panel-surface: 800ms;
   --motion-duration-sheet-drag: 800ms;
   --motion-duration-banner: 800ms;
   --motion-duration-header-line: 223ms;

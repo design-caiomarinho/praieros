@@ -1,0 +1,141 @@
+---
+import Icon from './icon.astro';
+import { STATUS_LABELS } from '../lib/rules/status.ts';
+import type { ChipStatus } from '../lib/rules/status.ts';
+
+// Cartão de resultado da busca (concept da busca, Figma de Caio): nome, ponto de status +
+// "bairro · N pontos de coleta" e seta à direita. Usado na vista de um bairro e nos resultados
+// da digitação. Pendente de componentizar no Figma (ver docs/components.md).
+interface Props {
+  name: string;
+  /** Linha de apoio já montada ("Barra · 1 ponto de coleta"). */
+  meta: string;
+  status: ChipStatus;
+  /** Praia fora do boletim atual: acrescenta "Boletim desatualizado". */
+  outdated?: boolean;
+  /** Sem marcador no mapa: aparência desabilitada, sem ação. */
+  disabled?: boolean;
+}
+
+const { name, meta, status, outdated = false, disabled = false } = Astro.props;
+---
+
+<button
+  type="button"
+  class="result"
+  aria-disabled={disabled ? 'true' : undefined}
+>
+  <span class="text">
+    <span class="name">{name}</span>
+    <span class="meta">
+      <span class={`dot dot--${status}`} aria-hidden="true"></span>
+      <span class="sr-only">{STATUS_LABELS[status]}</span>
+      <span class="sub">{meta}</span>
+    </span>
+    {outdated && <span class="sub">Boletim desatualizado</span>}
+  </span>
+  <Icon name="chevron-right" size={20} />
+</button>
+
+<style>
+  .result {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-md);
+    width: 100%;
+    padding: var(--space-inset-md);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  /* Mesmo padrão do botão secundário (outlined), como os bairros: hover e foco trocam a
+     superfície; foco (teclado) ganha o anel. */
+  .result:hover:not([aria-disabled='true']),
+  .result:focus-visible {
+    background: var(--s-color-surface-hover);
+  }
+  .result:focus-visible {
+    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline-offset: var(--primitives-spacing-4);
+  }
+  /* Desabilitado (sem marcador no mapa): igual ao botão secundário desabilitado. */
+  .result[aria-disabled='true'] {
+    background: transparent;
+    border-color: var(--s-color-surface-hover);
+    color: var(--s-color-content-disabled);
+    cursor: not-allowed;
+  }
+  .text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .name {
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--primitives-font-weight-600);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+  }
+  .sub {
+    color: var(--s-color-content-muted);
+    font-family: var(--s-typo-body-small-family);
+    font-weight: var(--s-typo-body-small-weight);
+    font-size: var(--s-typo-body-small-size);
+    line-height: var(--s-typo-body-small-line);
+    letter-spacing: var(--s-typo-body-small-spacing);
+  }
+  .result[aria-disabled='true'] .sub {
+    color: var(--s-color-content-disabled);
+  }
+  .result > :global(svg) {
+    flex-shrink: 0;
+  }
+  /* Ponto de status (8px). Sempre acompanhado do texto do status ao lado (princípio 3). */
+  .dot {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    width: var(--primitives-spacing-8);
+    height: var(--primitives-spacing-8);
+    border: var(--border-width-default) solid;
+    border-radius: var(--radius-full);
+  }
+  .dot--suitable {
+    background: var(--s-color-surface-positive-default);
+    border-color: var(--s-color-border-positive);
+  }
+  .dot--unsuitable {
+    background: var(--s-color-surface-negative-default);
+    border-color: var(--s-color-border-negative);
+  }
+  .dot--outdated {
+    background: var(--s-color-surface-warning-default);
+    border-color: var(--s-color-border-warning);
+  }
+  /* Desconhecido (Figma 117:6459): círculo cheio (surface/unknown/default), sem borda visível. */
+  .dot--no-result {
+    background: var(--s-color-surface-unknown-default);
+    border-color: var(--s-color-surface-unknown-default);
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

@@ -19,11 +19,11 @@
     "duration": {
       "panel": {
         "$type": "duration",
-        "$value": 1500
+        "$value": 800
       },
       "panel-surface": {
         "$type": "duration",
-        "$value": 1500
+        "$value": 800
       },
       "sheet-drag": {
         "$type": "duration",
