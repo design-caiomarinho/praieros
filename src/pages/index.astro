@@ -409,6 +409,9 @@ const sourceBulletin = site.current
   const sourceSlot = document.getElementById('source-slot')!;
   let sourceOpener: HTMLElement | null = null;
   let panelBeforeSource = false;
+  // Aberta pelo link da ficha (fluxo do painel): só então a Fonte tem o botão de voltar. Aberta
+  // direto pela navbar, não herda o botão (pedido de Caio).
+  let sourceFromFlow = false;
 
   function openSource(opener: HTMLElement) {
     // A busca sai (nunca dois painéis ao mesmo tempo).
@@ -418,6 +421,10 @@ const sourceBulletin = site.current
     }
     if (sourceSlot.hidden) {
       sourceOpener = opener;
+      sourceFromFlow = !!opener.closest('#panel');
+      sourceSlot
+        .querySelector<HTMLElement>('[data-source-back]')
+        ?.toggleAttribute('hidden', !sourceFromFlow);
       panelBeforeSource = !panel.hidden;
       panel.hidden = true;
       syncBanner(null);
@@ -474,7 +481,7 @@ const sourceBulletin = site.current
 
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    if (!sourceSlot.hidden) return closeSource(true);
+    if (!sourceSlot.hidden) return closeSource(sourceFromFlow);
     if (!panel.hidden) close();
     else if (marked) clearMark();
   });
@@ -756,8 +763,20 @@ const sourceBulletin = site.current
       right: var(--size-panel-width);
       transition-delay: var(--motion-delay-panel-surface);
     }
+    /* A faixa de carregamento do mapa se comporta como as faixas de aviso: acompanha a largura da
+       área visível do mapa (para onde o painel começa), com os mesmos tempos e curva. O azul avança
+       sobre a largura que sobra, então o progresso segue proporcional. */
+    .stage :global(.loadbar) {
+      transition: right var(--motion-duration-panel-surface)
+        var(--motion-easing-panel) var(--motion-delay-panel-surface-close);
+    }
+    .stage:has(.sidebar[data-open]) :global(.loadbar) {
+      right: var(--size-panel-width);
+      transition-delay: var(--motion-delay-panel-surface);
+    }
     @media (prefers-reduced-motion: reduce) {
-      .map-banner:not([hidden]) {
+      .map-banner:not([hidden]),
+      .stage :global(.loadbar) {
         transition: none;
       }
     }

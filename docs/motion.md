@@ -61,7 +61,7 @@ Comportamento: `transform` e `clip-path` (a coluna anima `width` sobre o mapa; o
 - **Esqueleto de carregamento** e **câmera do mapa** (voo até a praia): seguem pendentes.
 - **Ficha, Classificação e Fonte** (abrir/fechar): ainda sem motion.
 
-- **Brilho/pulso do skeleton da busca** (sessão 19): os blocos já existem, estáticos; falta duração, curva e movimento reduzido do Figma.
+- **Pulso do skeleton da busca** (sessão 35, pedido de Caio, referência: skeleton do shadcn): opacidade 1 → 0,5 → 1, 2000 ms (`duration-skeleton`), curva `easing-skeleton` = `0.4, 0, 0.6, 1`, infinito, blocos em sincronia; reduzir movimento: sem animação. Valores do `animate-pulse` do shadcn, não do Figma.
 
 - Botão que abre painel (busca/Fonte): dissolve de 700 ms (`--motion-duration-engage`, curva dissolve) ao ligar e desligar `data-engaged`. Camada azul removida; atrasos do painel = 0.
 - Painel lateral (desktop): um só deslize de 800 ms (`duration-panel`), contêiner e conteúdo juntos (sessão 31).

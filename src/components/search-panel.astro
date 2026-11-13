@@ -412,7 +412,8 @@ const neighborhoods = suggestNeighborhoods(results);
 
   /* Esqueleto de carregamento (Figma de Caio): blocos na cor surface/strong no lugar do título,
      do chip, do campo e dos bairros, enquanto o mapa carrega (escolher uma praia depende dele).
-     O botão de fechar fica. Estático: o brilho/pulso é motion e espera a fase de motion. */
+     O botão de fechar fica. Pulso como o do skeleton do shadcn: a opacidade vai de 1 a 0,5 e volta,
+     em 2 s, sem parar, com todos os blocos em sincronia (ver docs/decisions.md, sessão 35). */
   .sk,
   .sk-body {
     display: none;
@@ -420,6 +421,13 @@ const neighborhoods = suggestNeighborhoods(results);
   .search[data-loading] .sk {
     display: block;
     background: var(--s-color-surface-strong);
+    animation: skeleton-pulse var(--motion-duration-skeleton)
+      var(--motion-easing-skeleton) infinite;
+  }
+  @keyframes skeleton-pulse {
+    50% {
+      opacity: var(--motion-opacity-skeleton);
+    }
   }
   .search[data-loading] .sk-body {
     display: flex;
@@ -439,6 +447,14 @@ const neighborhoods = suggestNeighborhoods(results);
     width: 55%;
     height: var(--primitives-spacing-24);
     background: var(--s-color-surface-strong);
+    animation: skeleton-pulse var(--motion-duration-skeleton)
+      var(--motion-easing-skeleton) infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .search[data-loading] .sk,
+    .search[data-loading] .head-top::after {
+      animation: none;
+    }
   }
   .sk--field {
     height: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));

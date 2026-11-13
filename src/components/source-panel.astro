@@ -47,7 +47,8 @@ const mapCredits = [
   <header class="head">
     <div class="top">
       <div class="title">
-        <div class="back" data-source-back>
+        {/* Só aparece quando a Fonte foi aberta pelo fluxo da ficha (index.astro). */}
+        <div class="back" data-source-back hidden>
           <ButtonIcon
             variant="ghost"
             size="xsmall"
@@ -193,6 +194,9 @@ const mapCredits = [
   .back,
   .close {
     display: contents;
+  }
+  .back[hidden] {
+    display: none;
   }
   h2 {
     margin: 0;
