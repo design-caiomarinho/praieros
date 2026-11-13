@@ -254,7 +254,7 @@
   --motion-duration-header-line: 223ms;
   --motion-duration-hover: 300ms;
   --motion-duration-dissolve: 150ms;
-  --motion-duration-pin-label: 1000ms;
+  --motion-duration-pin-label: 500ms;
   --motion-duration-pin-select: 250ms;
   --motion-duration-load-progress: 2500ms;
   --motion-duration-pin-hover: 500ms;

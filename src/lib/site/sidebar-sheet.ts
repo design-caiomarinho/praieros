@@ -12,6 +12,10 @@
 // A altura final é CSS (`data-expanded` no #sidebar, ver index.astro).
 
 import { cssTimeMs } from '../map/css-time.ts';
+import {
+  resetScroll as resetPaneScroll,
+  visibleScroller,
+} from './scroll-area.ts';
 
 const PANE_IDS = ['search', 'panel', 'source-slot'];
 /** Arrasto mínimo (px) para valer como arraste (e não toque). */
@@ -79,7 +83,7 @@ export function initSidebarSheet(): void {
   }
   /** De volta à origem, o conteúdo volta ao topo (sem rolagem interna lá). */
   function resetScroll() {
-    panes.forEach((p) => (p.scrollTop = 0));
+    panes.forEach(resetPaneScroll);
   }
   function label() {
     syncTop();
@@ -275,8 +279,8 @@ export function initSidebarSheet(): void {
       suppressClick = false;
       return;
     }
-    const p = current();
-    if (expanded || (p && p.scrollHeight > p.clientHeight + 1)) set(!expanded);
+    const s = current() && visibleScroller(current()!);
+    if (expanded || (s && s.scrollHeight > s.clientHeight + 1)) set(!expanded);
   });
 
   // Fechou o sidebar ou trocou de painel: volta ao tamanho inicial.

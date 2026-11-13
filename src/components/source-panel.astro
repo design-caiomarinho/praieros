@@ -66,77 +66,81 @@ const mapCredits = [
         />
       </div>
     </div>
-    <p class="intro">
-      Um jeito mais claro de ler o boletim de balneabilidade das praias de
-      Salvador. Aqui você entende os termos do boletim e de onde vêm as
-      informações.
-    </p>
-    <p class="independent">
-      O Praieros é independente. Não é um canal oficial e não tem vínculo com o
-      Inema. Para consultar o documento original, use o link do boletim.
-    </p>
   </header>
 
-  <div class="section">
-    <h3>Glossário</h3>
-    <dl class="glossary">
-      {glossary.map(({ term, text }) => (
-        <div class="entry">
-          <dt>{term}</dt>
-          <dd>{text}</dd>
-        </div>
-      ))}
-    </dl>
-  </div>
+  <div class="scroll" data-scroll>
+    <div class="section lead">
+      <p class="intro">
+        Um jeito mais claro de ler o boletim de balneabilidade das praias de
+        Salvador. Aqui você entende os termos do boletim e de onde vêm as
+        informações.
+      </p>
+      <p class="independent">
+        O Praieros é independente. Não é um canal oficial e não tem vínculo com
+        o Inema. Para consultar o documento original, use o link do boletim.
+      </p>
+    </div>
+    <div class="section">
+      <h3>Glossário</h3>
+      <dl class="glossary">
+        {glossary.map(({ term, text }) => (
+          <div class="entry">
+            <dt>{term}</dt>
+            <dd>{text}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
 
-  <div class="section">
-    <h3>Fontes e limites</h3>
-    <div class="stack">
-      <div class="limits">
-        <p>
-          <strong>Fonte: </strong>
-          {bulletin
-            ? `Inema, Boletim de Balneabilidade nº ${bulletin.number}, emitido em ${bulletin.date}.`
-            : 'Inema, Boletim de Balneabilidade.'}
-        </p>
-        <p>
-          <strong>Posições no mapa: </strong>aproximadas. Os pontos de coleta
-          podem estar em outro lugar da praia.
-        </p>
-        <p>
-          <strong>Data da coleta: </strong>nem todo boletim informa a data da
-          coleta. Quando falta, mostramos só a data de emissão.
-        </p>
-        <p>
-          <strong>Atualização: </strong>o Praieros pode demorar a refletir um
-          boletim novo. Confira sempre a data de emissão.
-        </p>
-        <p class="map-credit">
-          <strong>Mapa: </strong>
-          {mapCredits.map(({ text, href }, i) => (
-            <Fragment>
-              {i > 0 && ' · '}
-              <a href={href} target="_blank" rel="noopener noreferrer">
-                {text}
-                <span class="sr-only"> (abre em nova aba)</span>
-              </a>
-            </Fragment>
-          ))}
-        </p>
-      </div>
-      {bulletin?.pdfUrl && (
-        <div class="original">
-          <Button
-            variant="secondary"
-            href={bulletin.pdfUrl}
-            target="_blank"
-            spread
-            iconRight="external"
-          >
-            Boletim original
-          </Button>
+    <div class="section">
+      <h3>Fontes e limites</h3>
+      <div class="stack">
+        <div class="limits">
+          <p>
+            <strong>Fonte: </strong>
+            {bulletin
+              ? `Inema, Boletim de Balneabilidade nº ${bulletin.number}, emitido em ${bulletin.date}.`
+              : 'Inema, Boletim de Balneabilidade.'}
+          </p>
+          <p>
+            <strong>Posições no mapa: </strong>aproximadas. Os pontos de coleta
+            podem estar em outro lugar da praia.
+          </p>
+          <p>
+            <strong>Data da coleta: </strong>nem todo boletim informa a data da
+            coleta. Quando falta, mostramos só a data de emissão.
+          </p>
+          <p>
+            <strong>Atualização: </strong>o Praieros pode demorar a refletir um
+            boletim novo. Confira sempre a data de emissão.
+          </p>
+          <p class="map-credit">
+            <strong>Mapa: </strong>
+            {mapCredits.map(({ text, href }, i) => (
+              <Fragment>
+                {i > 0 && ' · '}
+                <a href={href} target="_blank" rel="noopener noreferrer">
+                  {text}
+                  <span class="sr-only"> (abre em nova aba)</span>
+                </a>
+              </Fragment>
+            ))}
+          </p>
         </div>
-      )}
+        {bulletin?.pdfUrl && (
+          <div class="original">
+            <Button
+              variant="secondary"
+              href={bulletin.pdfUrl}
+              target="_blank"
+              spread
+              iconRight="external"
+            >
+              Boletim original
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   </div>
 </section>
@@ -152,20 +156,25 @@ const mapCredits = [
     color: var(--s-color-content-primary);
     border-left: var(--border-width-default) solid var(--s-color-border-default);
   }
+  /* Área que rola (corpo + rodapé): o cabeçalho fica fora dela, então a barra de rolagem começa
+     abaixo dele (pedido de Caio). */
+  .scroll {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+  }
   /* Recebe o foco ao abrir (sem anel: não é um controle). */
   .panel:focus {
     outline: none;
   }
   /* Cabeçalho (Figma 126:4365): padding 24, borda inferior. */
   .head {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: var(--s-color-surface-default);
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-sm);
-    padding: var(--space-inset-lg);
+    flex-shrink: 0;
+    padding: var(--space-inset-md) var(--space-inset-lg);
     border-bottom: var(--border-width-default) solid
       var(--s-color-border-default);
   }
@@ -207,7 +216,6 @@ const mapCredits = [
   }
   /* Caixa "independente" (Figma 126:5090): fundo forte, borda, padding 16. */
   .independent {
-    margin-top: var(--space-stack-xs);
     padding: var(--space-inset-md);
     background: var(--s-color-surface-strong);
     border: var(--border-width-default) solid var(--s-color-border-default);
@@ -292,7 +300,7 @@ const mapCredits = [
         var(--s-color-border-default);
     }
     .head {
-      padding: var(--space-inset-lg) var(--space-inset-md);
+      padding: var(--space-inset-md);
     }
     .section {
       padding: var(--space-inset-lg) var(--space-inset-md);

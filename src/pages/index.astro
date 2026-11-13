@@ -149,6 +149,7 @@ const sourceBulletin = site.current
   import { cssTimeMs } from '../lib/map/css-time.ts';
   import { initSidebarShell } from '../lib/site/sidebar-shell.ts';
   import { initSidebarSheet } from '../lib/site/sidebar-sheet.ts';
+  import { resetScroll } from '../lib/site/scroll-area.ts';
 
   initSidebarShell();
   initSidebarSheet();
@@ -244,7 +245,7 @@ const sourceBulletin = site.current
       else if (!el.hidden) el.setAttribute('data-view', view);
     });
     // A folha começa do topo a cada vista (a rolagem da ficha não vaza para a Classificação).
-    panel.scrollTop = 0;
+    resetScroll(panel);
   }
 
   function close() {
@@ -494,11 +495,35 @@ const sourceBulletin = site.current
   /* Mobile: folha inferior sobre o mapa (Figma 125:3460 e 117:5257: 450px de 756px de palco,
      ~60%); o conteúdo rola por dentro. A folha é o mesmo sidebar do desktop, na vertical: a
      camada azul e o painel branco sobem de baixo, com os mesmos tempos e curva (pedido de Caio). */
+  /* O painel não rola: o cabeçalho de cada vista fica fixo e só a área `[data-scroll]` rola, então a
+     barra de rolagem começa abaixo do cabeçalho. */
   .panel {
     position: absolute;
     inset: 0;
-    overflow-y: auto;
+    overflow: hidden;
     background: var(--s-color-surface-default);
+  }
+  .panel:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+  }
+  .panel [data-beach]:not([hidden]) {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .layout-mobile {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .layout-mobile > :global(section),
+  .layout-classification > :global(section),
+  .layout-desktop > :global(section) {
+    flex: 1 1 auto;
+    min-height: 0;
   }
   .layout-desktop {
     display: none;
@@ -543,17 +568,13 @@ const sourceBulletin = site.current
     }
     .sidebar[data-expanded]
       .sidebar__viewport
-      :global(:is(.panel, .search, .source-slot)) {
+      :global(:is(#panel, #search, #source-slot)) {
       padding-bottom: var(--primitives-spacing-20);
     }
     /* Sem rolagem interna na posição de origem nem enquanto a folha se move: o conteúdo só rola com a
        folha na tela toda e já fixada (data-expanded sem data-moving, sidebar-sheet.ts). */
-    .sidebar:not([data-expanded])
-      .sidebar__viewport
-      :global(:is(.panel, .search, .source-slot)),
-    .sidebar[data-moving]
-      .sidebar__viewport
-      :global(:is(.panel, .search, .source-slot)) {
+    .sidebar:not([data-expanded]) .sidebar__viewport :global([data-scroll]),
+    .sidebar[data-moving] .sidebar__viewport :global([data-scroll]) {
       overflow-y: hidden;
     }
     /* Áreas de gesto: o navegador não pode tratar o arrastar como rolagem da página nem como
@@ -564,7 +585,7 @@ const sourceBulletin = site.current
     .sidebar:not([data-expanded]) .sidebar__viewport :global(*) {
       touch-action: none;
     }
-    .sidebar__viewport :global(:is(.panel, .search, .source-slot)) {
+    .sidebar__viewport :global([data-scroll]) {
       overscroll-behavior: contain;
     }
     .sidebar[data-moving] .sidebar__viewport,
@@ -722,17 +743,6 @@ const sourceBulletin = site.current
         transition: none;
       }
     }
-    /* Corpo da ficha ocupa a altura toda (links e crédito no rodapé); rola se for alta. */
-    .panel:not([hidden]) {
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-    }
-    .panel [data-beach]:not([hidden]) {
-      display: flex;
-      flex: 1 0 auto;
-      flex-direction: column;
-    }
     .search-slot :global(.search) {
       width: auto;
     }
@@ -769,17 +779,12 @@ const sourceBulletin = site.current
     }
     .layout-desktop {
       display: flex;
-      flex: 1 0 auto;
+      flex: 1 1 auto;
       flex-direction: column;
-    }
-    .layout-desktop > :global(section) {
-      flex: 1 0 auto;
+      min-height: 0;
     }
     .layout-mobile {
       display: none;
-    }
-    .layout-classification > :global(section) {
-      flex: 1 0 auto;
     }
   }
   /* Classificação: no lugar da ficha enquanto estiver aberta (desktop e folha inferior mobile). */
@@ -792,8 +797,9 @@ const sourceBulletin = site.current
   }
   [data-view='classification'] .layout-classification {
     display: flex;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     flex-direction: column;
+    min-height: 0;
   }
   /* Fonte e como ler: mobile = folha inferior (60% do palco, rola por dentro), como a ficha;
      desktop = à direita como a ficha. */
@@ -801,20 +807,20 @@ const sourceBulletin = site.current
     display: none;
   }
   .source-slot:not([hidden]) {
-    display: block;
+    display: flex;
+    flex-direction: column;
     position: absolute;
     inset: 0;
-    overflow-y: auto;
+    overflow: hidden;
     background: var(--s-color-surface-default);
+  }
+  .source-slot :global(section) {
+    flex: 1 1 auto;
+    min-height: 0;
   }
   @media (min-width: 1024px) {
     .source-slot:not([hidden]) {
-      display: flex;
-      flex-direction: column;
       width: auto;
-    }
-    .source-slot :global(section) {
-      flex: 1 0 auto;
     }
   }
 </style>

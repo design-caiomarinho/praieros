@@ -62,7 +62,7 @@ const neighborhoods = suggestNeighborhoods(results);
     </div>
   </header>
 
-  <div class="body">
+  <div class="body" data-scroll>
     <div class="controls">
       <div class="field" data-field>
         <InputText label="Buscar praia" name="q" />
@@ -171,8 +171,8 @@ const neighborhoods = suggestNeighborhoods(results);
     flex-direction: column;
     min-height: 0;
     width: 100%;
-    /* O painel inteiro rola (cabeçalho e corpo), como Fonte e como ler. */
-    overflow-y: auto;
+    /* Só o corpo rola; o cabeçalho fica fixo e a barra de rolagem começa abaixo dele. */
+    overflow: hidden;
     background: var(--s-color-surface-default);
     color: var(--s-color-content-primary);
   }
@@ -204,10 +204,6 @@ const neighborhoods = suggestNeighborhoods(results);
   /* Cabeçalho (Figma 213:3706 e 213:3802): só título e fechar; padding 16 e 24, borda inferior.
      O campo e o chip do boletim ficam no corpo. */
   .head {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: var(--s-color-surface-default);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -272,8 +268,10 @@ const neighborhoods = suggestNeighborhoods(results);
   .body {
     position: relative;
     display: flex;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
     gap: var(--space-stack-xl);
     padding: var(--space-inset-lg);
   }
@@ -330,13 +328,13 @@ const neighborhoods = suggestNeighborhoods(results);
     list-style: none;
   }
   /* Sem resultado de busca: mesmo desenho do erro do mapa, centrado no corpo. */
-  .body:has(.empty:not([hidden])) {
-    justify-content: center;
-  }
+  /* Campo e chip ficam no topo; só a mensagem centraliza no espaço que sobra. */
   .empty {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     /* Inset vertical de 40px (token inset/2xl) em volta da mensagem. */
     padding-block: var(--space-inset-2xl);
     gap: var(--space-gap-xl);

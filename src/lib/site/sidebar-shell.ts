@@ -13,6 +13,7 @@
 
 import { halfwayTime } from '../map/cubic-bezier.ts';
 import { cssTimeMs } from '../map/css-time.ts';
+import { resetScroll, visibleScroller } from './scroll-area.ts';
 
 const PANE_IDS = ['search', 'panel', 'source-slot'];
 
@@ -84,7 +85,7 @@ export function initSidebarShell(): void {
     el.setAttribute('inert', '');
     el.setAttribute('aria-hidden', 'true');
     el.classList.add('sidebar__ghost');
-    return { el, scroll: p.scrollTop };
+    return { el, scroll: visibleScroller(p)?.scrollTop ?? 0 };
   }
 
   function leave(g: HTMLElement) {
@@ -152,10 +153,12 @@ export function initSidebarShell(): void {
   function sync() {
     const pane = visible();
     const key = keyOf(pane);
-    if (key !== prevKey && snap) {
+    // Trocar de conteúdo com o sidebar aberto é direto, sem dissolve (pedido de Caio). O fantasma só
+    // existe ao fechar (sem painel): fica parado até a saída acabar.
+    if (key !== prevKey && snap && !pane) {
       ghosts!.append(snap.el);
-      snap.el.scrollTop = snap.scroll;
-      if (pane) leave(snap.el); // trocou de conteúdo: dissolve; sem painel: fica até fechar
+      const area = visibleScroller(snap.el);
+      if (area) area.scrollTop = snap.scroll;
     }
     engageInfo(
       pane?.id === 'source-slot',
@@ -168,6 +171,9 @@ export function initSidebarShell(): void {
         .querySelectorAll<HTMLElement>('.sidebar__ghost:not([data-leaving])')
         .forEach(leave);
       open();
+      // Mudou o conteúdo (voltou à busca, trocou de praia ou de vista): o painel novo começa do topo,
+      // não onde o usuário parou da última vez (a rolagem de um painel escondido fica guardada).
+      if (key !== prevKey) resetScroll(pane);
     } else close();
     prevKey = key;
     snap = pane ? snapshot(pane) : null;

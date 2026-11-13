@@ -93,102 +93,104 @@ const noResult = notice === 'no-result';
     </div>
   </header>
 
-  <div class="body">
-    <div class="main">
-      <div class="intro">
-        <div class="titles">
-          <h3 class="beach-name">{name}</h3>
-          <p class="subtitle">{subtitle}</p>
-        </div>
-        <div class="bulletin">
-          <span class="bulletin-chip">
-            {noResult
-              ? 'Boletim não encontrado'
-              : `Boletim nº ${bulletin.number} · emitido em ${bulletin.date}`}
-          </span>
-          {note && <p class="note">{note}</p>}
-        </div>
-      </div>
-      {noResult && (
-        <div class="empty">
-          <div class="empty-icon">
-            <Icon name="warning" size={24} />
+  <div class="scroll" data-scroll>
+    <div class="body">
+      <div class="main">
+        <div class="intro">
+          <div class="titles">
+            <h3 class="beach-name">{name}</h3>
+            <p class="subtitle">{subtitle}</p>
           </div>
-          <div class="empty-text">
-            <p class="empty-title">Sem resultado</p>
-            <p class="empty-body">
-              Não há resultado do Inema
-              <br />
-              para esta praia.
-            </p>
+          <div class="bulletin">
+            <span class="bulletin-chip">
+              {noResult
+                ? 'Boletim não encontrado'
+                : `Boletim nº ${bulletin.number} · emitido em ${bulletin.date}`}
+            </span>
+            {note && <p class="note">{note}</p>}
           </div>
         </div>
-      )}
-      {!noResult && points.length > 0 && (
-        <div class="points">
-          <h4>Pontos de coleta</h4>
-          <div class="cards">
-            {points.map((p) => (
-              <PointCard
-                pointId={p.id}
-                name={p.name}
-                location={p.location}
-                status={p.status}
-                accuracy={p.accuracy}
-              />
-            ))}
-            {rainNotice && (
-              <div class="rain">
-                <Icon name="rain" size={20} />
-                <p>{RAIN_NOTICE_TEXT}</p>
+        {noResult && (
+          <div class="empty">
+            <div class="empty-icon">
+              <Icon name="warning" size={24} />
+            </div>
+            <div class="empty-text">
+              <p class="empty-title">Sem resultado</p>
+              <p class="empty-body">
+                Não há resultado do Inema
+                <br />
+                para esta praia.
+              </p>
+            </div>
+          </div>
+        )}
+        {!noResult && points.length > 0 && (
+          <div class="points">
+            <h4>Pontos de coleta</h4>
+            <div class="cards">
+              {points.map((p) => (
+                <PointCard
+                  pointId={p.id}
+                  name={p.name}
+                  location={p.location}
+                  status={p.status}
+                  accuracy={p.accuracy}
+                />
+              ))}
+              {rainNotice && (
+                <div class="rain">
+                  <Icon name="rain" size={20} />
+                  <p>{RAIN_NOTICE_TEXT}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {!noResult && (
+          <div class="buttons">
+            {showDetails && (
+              <div class="details" data-open-classification>
+                <Button variant="primary">Ver classificação</Button>
               </div>
             )}
+            <ButtonIcon
+              variant="outlined"
+              icon="share"
+              label="Compartilhar praia"
+              disabled
+            />
           </div>
-        </div>
-      )}
-
-      {!noResult && (
-        <div class="buttons">
-          {showDetails && (
-            <div class="details" data-open-classification>
-              <Button variant="primary">Ver classificação</Button>
-            </div>
-          )}
-          <ButtonIcon
-            variant="outlined"
-            icon="share"
-            label="Compartilhar praia"
-            disabled
-          />
-        </div>
-      )}
-    </div>
-  </div>
-
-  <footer class="foot-wrap">
-    <div class="foot">
-      <div class="links">
-        <Button
-          variant="secondary"
-          href={sourceHref}
-          spread
-          iconRight="chevron-right"
-        >
-          Como ler e fonte
-        </Button>
-        <Button
-          variant="secondary"
-          href={bulletin.pdfUrl}
-          target="_blank"
-          spread
-          iconRight="external"
-        >
-          Boletim original
-        </Button>
+        )}
       </div>
-      <p class="credit">Fonte: Inema · Praieros não é canal oficial</p>
     </div>
-  </footer>
+
+    <footer class="foot-wrap">
+      <div class="foot">
+        <div class="links">
+          <Button
+            variant="secondary"
+            href={sourceHref}
+            spread
+            iconRight="chevron-right"
+          >
+            Como ler e fonte
+          </Button>
+          <Button
+            variant="secondary"
+            href={bulletin.pdfUrl}
+            target="_blank"
+            spread
+            iconRight="external"
+          >
+            Boletim original
+          </Button>
+        </div>
+        <p class="credit">Fonte: Inema · Praieros não é canal oficial</p>
+      </div>
+    </footer>
+  </div>
 </section>
 
 <style>
@@ -215,12 +217,9 @@ const noResult = notice === 'no-result';
   }
   /* Cabeçalho (Figma 217:6822): só o título, padding 16 vertical e 24 lateral, borda inferior. */
   .head {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: var(--s-color-surface-default);
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
     padding: var(--space-inset-md) var(--space-inset-lg);
     border-bottom: var(--border-width-default) solid
       var(--s-color-border-default);
@@ -304,6 +303,15 @@ const noResult = notice === 'no-result';
     line-height: var(--s-typo-body-small-line);
     letter-spacing: var(--s-typo-body-small-spacing);
     white-space: nowrap;
+  }
+  /* Área que rola (corpo + rodapé): o cabeçalho fica fora dela, então a barra de rolagem começa
+     abaixo dele (pedido de Caio). */
+  .scroll {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
   }
   /* Corpo (Figma 217:6826): padding 24; título, pontos e ações. */
   .body {

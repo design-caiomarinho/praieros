@@ -46,59 +46,61 @@ const { content, pdfUrl, beachName } = Astro.props;
     </div>
   </header>
 
-  <div class="body">
-    <div class="main">
-      <div class="blocks">
-        <p class="intro">{CLASSIFICATION_INTRO}</p>
-        <div class="block">
-          <h3>Na fonte</h3>
-          <p>{content.source}</p>
-        </div>
-        <div class="block">
-          <h3>Em linguagem simples</h3>
-          <p>{content.plain}</p>
-        </div>
-        <div class="block">
-          <h3>Status</h3>
-          <div class="chip">
-            <StatusChip status={content.status} />
+  <div class="scroll" data-scroll>
+    <div class="body">
+      <div class="main">
+        <div class="blocks">
+          <p class="intro">{CLASSIFICATION_INTRO}</p>
+          <div class="block">
+            <h3>Na fonte</h3>
+            <p>{content.source}</p>
           </div>
-          <p>{content.statusText}</p>
+          <div class="block">
+            <h3>Em linguagem simples</h3>
+            <p>{content.plain}</p>
+          </div>
+          <div class="block">
+            <h3>Status</h3>
+            <div class="chip">
+              <StatusChip status={content.status} />
+            </div>
+            <p>{content.statusText}</p>
+          </div>
+        </div>
+        <div class="share">
+          <Button variant="primary" disabled>
+            Compartilhar praia
+          </Button>
         </div>
       </div>
-      <div class="share">
-        <Button variant="primary" disabled>
-          Compartilhar praia
-        </Button>
-      </div>
     </div>
-  </div>
 
-  <footer class="foot-wrap">
-    <div class="foot">
-      <div class="links">
-        <Button
-          variant="secondary"
-          href={CONAMA_URL}
-          target="_blank"
-          spread
-          iconRight="external"
-        >
-          Ver resolução
-        </Button>
-        <Button
-          variant="secondary"
-          href={pdfUrl}
-          target="_blank"
-          spread
-          iconRight="external"
-        >
-          Boletim original
-        </Button>
+    <footer class="foot-wrap">
+      <div class="foot">
+        <div class="links">
+          <Button
+            variant="secondary"
+            href={CONAMA_URL}
+            target="_blank"
+            spread
+            iconRight="external"
+          >
+            Ver resolução
+          </Button>
+          <Button
+            variant="secondary"
+            href={pdfUrl}
+            target="_blank"
+            spread
+            iconRight="external"
+          >
+            Boletim original
+          </Button>
+        </div>
+        <p class="credit">Fonte: Inema · Praieros não é canal oficial</p>
       </div>
-      <p class="credit">Fonte: Inema · Praieros não é canal oficial</p>
-    </div>
-  </footer>
+    </footer>
+  </div>
 </section>
 
 <style>
@@ -118,12 +120,9 @@ const { content, pdfUrl, beachName } = Astro.props;
   }
   /* Cabeçalho (Figma 222:8902): só o título, padding 16 vertical e 24 lateral, borda inferior. */
   .head {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: var(--s-color-surface-default);
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
     padding: var(--space-inset-md) var(--space-inset-lg);
     border-bottom: var(--border-width-default) solid
       var(--s-color-border-default);
@@ -162,6 +161,15 @@ const { content, pdfUrl, beachName } = Astro.props;
     font-size: var(--s-typo-body-medium-size);
     line-height: var(--s-typo-body-medium-line);
     letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  /* Área que rola (corpo + rodapé): o cabeçalho fica fora dela, então a barra de rolagem começa
+     abaixo dele (pedido de Caio). */
+  .scroll {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
   }
   /* Corpo (Figma 222:8908): padding 24; texto de abertura, blocos (32) e botão (40). */
   .body {

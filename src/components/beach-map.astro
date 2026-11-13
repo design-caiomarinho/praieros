@@ -42,7 +42,10 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
       <div class="error__content">
         <div class="error__texts">
           <h2>Não conseguimos carregar o mapa</h2>
-          <p>Tente de novo em instantes. Você ainda pode buscar a praia pelo nome.</p>
+          <p>
+            Tente de novo em instantes. Você ainda pode buscar a praia pelo
+            nome.
+          </p>
         </div>
         <div class="error__action" id="map-retry">
           <Button variant="primary" size="medium">
@@ -346,8 +349,8 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     left: 0;
     right: 0;
     z-index: 3;
-    /* Figma 117:4816: faixa de 16 px. */
-    height: var(--primitives-spacing-16);
+    /* Faixa de 8 px (pedido de Caio; o Figma 117:4816 tinha 16 px). */
+    height: var(--primitives-spacing-8);
     /* Recorta: a faixa sobe para trás da navbar ao completar. */
     overflow: clip;
   }

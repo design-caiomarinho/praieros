@@ -47,7 +47,7 @@
       },
       "pin-label": {
         "$type": "duration",
-        "$value": 1000
+        "$value": 500
       },
       "pin-select": {
         "$type": "duration",
