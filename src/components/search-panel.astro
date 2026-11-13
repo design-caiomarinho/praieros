@@ -204,6 +204,10 @@ const neighborhoods = suggestNeighborhoods(results);
   /* Cabeçalho (Figma 213:3706 e 213:3802): só título e fechar; padding 16 e 24, borda inferior.
      O campo e o chip do boletim ficam no corpo. */
   .head {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--s-color-surface-default);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;

@@ -34,7 +34,7 @@ interface Props {
   /** Nº de pontos de coleta da praia para o subtítulo (padrão: `points.length`). */
   pointCount?: number;
   layout?: 'desktop' | 'mobile';
-  /** Mostra "Ver detalhes", que abre a Classificação (desktop e mobile; ligado em index.astro). */
+  /** Mostra "Ver classificação", que abre a Classificação (desktop e mobile; ligado em index.astro). */
   showDetails?: boolean;
   sourceHref?: string;
 }
@@ -151,7 +151,7 @@ const noResult = notice === 'no-result';
         <div class="buttons">
           {showDetails && (
             <div class="details" data-open-classification>
-              <Button variant="primary">Ver detalhes</Button>
+              <Button variant="primary">Ver classificação</Button>
             </div>
           )}
           <ButtonIcon
@@ -215,6 +215,10 @@ const noResult = notice === 'no-result';
   }
   /* Cabeçalho (Figma 217:6822): só o título, padding 16 vertical e 24 lateral, borda inferior. */
   .head {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--s-color-surface-default);
     display: flex;
     flex-direction: column;
     padding: var(--space-inset-md) var(--space-inset-lg);
@@ -388,7 +392,7 @@ const noResult = notice === 'no-result';
     flex-direction: column;
     gap: var(--space-stack-xs);
   }
-  /* "Ver detalhes" ocupa o que sobra; compartilhar é o botão de ícone ao lado (Figma 217:6966). */
+  /* "Ver classificação" ocupa o que sobra; compartilhar é o botão de ícone ao lado (Figma 217:6966). */
   .links {
     flex-direction: row;
   }

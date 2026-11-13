@@ -77,11 +77,6 @@ const Tag = pointId ? 'button' : 'article';
   .card {
     border-left-color: var(--edge);
   }
-  /* Hover e foco: a borda cinza passa para a cor do status (pedido de Caio). */
-  button.card:hover .body,
-  button.card:focus-visible .body {
-    border-color: var(--edge);
-  }
   /* O ponto escolhido (pin ativo no mapa): a borda cinza dá lugar à borda da cor do status, sem
      hover e sem clique (pedido de Caio). Os outros seguem com o hover de sempre. */
   .body {

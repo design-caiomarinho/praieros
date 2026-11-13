@@ -13,7 +13,7 @@
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | Botões do cabeçalho (rótulo acessível)            | Compartilhar o site · Fonte e como ler · Buscar praia                                                              |
 | Logo (link, texto oculto)                         | Praieros, página inicial                                                                                           |
-| Painel                                            | Fechar ficha da praia · Ver detalhes · Compartilhar praia · Pontos de coleta · Como ler e fonte · Boletim original |
+| Painel                                            | Fechar ficha da praia · Ver classificação · Compartilhar praia · Pontos de coleta · Como ler e fonte · Boletim original |
 | Chip do boletim                                   | Boletim nº X · dd/mm/aaaa                                                                                          |
 | Nota de rodapé                                    | Fonte: Inema · Praieros não é canal oficial                                                                        |
 | Notas sob o chip (tabela de estados do CLAUDE.md) | Esta praia não consta no boletim nº X. · A última análise foi em dd/mm/aaaa, antiga demais para mostrar.           |
@@ -54,7 +54,7 @@
 | Resumo do boletim (rótulo)       | N pontos de coleta (não inclui praias que não constam no boletim) | Provisório (sessão 10); a tela do resumo é futura |
 
 | Aviso de chuva (ficha com ponto Própria) | Depois de chuva forte, a água pode piorar. Evite o banho e confira o próximo boletim. | Figma 123:2645 (texto do design, não do boletim). Regra em `docs/decisions.md`, sessão 11 |
-| Botões da ficha | Ver detalhes · Compartilhar praia · Como ler e fonte · Boletim original | Figma 123:2440 |
+| Botões da ficha | Ver classificação · Compartilhar praia · Como ler e fonte · Boletim original | Figma 123:2440 |
 
 Sessão 11: "Posição aproximada" e "Posição muito aproximada" (linhas acima) **não são mais exibidas** no cartão do ponto (decisão do Caio; o Figma não tem). O chip do boletim passou a "Boletim nº X · emitido em dd/mm/aaaa" (Figma 123:2445).
 

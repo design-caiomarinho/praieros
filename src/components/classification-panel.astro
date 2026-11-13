@@ -44,12 +44,12 @@ const { content, pdfUrl, beachName } = Astro.props;
         />
       </div>
     </div>
-    <p class="intro">{CLASSIFICATION_INTRO}</p>
   </header>
 
   <div class="body">
     <div class="main">
       <div class="blocks">
+        <p class="intro">{CLASSIFICATION_INTRO}</p>
         <div class="block">
           <h3>Na fonte</h3>
           <p>{content.source}</p>
@@ -72,7 +72,9 @@ const { content, pdfUrl, beachName } = Astro.props;
         </Button>
       </div>
     </div>
+  </div>
 
+  <footer class="foot-wrap">
     <div class="foot">
       <div class="links">
         <Button
@@ -96,7 +98,7 @@ const { content, pdfUrl, beachName } = Astro.props;
       </div>
       <p class="credit">Fonte: Inema · Praieros não é canal oficial</p>
     </div>
-  </div>
+  </footer>
 </section>
 
 <style>
@@ -114,12 +116,15 @@ const { content, pdfUrl, beachName } = Astro.props;
   .panel:focus {
     outline: none;
   }
-  /* Cabeçalho (Figma 125:3915): padding 24, borda inferior. */
+  /* Cabeçalho (Figma 222:8902): só o título, padding 16 vertical e 24 lateral, borda inferior. */
   .head {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--s-color-surface-default);
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-sm);
-    padding: var(--space-inset-lg);
+    padding: var(--space-inset-md) var(--space-inset-lg);
     border-bottom: var(--border-width-default) solid
       var(--s-color-border-default);
   }
@@ -158,19 +163,22 @@ const { content, pdfUrl, beachName } = Astro.props;
     line-height: var(--s-typo-body-medium-line);
     letter-spacing: var(--s-typo-body-medium-spacing);
   }
-  /* Corpo (Figma 125:3921): blocos e botão no topo, links e crédito no rodapé. */
+  /* Corpo (Figma 222:8908): padding 24; texto de abertura, blocos (32) e botão (40). */
   .body {
     flex: 1 0 auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: var(--space-stack-xl);
     padding: var(--space-inset-lg);
   }
   .main {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-xl);
+    gap: var(--space-stack-2xl);
+  }
+  /* Rodapé (Figma 222:8934): borda no topo, padding 24, links e crédito. */
+  .foot-wrap {
+    padding: var(--space-inset-lg);
+    border-top: var(--border-width-default) solid var(--s-color-border-default);
   }
   .blocks {
     display: flex;
@@ -202,9 +210,12 @@ const { content, pdfUrl, beachName } = Astro.props;
         var(--s-color-border-default);
     }
     .head {
-      padding: var(--space-inset-lg) var(--space-inset-md);
+      padding: var(--space-inset-md);
     }
     .body {
+      padding: var(--space-inset-lg) var(--space-inset-md);
+    }
+    .foot-wrap {
       padding: var(--space-inset-lg) var(--space-inset-md);
       padding-bottom: calc(
         var(--space-inset-lg) + env(safe-area-inset-bottom, 0px)
@@ -229,10 +240,20 @@ const { content, pdfUrl, beachName } = Astro.props;
     flex-direction: column;
     gap: var(--space-stack-md);
   }
+  /* Desktop: lado a lado (Figma 222:8936); no mobile empilham (ver a ficha). */
   .links {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: var(--space-stack-xs);
+  }
+  .links > :global(*) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  @media (max-width: 1023px) {
+    .links {
+      flex-direction: column;
+    }
   }
   .credit {
     margin: 0;

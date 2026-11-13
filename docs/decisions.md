@@ -699,4 +699,11 @@ Ajuste (28): sem recorte no texto revelado (sem `overflow: hidden`): ele não fi
 - Nome do ponto: o Figma usa Switzer Bold (700); não há token de peso 700, então fica 600 (token mais próximo).
 - "Ver detalhes" ocupa a largura e "Compartilhar praia" vira botão de ícone de 48 px ao lado, ainda desabilitado até a R6. Sem "Ver detalhes" (dev), só o ícone aparece.
 - Motion do indicador (pedido de Caio): o miolo entra como o nome do pin (opacidade com a curva `pin-label`), mas por **escala** (0 → 1) e mais rápido: 500 ms (`motion.duration.pin-hover`, sem token novo). O anel muda de cinza para a cor do status no mesmo tempo. Reduzir movimento: sem transição.
-- Hover do PointCard (pedido de Caio): a borda cinza passa para a cor do status (a superfície de hover continua); mesmo vale para o foco do teclado. Mobile: "Como ler e fonte" e "Boletim original" empilham, cada um na largura toda (desktop segue lado a lado).
+- Hover do PointCard (pedido de Caio): só a superfície de hover muda; o anel do indicador fica em `border/default` também no hover e no foco (testadas e descartadas: cor do status e `border/strong`). Mobile: "Como ler e fonte" e "Boletim original" empilham, cada um na largura toda (desktop segue lado a lado).
+- Botão da ficha renomeado de "Ver detalhes" para "Ver classificação" (pedido de Caio), pois abre o painel Classificação. Textos anteriores nesta página que citam "Ver detalhes" são histórico. `docs/copy.md` atualizado.
+
+## Sessão 33 — Tela Classificação (Figma 125:3895 / 222:8901)
+
+- Mesmo padrão da ficha: cabeçalho só com seta, "Classificação" e fechar; o texto de abertura (CONAMA 274/2000) desce para o corpo, como primeiro bloco (32 px entre blocos, 40 px até "Compartilhar praia", ainda desabilitado até a R6). Rodapé fora do corpo com borda no topo; "Ver resolução" e "Boletim original" lado a lado no desktop e empilhados no mobile.
+- Esqueleto de carregamento (visto na imagem de Caio) fica para quando houver carregamento real: a Classificação só abre com o mapa pronto e dados estáticos. Pendente, junto do motion do esqueleto (`docs/motion.md`).
+- Cabeçalho fixo (pedido de Caio): nas quatro vistas do sidebar (busca, ficha, Classificação, Fonte) o `.head` é `position: sticky; top: 0` com fundo da superfície, então o título, a seta e o fechar não rolam com o conteúdo (desktop e folha mobile).
