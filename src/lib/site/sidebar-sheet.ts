@@ -22,6 +22,8 @@ const INTENT = 0.06;
 const SHEET_RATIO = 0.6;
 /** Altura da zona de arraste (alça 24 + título 48 = 3 × spacing-24), medida do topo da folha. */
 const ZONE = 72;
+/** Vão do mapa que sobra acima da folha inteira (px), para dar a sensação de algo no fundo. */
+const EXPANDED_GAP = 20;
 /** Elementos interativos: dentro deles não começa arraste (fechar, voltar, campos). */
 const INTERACTIVE =
   'button, a, input, select, textarea, [role="button"], [data-panel-close], [data-search-close], [data-panel-back], .close, .back';
@@ -117,7 +119,7 @@ export function initSidebarSheet(): void {
   } | null = null;
   let dragged = false;
   let suppressClick = false;
-  /** Deslocamento atual da folha em relação ao topo do palco (0 = tela toda; origem = 40%). */
+  /** Deslocamento atual da folha em relação ao topo do palco (20 = folha inteira, com o vão do mapa; origem = 40%). */
   function offsetY() {
     return (
       shell!.getBoundingClientRect().top -
@@ -163,7 +165,10 @@ export function initSidebarSheet(): void {
       shell!.style.transition = 'none';
     }
     const H = stageHeight();
-    const o = Math.min(Math.max(drag.startH - dy, 0), H * (1 - SHEET_RATIO));
+    const o = Math.min(
+      Math.max(drag.startH - dy, EXPANDED_GAP),
+      H * (1 - SHEET_RATIO),
+    );
     shell!.style.transform = `translateY(${o}px)`;
   }
   function dragEnd() {

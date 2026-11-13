@@ -16,6 +16,9 @@ interface Props {
   /** Texto revelado ao lado do ícone no hover e no foco do teclado (Figma 214:2880, ex.: "Busca").
    *  Só visual (aria-hidden): o nome acessível continua em `label`. */
   reveal?: string;
+  /** Texto do botão enquanto está "ligado" (painel aberto, `data-engaged`), no desktop: fica
+   *  visível, em cor de desabilitado (Figma 213:3706, "Buscar"). */
+  revealEngaged?: string;
   /** Só para a vitrine (/dev/components): força o visual de hover/foco. */
   state?: 'hover' | 'focus';
 }
@@ -30,6 +33,7 @@ const {
   disabled = false,
   controls,
   reveal,
+  revealEngaged,
   state,
 } = Astro.props;
 
@@ -52,15 +56,17 @@ const attrs = asLink
   {...attrs}
 >
   <Icon name={icon} size={20} label={label} />
-  {
-    reveal && (
-      <span class="btn-icon__reveal" aria-hidden="true">
-        <span class="btn-icon__reveal-clip">
-          <span class="btn-icon__reveal-text">{reveal}</span>
-        </span>
+  {reveal && (
+    <span class="btn-icon__reveal" aria-hidden="true">
+      <span class="btn-icon__reveal-clip">
+        <span
+          class="btn-icon__reveal-text"
+          data-text={reveal}
+          data-text-engaged={revealEngaged ?? reveal}
+        />
       </span>
-    )
-  }
+    </span>
+  )}
 </Tag>
 
 <style>
@@ -79,8 +85,22 @@ const attrs = asLink
       border-color var(--motion-duration-hover) var(--motion-easing-hover),
       color var(--motion-duration-hover) var(--motion-easing-hover);
   }
+  /* Painel abrindo/fechando: o botão se dissolve devagar, sem pressa (pedido de Caio). Vale ao
+     ligar e ao desligar `data-engaged` (o botão de busca e o de busca/Fonte que abrem painel). */
+  .btn-icon[data-reveal],
+  .btn-icon[aria-controls],
+  .btn-icon[data-engaged] {
+    transition:
+      background-color var(--motion-duration-engage)
+        var(--motion-easing-dissolve),
+      border-color var(--motion-duration-engage) var(--motion-easing-dissolve),
+      color var(--motion-duration-engage) var(--motion-easing-dissolve);
+  }
   @media (prefers-reduced-motion: reduce) {
-    .btn-icon {
+    .btn-icon,
+    .btn-icon[data-reveal],
+    .btn-icon[aria-controls],
+    .btn-icon[data-engaged] {
       transition: none;
     }
   }
@@ -108,7 +128,8 @@ const attrs = asLink
       (
           var(--space-inset-sm) * 2 + var(--primitives-spacing-24) -
             var(--primitives-spacing-20)
-        ) / 2 - var(--border-width-default)
+        ) /
+        2 - var(--border-width-default)
     );
   }
   .btn-icon__reveal {
@@ -117,9 +138,10 @@ const attrs = asLink
     transition: grid-template-columns var(--motion-duration-pin-hover)
       var(--motion-easing-pin-hover);
   }
+  /* Sem recorte (overflow visível): o texto não é cortado enquanto a largura abre; ele só
+     aparece por opacidade. `min-width: 0` deixa a coluna ir a 0fr mesmo com o texto maior. */
   .btn-icon__reveal-clip {
     min-width: 0;
-    overflow: hidden;
   }
   .btn-icon__reveal-text {
     display: block;
@@ -134,34 +156,44 @@ const attrs = asLink
     transition: opacity var(--motion-duration-dissolve)
       var(--motion-easing-dissolve);
   }
+  .btn-icon__reveal-text::before {
+    content: attr(data-text);
+  }
+  /* Painel aberto (desktop): o botão fica desabilitado com o texto visível (Figma 213:3706). Mesma
+     largura e tempos do hover; no mobile fica só o ícone. */
+  @media (min-width: 1024px) {
+    .btn-icon[data-reveal][data-engaged] .btn-icon__reveal {
+      grid-template-columns: 1fr;
+    }
+    .btn-icon[data-reveal][data-engaged] .btn-icon__reveal-text {
+      opacity: 1;
+      transition-delay: 100ms;
+      transition-duration: var(--motion-duration-engage);
+    }
+    .btn-icon[data-reveal][data-engaged] .btn-icon__reveal-text::before {
+      content: attr(data-text-engaged);
+    }
+  }
   /* Revela no hover (só com mouse) e no foco do teclado; não com o painel aberto nem desabilitado. */
   @media (hover: hover) {
-    .btn-icon[data-reveal]:hover:not(:disabled):not([aria-expanded='true']):not(
-        [data-engaged]
-      )
+    .btn-icon[data-reveal]:hover:not(:disabled):not([data-engaged])
       .btn-icon__reveal {
       grid-template-columns: 1fr;
     }
-    .btn-icon[data-reveal]:hover:not(:disabled):not([aria-expanded='true']):not(
-        [data-engaged]
-      )
+    .btn-icon[data-reveal]:hover:not(:disabled):not([data-engaged])
       .btn-icon__reveal-text {
       opacity: 1;
       transition-delay: 100ms;
     }
   }
-  .btn-icon[data-reveal]:focus-visible:not([aria-expanded='true']):not(
-      [data-engaged]
-    )
-    .btn-icon__reveal,
+  .btn-icon[data-reveal]:focus-visible:not([data-engaged]) .btn-icon__reveal,
   .btn-icon[data-reveal][data-state]:not([data-engaged]) .btn-icon__reveal {
     grid-template-columns: 1fr;
   }
-  .btn-icon[data-reveal]:focus-visible:not([aria-expanded='true']):not(
-      [data-engaged]
-    )
+  .btn-icon[data-reveal]:focus-visible:not([data-engaged])
     .btn-icon__reveal-text,
-  .btn-icon[data-reveal][data-state]:not([data-engaged]) .btn-icon__reveal-text {
+  .btn-icon[data-reveal][data-state]:not([data-engaged])
+    .btn-icon__reveal-text {
     opacity: 1;
     transition-delay: 100ms;
   }

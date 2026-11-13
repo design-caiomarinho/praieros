@@ -62,3 +62,5 @@ Comportamento: `transform` e `clip-path` (a coluna anima `width` sobre o mapa; o
 - **Ficha, Classificação e Fonte** (abrir/fechar): ainda sem motion.
 
 - **Brilho/pulso do skeleton da busca** (sessão 19): os blocos já existem, estáticos; falta duração, curva e movimento reduzido do Figma.
+
+- Botão que abre painel (busca/Fonte): dissolve de 700 ms (`--motion-duration-engage`, curva dissolve) ao ligar e desligar `data-engaged`. Camada azul removida; atrasos do painel = 0.

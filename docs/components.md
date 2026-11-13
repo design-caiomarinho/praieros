@@ -47,3 +47,5 @@ Ficha desktop (sessão 11): **pendentes de componentizar no Figma**: (1) aviso d
 8. BeachMap (carregando, erro, zoom) e BeachPanel como um todo (sem nó próprio).
 
 - Sessão 17 (home mobile): nenhum componente novo; só ajuste de posição em BeachMap (já listado acima como pendente de componentizar).
+
+- ButtonIcon: prop `revealEngaged` (texto visível com o painel aberto, desktop). Pendente de componentizar no Figma: variação "revelar texto" e o estado "ligado".

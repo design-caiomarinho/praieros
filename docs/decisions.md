@@ -666,3 +666,15 @@ Desempenho no celular (25e): subir/descer a folha mobile animava `height` (recal
 Sessão 27 (mapa carregado e erro): erro do mapa (Figma 117:4959) com a copy nova ("Tente de novo em instantes. Você ainda pode buscar a praia pelo nome."), título em 214 px (2 linhas), corpo em 280 px e botão "Tente novamente" em `medium` de 160 px. Pins: nome em `label.small` (feito na sessão 26); espaçamento do nome já igual ao do Figma 117:4522 (8 px do ícone, padding 8 e 4). Zoom em `medium` (48 px).
 
 Sessão 28 (hover da busca, Figma 214:2880 e zoom 213:2549): o botão de busca do cabeçalho revela o texto "Busca" no hover (só com mouse) e no foco do teclado, via prop `reveal` do ButtonIcon (derivado do Button primary com ícone e texto do Figma; o ButtonIcon continua separado, ver sessão 26). A largura vai de 48 px ao conteúdo (~96 px) em 500 ms com a curva do pin (`pin-hover`); a coluna do texto anima de 0fr a 1fr (sem JS); o texto entra por opacidade em 150 ms (`dissolve`) com atraso de 100 ms, e sai primeiro, sem atraso. Não revela com o painel aberto (`aria-expanded` ou `data-engaged`) nem desabilitado. Reduzir movimento: sem transição. Texto visível `aria-hidden`; nome acessível segue "Buscar praia". Zoom: 40 px com 8 px de espaço (Figma 213:2549), confirmando a correção da sessão 27.
+
+Ajuste (28): sem recorte no texto revelado (sem `overflow: hidden`): ele não fica cortado enquanto a largura abre, só entra por opacidade; `min-width: 0` mantém a coluna em 0fr.
+
+## Sessão 29 — Painel de busca novo (Figma 213:3706 e 213:3802)
+
+- Scroll indesejado fora do mapa: `html, body { height: 100%; overflow: hidden }`.
+- Camada azul removida em todo o site; a entrada continua com as mesmas curvas e duração, agora sem atraso (`motion.delay.panel`, `panel-surface` e `panel-surface-close` = 0). A largura do sidebar e o deslize do conteúdo têm o mesmo tempo, então não há costura.
+- Busca: cabeçalho só com título; campo e chip no corpo; bairros em botões de 48 px. A vista de resultados e a de bairro não têm Figma: mantêm o layout atual com o cabeçalho e o espaçamento novos (premissa).
+- Botão de busca fechado mostra "Busca" no hover; com o painel aberto (desktop) mostra "Buscar" desabilitado (`revealEngaged`). A linha do cabeçalho não encolhe mais com a busca aberta.
+- Botão azul ao abrir/fechar o painel: dissolve lento, novo token `motion.duration.engage` (700 ms, curva dissolve), também no texto.
+- Mobile: alça flutuante de 64×5 (opacidade .3), 13 px acima da borda da folha. Tela cheia deixa 20 px de mapa no topo (`EXPANDED_GAP`), com o padding inferior compensado.
+- Zoom no desktop: 24 px à esquerda do painel.

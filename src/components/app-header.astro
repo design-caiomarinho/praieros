@@ -43,6 +43,7 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
       icon="search"
       label="Buscar praia"
       reveal="Busca"
+      revealEngaged="Buscar"
       controls={searchId}
     />
   </div>
@@ -60,10 +61,8 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
     border-bottom: var(--border-width-default) solid
       var(--s-color-border-default);
   }
-  /* Busca aberta: a linha de baixo não passa sob o botão, que se junta ao painel (Figma 126:4604). */
-  /* A linha de baixo é desenhada por ::after (a borda fica transparente), para encolher na
-     abertura da busca só com clip-path, sem reflow (Figma 187:3852: 1440 → 1384 = menos a largura
-     do botão). Entrada e saída com tempos próprios (ver docs/motion.md). */
+  /* Linha de baixo inteira, também com a busca aberta (Figma 213:3706: o painel não se junta ao
+     botão). Desenhada por ::after (a borda fica transparente) para a Fonte poder abrir vão. */
   .header:not([data-source-open]) {
     border-bottom-color: transparent;
   }
@@ -76,40 +75,6 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
     bottom: calc(var(--border-width-default) * -1);
     height: var(--border-width-default);
     background: var(--s-color-border-default);
-    clip-path: inset(0);
-    transition: clip-path var(--motion-duration-header-line)
-      var(--motion-easing-header-line) var(--motion-delay-header-line-close);
-  }
-  .header:has([aria-expanded='true']):not([data-source-open])::after {
-    clip-path: inset(
-      0 calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24)) 0 0
-    );
-    transition-timing-function: var(--motion-easing-header-line);
-    transition-delay: var(--motion-delay-header-line);
-  }
-  /* A borda de baixo (1px) é transparente e mostrava o fundo branco do cabeçalho sob o botão
-     azul de busca quando a linha encolhe (sobrava uma faixa branca entre o botão e a camada azul
-     do sidebar). Esta faixa, sob a linha, acompanha a cor do botão: azul enquanto ele é azul,
-     branca quando ele vira "desabilitado" (mesma transição do botão). Fechado, a linha a cobre. */
-  .header:not([data-source-open])::before {
-    content: '';
-    position: absolute;
-    right: 0;
-    bottom: calc(var(--border-width-default) * -1);
-    width: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
-    height: var(--border-width-default);
-    background: var(--s-color-surface-accent-default);
-    transition: background-color var(--motion-duration-hover)
-      var(--motion-easing-hover);
-  }
-  .header:not([data-source-open]):has([data-engaged])::before {
-    background: var(--s-color-surface-default);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .header:not([data-source-open])::before,
-    .header:not([data-source-open])::after {
-      transition: none;
-    }
   }
   /* Fonte e como ler aberta (`data-source-open`, ligado em index.astro): o botão de informação
      se junta ao painel, sem a linha de baixo. A linha continua à esquerda e sob a busca. */
@@ -145,44 +110,6 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
     }
     .header:not([data-source-open]):has([aria-expanded='true'])::after {
       clip-path: inset(0);
-    }
-  }
-  /* Mobile, folha na tela toda e fixada (`data-sheet-top`, sidebar-sheet.ts): a folha encosta no
-     cabeçalho e a linha de baixo some sob o botão ativo (busca ou Fonte), como no desktop, mas sem
-     animação: encostou, sumiu. */
-  @media (max-width: 1023.98px) {
-    .header[data-sheet-top] {
-      border-bottom-color: transparent;
-    }
-    .header[data-sheet-top]::before,
-    .header[data-sheet-top]::after {
-      content: '';
-      display: block;
-      position: absolute;
-      bottom: calc(var(--border-width-default) * -1);
-      height: var(--border-width-default);
-      background: var(--s-color-border-default);
-      clip-path: none;
-      transition: none;
-    }
-    .header[data-sheet-top]:not([data-source-open])::before {
-      left: 0;
-      right: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
-      width: auto;
-      background: var(--s-color-border-default);
-    }
-    .header[data-sheet-top]:not([data-source-open])::after {
-      display: none;
-    }
-    .header[data-sheet-top][data-source-open]::before {
-      left: 0;
-      right: calc(
-        (var(--space-inset-sm) * 2 + var(--primitives-spacing-24)) * 2
-      );
-    }
-    .header[data-sheet-top][data-source-open]::after {
-      right: 0;
-      width: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
     }
   }
   /* Mobile (abaixo do breakpoint de 1024px da página): inset md (16px). */

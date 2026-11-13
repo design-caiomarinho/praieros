@@ -60,16 +60,20 @@
       "pin-hover": {
         "$type": "duration",
         "$value": 500
+      },
+      "engage": {
+        "$type": "duration",
+        "$value": 700
       }
     },
     "delay": {
       "panel": {
         "$type": "duration",
-        "$value": 300
+        "$value": 0
       },
       "panel-surface": {
         "$type": "duration",
-        "$value": 200
+        "$value": 0
       },
       "header-line": {
         "$type": "duration",
@@ -81,7 +85,7 @@
       },
       "panel-surface-close": {
         "$type": "duration",
-        "$value": 100
+        "$value": 0
       }
     },
     "easing": {

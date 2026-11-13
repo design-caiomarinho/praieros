@@ -59,21 +59,23 @@ const neighborhoods = suggestNeighborhoods(results);
           />
         </div>
       </div>
+    </div>
+  </header>
+
+  <div class="body">
+    <div class="controls">
+      <div class="field" data-field>
+        <InputText label="Buscar praia" name="q" />
+      </div>
       {bulletin && (
         <span class="bulletin-chip">
           Boletim nº {bulletin.number} · emitido em {bulletin.date}
         </span>
       )}
     </div>
-    <div class="field" data-field>
-      <InputText label="Buscar praia" name="q" />
-    </div>
-    <span class="sk sk--field" aria-hidden="true"></span>
-  </header>
-
-  <div class="body">
     <!-- Esqueleto (Figma de Caio): só enquanto o mapa carrega; sem animação por enquanto. -->
     <div class="sk-body" aria-hidden="true">
+      <span class="sk sk--field"></span>
       <span class="sk sk--label"></span>
       <div class="sk-grid">
         <span class="sk sk--hood"></span>
@@ -156,7 +158,7 @@ const neighborhoods = suggestNeighborhoods(results);
         <div class="hood-grid">
           {neighborhoods.map((hood) => (
             <div class="hood" data-hood={hood}>
-              <Button variant="secondary" size="small" selected={false}>
+              <Button variant="secondary" size="medium" selected={false}>
                 {abbreviateLabel(hood) === hood ? (
                   hood
                 ) : (
@@ -214,13 +216,13 @@ const neighborhoods = suggestNeighborhoods(results);
      desktop pela direita, no mobile por baixo; ver index e docs/motion.md). O painel em si não
      desliza, só aparece e some (a troca de conteúdo dissolve). */
 
-  /* Cabeçalho (Figma 117:5179): padding 24, 24 entre o bloco do título e o campo, borda inferior. */
+  /* Cabeçalho (Figma 213:3706 e 213:3802): só título e fechar; padding 16 e 24, borda inferior.
+     O campo e o chip do boletim ficam no corpo. */
   .head {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    gap: var(--space-stack-lg);
-    padding: var(--space-inset-lg);
+    padding: var(--space-inset-md) var(--space-inset-lg);
     border-bottom: var(--border-width-default) solid
       var(--s-color-border-default);
   }
@@ -285,6 +287,16 @@ const neighborhoods = suggestNeighborhoods(results);
     flex-direction: column;
     gap: var(--space-stack-xl);
     padding: var(--space-inset-lg);
+  }
+  /* Campo e chip do boletim (Figma 213:3706): 16 entre eles. */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-stack-md);
+  }
+  .controls .field {
+    width: 100%;
   }
   .hoods,
   .found {
@@ -481,13 +493,10 @@ const neighborhoods = suggestNeighborhoods(results);
       border-top: var(--border-width-default) solid
         var(--s-color-border-default);
     }
-    .head {
-      padding: var(--space-inset-md);
-    }
+    /* Paddings do cabeçalho e do corpo iguais aos do desktop (Figma 213:3802: 16/24 e 24). */
     .body {
-      padding: var(--space-inset-md);
       padding-bottom: calc(
-        var(--space-inset-md) + env(safe-area-inset-bottom, 0px)
+        var(--space-inset-lg) + env(safe-area-inset-bottom, 0px)
       );
     }
     .search {
@@ -521,8 +530,6 @@ const neighborhoods = suggestNeighborhoods(results);
     gap: var(--space-stack-md);
   }
   .search[data-loading] h2,
-  .search[data-loading] .bulletin-chip,
-  .search[data-loading] .field,
   .search[data-loading] .body > :not(.sk-body) {
     display: none;
   }
@@ -549,7 +556,7 @@ const neighborhoods = suggestNeighborhoods(results);
     gap: var(--space-gap-xs);
   }
   .sk--hood {
-    height: var(--primitives-spacing-40);
+    height: var(--primitives-spacing-48);
   }
 
   .sr-only {

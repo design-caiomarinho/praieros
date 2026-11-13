@@ -258,11 +258,12 @@
   --motion-duration-pin-select: 250ms;
   --motion-duration-load-progress: 2500ms;
   --motion-duration-pin-hover: 500ms;
-  --motion-delay-panel: 300ms;
-  --motion-delay-panel-surface: 200ms;
+  --motion-duration-engage: 700ms;
+  --motion-delay-panel: 0ms;
+  --motion-delay-panel-surface: 0ms;
   --motion-delay-header-line: 162ms;
   --motion-delay-header-line-close: 575ms;
-  --motion-delay-panel-surface-close: 100ms;
+  --motion-delay-panel-surface-close: 0ms;
   --motion-easing-panel: cubic-bezier(0.175, 0.885, 0.32, 0.99);
   --motion-easing-header-line: cubic-bezier(0.64, 0.05, 0.35, 1);
   --motion-easing-hover: cubic-bezier(0.42, 0, 0.58, 1);

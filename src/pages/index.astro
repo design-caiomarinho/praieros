@@ -525,7 +525,8 @@ const sourceBulletin = site.current
       bottom: 0;
       height: 100%;
       z-index: 3;
-      overflow: clip;
+      /* Sem recorte: a alça flutua acima da borda da folha (o palco recorta o resto). */
+      overflow: visible;
       pointer-events: none;
       /* A folha tem sempre a altura do palco e a origem (60% visível) é um deslocamento: subir e
          descer anima só transform (composição, sem recalcular layout a cada quadro, o que travava
@@ -535,8 +536,15 @@ const sourceBulletin = site.current
       transition: transform var(--motion-duration-sheet-drag)
         var(--motion-easing-panel);
     }
+    /* Folha inteira (Figma 213:3802): sobra um vão de 20px do mapa no topo, para dar a sensação de
+       algo ao fundo. Continua só transform; o rodapé que sai do palco ganha padding no conteúdo. */
     .sidebar[data-expanded] {
-      transform: none;
+      transform: translateY(var(--primitives-spacing-20));
+    }
+    .sidebar[data-expanded]
+      .sidebar__viewport
+      :global(:is(.panel, .search, .source-slot)) {
+      padding-bottom: var(--primitives-spacing-20);
     }
     /* Sem rolagem interna na posição de origem nem enquanto a folha se move: o conteúdo só rola com a
        folha na tela toda e já fixada (data-expanded sem data-moving, sidebar-sheet.ts). */
@@ -563,28 +571,33 @@ const sourceBulletin = site.current
     .sidebar[data-moving] .sidebar__viewport :global(*) {
       touch-action: none;
     }
-    /* Alça (drag handle) no topo da folha: faixa de toque de 24 px com a barra de 32×4 px. */
+    /* Alça (drag handle, Figma 213:3802): barra de 64×5 px (surface/inverse a 30%) que flutua 13 px
+       acima da borda da folha, sobre o mapa. A faixa de toque é transparente: 24 px acima da borda
+       e 16 px dentro (até o padding do cabeçalho). Sem token para 64, 5 e 13. */
     .sidebar__viewport :global(.sidebar__handle) {
       position: absolute;
       z-index: 4;
-      top: 0;
+      top: calc(var(--space-inset-lg) * -1);
       left: 0;
       right: 0;
       touch-action: none;
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      height: var(--space-inset-lg);
-      padding: var(--primitives-spacing-8) 0 0;
+      height: calc(var(--space-inset-lg) + var(--space-inset-md));
+      padding: 0;
       border: 0;
-      background: var(--s-color-surface-default);
+      background: transparent;
       cursor: pointer;
     }
     .sidebar__viewport :global(.sidebar__handle span) {
-      width: var(--primitives-spacing-32);
-      height: var(--primitives-spacing-4);
+      /* 13 px acima da borda = 24 - 13 = 11 px do topo da faixa. */
+      margin-top: calc(var(--space-inset-lg) - 13px);
+      width: calc(var(--primitives-spacing-32) * 2);
+      height: 5px;
       border-radius: var(--radius-full);
-      background: var(--primitives-color-neutral-300);
+      background: var(--s-color-surface-inverse);
+      opacity: 0.3;
     }
     .sidebar__viewport :global(.sidebar__handle:focus-visible) {
       outline: var(--border-width-default) solid var(--s-color-border-focus);
@@ -596,21 +609,7 @@ const sourceBulletin = site.current
     .stage {
       overflow: clip;
     }
-    /* Camada azul: sobe de baixo (origem fora da tela). Entra antes do painel branco e, na saída,
-       sai depois dele (atrasos do Figma 187:3839). */
-    .sidebar::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--s-color-surface-accent-default);
-      transform: translateY(100%);
-      transition: transform var(--motion-duration-panel-surface)
-        var(--motion-easing-panel) var(--motion-delay-panel-surface-close);
-    }
-    .sidebar[data-open]::before {
-      transform: none;
-      transition-delay: var(--motion-delay-panel-surface);
-    }
+    /* Sem camada azul (Figma 213:3802): só o painel branco sobe de baixo (origem fora da tela). */
     .sidebar__viewport {
       position: absolute;
       inset: 0;
@@ -625,8 +624,6 @@ const sourceBulletin = site.current
     }
     @media (prefers-reduced-motion: reduce) {
       .sidebar,
-      .sidebar::before,
-      .sidebar[data-open]::before,
       .sidebar__viewport,
       .sidebar[data-open] .sidebar__viewport {
         transition: none;
@@ -656,29 +653,9 @@ const sourceBulletin = site.current
   .map-banner > :global(*) {
     position: relative;
     z-index: 1;
-    /* A faixa branca entra um pouco depois da camada azul (mesma diferença do painel: 300 − 200 ms). */
-    animation: banner-in var(--motion-duration-banner)
-      var(--motion-easing-pin-label)
-      calc(
-        var(--banner-delay, 0ms) + var(--motion-delay-panel) -
-          var(--motion-delay-panel-surface)
-      )
-      both;
-  }
-  /* Camada azul atrás da faixa, como a do sidebar: chega à frente (mesma curva e tempo) e, na
-     saída, vai embora depois (atraso de saída da camada, 100 ms). */
-  .map-banner:not([hidden])::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--s-color-surface-accent-default);
+    /* Sem camada azul atrás da faixa (Figma 213:3706): só a faixa entra. */
     animation: banner-in var(--motion-duration-banner)
       var(--motion-easing-pin-label) var(--banner-delay, 0ms) both;
-  }
-  .map-banner[data-leaving]::before {
-    animation: banner-out var(--motion-duration-banner)
-      var(--motion-easing-pin-label) var(--motion-delay-panel-surface-close)
-      both;
   }
   /* Saída: começa na hora, antes do painel (que tem os próprios atrasos de saída). */
   .map-banner[data-leaving] > :global(*) {
@@ -706,8 +683,7 @@ const sourceBulletin = site.current
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .map-banner > :global(*),
-    .map-banner::before {
+    .map-banner > :global(*) {
       animation: none;
     }
   }
@@ -725,7 +701,8 @@ const sourceBulletin = site.current
       z-index: 3;
       width: 0;
       overflow: clip;
-      background: var(--s-color-surface-accent-default);
+      /* Sem camada azul (Figma 213:3706): a coluna só recorta o painel, que acompanha a largura
+         (mesma duração, curva e atraso zero: sem vão entre a borda da coluna e o painel). */
       transition: width var(--motion-duration-panel-surface)
         var(--motion-easing-panel) var(--motion-delay-panel-surface-close);
     }
@@ -796,7 +773,7 @@ const sourceBulletin = site.current
         var(--motion-easing-panel) var(--motion-delay-panel-surface-close);
     }
     .stage:has(.sidebar[data-open]) :global(.zoom) {
-      right: calc(var(--size-panel-width) + var(--space-stack-md));
+      right: calc(var(--size-panel-width) + var(--space-inset-lg));
       transition-delay: var(--motion-delay-panel-surface);
       transition-timing-function: var(--motion-easing-panel);
     }
@@ -858,6 +835,14 @@ const sourceBulletin = site.current
 </style>
 
 <style is:global>
+  /* O app ocupa a tela toda (`.app` = 100dvh) e quem rola são os painéis por dentro: a página em
+     si nunca rola (sem barra de rolagem fora do mapa; sobras de 1 a 4 px do mapa e da folha, ou
+     a barra de endereço do celular, faziam o documento rolar). */
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
   /* Fantasma do conteúdo que saiu (clone criado por sidebar-shell.ts): dissolve por cima do novo
      conteúdo (150 ms, ver docs/motion.md); ao fechar o sidebar, fica parado até a saída acabar. */
   .sidebar__ghost {
