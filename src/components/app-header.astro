@@ -81,7 +81,7 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
   }
   .header:has([aria-expanded='true']):not([data-source-open])::after {
     clip-path: inset(
-      0 calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24)) 0 0
+      0 calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24)) 0 0
     );
     transition-timing-function: var(--motion-easing-header-line);
     transition-delay: var(--motion-delay-header-line);
@@ -95,7 +95,7 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
     position: absolute;
     right: 0;
     bottom: calc(var(--border-width-default) * -1);
-    width: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+    width: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
     height: var(--border-width-default);
     background: var(--s-color-surface-accent-default);
     transition: background-color var(--motion-duration-hover)
@@ -125,11 +125,11 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
   }
   .header[data-source-open]::before {
     left: 0;
-    right: calc((var(--space-inset-md) * 2 + var(--primitives-spacing-24)) * 2);
+    right: calc((var(--space-inset-sm) * 2 + var(--primitives-spacing-24)) * 2);
   }
   .header[data-source-open]::after {
     right: 0;
-    width: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+    width: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
   }
   /* Mobile: a folha sobe de baixo, longe do botão; então a linha de baixo do cabeçalho não
      encolhe nem abre vão sob o botão (busca ou Fonte). Só o botão muda de estado. */
@@ -166,7 +166,7 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
     }
     .header[data-sheet-top]:not([data-source-open])::before {
       left: 0;
-      right: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+      right: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
       width: auto;
       background: var(--s-color-border-default);
     }
@@ -176,12 +176,12 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
     .header[data-sheet-top][data-source-open]::before {
       left: 0;
       right: calc(
-        (var(--space-inset-md) * 2 + var(--primitives-spacing-24)) * 2
+        (var(--space-inset-sm) * 2 + var(--primitives-spacing-24)) * 2
       );
     }
     .header[data-sheet-top][data-source-open]::after {
       right: 0;
-      width: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+      width: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
     }
   }
   /* Mobile (abaixo do breakpoint de 1024px da página): inset md (16px). */

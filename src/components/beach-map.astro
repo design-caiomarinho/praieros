@@ -57,7 +57,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     <div data-zoom="in">
       <ButtonIcon
         variant="outlined"
-        size="xsmall"
+        size="medium"
         icon="plus"
         label="Aumentar o zoom"
       />
@@ -65,7 +65,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     <div data-zoom="out">
       <ButtonIcon
         variant="outlined"
-        size="xsmall"
+        size="medium"
         icon="minus"
         label="Diminuir o zoom"
       />
@@ -73,7 +73,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     <div data-zoom="fit">
       <ButtonIcon
         variant="outlined"
-        size="xsmall"
+        size="medium"
         icon="fit-screen"
         label="Ajustar o mapa à tela"
       />
@@ -162,8 +162,21 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   // pronto, completa; ao chegar ao fim some e o mapa faz o zoom out até o enquadramento.
   const fill = loading.querySelector<HTMLElement>('.loadbar__fill')!;
   let loadingTimer: number | undefined;
+  // O movimento da faixa é sempre completo e no mesmo ritmo, com internet rápida ou lenta: o mapa
+  // pronto antes da hora não acelera a faixa; o fim (90% → 100%) espera a faixa chegar aos 90%.
+  let sweepDone = false;
+  let onSweepDone: (() => void) | null = null;
+  fill.addEventListener('animationend', (e) => {
+    if ((e as AnimationEvent).animationName !== 'loadbar-progress') return;
+    sweepDone = true;
+    const next = onSweepDone;
+    onSweepDone = null;
+    next?.();
+  });
   function resetBar() {
     window.clearTimeout(loadingTimer);
+    sweepDone = false;
+    onSweepDone = null;
     fill.removeAttribute('style');
     loading.removeAttribute('data-leaving');
   }
@@ -176,7 +189,12 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
       }
       return;
     }
-    const finish = cssTimeMs(token('--motion-duration-hover'));
+    if (!sweepDone) {
+      onSweepDone = () => finishBar(zoomOut);
+      return;
+    }
+    // Último trecho (90% → 100%) no tempo da faixa de aviso, devagar, para fechar o movimento.
+    const finish = cssTimeMs(token('--motion-duration-banner'));
     const progress = getComputedStyle(fill).transform;
     fill.style.animation = 'none';
     fill.style.transform = progress;
@@ -205,6 +223,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
       loading.hidden = false;
     } else if (!loading.hidden) {
       window.clearTimeout(loadingTimer);
+      onSweepDone = null;
       finishBar(state === 'ready');
     }
     errorBox.hidden = state !== 'error';
@@ -327,7 +346,8 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     left: 0;
     right: 0;
     z-index: 3;
-    height: var(--primitives-spacing-4);
+    /* Figma 117:4816: faixa de 16 px. */
+    height: var(--primitives-spacing-16);
     /* Recorta: a faixa sobe para trás da navbar ao completar. */
     overflow: clip;
   }
@@ -351,7 +371,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     transform: scaleX(0);
     transform-origin: left;
     animation: loadbar-progress var(--motion-duration-load-progress)
-      var(--motion-easing-panel) forwards;
+      var(--motion-easing-hover) forwards;
   }
   @keyframes loadbar-progress {
     to {

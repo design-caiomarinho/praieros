@@ -656,3 +656,9 @@ Desempenho no celular (25e): subir/descer a folha mobile animava `height` (recal
 - InputText (117:5370): altura 56 → 48 (padding vertical xs, horizontal md).
 - Marcador do mapa (117:4522): nome do pin em `label.small`. Os 5 tipos (positivo, negativo, atenção, desconhecido tracejado, selecionado) já existiam.
 - ButtonIcon (assets recebidos, Figma 30:99): SVGs de 20 px de `info`, `plus`, `minus`, `fit-screen` e `arrow-left` salvos em `src/icons/`. O ButtonIcon passa a 48 (medium) e 40 (xsmall) com ícone de 20 px. **Não foi fundido no Button**: depende de `controls`, `data-engaged` e do seletor `.btn-icon` em 4 painéis (zona de clique do fechar); fundir fica para uma sessão própria. Sobraram no Figma, sem uso ainda: check, list, question-mark, gps-fix, file, warning 20 px.
+
+## Sessão 27: refino da tela de carregamento (Figma 117:4816)
+
+- Header e busca: os cálculos de largura do botão (linha de baixo, encaixe com o painel, esqueleto do campo) estavam em 56 px (`inset-md`); passam a 48 px (`inset-sm`), como os botões do Figma.
+- Faixa de carregamento: 16 px de altura (era 4). O movimento é sempre completo: 0 → 90% em 2500 ms (`load-progress`, curva `hover`, ease-in-out), e o último trecho 90% → 100% em 800 ms (`banner`). Com internet rápida, o mapa pronto antes da hora NÃO acelera a faixa: o fim espera a faixa chegar aos 90% (evento `animationend`); só então completa e o mapa aparece. Com internet lenta, a faixa espera em 90% até o mapa ficar pronto. Mínimo total ≈ 3,3 s. Reduzir movimento: sem animação, como antes.
+- Controles de zoom: `medium` (48 px, ícones de 20 px), a 24 px do canto e 4 px entre si.
