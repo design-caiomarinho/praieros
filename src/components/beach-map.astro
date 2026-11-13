@@ -42,10 +42,10 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
       <div class="error__content">
         <div class="error__texts">
           <h2>Não conseguimos carregar o mapa</h2>
-          <p>Tente de novo ou busque uma praia pelo nome.</p>
+          <p>Tente de novo em instantes. Você ainda pode buscar a praia pelo nome.</p>
         </div>
         <div class="error__action" id="map-retry">
-          <Button variant="primary" size="small">
+          <Button variant="primary" size="medium">
             Tente novamente
           </Button>
         </div>
@@ -418,8 +418,11 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   .error__content {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: var(--space-stack-lg);
-    width: 230px;
+    /* Larguras do Figma 117:4959: corpo 280, título 214 (quebra em 2 linhas), botão 160; sem token. */
+    width: 280px;
+    max-width: 100%;
   }
   .error__texts {
     display: flex;
@@ -445,6 +448,12 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     font-size: var(--s-typo-body-medium-size);
     line-height: var(--s-typo-body-medium-line);
     letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  .error__texts h2 {
+    max-width: 214px;
+  }
+  .error__action {
+    width: 160px;
   }
   .error__action :global(.btn) {
     width: 100%;
