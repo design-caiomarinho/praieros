@@ -88,14 +88,14 @@ const attrs = asLink
       transition: none;
     }
   }
-  /* Alturas do Figma (56 e 48) = 2 x inset + 24, sem token próprio. */
+  /* Alturas do Figma (48 e 40) = 2 x inset vertical + 24, sem token próprio. */
   .btn--medium {
-    padding: var(--space-inset-md);
-    height: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
-  }
-  .btn--small {
     padding: var(--space-inset-sm);
     height: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
+  }
+  .btn--small {
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    height: calc(var(--space-inset-xs) * 2 + var(--primitives-spacing-24));
   }
 
   /* Linha de navegação (spread): largura total, texto à esquerda, ícone à direita. */

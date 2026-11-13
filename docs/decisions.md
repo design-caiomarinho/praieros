@@ -648,3 +648,11 @@ Tempos (25c): animações das folhas (painel, camada azul e câmera) passam a 10
 Tempos (25d): painel, camada azul e câmera voltam ao valor anterior à padronização, 1500 ms (não 1400: era 1500 nos tokens). A altura da folha mobile no arraste segue em 800 ms (`sheet-drag`); banner e faixa de carregamento, 800 ms.
 
 Desempenho no celular (25e): subir/descer a folha mobile animava `height` (recalcula o layout do conteúdo a cada quadro, o que travava em aparelhos reais). Agora a folha tem sempre a altura do palco e a origem (60% visível) é `translateY(40%)`; subir e descer anima só `transform`, com `will-change`, e o arraste também (`sidebar-sheet.ts`). `.stage` recorta a parte fora do palco no mobile. Mesmo tempo (`sheet-drag`, 800 ms) e mesma curva. Verificado no emulador; o ganho em aparelho real precisa de conferência.
+
+## Sessão 26: atualização de tokens e componentes (design novo)
+
+- Tokens (JSON novo do Figma): `surface.accent.hover` passa de `brand.600` para `brand.700`; `surface.indicator` sai (não era usado) e entra `surface.inverse` (`neutral.950`); novo `s-typo.label.small` (12 px, semibold, line 1). Resto dos tokens idêntico.
+- Button (Figma 123:2668): alturas passam a 48 (medium) e 40 (small), por `2 x inset + 24` (medium: inset sm; small: inset xs na vertical e sm na horizontal). As telas existentes que usam Button ficam 8 px menores; ajuste de layout fica para o refino de cada tela.
+- InputText (117:5370): altura 56 → 48 (padding vertical xs, horizontal md).
+- Marcador do mapa (117:4522): nome do pin em `label.small`. Os 5 tipos (positivo, negativo, atenção, desconhecido tracejado, selecionado) já existiam.
+- ButtonIcon (assets recebidos, Figma 30:99): SVGs de 20 px de `info`, `plus`, `minus`, `fit-screen` e `arrow-left` salvos em `src/icons/`. O ButtonIcon passa a 48 (medium) e 40 (xsmall) com ícone de 20 px. **Não foi fundido no Button**: depende de `controls`, `data-engaged` e do seletor `.btn-icon` em 4 painéis (zona de clique do fechar); fundir fica para uma sessão própria. Sobraram no Figma, sem uso ainda: check, list, question-mark, gps-fix, file, warning 20 px.

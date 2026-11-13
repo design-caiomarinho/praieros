@@ -46,7 +46,7 @@ const attrs = asLink
   data-state={state}
   {...attrs}
 >
-  <Icon name={icon} size={24} label={label} />
+  <Icon name={icon} size={20} label={label} />
 </Tag>
 
 <style>
@@ -70,14 +70,14 @@ const attrs = asLink
       transition: none;
     }
   }
-  /* 56 e 40 = 24 (ícone) + 2 x inset, sem token próprio. */
+  /* Figma (Button only-icon, 123:2668): 48 e 40, ícone de 20 centrado; 2 x inset + 24, sem token. */
   .btn-icon--medium {
-    padding: var(--space-inset-md);
-    width: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
-    height: calc(var(--space-inset-md) * 2 + var(--primitives-spacing-24));
+    padding: 0;
+    width: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
+    height: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
   }
   .btn-icon--xsmall {
-    padding: var(--space-inset-xs);
+    padding: 0;
     width: calc(var(--space-inset-xs) * 2 + var(--primitives-spacing-24));
     height: calc(var(--space-inset-xs) * 2 + var(--primitives-spacing-24));
   }

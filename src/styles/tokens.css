@@ -115,7 +115,7 @@
   --s-color-surface-accent-soft: var(--primitives-color-brand-200);
   --s-color-surface-accent-subtle: var(--primitives-color-brand-100);
   --s-color-surface-accent-default: var(--primitives-color-brand-500);
-  --s-color-surface-accent-hover: var(--primitives-color-brand-600);
+  --s-color-surface-accent-hover: var(--primitives-color-brand-700);
   --s-color-surface-accent-translucid: var(--primitives-color-brand-alpha-300);
   --s-color-surface-disabled: var(--primitives-color-neutral-100);
   --s-color-surface-hover: var(--primitives-color-neutral-100);
@@ -135,7 +135,7 @@
   --s-color-surface-unknown-default: var(--primitives-color-neutral-400);
   --s-color-surface-unknown-hover: var(--primitives-color-neutral-400);
   --s-color-surface-unknown-translucid: var(--primitives-color-neutral-alpha-300);
-  --s-color-surface-indicator: var(--primitives-color-red-600);
+  --s-color-surface-inverse: var(--primitives-color-neutral-950);
   --s-color-surface-warning-subtle: var(--primitives-color-amber-100);
   --s-color-surface-warning-soft: var(--primitives-color-amber-200);
   --s-color-surface-warning-default: var(--primitives-color-amber-400);
@@ -200,6 +200,11 @@
   --s-typo-label-medium-size: var(--primitives-font-size-14);
   --s-typo-label-medium-line: var(--primitives-font-line-height-100);
   --s-typo-label-medium-spacing: var(--primitives-font-letter-spacing-normal);
+  --s-typo-label-small-family: var(--primitives-font-family-body);
+  --s-typo-label-small-weight: var(--primitives-font-weight-600);
+  --s-typo-label-small-size: var(--primitives-font-size-12);
+  --s-typo-label-small-line: var(--primitives-font-line-height-100);
+  --s-typo-label-small-spacing: var(--primitives-font-letter-spacing-normal);
   --s-typo-caption-small-family: var(--primitives-font-family-body);
   --s-typo-caption-small-weight: var(--primitives-font-weight-500);
   --s-typo-caption-small-size: var(--primitives-font-size-12);
