@@ -26,12 +26,24 @@ const { icon, text } = Astro.props;
     align-items: center;
     background: var(--s-color-surface-default);
     /* Aparece como o nome do pin (Figma 204:7892), como a pílula de carregando: opacidade 0 → 1
-       e de baixo para cima (+8px → 0); ao sair (`data-leaving`), o inverso. */
+       e de baixo para cima (+8px → 0); ao sair (`data-leaving`), o inverso (`pill-out`). */
     animation: pill-in var(--motion-duration-pin-label)
       var(--motion-easing-pin-label) both;
   }
+  /* Saída: o inverso da entrada, com a mesma curva e tempo. É uma animação própria (nome diferente)
+     porque inverter a direção da entrada, já terminada, não anima: o estado só pula. */
   .pill[data-leaving] {
-    animation-direction: reverse;
+    animation-name: pill-out;
+  }
+  @keyframes pill-out {
+    from {
+      opacity: 1;
+      translate: 0 0;
+    }
+    to {
+      opacity: 0;
+      translate: 0 var(--space-stack-xs);
+    }
   }
   @keyframes pill-in {
     from {

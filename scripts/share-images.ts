@@ -5,6 +5,7 @@
 // mudar, não a cada boletim. Acessa os tiles do OpenFreeMap (ver docs/decisions.md).
 //   npm run share:images            todas as praias
 //   npm run share:images -- <slug>  só a praia dada
+//   SHARE_ORIGIN=http://localhost:4321 npm run share:images   com o servidor de dev que já está rodando
 import { spawn } from 'node:child_process';
 import { mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -14,7 +15,9 @@ import { buildSiteModel } from '../src/lib/site/build-beach-models.ts';
 import { toMarkers } from '../src/lib/site/map-markers.ts';
 
 const PORT = 4399;
-const ORIGIN = `http://localhost:${PORT}`;
+// SHARE_ORIGIN: usa um servidor de dev já rodando (o Astro só deixa um por projeto) e não sobe outro.
+const EXTERNAL = process.env.SHARE_ORIGIN;
+const ORIGIN = EXTERNAL ?? `http://localhost:${PORT}`;
 const OUT = fileURLToPath(new URL('../public/share/', import.meta.url));
 
 const inputs = await loadSalvadorInputs();
@@ -34,12 +37,14 @@ if (only.length && slugs.length !== only.length) {
   process.exit(1);
 }
 
-const server = spawn(
-  process.execPath,
-  ['node_modules/astro/bin/astro.mjs', 'dev', '--port', String(PORT)],
-  { stdio: 'ignore' },
-);
-const stop = () => server.kill();
+const server = EXTERNAL
+  ? null
+  : spawn(
+      process.execPath,
+      ['node_modules/astro/bin/astro.mjs', 'dev', '--port', String(PORT)],
+      { stdio: 'ignore' },
+    );
+const stop = () => server?.kill();
 process.on('exit', stop);
 
 async function waitForServer() {

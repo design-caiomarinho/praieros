@@ -98,7 +98,7 @@ const sourceBulletin = site.current
            entram e saem dela, para o leitor de tela anunciar. -->
       <div class="notices" id="notices" role="status">
         <div id="notice-copied" hidden>
-          <NoticePill icon="check" text="Link copiado" />
+          <NoticePill icon="check" text="Link copiado com sucesso." />
         </div>
         <div id="notice-copy-failed" hidden>
           <NoticePill icon="warning" text="Não foi possível copiar o link" />
@@ -411,7 +411,7 @@ const sourceBulletin = site.current
     );
   }
   /** Copia o link da praia (R6: a página dela abre o estado atual). Sucesso: o ícone do botão vira
-   *  check por um instante e aparece "Link copiado"; falha: aviso de que não foi possível. */
+   *  check por um instante e aparece "Link copiado com sucesso."; falha: aviso de que não foi possível. */
   async function copyShareLink(trigger: Element | null) {
     const section = trigger?.closest('.layout-share section');
     const url = section?.getAttribute('data-share-url');

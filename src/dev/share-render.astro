@@ -7,13 +7,21 @@ import { toMarkers } from '../lib/site/map-markers.ts';
 
 // Cena da imagem de prévia (só em `astro dev`; usada por `npm run share:images`). Mostra só a
 // praia pedida, selecionada (pino azul com o nome), em 1200×630, com a regra de produção.
+// Sempre UM pino, no centro da imagem: a prévia é da praia, não de cada ponto de coleta. Praia de
+// vários pontos usa um marcador único na posição do Ponto 1 (a ficha lista os pontos).
 export async function getStaticPaths() {
+  // Dentro da função: o Astro iça `getStaticPaths` para fora do componente.
+  function onePin(points: ReturnType<typeof toMarkers>) {
+    // Posição do Ponto 1 (um ponto de coleta real, sempre na orla): a média de dois pontos pode
+    // cair no mar ou na rua.
+    return { ...points[0], id: `${points[0].slug}:share`, number: 1 };
+  }
   const { site } = await loadSite({ includeUnverified: false });
   const all = toMarkers(site.beaches);
   const slugs = [...new Set(all.map((m) => m.slug))];
   return slugs.map((slug) => ({
     params: { slug },
-    props: { markers: all.filter((m) => m.slug === slug) },
+    props: { markers: [onePin(all.filter((m) => m.slug === slug))] },
   }));
 }
 const { slug } = Astro.params;
