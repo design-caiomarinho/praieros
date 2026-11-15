@@ -22,6 +22,10 @@ const devPages = {
           entrypoint: './src/dev/catalog-overview.astro',
         });
         injectRoute({
+          pattern: '/dev/share-render/[slug]',
+          entrypoint: './src/dev/share-render.astro',
+        });
+        injectRoute({
           pattern: '/dev/api/catalog',
           entrypoint: './src/dev/catalog-api.ts',
         });

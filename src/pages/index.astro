@@ -6,12 +6,18 @@ import BeachPanel from '../components/beach-panel.astro';
 import SearchPanel from '../components/search-panel.astro';
 import ClassificationPanel from '../components/classification-panel.astro';
 import SourcePanel from '../components/source-panel.astro';
+import SharePanel from '../components/share-panel.astro';
+import {
+  shareImagePath,
+  shareMessage,
+  shareUrl,
+  whatsappUrl,
+} from '../lib/share/share.ts';
 import { classificationFor } from '../lib/site/classification.ts';
 import { toSearchResults } from '../lib/search/search.ts';
 import OutdatedBanner from '../components/outdated-banner.astro';
 import NoResultBanner from '../components/no-result-banner.astro';
-import { loadSalvadorInputs, NOT_BEACHES } from '../lib/site/load-data.ts';
-import { buildSiteModel } from '../lib/site/build-beach-models.ts';
+import { loadSite } from '../lib/site/load-site.ts';
 import { toMarkers } from '../lib/site/map-markers.ts';
 import {
   bulletinNumber,
@@ -20,24 +26,11 @@ import {
 } from '../lib/site/panel-props.ts';
 
 // Pontos com verified: false só aparecem em desenvolvimento; em produção, nenhum.
-const {
-  bulletins,
-  catalog,
-  references,
-  referenceExclude,
-  aliases,
-  neighborhoodNames,
-} = await loadSalvadorInputs();
-const site = buildSiteModel(bulletins, catalog, {
-  includeUnverified: import.meta.env.DEV,
-  excluded: NOT_BEACHES,
-  references,
-  referenceExclude,
-  aliases,
-  neighborhoodNames,
-});
+const { bulletins, site } = await loadSite();
 
 const markers = toMarkers(site.beaches);
+const origin = Astro.site!.origin;
+const base = import.meta.env.BASE_URL;
 const pdfUrls = new Map(
   bulletins.flatMap((b) =>
     b.sourceUrl ? [[bulletinNumber(b), b.sourceUrl] as const] : [],
@@ -49,9 +42,20 @@ const panels = site.beaches
   .filter((b) => slugsOnMap.has(b.slug))
   .flatMap((beach) => {
     const data = toPanelData(beach, site.current, pdfUrls);
-    return data
-      ? [{ slug: beach.slug, data, classification: classificationFor(beach) }]
-      : [];
+    if (!data) return [];
+    const url = shareUrl(origin, base, beach.slug);
+    return [
+      {
+        slug: beach.slug,
+        data,
+        classification: classificationFor(beach),
+        share: {
+          url,
+          whatsappHref: whatsappUrl(shareMessage(beach.name, url)),
+          imageSrc: shareImagePath(base, beach.slug),
+        },
+      },
+    ];
   });
 const searchResults = toSearchResults(site.beaches, slugsOnMap);
 const currentBulletin = site.current
@@ -97,7 +101,7 @@ const sourceBulletin = site.current
       <div class="sidebar" id="sidebar">
         <div class="sidebar__viewport" id="sidebar-viewport">
           <aside class="panel" id="panel" aria-label="Ficha da praia" hidden>
-            {panels.map(({ slug, data, classification }) => (
+            {panels.map(({ slug, data, classification, share }) => (
               <div data-beach={slug} hidden>
                 <div class="layout-desktop">
                   <BeachPanel
@@ -113,6 +117,16 @@ const sourceBulletin = site.current
                     showDetails={!!classification}
                   />
                 </div>
+                {data.notice !== 'no-result' && (
+                  <div class="layout-share">
+                    <SharePanel
+                      beachName={data.name}
+                      url={share.url}
+                      whatsappHref={share.whatsappHref}
+                      imageSrc={share.imageSrc}
+                    />
+                  </div>
+                )}
                 {classification && (
                   <div class="layout-classification">
                     <ClassificationPanel
@@ -150,6 +164,7 @@ const sourceBulletin = site.current
   import { initSidebarShell } from '../lib/site/sidebar-shell.ts';
   import { initSidebarSheet } from '../lib/site/sidebar-sheet.ts';
   import { resetScroll } from '../lib/site/scroll-area.ts';
+  import { slugFromSearch } from '../lib/share/share.ts';
 
   initSidebarShell();
   initSidebarSheet();
@@ -238,8 +253,8 @@ const sourceBulletin = site.current
     });
   }
 
-  /** Mostra a ficha ou a Classificação da praia aberta (a vista fica em `data-view`). */
-  function setView(view: 'beach' | 'classification') {
+  /** Mostra a ficha, a Classificação ou o Compartilhar da praia aberta (vista em `data-view`). */
+  function setView(view: 'beach' | 'classification' | 'share') {
     panel.querySelectorAll<HTMLElement>('[data-beach]').forEach((el) => {
       if (view === 'beach') el.removeAttribute('data-view');
       else if (!el.hidden) el.setAttribute('data-view', view);
@@ -357,6 +372,22 @@ const sourceBulletin = site.current
     syncBack();
   });
 
+  /** Vista de onde o Compartilhar foi aberto. */
+  let shareFrom: 'beach' | 'classification' = 'beach';
+  /** Copia o link da praia (R6: a página dela abre o estado atual) e avisa no painel. */
+  async function copyShareLink(section: Element | null) {
+    const url = section?.getAttribute('data-share-url');
+    const feedback = section?.querySelector('[data-share-feedback]');
+    if (!url || !feedback) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      feedback.textContent = 'Link copiado.';
+    } catch {
+      feedback.textContent =
+        'Não foi possível copiar. Selecione e copie: ' + url;
+    }
+  }
+
   // Os cartões dos pontos são só visualização: quem escolhe o ponto é o pin no mapa.
   function focusVisible(selector: string) {
     [...panel.querySelectorAll<HTMLElement>(selector)]
@@ -370,10 +401,9 @@ const sourceBulletin = site.current
     if (card?.hasAttribute('data-current')) return;
     if (target.closest('[data-panel-close]')) {
       // Fechar a Classificação (depois de ver os detalhes) encerra tudo: o pin volta ao normal.
-      const fromDetails =
-        panel
-          .querySelector('[data-beach]:not([hidden])')
-          ?.getAttribute('data-view') === 'classification';
+      const fromDetails = !!panel
+        .querySelector('[data-beach]:not([hidden])')
+        ?.getAttribute('data-view');
       close();
       if (fromDetails && marked) clearMark();
     } else if (target.closest('[data-panel-back]')) {
@@ -401,6 +431,18 @@ const sourceBulletin = site.current
       // Volta à ficha da mesma praia, com o foco no botão que abriu a Classificação.
       setView('beach');
       focusVisible('[data-open-classification] button');
+    } else if (target.closest('[data-open-share]')) {
+      // Compartilhar: volta para a vista de onde veio (ficha ou Classificação).
+      shareFrom = target.closest('.layout-classification')
+        ? 'classification'
+        : 'beach';
+      setView('share');
+      focusVisible('.layout-share section');
+    } else if (target.closest('[data-share-back]')) {
+      setView(shareFrom);
+      focusVisible('[data-open-share] button, [data-open-share] a');
+    } else if (target.closest('[data-share-copy]')) {
+      void copyShareLink(target.closest('.layout-share section'));
     }
   });
 
@@ -479,6 +521,42 @@ const sourceBulletin = site.current
     panelBeforeSource = false;
   });
 
+  // Link compartilhado (R6): `?praia=<slug>` abre a ficha da praia, sempre com o estado atual.
+  // Praia desconhecida é ignorada (abre o site normal). A ficha abre já; a câmera espera o mapa
+  // terminar de aparecer (o enquadramento inicial roda nesse momento e não pode sobrescrevê-la).
+  const sharedSlug = slugFromSearch(
+    location.search,
+    new Set(
+      [...panel.querySelectorAll<HTMLElement>('[data-beach]')].map(
+        (el) => el.dataset.beach!,
+      ),
+    ),
+  );
+  if (sharedSlug) {
+    map.dispatchEvent(
+      new CustomEvent('marker-select', {
+        bubbles: true,
+        detail: { slug: sharedSlug, pointId: null },
+      }),
+    );
+    const focusShared = () =>
+      map.dispatchEvent(
+        new CustomEvent('marker-focus', { detail: { slug: sharedSlug } }),
+      );
+    if (map.hasAttribute('data-revealed')) focusShared();
+    else {
+      const watch = new MutationObserver(() => {
+        if (!map.hasAttribute('data-revealed')) return;
+        watch.disconnect();
+        focusShared();
+      });
+      watch.observe(map, {
+        attributes: true,
+        attributeFilter: ['data-revealed'],
+      });
+    }
+  }
+
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (!sourceSlot.hidden) return closeSource(sourceFromFlow);
@@ -528,6 +606,7 @@ const sourceBulletin = site.current
   }
   .layout-mobile > :global(section),
   .layout-classification > :global(section),
+  .layout-share > :global(section),
   .layout-desktop > :global(section) {
     flex: 1 1 auto;
     min-height: 0;
@@ -811,8 +890,21 @@ const sourceBulletin = site.current
     display: none;
   }
   [data-view='classification'] .layout-desktop,
-  [data-view='classification'] .layout-mobile {
+  [data-view='classification'] .layout-mobile,
+  [data-view='share'] .layout-desktop,
+  [data-view='share'] .layout-mobile,
+  [data-view='share'] .layout-classification {
     display: none;
+  }
+  /* Compartilhar praia: no lugar da ficha ou da Classificação, como elas. */
+  .layout-share {
+    display: none;
+  }
+  [data-view='share'] .layout-share {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
   }
   [data-view='classification'] .layout-classification {
     display: flex;

@@ -1,0 +1,112 @@
+---
+import '../styles/tokens.css';
+import '../styles/fonts.css';
+import BeachMap from '../components/beach-map.astro';
+import { loadSite } from '../lib/site/load-site.ts';
+import { toMarkers } from '../lib/site/map-markers.ts';
+
+// Cena da imagem de prévia (só em `astro dev`; usada por `npm run share:images`). Mostra só a
+// praia pedida, selecionada (pino azul com o nome), em 1200×630, com a regra de produção.
+export async function getStaticPaths() {
+  const { site } = await loadSite({ includeUnverified: false });
+  const all = toMarkers(site.beaches);
+  const slugs = [...new Set(all.map((m) => m.slug))];
+  return slugs.map((slug) => ({
+    params: { slug },
+    props: { markers: all.filter((m) => m.slug === slug) },
+  }));
+}
+const { slug } = Astro.params;
+const { markers } = Astro.props;
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Prévia · {slug}</title>
+  </head>
+  <body>
+    <div id="share-stage" data-slug={slug}>
+      <BeachMap markers={markers} />
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  body {
+    margin: 0;
+  }
+  #share-stage {
+    display: flex;
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+  }
+  astro-dev-toolbar {
+    display: none !important;
+  }
+  /* Sem controles nem faixa de carregamento na imagem. */
+  #share-stage .zoom,
+  #share-stage .loadbar {
+    visibility: hidden !important;
+  }
+</style>
+
+<script>
+  const stage = document.getElementById('share-stage')!;
+  const map = document.getElementById('beach-map')!;
+  const slug = stage.dataset.slug!;
+  const points: { lat: number; lng: number }[] = JSON.parse(
+    document.getElementById('map-markers')!.textContent ?? '[]',
+  );
+  /** Zoom de uma praia de um ponto só e limite para as de vários (o enquadramento os reúne). */
+  const SINGLE_ZOOM = 16;
+  /** Espera o mapa aparecer (a faixa de carregamento termina), seleciona a praia e a enquadra
+   *  com o pino no centro da imagem (o recorte de 300 px do painel pega o meio). */
+  const show = () => {
+    const mapGl = (
+      window as unknown as {
+        __beachMap?: {
+          jumpTo(o: object): void;
+          fitBounds(b: number[][], o: object): void;
+        };
+      }
+    ).__beachMap;
+    map.dispatchEvent(
+      new CustomEvent('marker-set', { detail: { slug, pointId: null } }),
+    );
+    const lngs = points.map((m) => m.lng);
+    const lats = points.map((m) => m.lat);
+    const west = Math.min(...lngs);
+    const east = Math.max(...lngs);
+    const south = Math.min(...lats);
+    const north = Math.max(...lats);
+    if (points.length < 2 || (west === east && south === north)) {
+      mapGl?.jumpTo({ center: [west, south], zoom: SINGLE_ZOOM });
+    } else {
+      mapGl?.fitBounds(
+        [
+          [west, south],
+          [east, north],
+        ],
+        { padding: 140, maxZoom: SINGLE_ZOOM, duration: 0 },
+      );
+    }
+    window.setTimeout(() => {
+      (window as unknown as { __shareReady?: boolean }).__shareReady = true;
+    }, 3000);
+  };
+  if (map.hasAttribute('data-revealed')) show();
+  else {
+    const watch = new MutationObserver(() => {
+      if (!map.hasAttribute('data-revealed')) return;
+      watch.disconnect();
+      show();
+    });
+    watch.observe(map, {
+      attributes: true,
+      attributeFilter: ['data-revealed'],
+    });
+  }
+</script>

@@ -67,10 +67,8 @@ const { content, pdfUrl, beachName } = Astro.props;
             <p>{content.statusText}</p>
           </div>
         </div>
-        <div class="share">
-          <Button variant="primary" disabled>
-            Compartilhar praia
-          </Button>
+        <div class="share" data-open-share>
+          <Button variant="primary">Compartilhar praia</Button>
         </div>
       </div>
     </div>

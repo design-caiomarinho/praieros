@@ -139,6 +139,10 @@
     "panel-width": {
       "$type": "dimension",
       "$value": 477
+    },
+    "share-preview-height": {
+      "$type": "dimension",
+      "$value": 300
     }
   }
 }

@@ -136,6 +136,7 @@ const noResult = notice === 'no-result';
                   location={p.location}
                   status={p.status}
                   accuracy={p.accuracy}
+                  showIndicator={points.length > 1}
                 />
               ))}
               {rainNotice && (
@@ -155,12 +156,13 @@ const noResult = notice === 'no-result';
                 <Button variant="primary">Ver classificação</Button>
               </div>
             )}
-            <ButtonIcon
-              variant="outlined"
-              icon="share"
-              label="Compartilhar praia"
-              disabled
-            />
+            <div class="share" data-open-share>
+              <ButtonIcon
+                variant="outlined"
+                icon="share"
+                label="Compartilhar praia"
+              />
+            </div>
           </div>
         )}
       </div>
@@ -344,6 +346,9 @@ const noResult = notice === 'no-result';
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    /* Inset vertical de 40px (inset/2xl, como a busca sem resultado): a mensagem nunca fica
+       espremida entre o chip do boletim e os links, mesmo na folha mobile baixa. */
+    padding-block: var(--space-inset-2xl);
     gap: var(--space-gap-xl);
   }
   .empty-icon {
@@ -356,7 +361,7 @@ const noResult = notice === 'no-result';
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-gap-md);
+    gap: var(--space-gap-xs);
     width: 230px;
     text-align: center;
   }
@@ -366,11 +371,11 @@ const noResult = notice === 'no-result';
   }
   .empty-title {
     color: var(--s-color-content-primary);
-    font-family: var(--s-typo-heading-large-family);
-    font-weight: var(--s-typo-heading-large-weight);
-    font-size: var(--s-typo-heading-large-size);
-    line-height: var(--s-typo-heading-large-line);
-    letter-spacing: var(--s-typo-heading-large-spacing);
+    font-family: var(--s-typo-heading-medium-family);
+    font-weight: var(--s-typo-heading-medium-weight);
+    font-size: var(--s-typo-heading-medium-size);
+    line-height: var(--s-typo-heading-medium-line);
+    letter-spacing: var(--s-typo-heading-medium-spacing);
   }
   .empty-body {
     color: var(--s-color-content-secondary);
@@ -414,6 +419,10 @@ const noResult = notice === 'no-result';
   }
   .buttons > :global(*) {
     justify-content: center;
+  }
+  /* Abre a vista Compartilhar praia (ligado em index.astro). */
+  .share {
+    display: contents;
   }
   .details {
     display: flex;

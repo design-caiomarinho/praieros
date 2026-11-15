@@ -9,15 +9,15 @@
 
 ## Cabeçalho e ficha (sessão 5)
 
-| Onde                                              | Texto                                                                                                              |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Botões do cabeçalho (rótulo acessível)            | Compartilhar o site · Fonte e como ler · Buscar praia                                                              |
-| Logo (link, texto oculto)                         | Praieros, página inicial                                                                                           |
+| Onde                                              | Texto                                                                                                                   |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Botões do cabeçalho (rótulo acessível)            | Compartilhar o site · Fonte e como ler · Buscar praia                                                                   |
+| Logo (link, texto oculto)                         | Praieros, página inicial                                                                                                |
 | Painel                                            | Fechar ficha da praia · Ver classificação · Compartilhar praia · Pontos de coleta · Como ler e fonte · Boletim original |
-| Chip do boletim                                   | Boletim nº X · dd/mm/aaaa                                                                                          |
-| Nota de rodapé                                    | Fonte: Inema · Praieros não é canal oficial                                                                        |
-| Notas sob o chip (tabela de estados do CLAUDE.md) | Esta praia não consta no boletim nº X. · A última análise foi em dd/mm/aaaa, antiga demais para mostrar.           |
-| Subtítulo                                         | bairro · N ponto(s) de coleta ("1 ponto de coleta", "3 pontos de coleta")                                          |
+| Chip do boletim                                   | Boletim nº X · dd/mm/aaaa                                                                                               |
+| Nota de rodapé                                    | Fonte: Inema · Praieros não é canal oficial                                                                             |
+| Notas sob o chip (tabela de estados do CLAUDE.md) | Esta praia não consta no boletim nº X. · A última análise foi em dd/mm/aaaa, antiga demais para mostrar.                |
+| Subtítulo                                         | bairro · N ponto(s) de coleta ("1 ponto de coleta", "3 pontos de coleta")                                               |
 
 ## Página inicial (sessão 6)
 
@@ -116,3 +116,17 @@ Sessão 11: "Posição aproximada" e "Posição muito aproximada" (linhas acima)
 | Créditos do mapa   | Mapa: © OpenStreetMap contributors (https://www.openstreetmap.org/copyright) · © OpenMapTiles (https://openmaptiles.org) · OpenFreeMap (https://openfreemap.org)                | **Provisório** (linha exigida pelas licenças; não está no design) |
 | Botão              | Boletim original                                                                                                                                                                | Figma                                                             |
 | Rótulos acessíveis | Voltar · Fechar fonte e como ler · (abre em nova aba) nos links de crédito                                                                                                      | Derivados (não visíveis)                                          |
+
+## Compartilhar praia (Figma 126:5695)
+
+| Elemento             | Texto                                                                                                                       | Origem                                              |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Título               | Compartilhar praia                                                                                                          | Figma                                               |
+| Texto de abertura    | Quem abrir o link vai direto para a ficha desta praia, com a fonte e a data do boletim.                                     | Figma                                               |
+| Botões               | Compartilhar via WhatsApp · (ícone) Copiar link                                                                             | Figma; rótulo do ícone derivado                     |
+| Aviso após copiar    | Link copiado.                                                                                                               | **Provisório**                                      |
+| Cópia negada         | Não foi possível copiar. Selecione e copie: {link}                                                                          | **Provisório**                                      |
+| Mensagem do WhatsApp | Confira a balneabilidade de {praia} no Praieros: {link}                                                                     | **Provisório** (sem status nem data, R6)            |
+| Prévia, título       | {praia} · Praieros                                                                                                          | **Provisório**                                      |
+| Prévia, descrição    | {Status} · Boletim nº N/AAAA · emitido em dd/mm/aaaa · Fonte: Inema (desatualizada: "{Status} · Boletim desatualizado · …") | **Provisório**, status e data do momento da geração |
+| Rótulos acessíveis   | Voltar · Fechar compartilhamento · Compartilhar praia: {praia} · Mapa com o ponto da praia {praia}                          | Derivados (não visíveis)                            |

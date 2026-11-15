@@ -244,7 +244,7 @@ const mapCredits = [
   .glossary {
     display: flex;
     flex-direction: column;
-    gap: var(--space-gap-md);
+    gap: var(--space-stack-lg);
     margin: 0;
   }
   .entry {
@@ -261,16 +261,16 @@ const mapCredits = [
     line-height: var(--s-typo-body-medium-line);
     letter-spacing: var(--s-typo-body-medium-spacing);
   }
-  /* Texto + botão: 32px entre eles (Figma 126:5146, stack xl). */
+  /* Texto + botão: 24px entre eles (o Figma 126:5146 tinha 32; ver docs/decisions.md, sessão 35). */
   .stack {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-xl);
+    gap: var(--space-stack-lg);
   }
   .limits {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-sm);
+    gap: var(--space-stack-md);
   }
   .limits p {
     margin: 0;

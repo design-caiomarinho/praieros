@@ -12,9 +12,12 @@ interface Props {
   status: ChipStatus;
   /** Posição automática no mapa. Guardada, mas não exibida (o Figma não tem o aviso). */
   accuracy?: 'approximate' | 'very-approximate' | null;
+  /** Mostra o indicador (checkbox) de ponto escolhido. Some quando a praia tem um único ponto: não
+   *  há o que escolher. */
+  showIndicator?: boolean;
 }
 
-const { pointId, name, location, status } = Astro.props;
+const { pointId, name, location, status, showIndicator = true } = Astro.props;
 const Tag = pointId ? 'button' : 'article';
 ---
 
@@ -26,7 +29,7 @@ const Tag = pointId ? 'button' : 'article';
   <span class="body">
     <span class="header">
       <StatusChip status={status} />
-      <span class="indicator" aria-hidden="true"></span>
+      {showIndicator && <span class="indicator" aria-hidden="true" />}
     </span>
     <span class="text">
       <span class="name">{name}</span>

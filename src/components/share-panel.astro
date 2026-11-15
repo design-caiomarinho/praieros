@@ -1,0 +1,222 @@
+---
+import Button from './button.astro';
+import ButtonIcon from './button-icon.astro';
+
+// Painel Compartilhar praia (Figma 126:5695, desktop). Só apresentação: recebe o link, a
+// mensagem e a prévia prontos (ver `src/lib/share/share.ts`). Voltar, fechar e copiar são
+// ligados em index.astro.
+interface Props {
+  beachName: string;
+  /** Link da página da praia (prévia + redirecionamento). */
+  url: string;
+  /** Link `wa.me` com a mensagem já montada. */
+  whatsappHref: string;
+  /** Imagem da prévia (pin da praia sobre o mapa), a mesma que o WhatsApp mostra. */
+  imageSrc: string;
+}
+
+const { beachName, url, whatsappHref, imageSrc } = Astro.props;
+---
+
+<section
+  class="panel"
+  aria-label={`Compartilhar praia: ${beachName}`}
+  tabindex="-1"
+  data-share-url={url}
+>
+  <header class="head">
+    <div class="top">
+      <div class="title">
+        <div class="back" data-share-back>
+          <ButtonIcon
+            variant="ghost"
+            size="xsmall"
+            icon="arrow-left"
+            label="Voltar"
+          />
+        </div>
+        <h2>Compartilhar praia</h2>
+      </div>
+      <div class="close" data-panel-close>
+        <ButtonIcon
+          variant="ghost"
+          size="xsmall"
+          icon="close"
+          label="Fechar compartilhamento"
+        />
+      </div>
+    </div>
+  </header>
+
+  <div class="scroll" data-scroll>
+    <div class="body">
+      <p class="intro">
+        Quem abrir o link vai direto para a ficha desta praia, com a fonte e a
+        data do boletim.
+      </p>
+      <div class="preview">
+        <img
+          class="preview__image"
+          src={imageSrc}
+          alt={`Mapa com o ponto da praia ${beachName}`}
+          width="1200"
+          height="630"
+          loading="lazy"
+        />
+        <div class="actions">
+          <div class="whatsapp">
+            <Button variant="primary" href={whatsappHref} target="_blank">
+              Compartilhar via WhatsApp
+            </Button>
+          </div>
+          <div class="copy" data-share-copy>
+            <ButtonIcon variant="outlined" icon="copy" label="Copiar link" />
+          </div>
+        </div>
+        <p class="feedback" role="status" data-share-feedback></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .panel {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: var(--size-panel-width);
+    max-width: 100%;
+    background: var(--s-color-surface-default);
+    color: var(--s-color-content-primary);
+    border-left: var(--border-width-default) solid var(--s-color-border-default);
+  }
+  .panel:focus {
+    outline: none;
+  }
+  /* Cabeçalho como o da Classificação (Figma 235:9705). */
+  .head {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: var(--space-inset-sm) var(--space-inset-lg);
+    border-bottom: var(--border-width-default) solid
+      var(--s-color-border-default);
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-gap-md);
+  }
+  .title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+    min-width: 0;
+  }
+  .back,
+  .close {
+    display: contents;
+  }
+  h2 {
+    margin: 0;
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-heading-medium-family);
+    font-weight: var(--s-typo-heading-medium-weight);
+    font-size: var(--s-typo-heading-medium-size);
+    line-height: var(--s-typo-heading-medium-line);
+    letter-spacing: var(--s-typo-heading-medium-spacing);
+  }
+  .scroll {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  /* Corpo (Figma 126:5718): padding 24, texto e prévia separados por 32. */
+  .body {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    gap: var(--space-stack-xl);
+    padding: var(--space-inset-lg);
+  }
+  .intro {
+    margin: 0;
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+  }
+  .preview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+  }
+  /* Recorte de 300 de altura (Figma 126:5797): o pin fica no centro da imagem. */
+  .preview__image {
+    display: block;
+    width: 100%;
+    height: var(--size-share-preview-height);
+    object-fit: cover;
+    object-position: center;
+    background: var(--s-color-surface-strong);
+  }
+  .actions {
+    display: flex;
+    gap: var(--space-stack-xs);
+  }
+  .whatsapp {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .whatsapp > :global(*) {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  .copy {
+    display: contents;
+  }
+  /* Só aparece depois de copiar; o leitor de tela anuncia pelo role="status". */
+  .feedback {
+    margin: 0;
+    min-height: 0;
+    color: var(--s-color-content-secondary);
+    font-family: var(--s-typo-body-small-family);
+    font-weight: var(--s-typo-body-small-weight);
+    font-size: var(--s-typo-body-small-size);
+    line-height: var(--s-typo-body-small-line);
+    letter-spacing: var(--s-typo-body-small-spacing);
+  }
+  .feedback:empty {
+    display: none;
+  }
+  /* Mobile, folha inferior (mesmo padrão da Classificação). */
+  @media (max-width: 1023px) {
+    .panel {
+      width: auto;
+      border-left: 0;
+      border-top: var(--border-width-default) solid
+        var(--s-color-border-default);
+    }
+    .head {
+      padding: var(--space-inset-sm) var(--space-inset-md);
+    }
+    .body {
+      padding: var(--space-inset-lg) var(--space-inset-md)
+        calc(var(--space-inset-lg) + env(safe-area-inset-bottom, 0px));
+    }
+    .close :global(.btn-icon) {
+      position: relative;
+    }
+    .close :global(.btn-icon)::after {
+      content: '';
+      position: absolute;
+      inset: calc(var(--primitives-spacing-4) / -2);
+    }
+  }
+</style>
