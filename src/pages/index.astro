@@ -385,8 +385,9 @@ const sourceBulletin = site.current
 
   /** Vista de onde o Compartilhar foi aberto. */
   let shareFrom: 'beach' | 'classification' = 'beach';
-  /** Quanto tempo o aviso e o check no botão ficam (ms); depois voltam ao normal. */
+  /** Quanto tempo o aviso fica (ms) e quanto o check fica no botão: o botão é só um aceno rápido. */
   const COPY_FEEDBACK_MS = 2500;
+  const COPY_BUTTON_MS = 1200;
   const noticeTimers = new Map<HTMLElement, number>();
   /** Mostra uma pílula por um tempo; ao fim ela sai com a animação inversa. Chamar de novo reinicia. */
   function flashNotice(box: HTMLElement) {
@@ -428,7 +429,7 @@ const sourceBulletin = site.current
       window.setTimeout(() => {
         button.removeAttribute('data-swapped');
         button.removeAttribute('data-timer');
-      }, COPY_FEEDBACK_MS),
+      }, COPY_BUTTON_MS),
     );
     flashNotice(document.getElementById('notice-copied')!);
   }
