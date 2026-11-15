@@ -61,7 +61,7 @@ const { markers } = Astro.props;
     document.getElementById('map-markers')!.textContent ?? '[]',
   );
   /** Zoom de uma praia de um ponto só e limite para as de vários (o enquadramento os reúne). */
-  const SINGLE_ZOOM = 16;
+  const SINGLE_ZOOM = 17.5;
   /** Espera o mapa aparecer (a faixa de carregamento termina), seleciona a praia e a enquadra
    *  com o pino no centro da imagem (o recorte de 300 px do painel pega o meio). */
   const show = () => {

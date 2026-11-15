@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write # para chamar o deploy (gh workflow run)
 
 concurrency:
   group: ingest-bulletins
@@ -42,7 +43,14 @@ jobs:
             git add -- "$f"
             git commit -m "data: boletim nº ${number}/${year} ${region}" -- "$f"
           done
-          if [ -n "$files" ]; then git push origin HEAD:main; fi
+          if [ -n "$files" ]; then
+            git push origin HEAD:main
+            # Push feito com GITHUB_TOKEN não dispara o deploy (regra do GitHub, contra laços);
+            # só workflow_dispatch é exceção. Sem isto, o boletim novo ficava no Git e fora do site.
+            gh workflow run deploy-pages.yml --ref main
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       # Falha visível: o commit acima já guardou o que era válido.
       - name: Falhar se a ingestão teve erro

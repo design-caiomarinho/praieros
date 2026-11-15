@@ -49,8 +49,13 @@ const target = openBeachPath(base, beach.slug);
       content={`Mapa com o ponto da praia ${beach.name}`}
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <meta property="og:image:type" content="image/jpeg" />
   </Fragment>
+  <!-- Redirecionamento por script: quem lê o link para a prévia (WhatsApp) não executa script e
+       fica nesta página; um meta refresh poderia levá-lo à página inicial, sem as tags og. -->
+  <script is:inline define:vars={{ target }}>
+    location.replace(target);
+  </script>
   <p>
     Abrindo a ficha de {beach.name}…<a href={target}>Abrir no Praieros</a>
   </p>

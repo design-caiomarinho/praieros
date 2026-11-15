@@ -25,15 +25,15 @@ describe('links', () => {
   });
   it('monta a imagem da prévia', () => {
     expect(shareImageUrl(ORIGIN, '/praieros/', 'porto-da-barra')).toBe(
-      `${ORIGIN}/praieros/share/porto-da-barra.png`,
+      `${ORIGIN}/praieros/share/porto-da-barra.jpg`,
     );
   });
   it('a miniatura usa o caminho local', () => {
     expect(shareImagePath('/praieros/', 'porto-da-barra')).toBe(
-      '/praieros/share/porto-da-barra.png',
+      '/praieros/share/porto-da-barra.jpg',
     );
     expect(shareImagePath('/', 'porto-da-barra')).toBe(
-      '/share/porto-da-barra.png',
+      '/share/porto-da-barra.jpg',
     );
   });
   it('o redirecionamento abre a ficha no site', () => {

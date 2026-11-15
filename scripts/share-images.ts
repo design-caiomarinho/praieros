@@ -1,4 +1,4 @@
-// Gera as imagens de prévia do compartilhamento (`public/share/<slug>.png`, 1200×630): o pino da
+// Gera as imagens de prévia do compartilhamento (`public/share/<slug>.jpg`, 1200×630, JPEG: o WhatsApp só mostra imagens leves): o pino da
 // praia sobre o mapa, com a regra de produção (só pontos que o site mostra). Usa a página
 // `/dev/share-render/<slug>` do `astro dev` e o Chrome ou Edge instalado (playwright-core, sem
 // baixar navegador). A imagem não leva status nem data (só posição): regenerar quando o catálogo
@@ -73,7 +73,7 @@ try {
       });
       await page
         .locator('#share-stage')
-        .screenshot({ path: `${OUT}${slug}.png` });
+        .screenshot({ path: `${OUT}${slug}.jpg`, type: 'jpeg', quality: 85 });
       console.log(`ok   ${slug}`);
     } catch (error) {
       failed++;

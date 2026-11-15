@@ -23,13 +23,13 @@ export function shareImageUrl(
   base: string,
   slug: string,
 ): string {
-  return `${root(origin, base)}share/${encodeURIComponent(slug)}.png`;
+  return `${root(origin, base)}share/${encodeURIComponent(slug)}.jpg`;
 }
 
 /** Caminho local da mesma imagem (miniatura no painel: não depende do endereço publicado). */
 export function shareImagePath(base: string, slug: string): string {
   const b = base.replace(/^\/+|\/+$/g, '');
-  return `${b ? `/${b}` : ''}/share/${encodeURIComponent(slug)}.png`;
+  return `${b ? `/${b}` : ''}/share/${encodeURIComponent(slug)}.jpg`;
 }
 
 /** Destino do redirecionamento: o site com a ficha da praia aberta (`?praia=<slug>`). */
