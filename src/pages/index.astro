@@ -7,6 +7,7 @@ import SearchPanel from '../components/search-panel.astro';
 import ClassificationPanel from '../components/classification-panel.astro';
 import SourcePanel from '../components/source-panel.astro';
 import SharePanel from '../components/share-panel.astro';
+import NoticePill from '../components/notice-pill.astro';
 import {
   shareImagePath,
   shareMessage,
@@ -93,6 +94,16 @@ const sourceBulletin = site.current
             </div>
           ),
       )}
+      <!-- Avisos passageiros sobre o mapa (link copiado ou não). A região é fixa e as pílulas
+           entram e saem dela, para o leitor de tela anunciar. -->
+      <div class="notices" id="notices" role="status">
+        <div id="notice-copied" hidden>
+          <NoticePill icon="check" text="Link copiado" />
+        </div>
+        <div id="notice-copy-failed" hidden>
+          <NoticePill icon="warning" text="Não foi possível copiar o link" />
+        </div>
+      </div>
       <!-- Ficha: escondida até um marcador ser escolhido. Desktop e mobile são o mesmo
            conteúdo; o CSS mostra só uma versão. -->
       <!-- Sidebar (desktop): camada azul + painel que entram da direita por cima do mapa e
@@ -374,18 +385,52 @@ const sourceBulletin = site.current
 
   /** Vista de onde o Compartilhar foi aberto. */
   let shareFrom: 'beach' | 'classification' = 'beach';
-  /** Copia o link da praia (R6: a página dela abre o estado atual) e avisa no painel. */
-  async function copyShareLink(section: Element | null) {
+  /** Quanto tempo o aviso e o check no botão ficam (ms); depois voltam ao normal. */
+  const COPY_FEEDBACK_MS = 2500;
+  const noticeTimers = new Map<HTMLElement, number>();
+  /** Mostra uma pílula por um tempo; ao fim ela sai com a animação inversa. Chamar de novo reinicia. */
+  function flashNotice(box: HTMLElement) {
+    const pill = box.firstElementChild as HTMLElement;
+    window.clearTimeout(noticeTimers.get(box));
+    pill.removeAttribute('data-leaving');
+    box.hidden = false;
+    const out = cssTimeMs(
+      getComputedStyle(pill).getPropertyValue('--motion-duration-pin-label'),
+    );
+    noticeTimers.set(
+      box,
+      window.setTimeout(() => {
+        if (reduceMotion.matches) return void (box.hidden = true);
+        pill.setAttribute('data-leaving', '');
+        noticeTimers.set(
+          box,
+          window.setTimeout(() => (box.hidden = true), out || 500),
+        );
+      }, COPY_FEEDBACK_MS),
+    );
+  }
+  /** Copia o link da praia (R6: a página dela abre o estado atual). Sucesso: o ícone do botão vira
+   *  check por um instante e aparece "Link copiado"; falha: aviso de que não foi possível. */
+  async function copyShareLink(trigger: Element | null) {
+    const section = trigger?.closest('.layout-share section');
     const url = section?.getAttribute('data-share-url');
-    const feedback = section?.querySelector('[data-share-feedback]');
-    if (!url || !feedback) return;
+    const button = trigger?.querySelector<HTMLElement>('button');
+    if (!url || !button) return;
     try {
       await navigator.clipboard.writeText(url);
-      feedback.textContent = 'Link copiado.';
     } catch {
-      feedback.textContent =
-        'Não foi possível copiar. Selecione e copie: ' + url;
+      flashNotice(document.getElementById('notice-copy-failed')!);
+      return;
     }
+    button.setAttribute('data-swapped', '');
+    window.clearTimeout(Number(button.dataset.timer) || undefined);
+    button.dataset.timer = String(
+      window.setTimeout(() => {
+        button.removeAttribute('data-swapped');
+        button.removeAttribute('data-timer');
+      }, COPY_FEEDBACK_MS),
+    );
+    flashNotice(document.getElementById('notice-copied')!);
   }
 
   // Os cartões dos pontos são só visualização: quem escolhe o ponto é o pin no mapa.
@@ -442,7 +487,7 @@ const sourceBulletin = site.current
       setView(shareFrom);
       focusVisible('[data-open-share] button, [data-open-share] a');
     } else if (target.closest('[data-share-copy]')) {
-      void copyShareLink(target.closest('.layout-share section'));
+      void copyShareLink(target.closest('[data-share-copy]'));
     }
   });
 
@@ -566,6 +611,31 @@ const sourceBulletin = site.current
 </script>
 
 <style>
+  /* Avisos passageiros (link copiado): centralizados na parte visível do mapa. No desktop, à esquerda
+     do sidebar, junto ao rodapé; no mobile, logo acima da folha inferior (60% do palco). */
+  .notices {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--space-inset-lg);
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .notices > [hidden] {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .notices {
+      right: var(--size-panel-width);
+    }
+  }
+  @media (max-width: 1023px) {
+    .notices {
+      bottom: calc(60% + var(--space-inset-lg));
+    }
+  }
   .app {
     display: flex;
     flex-direction: column;

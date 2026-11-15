@@ -119,14 +119,14 @@ Sessão 11: "Posição aproximada" e "Posição muito aproximada" (linhas acima)
 
 ## Compartilhar praia (Figma 126:5695)
 
-| Elemento             | Texto                                                                                                                       | Origem                                              |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| Título               | Compartilhar praia                                                                                                          | Figma                                               |
-| Texto de abertura    | Quem abrir o link vai direto para a ficha desta praia, com a fonte e a data do boletim.                                     | Figma                                               |
-| Botões               | Compartilhar via WhatsApp · (ícone) Copiar link                                                                             | Figma; rótulo do ícone derivado                     |
-| Aviso após copiar    | Link copiado.                                                                                                               | **Provisório**                                      |
-| Cópia negada         | Não foi possível copiar. Selecione e copie: {link}                                                                          | **Provisório**                                      |
-| Mensagem do WhatsApp | Confira a balneabilidade de {praia} no Praieros: {link}                                                                     | **Provisório** (sem status nem data, R6)            |
-| Prévia, título       | {praia} · Praieros                                                                                                          | **Provisório**                                      |
-| Prévia, descrição    | {Status} · Boletim nº N/AAAA · emitido em dd/mm/aaaa · Fonte: Inema (desatualizada: "{Status} · Boletim desatualizado · …") | **Provisório**, status e data do momento da geração |
-| Rótulos acessíveis   | Voltar · Fechar compartilhamento · Compartilhar praia: {praia} · Mapa com o ponto da praia {praia}                          | Derivados (não visíveis)                            |
+| Elemento                                | Texto                                                                                                                       | Origem                                              |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Título                                  | Compartilhar praia                                                                                                          | Figma                                               |
+| Texto de abertura                       | Quem abrir o link vai direto para a ficha desta praia, com a fonte e a data do boletim.                                     | Figma                                               |
+| Botões                                  | Compartilhar via WhatsApp · (ícone) Copiar link                                                                             | Figma; rótulo do ícone derivado                     |
+| Aviso após copiar (pílula sobre o mapa) | Link copiado                                                                                                                | **Provisório**                                      |
+| Cópia negada (pílula, ícone de alerta)  | Não foi possível copiar o link                                                                                              | **Provisório**                                      |
+| Mensagem do WhatsApp                    | Confira a balneabilidade de {praia} no Praieros: {link}                                                                     | **Provisório** (sem status nem data, R6)            |
+| Prévia, título                          | {praia} · Praieros                                                                                                          | **Provisório**                                      |
+| Prévia, descrição                       | {Status} · Boletim nº N/AAAA · emitido em dd/mm/aaaa · Fonte: Inema (desatualizada: "{Status} · Boletim desatualizado · …") | **Provisório**, status e data do momento da geração |
+| Rótulos acessíveis                      | Voltar · Fechar compartilhamento · Compartilhar praia: {praia} · Mapa com o ponto da praia {praia}                          | Derivados (não visíveis)                            |

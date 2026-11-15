@@ -70,10 +70,14 @@ const { beachName, url, whatsappHref, imageSrc } = Astro.props;
             </Button>
           </div>
           <div class="copy" data-share-copy>
-            <ButtonIcon variant="outlined" icon="copy" label="Copiar link" />
+            <ButtonIcon
+              variant="outlined"
+              icon="copy"
+              swapIcon="check"
+              label="Copiar link"
+            />
           </div>
         </div>
-        <p class="feedback" role="status" data-share-feedback></p>
       </div>
     </div>
   </div>
@@ -180,20 +184,6 @@ const { beachName, url, whatsappHref, imageSrc } = Astro.props;
   }
   .copy {
     display: contents;
-  }
-  /* Só aparece depois de copiar; o leitor de tela anuncia pelo role="status". */
-  .feedback {
-    margin: 0;
-    min-height: 0;
-    color: var(--s-color-content-secondary);
-    font-family: var(--s-typo-body-small-family);
-    font-weight: var(--s-typo-body-small-weight);
-    font-size: var(--s-typo-body-small-size);
-    line-height: var(--s-typo-body-small-line);
-    letter-spacing: var(--s-typo-body-small-spacing);
-  }
-  .feedback:empty {
-    display: none;
   }
   /* Mobile, folha inferior (mesmo padrão da Classificação). */
   @media (max-width: 1023px) {

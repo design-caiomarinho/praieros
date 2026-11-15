@@ -6,6 +6,8 @@ interface Props {
   /** Nome acessível (aria-label do ícone): obrigatório, o botão não tem texto. */
   label: string;
   icon?: IconName;
+  /** Ícone que toma o lugar do principal enquanto o botão tem `data-swapped` (ex.: copiar → check). */
+  swapIcon?: IconName;
   variant?: 'filled' | 'outlined' | 'ghost';
   size?: 'medium' | 'xsmall';
   href?: string;
@@ -26,6 +28,7 @@ interface Props {
 const {
   label,
   icon = 'info',
+  swapIcon,
   variant = 'filled',
   size = 'medium',
   href,
@@ -55,7 +58,18 @@ const attrs = asLink
   data-state={state}
   {...attrs}
 >
-  <Icon name={icon} size={20} label={label} />
+  {swapIcon ? (
+    <span class="btn-icon__glyphs">
+      <span class="btn-icon__glyph">
+        <Icon name={icon} size={20} label={label} />
+      </span>
+      <span class="btn-icon__glyph btn-icon__glyph--swap" aria-hidden="true">
+        <Icon name={swapIcon} size={20} />
+      </span>
+    </span>
+  ) : (
+    <Icon name={icon} size={20} label={label} />
+  )}
   {reveal && (
     <span class="btn-icon__reveal" aria-hidden="true">
       <span class="btn-icon__reveal-clip">
@@ -70,6 +84,24 @@ const attrs = asLink
 </Tag>
 
 <style>
+  /* Dois ícones empilhados: o principal segue na árvore de acessibilidade (nome do botão) e só
+     some visualmente enquanto o outro aparece. */
+  .btn-icon__glyphs {
+    display: grid;
+  }
+  .btn-icon__glyph {
+    grid-area: 1 / 1;
+    display: flex;
+  }
+  .btn-icon__glyph--swap {
+    opacity: 0;
+  }
+  .btn-icon[data-swapped] .btn-icon__glyph:not(.btn-icon__glyph--swap) {
+    opacity: 0;
+  }
+  .btn-icon[data-swapped] .btn-icon__glyph--swap {
+    opacity: 1;
+  }
   .btn-icon {
     box-sizing: border-box;
     display: inline-flex;

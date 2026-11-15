@@ -1,0 +1,76 @@
+---
+import Icon from './icon.astro';
+import type { IconName } from './icon.astro';
+
+// Aviso passageiro sobre o mapa: a pílula "Carregando o mapa…" (Figma 117:4900) com outro ícone
+// no lugar do spinner (ex.: check + "Link copiado"). Só apresentação: quem a mostra e esconde
+// (e o tempo) é index.astro; o leitor de tela anuncia pela região `role="status"` que a envolve.
+interface Props {
+  icon: IconName;
+  text: string;
+}
+
+const { icon, text } = Astro.props;
+---
+
+<div class="pill">
+  <span class="pill__icon">
+    <Icon name={icon} size={24} />
+  </span>
+  <span class="pill__text">{text}</span>
+</div>
+
+<style>
+  .pill {
+    display: flex;
+    align-items: center;
+    background: var(--s-color-surface-default);
+    /* Aparece como o nome do pin (Figma 204:7892), como a pílula de carregando: opacidade 0 → 1
+       e de cima para baixo (-8px → 0); ao sair (`data-leaving`), o inverso. */
+    animation: pill-in var(--motion-duration-pin-label)
+      var(--motion-easing-pin-label) both;
+  }
+  .pill[data-leaving] {
+    animation-direction: reverse;
+  }
+  @keyframes pill-in {
+    from {
+      opacity: 0;
+      translate: 0 calc(var(--space-stack-xs) * -1);
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pill {
+      animation: none;
+    }
+  }
+  .pill[hidden] {
+    display: none;
+  }
+  .pill__icon {
+    display: flex;
+    padding: var(--space-inset-md);
+    background: var(--s-color-surface-accent-default);
+    color: var(--s-color-content-on-accent);
+  }
+  .pill__text {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    border-left: 0;
+    color: var(--s-color-content-primary);
+    font-family: var(--s-typo-body-medium-family);
+    font-weight: var(--s-typo-body-medium-weight);
+    font-size: var(--s-typo-body-medium-size);
+    line-height: var(--s-typo-body-medium-line);
+    letter-spacing: var(--s-typo-body-medium-spacing);
+    white-space: nowrap;
+  }
+</style>
