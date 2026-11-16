@@ -82,6 +82,7 @@ Layout: desktop = mapa + painel lateral; mobile = mapa + folha inferior. Medidas
   - lint: `npm run lint` (ESLint); formatar: `npm run format` (Prettier)
   - tipos: `npm run check` (astro check)
   - build: `npm run build`
+  - docs dos tokens: `npm run tokens:docs` (gera `docs/tokens.md`; não editar à mão)
 
 Tokens de design: `tokens/tokens.json` (fonte única). Não usar valores soltos de cor, espaçamento ou tipografia: sempre token.
 
@@ -109,7 +110,7 @@ Fase 1, sessão 2 concluída: leitura e validação dos PDFs (`ingest-bulletin.t
 Fase 1, sessão 3 concluída: R1–R4 e D1–D3 como funções puras em `src/lib/rules/` (identidade, renomeação e pendências em `docs/decisions.md`).
 Fase 1, sessão 4 concluída: workflow diário `.github/workflows/ingest-bulletins.yml` (`npm run bulletins:ingest`), D4 por região; GITHUB_TOKEN não dispara outros workflows (ver `docs/decisions.md`).
 Fase 2, sessão 1 concluída: `tokens/tokens.json` (do Figma, com aliases) e `src/styles/tokens.css` gerado por `npm run tokens:build`; pendências em `docs/decisions.md`.
-Fase 2, sessão 2 (parcial): tokens do Figma + `tokens/extra.json`; `StatusChip` em `src/components/status-chip.astro`; página `/dev/components` só em dev. Faltam faixas e PointCard (aguardam links).
+Fase 2, sessão 2 (parcial): tokens do Figma + `tokens/code.json` (antes `extra.json`); `StatusChip` em `src/components/status-chip.astro`; página `/dev/components` só em dev. Faltam faixas e PointCard (aguardam links).
 Fonte Switzer self-host (`public/fonts/`, `src/styles/fonts.css`); atribuição da licença dispensada por decisão (ver `docs/decisions.md`).
 Nomenclatura em inglês padronizada (status `suitable | unsuitable | outdated | no-result`, arquivos em kebab-case).
 Fase 2, sessão 3: `OutdatedBanner`, `NoResultBanner` e `PointCard` criados (pendentes de componentizar no Figma); valores assumidos em `docs/decisions.md`.
@@ -140,3 +141,4 @@ Sessão 29 (refino): painel de busca novo (Figma 213:3706/3802), camada azul rem
 Sessão 32: tela de detalhes (Figma 217:6800): cabeçalho "Detalhes" como o da busca, rodapé separado e PointCard com indicador (cheio só no ponto escolhido). Ver `docs/decisions.md`.
 Sessão 36: Compartilhar praia (Figma 126:5695): painel como vista da ficha, link `/praia/<slug>/` com prévia `og:*` e redirecionamento para `/?praia=`, imagens em `public/share/` (`npm run share:images`), ícone `copy`. Pendentes: Termos do OpenFreeMap; testar a prévia no WhatsApp após publicar. Ver `docs/decisions.md`, sessão 36.
 Sessão 37: Compartilhar site (Figma 126:8129, painel pelo botão da navbar, sem esqueleto) e NoticePill com barra de progresso, aviso no topo no mobile (compartilhar site). Ver `docs/decisions.md`, sessão 37.
+Sessão 38: tokens renomeados (sem `s-`, `translucent`, `neutral`, escala `space.inline`), sombra excluída, `tokens/code.json` (só código) separado de `tokens/tokens.json` (Figma). Ver `docs/decisions.md`, sessão 38.

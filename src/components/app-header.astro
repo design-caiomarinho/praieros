@@ -61,9 +61,8 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
     align-items: center;
     justify-content: space-between;
     padding-left: var(--space-inset-md);
-    background: var(--s-color-surface-default);
-    border-bottom: var(--border-width-default) solid
-      var(--s-color-border-default);
+    background: var(--color-surface-default);
+    border-bottom: var(--border-width-default) solid var(--color-border-default);
   }
   /* Desktop: com o painel da Fonte ou do Compartilhar aberto, o botão (já "desabilitado", com o texto
      visível) se junta ao painel: cobre a linha de baixo do cabeçalho só na largura dele, que cresce
@@ -80,7 +79,7 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
       right: 0;
       bottom: calc(var(--border-width-default) * -1);
       height: var(--border-width-default);
-      background: var(--s-color-surface-default);
+      background: var(--color-surface-default);
     }
   }
   .logo {
@@ -96,6 +95,6 @@ const { homeHref = `${base}/`, infoHref = '#fonte', searchId } = Astro.props;
   }
   /* Divisor de 1px antes de cada botão (como no Figma). */
   .actions > :global(*) {
-    border-left: var(--border-width-default) solid var(--s-color-border-default);
+    border-left: var(--border-width-default) solid var(--color-border-default);
   }
 </style>

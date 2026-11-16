@@ -30,7 +30,7 @@ const { icon, text } = Astro.props;
   .pill {
     display: flex;
     align-items: center;
-    background: var(--s-color-surface-default);
+    background: var(--color-surface-default);
     /* Aparece como o nome do pin (Figma 204:7892), como a pílula de carregando: opacidade 0 → 1
        e de baixo para cima (+8px → 0); ao sair (`data-leaving`), o inverso (`pill-out`). */
     animation: pill-in var(--motion-duration-pin-label)
@@ -72,13 +72,13 @@ const { icon, text } = Astro.props;
   .pill__icon {
     display: flex;
     padding: var(--space-inset-md);
-    background: var(--s-color-surface-accent-default);
-    color: var(--s-color-content-on-accent);
+    background: var(--color-surface-accent-default);
+    color: var(--color-content-on-accent);
   }
   .pill__body {
     display: flex;
     flex-direction: column;
-    border: var(--border-width-default) solid var(--s-color-border-default);
+    border: var(--border-width-default) solid var(--color-border-default);
     border-left: 0;
   }
   .pill__text {
@@ -87,12 +87,12 @@ const { icon, text } = Astro.props;
     align-items: center;
     height: 48px;
     padding: var(--space-inset-sm) var(--space-inset-md);
-    color: var(--s-color-content-secondary);
-    font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--s-typo-body-medium-weight);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
+    color: var(--color-content-secondary);
+    font-family: var(--typo-body-medium-family);
+    font-weight: var(--typo-body-medium-weight);
+    font-size: var(--typo-body-medium-size);
+    line-height: var(--typo-body-medium-line);
+    letter-spacing: var(--typo-body-medium-spacing);
     white-space: nowrap;
   }
   /* Barra de 8 px sob o texto; o azul avança até 90% e espera (index.astro completa e some). */
@@ -104,7 +104,7 @@ const { icon, text } = Astro.props;
   .pill__fill {
     display: block;
     height: 100%;
-    background: var(--s-color-surface-accent-default);
+    background: var(--color-surface-accent-default);
     transform: scaleX(0);
     transform-origin: left;
     animation: pill-progress var(--motion-duration-load-progress)

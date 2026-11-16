@@ -40,11 +40,11 @@ describe('tokensToCss', () => {
     );
     expect(css).not.toMatch(/[{]primitives|[{]s-/);
     expect(css).toContain(
-      '--s-color-surface-negative-default: var(--primitives-color-red-400);',
+      '--color-surface-negative-default: var(--primitives-color-red-400);',
     );
   });
 
-  it('junta extra.json ao tokens.json e dá px a dimension', () => {
+  it('junta code.json ao tokens.json e dá px a dimension', () => {
     const merged = mergeTrees(
       { a: { b: { $type: 'color', $value: '#fff' } } },
       { radius: { full: { $type: 'dimension', $value: 999 } } },
@@ -52,7 +52,7 @@ describe('tokensToCss', () => {
     expect(tokensToCss(merged)).toContain('--radius-full: 999px;');
   });
 
-  it('falha quando extra.json repete um token', () => {
+  it('falha quando code.json repete um token', () => {
     const tok = { $type: 'color', $value: '#fff' };
     expect(() => mergeTrees({ a: tok }, { a: tok })).toThrow('Token duplicado');
   });

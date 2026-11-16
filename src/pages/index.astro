@@ -784,7 +784,7 @@ const sourceBulletin = site.current
     position: absolute;
     inset: 0;
     overflow: hidden;
-    background: var(--s-color-surface-default);
+    background: var(--color-surface-default);
   }
   .panel:not([hidden]) {
     display: flex;
@@ -915,11 +915,11 @@ const sourceBulletin = site.current
       width: calc(var(--primitives-spacing-32) * 2);
       height: 5px;
       border-radius: var(--radius-full);
-      background: var(--s-color-surface-inverse);
-      opacity: 0.3;
+      background: var(--color-surface-inverse);
+      opacity: var(--opacity-handle);
     }
     .sidebar__viewport :global(.sidebar__handle:focus-visible) {
-      outline: var(--border-width-default) solid var(--s-color-border-focus);
+      outline: var(--border-width-default) solid var(--color-border-focus);
       outline-offset: calc(var(--border-width-default) * -1);
     }
     .sidebar[data-active] {
@@ -1046,7 +1046,7 @@ const sourceBulletin = site.current
     }
     .sidebar[data-compact] .share-site-slot :global(section) {
       border-bottom: var(--border-width-default) solid
-        var(--s-color-border-default);
+        var(--color-border-default);
     }
     @media (prefers-reduced-motion: reduce) {
       .sidebar,
@@ -1150,7 +1150,7 @@ const sourceBulletin = site.current
     position: absolute;
     inset: 0;
     overflow: hidden;
-    background: var(--s-color-surface-default);
+    background: var(--color-surface-default);
   }
   .source-slot :global(section),
   .sidebar[data-compact] .share-site-slot:not([hidden]) {

@@ -58,24 +58,24 @@ const Tag = pointId ? 'button' : 'article';
   /* Hover e foco (teclado) como os itens da busca: superfície de hover; foco com anel. */
   button.card:hover .body,
   button.card:focus-visible .body {
-    background: var(--s-color-surface-hover);
+    background: var(--color-surface-hover);
   }
   button.card:focus-visible {
-    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline: var(--border-width-default) solid var(--color-border-focus);
     outline-offset: var(--primitives-spacing-4);
   }
   /* Só no-result vem no Figma; as outras cores seguem os tokens de borda de cada status. */
   .card--suitable {
-    --edge: var(--s-color-border-positive);
+    --edge: var(--color-border-positive);
   }
   .card--unsuitable {
-    --edge: var(--s-color-border-negative);
+    --edge: var(--color-border-negative);
   }
   .card--outdated {
-    --edge: var(--s-color-border-warning);
+    --edge: var(--color-border-warning);
   }
   .card--no-result {
-    --edge: var(--s-color-border-unknown);
+    --edge: var(--color-border-neutral);
   }
   .card {
     border-left-color: var(--edge);
@@ -104,7 +104,7 @@ const Tag = pointId ? 'button' : 'article';
     flex-direction: column;
     gap: var(--space-stack-md);
     padding: var(--space-inset-md);
-    border: var(--border-width-default) solid var(--s-color-border-default);
+    border: var(--border-width-default) solid var(--color-border-default);
     border-left: 0;
   }
   .text {
@@ -116,8 +116,8 @@ const Tag = pointId ? 'button' : 'article';
      ganha a borda do status e o miolo de 16 px (premissa de Caio, ver decisions). O miolo entra
      como o nome do pin (opacidade, curva `pin-label`), mas por escala (0 a 1) e mais rápido. */
   .indicator {
-    --dot: var(--s-color-surface-unknown-default);
-    --ring: var(--s-color-border-unknown);
+    --dot: var(--color-surface-neutral-default);
+    --ring: var(--color-border-neutral);
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -125,7 +125,7 @@ const Tag = pointId ? 'button' : 'article';
     flex-shrink: 0;
     width: var(--primitives-spacing-24);
     height: var(--primitives-spacing-24);
-    border: var(--border-width-default) solid var(--s-color-border-default);
+    border: var(--border-width-default) solid var(--color-border-default);
     border-radius: var(--radius-full);
     transition: border-color var(--motion-duration-pin-hover)
       var(--motion-easing-pin-label);
@@ -143,16 +143,16 @@ const Tag = pointId ? 'button' : 'article';
       transform var(--motion-duration-pin-hover) var(--motion-easing-pin-label);
   }
   .card--suitable .indicator {
-    --dot: var(--s-color-surface-positive-default);
-    --ring: var(--s-color-border-positive);
+    --dot: var(--color-surface-positive-default);
+    --ring: var(--color-border-positive);
   }
   .card--unsuitable .indicator {
-    --dot: var(--s-color-surface-negative-default);
-    --ring: var(--s-color-border-negative);
+    --dot: var(--color-surface-negative-default);
+    --ring: var(--color-border-negative);
   }
   .card--outdated .indicator {
-    --dot: var(--s-color-surface-warning-default);
-    --ring: var(--s-color-border-warning);
+    --dot: var(--color-surface-warning-default);
+    --ring: var(--color-border-warning);
   }
   .card[data-current] .indicator {
     border-color: var(--ring);
@@ -175,12 +175,12 @@ const Tag = pointId ? 'button' : 'article';
   }
   .name {
     margin: 0;
-    color: var(--s-color-content-primary);
-    font-family: var(--s-typo-body-large-family);
+    color: var(--color-content-primary);
+    font-family: var(--typo-body-large-family);
     font-weight: var(--primitives-font-weight-600);
-    font-size: var(--s-typo-body-large-size);
-    line-height: var(--s-typo-body-large-line);
-    letter-spacing: var(--s-typo-body-large-spacing);
+    font-size: var(--typo-body-large-size);
+    line-height: var(--typo-body-large-line);
+    letter-spacing: var(--typo-body-large-spacing);
   }
   .name,
   .location {
@@ -189,11 +189,11 @@ const Tag = pointId ? 'button' : 'article';
   .location {
     display: block;
     margin: 0;
-    color: var(--s-color-content-secondary);
-    font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--s-typo-body-medium-weight);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
+    color: var(--color-content-secondary);
+    font-family: var(--typo-body-medium-family);
+    font-weight: var(--typo-body-medium-weight);
+    font-size: var(--typo-body-medium-size);
+    line-height: var(--typo-body-medium-line);
+    letter-spacing: var(--typo-body-medium-spacing);
   }
 </style>

@@ -90,9 +90,9 @@ const { beachName, url, whatsappHref, imageSrc } = Astro.props;
     flex-direction: column;
     width: var(--size-panel-width);
     max-width: 100%;
-    background: var(--s-color-surface-default);
-    color: var(--s-color-content-primary);
-    border-left: var(--border-width-default) solid var(--s-color-border-default);
+    background: var(--color-surface-default);
+    color: var(--color-content-primary);
+    border-left: var(--border-width-default) solid var(--color-border-default);
   }
   .panel:focus {
     outline: none;
@@ -103,8 +103,7 @@ const { beachName, url, whatsappHref, imageSrc } = Astro.props;
     flex-direction: column;
     flex-shrink: 0;
     padding: var(--space-inset-sm) var(--space-inset-lg);
-    border-bottom: var(--border-width-default) solid
-      var(--s-color-border-default);
+    border-bottom: var(--border-width-default) solid var(--color-border-default);
   }
   .top {
     display: flex;
@@ -124,12 +123,12 @@ const { beachName, url, whatsappHref, imageSrc } = Astro.props;
   }
   h2 {
     margin: 0;
-    color: var(--s-color-content-primary);
-    font-family: var(--s-typo-heading-medium-family);
-    font-weight: var(--s-typo-heading-medium-weight);
-    font-size: var(--s-typo-heading-medium-size);
-    line-height: var(--s-typo-heading-medium-line);
-    letter-spacing: var(--s-typo-heading-medium-spacing);
+    color: var(--color-content-primary);
+    font-family: var(--typo-heading-medium-family);
+    font-weight: var(--typo-heading-medium-weight);
+    font-size: var(--typo-heading-medium-size);
+    line-height: var(--typo-heading-medium-line);
+    letter-spacing: var(--typo-heading-medium-spacing);
   }
   .scroll {
     display: flex;
@@ -148,12 +147,12 @@ const { beachName, url, whatsappHref, imageSrc } = Astro.props;
   }
   .intro {
     margin: 0;
-    color: var(--s-color-content-secondary);
-    font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--s-typo-body-medium-weight);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
+    color: var(--color-content-secondary);
+    font-family: var(--typo-body-medium-family);
+    font-weight: var(--typo-body-medium-weight);
+    font-size: var(--typo-body-medium-size);
+    line-height: var(--typo-body-medium-line);
+    letter-spacing: var(--typo-body-medium-spacing);
   }
   .preview {
     display: flex;
@@ -167,7 +166,7 @@ const { beachName, url, whatsappHref, imageSrc } = Astro.props;
     height: var(--size-share-preview-height);
     object-fit: cover;
     object-position: center;
-    background: var(--s-color-surface-strong);
+    background: var(--color-surface-muted);
   }
   .actions {
     display: flex;
@@ -190,8 +189,7 @@ const { beachName, url, whatsappHref, imageSrc } = Astro.props;
     .panel {
       width: auto;
       border-left: 0;
-      border-top: var(--border-width-default) solid
-        var(--s-color-border-default);
+      border-top: var(--border-width-default) solid var(--color-border-default);
     }
     .head {
       padding: var(--space-inset-sm) var(--space-inset-md);

@@ -1,0 +1,230 @@
+{
+  "primitives": {
+    "motion": {
+      "duration": {
+        "0": {
+          "$type": "duration",
+          "$value": 0
+        },
+        "150": {
+          "$type": "duration",
+          "$value": 150
+        },
+        "162": {
+          "$type": "duration",
+          "$value": 162
+        },
+        "223": {
+          "$type": "duration",
+          "$value": 223
+        },
+        "250": {
+          "$type": "duration",
+          "$value": 250
+        },
+        "300": {
+          "$type": "duration",
+          "$value": 300
+        },
+        "500": {
+          "$type": "duration",
+          "$value": 500
+        },
+        "575": {
+          "$type": "duration",
+          "$value": 575
+        },
+        "700": {
+          "$type": "duration",
+          "$value": 700
+        },
+        "800": {
+          "$type": "duration",
+          "$value": 800
+        },
+        "2000": {
+          "$type": "duration",
+          "$value": 2000
+        },
+        "2500": {
+          "$type": "duration",
+          "$value": 2500
+        }
+      },
+      "easing": {
+        "decelerate": {
+          "$type": "cubicBezier",
+          "$value": "0.175, 0.885, 0.32, 0.99"
+        },
+        "emphasized": {
+          "$type": "cubicBezier",
+          "$value": "0.64, 0.05, 0.35, 1"
+        },
+        "ease-in-out": {
+          "$type": "cubicBezier",
+          "$value": "0.42, 0, 0.58, 1"
+        },
+        "decelerate-pin": {
+          "$type": "cubicBezier",
+          "$value": "0.17, 0.88, 0.32, 0.99"
+        },
+        "ease-in-out-soft": {
+          "$type": "cubicBezier",
+          "$value": "0.4, 0, 0.6, 1"
+        }
+      },
+      "scale": {
+        "115": {
+          "$type": "number",
+          "$value": 1.15
+        }
+      }
+    },
+    "opacity": {
+      "30": {
+        "$type": "number",
+        "$value": 0.3
+      },
+      "50": {
+        "$type": "number",
+        "$value": 0.5
+      }
+    }
+  },
+  "motion": {
+    "duration": {
+      "panel": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.800}"
+      },
+      "panel-surface": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.800}"
+      },
+      "sheet-drag": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.800}"
+      },
+      "banner": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.800}"
+      },
+      "header-line": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.223}"
+      },
+      "hover": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.300}"
+      },
+      "dissolve": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.150}"
+      },
+      "pin-label": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.500}"
+      },
+      "pin-select": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.250}"
+      },
+      "load-progress": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.2500}"
+      },
+      "pin-hover": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.500}"
+      },
+      "engage": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.700}"
+      },
+      "skeleton": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.2000}"
+      }
+    },
+    "delay": {
+      "panel": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.0}"
+      },
+      "panel-surface": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.0}"
+      },
+      "header-line": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.162}"
+      },
+      "header-line-close": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.575}"
+      },
+      "panel-surface-close": {
+        "$type": "duration",
+        "$value": "{primitives.motion.duration.0}"
+      }
+    },
+    "easing": {
+      "panel": {
+        "$type": "cubicBezier",
+        "$value": "{primitives.motion.easing.decelerate}"
+      },
+      "header-line": {
+        "$type": "cubicBezier",
+        "$value": "{primitives.motion.easing.emphasized}"
+      },
+      "hover": {
+        "$type": "cubicBezier",
+        "$value": "{primitives.motion.easing.ease-in-out}"
+      },
+      "dissolve": {
+        "$type": "cubicBezier",
+        "$value": "{primitives.motion.easing.ease-in-out}"
+      },
+      "pin-label": {
+        "$type": "cubicBezier",
+        "$value": "{primitives.motion.easing.decelerate}"
+      },
+      "pin-hover": {
+        "$type": "cubicBezier",
+        "$value": "{primitives.motion.easing.decelerate-pin}"
+      },
+      "skeleton": {
+        "$type": "cubicBezier",
+        "$value": "{primitives.motion.easing.ease-in-out-soft}"
+      }
+    },
+    "scale": {
+      "pin-hover": {
+        "$type": "number",
+        "$value": "{primitives.motion.scale.115}"
+      }
+    },
+    "opacity": {
+      "skeleton": {
+        "$type": "number",
+        "$value": "{primitives.opacity.50}"
+      }
+    }
+  },
+  "opacity": {
+    "handle": {
+      "$type": "number",
+      "$value": "{primitives.opacity.30}"
+    }
+  },
+  "size": {
+    "panel-width": {
+      "$type": "dimension",
+      "$value": 477
+    },
+    "share-preview-height": {
+      "$type": "dimension",
+      "$value": 300
+    }
+  }
+}

@@ -139,13 +139,13 @@ const attrs = asLink
   /* Figma (Button only-icon, 123:2668): 48 e 40, ícone de 20 centrado; 2 x inset + 24, sem token. */
   .btn-icon--medium {
     padding: 0;
-    width: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
-    height: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
+    width: var(--size-control-md);
+    height: var(--size-control-md);
   }
   .btn-icon--xsmall {
     padding: 0;
-    width: calc(var(--space-inset-xs) * 2 + var(--primitives-spacing-24));
-    height: calc(var(--space-inset-xs) * 2 + var(--primitives-spacing-24));
+    width: var(--size-control-sm);
+    height: var(--size-control-sm);
   }
 
   /* Revelar o texto (Figma 214:2880): a largura cresce da esquerda do botão (ancorado à direita
@@ -157,7 +157,7 @@ const attrs = asLink
        e nunca cobre os botões vizinhos. O contorno de foco fica fora (não é cortado). */
     overflow: clip;
     width: auto;
-    min-width: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
+    min-width: var(--size-control-md);
     /* 48 fechado = borda + padding + ícone de 20: o padding lateral é o que sobra. */
     padding-inline: calc(
       (
@@ -189,11 +189,11 @@ const attrs = asLink
     padding-left: var(--space-gap-xs);
     white-space: nowrap;
     translate: 100% 0;
-    font-family: var(--s-typo-label-medium-family);
-    font-weight: var(--s-typo-label-medium-weight);
-    font-size: var(--s-typo-label-medium-size);
-    line-height: var(--s-typo-label-medium-line);
-    letter-spacing: var(--s-typo-label-medium-spacing);
+    font-family: var(--typo-label-medium-family);
+    font-weight: var(--typo-label-medium-weight);
+    font-size: var(--typo-label-medium-size);
+    line-height: var(--typo-label-medium-line);
+    letter-spacing: var(--typo-label-medium-spacing);
     transition: translate var(--motion-duration-pin-hover)
       var(--motion-easing-pin-hover);
   }
@@ -243,30 +243,30 @@ const attrs = asLink
 
   .btn-icon:focus-visible,
   .btn-icon[data-state='focus'] {
-    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline: var(--border-width-default) solid var(--color-border-focus);
     outline-offset: calc(
       var(--primitives-spacing-4) - var(--border-width-default)
     );
   }
 
   .btn-icon--filled {
-    background: var(--s-color-surface-accent-default);
-    color: var(--s-color-content-on-accent);
+    background: var(--color-surface-accent-default);
+    color: var(--color-content-on-accent);
   }
   .btn-icon--filled:hover:not(:disabled),
   .btn-icon--filled[data-state='hover'],
   .btn-icon--filled:focus-visible,
   .btn-icon--filled[data-state='focus'] {
-    background: var(--s-color-surface-accent-hover);
+    background: var(--color-surface-accent-hover);
   }
 
   .btn-icon--outlined,
   .btn-icon--ghost {
-    background: var(--s-color-surface-default);
-    color: var(--s-color-content-primary);
+    background: var(--color-surface-default);
+    color: var(--color-content-primary);
   }
   .btn-icon--outlined {
-    border-color: var(--s-color-border-default);
+    border-color: var(--color-border-default);
   }
   .btn-icon--outlined:hover:not(:disabled),
   .btn-icon--outlined[data-state='hover'],
@@ -276,7 +276,7 @@ const attrs = asLink
   .btn-icon--ghost[data-state='hover'],
   .btn-icon--ghost:focus-visible,
   .btn-icon--ghost[data-state='focus'] {
-    background: var(--s-color-surface-hover);
+    background: var(--color-surface-hover);
   }
 
   /* Botão que abre um painel, com o painel em cena: aparência de desabilitado (Figma 126:4529;
@@ -284,33 +284,33 @@ const attrs = asLink
      é pelo botão de fechar do painel. `data-engaged` é ligado pelo painel no tempo da animação
      (a 50% da entrada; só depois da saída completa), enquanto `aria-expanded` muda na hora. */
   .btn-icon--filled[data-engaged] {
-    background: var(--s-color-surface-default);
-    color: var(--s-color-content-disabled);
+    background: var(--color-surface-default);
+    color: var(--color-content-disabled);
     cursor: default;
   }
   .btn-icon--ghost[data-engaged] {
-    color: var(--s-color-content-disabled);
+    color: var(--color-content-disabled);
     cursor: default;
   }
   .btn-icon--ghost[data-engaged]:hover,
   .btn-icon--ghost[data-engaged]:focus-visible {
-    background: var(--s-color-surface-default);
+    background: var(--color-surface-default);
   }
   .btn-icon--filled[data-engaged]:hover,
   .btn-icon--filled[data-engaged]:focus-visible {
-    background: var(--s-color-surface-default);
+    background: var(--color-surface-default);
   }
 
   .btn-icon:disabled {
     cursor: not-allowed;
-    color: var(--s-color-content-disabled);
+    color: var(--color-content-disabled);
   }
   .btn-icon--filled:disabled {
-    background: var(--s-color-surface-disabled);
+    background: var(--color-surface-disabled);
   }
   .btn-icon--outlined:disabled {
     background: transparent;
-    border-color: var(--s-color-border-disabled);
+    border-color: var(--color-border-disabled);
   }
   .btn-icon--ghost:disabled {
     background: transparent;

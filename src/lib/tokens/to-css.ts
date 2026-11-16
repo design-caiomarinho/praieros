@@ -27,7 +27,7 @@ export function mergeTrees(
     const existing = out[key];
     if (existing === undefined) out[key] = node;
     else if (isToken(existing) || isToken(node))
-      throw new Error(`Token duplicado em extra.json: ${here}`);
+      throw new Error(`Token duplicado em code.json: ${here}`);
     else out[key] = mergeTrees(existing, node, [...path, key]);
   }
   return out;
@@ -52,11 +52,17 @@ function literal(token: FlatToken): string {
   const { value } = token;
   if (token.type === 'color') return String(value);
   if (token.type === 'dimension') return `${value}px`;
-  // Motion (tokens/extra.json): duração e atraso em ms; curva como cubic-bezier(...).
+  // Motion (tokens/code.json): duração e atraso em ms; curva como cubic-bezier(...).
   if (token.type === 'duration') return `${value}ms`;
   if (token.type === 'cubicBezier') return `cubic-bezier(${value})`;
-  if (group === 'motion' && (kind === 'scale' || kind === 'opacity'))
-    return String(value); // escala e opacidade (sem unidade)
+  // Escala e opacidade (sem unidade), semânticas e primitivas.
+  if (
+    (group === 'motion' && (kind === 'scale' || kind === 'opacity')) ||
+    (group === 'primitives' &&
+      (kind === 'opacity' || (kind === 'motion' && sub === 'scale'))) ||
+    group === 'opacity'
+  )
+    return String(value);
   if (group === 'primitives' && kind === 'spacing') return `${value}px`;
   if (group === 'primitives' && kind === 'font') {
     if (sub === 'size') return `${value}px`;

@@ -153,9 +153,9 @@ const mapCredits = [
     flex-direction: column;
     width: var(--size-panel-width);
     max-width: 100%;
-    background: var(--s-color-surface-default);
-    color: var(--s-color-content-primary);
-    border-left: var(--border-width-default) solid var(--s-color-border-default);
+    background: var(--color-surface-default);
+    color: var(--color-content-primary);
+    border-left: var(--border-width-default) solid var(--color-border-default);
   }
   /* Área que rola (corpo + rodapé): o cabeçalho fica fora dela, então a barra de rolagem começa
      abaixo dele (pedido de Caio). */
@@ -176,8 +176,7 @@ const mapCredits = [
     flex-direction: column;
     flex-shrink: 0;
     padding: var(--space-inset-sm) var(--space-inset-lg);
-    border-bottom: var(--border-width-default) solid
-      var(--s-color-border-default);
+    border-bottom: var(--border-width-default) solid var(--color-border-default);
   }
   .top {
     display: flex;
@@ -200,46 +199,45 @@ const mapCredits = [
   }
   h2 {
     margin: 0;
-    color: var(--s-color-content-primary);
-    font-family: var(--s-typo-heading-medium-family);
-    font-weight: var(--s-typo-heading-medium-weight);
-    font-size: var(--s-typo-heading-medium-size);
-    line-height: var(--s-typo-heading-medium-line);
-    letter-spacing: var(--s-typo-heading-medium-spacing);
+    color: var(--color-content-primary);
+    font-family: var(--typo-heading-medium-family);
+    font-weight: var(--typo-heading-medium-weight);
+    font-size: var(--typo-heading-medium-size);
+    line-height: var(--typo-heading-medium-line);
+    letter-spacing: var(--typo-heading-medium-spacing);
   }
   .intro,
   .independent,
   dd {
     margin: 0;
-    color: var(--s-color-content-secondary);
-    font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--s-typo-body-medium-weight);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
+    color: var(--color-content-secondary);
+    font-family: var(--typo-body-medium-family);
+    font-weight: var(--typo-body-medium-weight);
+    font-size: var(--typo-body-medium-size);
+    line-height: var(--typo-body-medium-line);
+    letter-spacing: var(--typo-body-medium-spacing);
   }
   /* Caixa "independente" (Figma 126:5090): fundo forte, borda, padding 16. */
   .independent {
     padding: var(--space-inset-md);
-    background: var(--s-color-surface-strong);
-    border: var(--border-width-default) solid var(--s-color-border-default);
+    background: var(--color-surface-muted);
+    border: var(--border-width-default) solid var(--color-border-default);
   }
   .section {
     display: flex;
     flex-direction: column;
     gap: var(--space-gap-md);
     padding: var(--space-inset-lg);
-    border-bottom: var(--border-width-default) solid
-      var(--s-color-border-default);
+    border-bottom: var(--border-width-default) solid var(--color-border-default);
   }
   h3 {
     margin: 0;
-    color: var(--s-color-content-muted);
-    font-family: var(--s-typo-body-small-family);
-    font-weight: var(--s-typo-body-small-weight);
-    font-size: var(--s-typo-body-small-size);
-    line-height: var(--s-typo-body-small-line);
-    letter-spacing: var(--s-typo-body-small-spacing);
+    color: var(--color-content-muted);
+    font-family: var(--typo-body-small-family);
+    font-weight: var(--typo-body-small-weight);
+    font-size: var(--typo-body-small-size);
+    line-height: var(--typo-body-small-line);
+    letter-spacing: var(--typo-body-small-spacing);
   }
   .glossary {
     display: flex;
@@ -253,13 +251,13 @@ const mapCredits = [
     gap: var(--space-stack-2xs);
   }
   dt {
-    color: var(--s-color-content-primary);
+    color: var(--color-content-primary);
     /* Termo do glossário (Figma 126:5108): 16 px em negrito (600, o maior peso dos tokens). */
-    font-family: var(--s-typo-body-medium-family);
+    font-family: var(--typo-body-medium-family);
     font-weight: var(--primitives-font-weight-600);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
+    font-size: var(--typo-body-medium-size);
+    line-height: var(--typo-body-medium-line);
+    letter-spacing: var(--typo-body-medium-spacing);
   }
   /* Texto + botão: 24px entre eles (o Figma 126:5146 tinha 32; ver docs/decisions.md, sessão 35). */
   .stack {
@@ -274,12 +272,12 @@ const mapCredits = [
   }
   .limits p {
     margin: 0;
-    color: var(--s-color-content-primary);
-    font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--s-typo-body-medium-weight);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
+    color: var(--color-content-primary);
+    font-family: var(--typo-body-medium-family);
+    font-weight: var(--typo-body-medium-weight);
+    font-size: var(--typo-body-medium-size);
+    line-height: var(--typo-body-medium-line);
+    letter-spacing: var(--typo-body-medium-spacing);
   }
   /* Negrito do Figma (Bold) não existe nos tokens: usa o maior peso, 600 (ver docs/decisions.md). */
   strong {
@@ -291,7 +289,7 @@ const mapCredits = [
     text-decoration: underline;
   }
   .map-credit a:focus-visible {
-    outline: var(--border-width-default) solid var(--s-color-content-primary);
+    outline: var(--border-width-default) solid var(--color-content-primary);
     outline-offset: var(--space-stack-2xs);
   }
   /* Mobile, folha inferior (mesmo padrão da ficha): sem largura fixa, borda no topo, padding 16
@@ -300,8 +298,7 @@ const mapCredits = [
     .panel {
       width: auto;
       border-left: 0;
-      border-top: var(--border-width-default) solid
-        var(--s-color-border-default);
+      border-top: var(--border-width-default) solid var(--color-border-default);
     }
     .head {
       padding: var(--space-inset-sm) var(--space-inset-md);

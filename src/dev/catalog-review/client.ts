@@ -357,12 +357,12 @@ render();
 createReviewMap({
   container: mapEl,
   palette: {
-    land: token('--s-color-surface-strong'),
-    water: token('--s-color-surface-accent-soft'),
-    park: token('--s-color-surface-positive-soft'),
-    sand: token('--s-color-surface-warning-subtle'),
-    block: token('--s-color-surface-emphasis'),
-    road: token('--s-color-surface-default'),
+    land: token('--color-surface-muted'),
+    water: token('--color-surface-accent-soft'),
+    park: token('--color-surface-positive-soft'),
+    sand: token('--color-surface-warning-subtle'),
+    block: token('--color-surface-strong'),
+    road: token('--color-surface-default'),
   },
   onPinSelect(id) {
     const [beach, code] = id.split('|') as [string, string];

@@ -108,9 +108,9 @@ const { content, pdfUrl, beachName } = Astro.props;
     flex-direction: column;
     width: var(--size-panel-width);
     max-width: 100%;
-    background: var(--s-color-surface-default);
-    color: var(--s-color-content-primary);
-    border-left: var(--border-width-default) solid var(--s-color-border-default);
+    background: var(--color-surface-default);
+    color: var(--color-content-primary);
+    border-left: var(--border-width-default) solid var(--color-border-default);
   }
   /* Recebe o foco ao abrir (sem anel: não é um controle). */
   .panel:focus {
@@ -122,8 +122,7 @@ const { content, pdfUrl, beachName } = Astro.props;
     flex-direction: column;
     flex-shrink: 0;
     padding: var(--space-inset-sm) var(--space-inset-lg);
-    border-bottom: var(--border-width-default) solid
-      var(--s-color-border-default);
+    border-bottom: var(--border-width-default) solid var(--color-border-default);
   }
   .top {
     display: flex;
@@ -143,22 +142,22 @@ const { content, pdfUrl, beachName } = Astro.props;
   }
   h2 {
     margin: 0;
-    color: var(--s-color-content-primary);
-    font-family: var(--s-typo-heading-medium-family);
-    font-weight: var(--s-typo-heading-medium-weight);
-    font-size: var(--s-typo-heading-medium-size);
-    line-height: var(--s-typo-heading-medium-line);
-    letter-spacing: var(--s-typo-heading-medium-spacing);
+    color: var(--color-content-primary);
+    font-family: var(--typo-heading-medium-family);
+    font-weight: var(--typo-heading-medium-weight);
+    font-size: var(--typo-heading-medium-size);
+    line-height: var(--typo-heading-medium-line);
+    letter-spacing: var(--typo-heading-medium-spacing);
   }
   .intro,
   .block p {
     margin: 0;
-    color: var(--s-color-content-secondary);
-    font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--s-typo-body-medium-weight);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
+    color: var(--color-content-secondary);
+    font-family: var(--typo-body-medium-family);
+    font-weight: var(--typo-body-medium-weight);
+    font-size: var(--typo-body-medium-size);
+    line-height: var(--typo-body-medium-line);
+    letter-spacing: var(--typo-body-medium-spacing);
   }
   /* Área que rola (corpo + rodapé): o cabeçalho fica fora dela, então a barra de rolagem começa
      abaixo dele (pedido de Caio). */
@@ -184,7 +183,7 @@ const { content, pdfUrl, beachName } = Astro.props;
   /* Rodapé (Figma 222:8934): borda no topo, padding 24, links e crédito. */
   .foot-wrap {
     padding: var(--space-inset-lg);
-    border-top: var(--border-width-default) solid var(--s-color-border-default);
+    border-top: var(--border-width-default) solid var(--color-border-default);
   }
   .blocks {
     display: flex;
@@ -199,12 +198,12 @@ const { content, pdfUrl, beachName } = Astro.props;
   }
   h3 {
     margin: 0;
-    color: var(--s-color-content-muted);
-    font-family: var(--s-typo-body-small-family);
-    font-weight: var(--s-typo-body-small-weight);
-    font-size: var(--s-typo-body-small-size);
-    line-height: var(--s-typo-body-small-line);
-    letter-spacing: var(--s-typo-body-small-spacing);
+    color: var(--color-content-muted);
+    font-family: var(--typo-body-small-family);
+    font-weight: var(--typo-body-small-weight);
+    font-size: var(--typo-body-small-size);
+    line-height: var(--typo-body-small-line);
+    letter-spacing: var(--typo-body-small-spacing);
   }
   /* Mobile, folha inferior (mesmo padrão da ficha): sem largura fixa, borda no topo, padding 16
      lateral e 24 vertical no cabeçalho e no corpo, área segura embaixo. */
@@ -212,8 +211,7 @@ const { content, pdfUrl, beachName } = Astro.props;
     .panel {
       width: auto;
       border-left: 0;
-      border-top: var(--border-width-default) solid
-        var(--s-color-border-default);
+      border-top: var(--border-width-default) solid var(--color-border-default);
     }
     .head {
       padding: var(--space-inset-sm) var(--space-inset-md);
@@ -263,11 +261,11 @@ const { content, pdfUrl, beachName } = Astro.props;
   }
   .credit {
     margin: 0;
-    color: var(--s-color-content-muted);
-    font-family: var(--s-typo-caption-small-family);
-    font-weight: var(--s-typo-caption-small-weight);
-    font-size: var(--s-typo-caption-small-size);
-    line-height: var(--s-typo-caption-small-line);
-    letter-spacing: var(--s-typo-caption-small-spacing);
+    color: var(--color-content-muted);
+    font-family: var(--typo-caption-small-family);
+    font-weight: var(--typo-caption-small-weight);
+    font-size: var(--typo-caption-small-size);
+    line-height: var(--typo-caption-small-line);
+    letter-spacing: var(--typo-caption-small-spacing);
   }
 </style>

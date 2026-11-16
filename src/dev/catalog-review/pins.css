@@ -8,15 +8,15 @@
   border: 0;
   background: none;
   cursor: grab;
-  font-family: var(--s-typo-label-medium-family);
-  font-weight: var(--s-typo-label-medium-weight);
-  font-size: var(--s-typo-label-medium-size);
+  font-family: var(--typo-label-medium-family);
+  font-weight: var(--typo-label-medium-weight);
+  font-size: var(--typo-label-medium-size);
   line-height: 1;
 }
 .pin__badge {
   display: flex;
   align-items: center;
-  gap: var(--space-inline-xs);
+  gap: var(--space-inline-2xs);
   box-sizing: border-box;
   min-width: 24px;
   height: 24px;
@@ -27,54 +27,54 @@
 }
 .pin__label {
   padding: var(--space-inset-2xs) var(--space-inset-xs);
-  border: var(--border-width-default) solid var(--s-color-border-default);
+  border: var(--border-width-default) solid var(--color-border-default);
   border-radius: var(--radius-full);
-  background: var(--s-color-surface-default);
-  color: var(--s-color-content-primary);
+  background: var(--color-surface-default);
+  color: var(--color-content-primary);
   white-space: nowrap;
 }
 .pin--proposed .pin__badge {
-  border-color: var(--s-color-border-warning);
-  background: var(--s-color-surface-warning-soft);
-  color: var(--s-color-content-warning);
+  border-color: var(--color-border-warning);
+  background: var(--color-surface-warning-soft);
+  color: var(--color-content-warning);
 }
 .pin--verified .pin__badge {
-  border-color: var(--s-color-border-positive);
-  background: var(--s-color-surface-positive-soft);
-  color: var(--s-color-content-positive);
+  border-color: var(--color-border-positive);
+  background: var(--color-surface-positive-soft);
+  color: var(--color-content-positive);
 }
 .pin--selected .pin__badge {
   border-width: var(--border-width-accent);
-  border-color: var(--s-color-border-accent);
-  background: var(--s-color-surface-accent-default);
-  color: var(--s-color-content-on-accent);
+  border-color: var(--color-border-accent);
+  background: var(--color-surface-accent-default);
+  color: var(--color-content-on-accent);
 }
 .pin:focus-visible {
-  outline: var(--border-width-accent) solid var(--s-color-border-focus);
+  outline: var(--border-width-accent) solid var(--color-border-focus);
 }
 
 .pin--auto .pin__badge {
-  border-color: var(--s-color-border-accent);
-  background: var(--s-color-surface-accent-soft);
-  color: var(--s-color-content-accent);
+  border-color: var(--color-border-accent);
+  background: var(--color-surface-accent-soft);
+  color: var(--color-content-accent);
 }
 .pin--pending .pin__badge {
   border-style: dashed;
-  border-color: var(--s-color-border-warning);
-  background: var(--s-color-surface-warning-soft);
-  color: var(--s-color-content-warning);
+  border-color: var(--color-border-warning);
+  background: var(--color-surface-warning-soft);
+  color: var(--color-content-warning);
 }
 .pin--very-approximate .pin__badge {
   border-style: dashed;
-  border-color: var(--s-color-border-warning);
-  background: var(--s-color-surface-warning-soft);
-  color: var(--s-color-content-warning);
+  border-color: var(--color-border-warning);
+  background: var(--color-surface-warning-soft);
+  color: var(--color-content-warning);
 }
 
 /* Praia de referência (OSM, fora do boletim): contorno neutro e símbolo ◇, sem número. */
 .pin--reference .pin__badge {
   border-style: dotted;
-  border-color: var(--s-color-border-default);
-  background: var(--s-color-surface-default);
-  color: var(--s-color-content-secondary);
+  border-color: var(--color-border-default);
+  background: var(--color-surface-default);
+  color: var(--color-content-secondary);
 }

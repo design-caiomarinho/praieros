@@ -69,11 +69,11 @@ const attrs = asLink
     gap: var(--space-gap-xs);
     border: var(--border-width-default) solid transparent;
     background: transparent;
-    font-family: var(--s-typo-label-medium-family);
-    font-weight: var(--s-typo-label-medium-weight);
-    font-size: var(--s-typo-label-medium-size);
-    line-height: var(--s-typo-label-medium-line);
-    letter-spacing: var(--s-typo-label-medium-spacing);
+    font-family: var(--typo-label-medium-family);
+    font-weight: var(--typo-label-medium-weight);
+    font-size: var(--typo-label-medium-size);
+    line-height: var(--typo-label-medium-line);
+    letter-spacing: var(--typo-label-medium-spacing);
     white-space: nowrap;
     text-decoration: none;
     cursor: pointer;
@@ -91,11 +91,11 @@ const attrs = asLink
   /* Alturas do Figma (48 e 40) = 2 x inset vertical + 24, sem token próprio. */
   .btn--medium {
     padding: var(--space-inset-sm);
-    height: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
+    height: var(--size-control-md);
   }
   .btn--small {
     padding: var(--space-inset-xs) var(--space-inset-sm);
-    height: calc(var(--space-inset-xs) * 2 + var(--primitives-spacing-24));
+    height: var(--size-control-sm);
   }
 
   /* Linha de navegação (spread): largura total, texto à esquerda, ícone à direita. */
@@ -107,7 +107,7 @@ const attrs = asLink
   /* Foco visível: anel de 1px a 4px da borda externa do Figma. */
   .btn:focus-visible,
   .btn[data-state='focus'] {
-    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline: var(--border-width-default) solid var(--color-border-focus);
     outline-offset: calc(
       var(--primitives-spacing-4) - var(--border-width-default)
     );
@@ -119,24 +119,24 @@ const attrs = asLink
 
   /* primary */
   .btn--primary {
-    background: var(--s-color-surface-accent-default);
-    color: var(--s-color-content-on-accent);
+    background: var(--color-surface-accent-default);
+    color: var(--color-content-on-accent);
   }
   .btn--primary:hover:not(:disabled),
   .btn--primary[data-state='hover'],
   .btn--primary:focus-visible,
   .btn--primary[data-state='focus'] {
-    background: var(--s-color-surface-accent-hover);
+    background: var(--color-surface-accent-hover);
   }
 
   /* secondary e ghost */
   .btn--secondary,
   .btn--ghost {
-    color: var(--s-color-content-secondary);
+    color: var(--color-content-secondary);
   }
   .btn--secondary {
-    background: var(--s-color-surface-default);
-    border-color: var(--s-color-border-default);
+    background: var(--color-surface-default);
+    border-color: var(--color-border-default);
   }
   .btn--secondary:hover:not(:disabled),
   .btn--secondary[data-state='hover'],
@@ -146,26 +146,26 @@ const attrs = asLink
   .btn--ghost[data-state='hover'],
   .btn--ghost:focus-visible,
   .btn--ghost[data-state='focus'] {
-    background: var(--s-color-surface-hover);
+    background: var(--color-surface-hover);
   }
   .btn--secondary[data-selected],
   .btn--ghost[data-selected] {
-    background: var(--s-color-surface-accent-subtle);
-    border-color: var(--s-color-border-accent);
-    color: var(--s-color-content-accent);
+    background: var(--color-surface-accent-subtle);
+    border-color: var(--color-border-accent);
+    color: var(--color-content-accent);
   }
 
   /* desabilitado (vem por último para vencer hover e selecionado) */
   .btn:disabled {
     cursor: not-allowed;
-    color: var(--s-color-content-disabled);
+    color: var(--color-content-disabled);
   }
   .btn--primary:disabled {
-    background: var(--s-color-surface-disabled);
+    background: var(--color-surface-disabled);
   }
   .btn--secondary:disabled {
     background: transparent;
-    border-color: var(--s-color-surface-hover);
+    border-color: var(--color-surface-hover);
   }
   .btn--ghost:disabled {
     background: transparent;

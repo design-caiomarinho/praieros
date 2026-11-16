@@ -112,12 +112,12 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   const token = (name: string) =>
     getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const palette = () => ({
-    land: token('--s-color-surface-strong'),
-    water: token('--s-color-surface-accent-soft'),
-    park: token('--s-color-surface-positive-soft'),
-    sand: token('--s-color-surface-warning-subtle'),
-    block: token('--s-color-surface-emphasis'),
-    road: token('--s-color-surface-default'),
+    land: token('--color-surface-muted'),
+    water: token('--color-surface-accent-soft'),
+    park: token('--color-surface-positive-soft'),
+    sand: token('--color-surface-warning-subtle'),
+    block: token('--color-surface-strong'),
+    road: token('--color-surface-default'),
   });
 
   // Desktop: o sidebar (busca, ficha, Classificação, Fonte) sobrepõe o mapa pela direita. Enquanto
@@ -324,7 +324,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     flex: 1;
     min-width: 0;
     /* Cor do mar desde o primeiro quadro (sem cinza antes dos tiles). */
-    background: var(--s-color-surface-accent-soft);
+    background: var(--color-surface-accent-soft);
     overflow: clip;
     /* Contexto próprio: a ficha (folha inferior) fica acima dos controles do MapLibre. */
     isolation: isolate;
@@ -378,7 +378,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   .loadbar__fill {
     display: block;
     height: 100%;
-    background: var(--s-color-surface-accent-default);
+    background: var(--color-surface-accent-default);
     transform: scaleX(0);
     transform-origin: left;
     animation: loadbar-progress var(--motion-duration-load-progress)
@@ -412,7 +412,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--s-color-surface-strong);
+    background: var(--color-surface-muted);
   }
   .error__box {
     display: flex;
@@ -423,8 +423,8 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   .error__icon {
     display: flex;
     padding: var(--space-inset-sm);
-    background: var(--s-color-surface-accent-subtle);
-    color: var(--s-color-content-accent);
+    background: var(--color-surface-accent-subtle);
+    color: var(--color-content-accent);
   }
   .error__content {
     display: flex;
@@ -444,21 +444,21 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   }
   .error__texts h2 {
     margin: 0;
-    color: var(--s-color-content-primary);
-    font-family: var(--s-typo-heading-medium-family);
-    font-weight: var(--s-typo-heading-medium-weight);
-    font-size: var(--s-typo-heading-medium-size);
-    line-height: var(--s-typo-heading-medium-line);
-    letter-spacing: var(--s-typo-heading-medium-spacing);
+    color: var(--color-content-primary);
+    font-family: var(--typo-heading-medium-family);
+    font-weight: var(--typo-heading-medium-weight);
+    font-size: var(--typo-heading-medium-size);
+    line-height: var(--typo-heading-medium-line);
+    letter-spacing: var(--typo-heading-medium-spacing);
   }
   .error__texts p {
     margin: 0;
-    color: var(--s-color-content-secondary);
-    font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--s-typo-body-medium-weight);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
+    color: var(--color-content-secondary);
+    font-family: var(--typo-body-medium-family);
+    font-weight: var(--typo-body-medium-weight);
+    font-size: var(--typo-body-medium-size);
+    line-height: var(--typo-body-medium-line);
+    letter-spacing: var(--typo-body-medium-spacing);
   }
   .error__texts h2 {
     max-width: 214px;
@@ -504,9 +504,9 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     border: 0;
     background: none;
     cursor: pointer;
-    font-family: var(--s-typo-label-medium-family);
-    font-weight: var(--s-typo-label-medium-weight);
-    font-size: var(--s-typo-label-medium-size);
+    font-family: var(--typo-label-medium-family);
+    font-weight: var(--typo-label-medium-weight);
+    font-size: var(--typo-label-medium-size);
     line-height: 1;
   }
   :global(.marker[hidden]) {
@@ -524,10 +524,10 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     display: flex;
     align-items: center;
     justify-content: center;
-    border: var(--border-width-default) solid var(--s-color-border-default);
+    border: var(--border-width-default) solid var(--color-border-default);
     border-radius: var(--radius-full);
-    background: var(--s-color-surface-default);
-    color: var(--s-color-content-primary);
+    background: var(--color-surface-default);
+    color: var(--color-content-primary);
     white-space: nowrap;
     transition: top var(--motion-duration-pin-select)
       var(--motion-easing-pin-hover);
@@ -643,7 +643,7 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   :global(.marker__pin) {
     opacity: 0;
     transform: scale(0.4);
-    color: var(--s-color-surface-accent-default);
+    color: var(--color-surface-accent-default);
   }
   :global(.marker--selected .marker__pin) {
     opacity: 1;
@@ -659,61 +659,61 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
     border: var(--border-width-default) solid;
     border-radius: var(--radius-full);
     /* Nome do pin em label/small (Figma 117:4522). */
-    font-family: var(--s-typo-label-small-family);
-    font-weight: var(--s-typo-label-small-weight);
-    font-size: var(--s-typo-label-small-size);
-    line-height: var(--s-typo-label-small-line);
+    font-family: var(--typo-label-small-family);
+    font-weight: var(--typo-label-small-weight);
+    font-size: var(--typo-label-small-size);
+    line-height: var(--typo-label-small-line);
     white-space: nowrap;
     text-align: center;
   }
   :global(.marker:focus-visible) {
-    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline: var(--border-width-default) solid var(--color-border-focus);
     outline-offset: var(--space-inset-2xs);
   }
   :global(.marker--positive .marker__disc) {
-    background: var(--s-color-surface-positive-default);
-    border-color: var(--s-color-border-positive);
-    color: var(--s-color-content-positive);
+    background: var(--color-surface-positive-default);
+    border-color: var(--color-border-positive);
+    color: var(--color-content-positive);
   }
   :global(.marker--positive .marker__label) {
-    background: var(--s-color-surface-positive-translucid);
-    border-color: var(--s-color-border-positive);
-    color: var(--s-color-content-positive);
+    background: var(--color-surface-positive-translucent);
+    border-color: var(--color-border-positive);
+    color: var(--color-content-positive);
   }
   :global(.marker--negative .marker__disc) {
-    background: var(--s-color-surface-negative-default);
-    border-color: var(--s-color-border-negative);
-    color: var(--s-color-content-negative);
+    background: var(--color-surface-negative-default);
+    border-color: var(--color-border-negative);
+    color: var(--color-content-negative);
   }
   :global(.marker--negative .marker__label) {
-    background: var(--s-color-surface-negative-translucid);
-    border-color: var(--s-color-border-negative);
-    color: var(--s-color-content-negative);
+    background: var(--color-surface-negative-translucent);
+    border-color: var(--color-border-negative);
+    color: var(--color-content-negative);
   }
   :global(.marker--warning .marker__disc) {
-    background: var(--s-color-surface-warning-default);
-    border-color: var(--s-color-border-warning);
-    color: var(--s-color-content-warning);
+    background: var(--color-surface-warning-default);
+    border-color: var(--color-border-warning);
+    color: var(--color-content-warning);
   }
   :global(.marker--warning .marker__label) {
-    background: var(--s-color-surface-warning-translucid);
-    border-color: var(--s-color-border-warning);
-    color: var(--s-color-content-warning);
+    background: var(--color-surface-warning-translucent);
+    border-color: var(--color-border-warning);
+    color: var(--color-content-warning);
   }
   :global(.marker--unknown .marker__disc) {
-    background: var(--s-color-surface-unknown-default);
-    border-color: var(--s-color-border-unknown);
-    color: var(--s-color-content-unknown);
+    background: var(--color-surface-neutral-default);
+    border-color: var(--color-border-neutral);
+    color: var(--color-content-neutral);
   }
   :global(.marker--unknown .marker__label) {
-    background: var(--s-color-surface-unknown-translucid);
-    border: var(--border-width-default) dashed var(--s-color-border-unknown);
-    color: var(--s-color-content-unknown);
+    background: var(--color-surface-neutral-translucent);
+    border: var(--border-width-default) dashed var(--color-border-neutral);
+    color: var(--color-content-neutral);
   }
   /* Selecionado: o nome fica azul (o pino azul é a camada .marker__pin). */
   :global(.marker--selected .marker__label) {
-    background: var(--s-color-surface-accent-translucid);
-    border-color: var(--s-color-border-accent);
-    color: var(--s-color-content-accent);
+    background: var(--color-surface-accent-translucent);
+    border-color: var(--color-border-accent);
+    color: var(--color-content-accent);
   }
 </style>

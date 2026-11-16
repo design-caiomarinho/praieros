@@ -75,10 +75,10 @@ const dataJson = JSON.stringify({
 <style is:global>
   body {
     margin: 0;
-    background: var(--s-color-surface-default);
-    color: var(--s-color-content-primary);
-    font-family: var(--s-typo-body-medium-family);
-    font-size: var(--s-typo-body-medium-size);
+    background: var(--color-surface-default);
+    color: var(--color-content-primary);
+    font-family: var(--typo-body-medium-family);
+    font-size: var(--typo-body-medium-size);
   }
   .ov {
     display: grid;
@@ -87,8 +87,7 @@ const dataJson = JSON.stringify({
   }
   .ov__side {
     overflow-y: auto;
-    border-right: var(--border-width-default) solid
-      var(--s-color-border-default);
+    border-right: var(--border-width-default) solid var(--color-border-default);
   }
   .ov__head {
     position: sticky;
@@ -98,24 +97,23 @@ const dataJson = JSON.stringify({
     flex-direction: column;
     gap: var(--space-stack-xs);
     padding: var(--space-inset-md);
-    background: var(--s-color-surface-default);
-    border-bottom: var(--border-width-default) solid
-      var(--s-color-border-default);
+    background: var(--color-surface-default);
+    border-bottom: var(--border-width-default) solid var(--color-border-default);
   }
   .ov__head h1 {
     margin: 0;
-    font-family: var(--s-typo-heading-medium-family);
-    font-weight: var(--s-typo-heading-medium-weight);
-    font-size: var(--s-typo-heading-medium-size);
+    font-family: var(--typo-heading-medium-family);
+    font-weight: var(--typo-heading-medium-weight);
+    font-size: var(--typo-heading-medium-size);
   }
   .ov__map {
     min-width: 0;
-    background: var(--s-color-surface-accent-soft);
+    background: var(--color-surface-accent-soft);
   }
   .ov__note {
     margin: 0;
-    color: var(--s-color-content-secondary);
-    font-size: var(--s-typo-body-small-size);
+    color: var(--color-content-secondary);
+    font-size: var(--typo-body-small-size);
   }
   .ov__filters {
     display: grid;
@@ -123,13 +121,13 @@ const dataJson = JSON.stringify({
     margin: 0;
     padding: 0;
     border: 0;
-    font-size: var(--s-typo-body-small-size);
+    font-size: var(--typo-body-small-size);
   }
   .ov__group {
     margin: 0;
     padding: var(--space-inset-xs) var(--space-inset-md);
-    background: var(--s-color-surface-strong);
-    font-weight: var(--s-typo-label-medium-weight);
+    background: var(--color-surface-muted);
+    font-weight: var(--typo-label-medium-weight);
   }
   .ov__item {
     display: grid;
@@ -137,8 +135,7 @@ const dataJson = JSON.stringify({
     width: 100%;
     padding: var(--space-inset-sm) var(--space-inset-md);
     border: 0;
-    border-bottom: var(--border-width-default) solid
-      var(--s-color-border-default);
+    border-bottom: var(--border-width-default) solid var(--color-border-default);
     background: none;
     color: inherit;
     font: inherit;
@@ -146,12 +143,12 @@ const dataJson = JSON.stringify({
     cursor: pointer;
   }
   .ov__item:hover {
-    background: var(--s-color-surface-hover);
+    background: var(--color-surface-hover);
   }
   .ov__item[aria-pressed='true'] {
-    border-left: var(--border-width-accent) solid var(--s-color-border-accent);
+    border-left: var(--border-width-accent) solid var(--color-border-accent);
   }
   .ov__item:focus-visible {
-    outline: var(--border-width-accent) solid var(--s-color-border-focus);
+    outline: var(--border-width-accent) solid var(--color-border-focus);
   }
 </style>

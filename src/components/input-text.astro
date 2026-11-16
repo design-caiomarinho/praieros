@@ -53,11 +53,11 @@ const {
     gap: var(--space-gap-xs);
     width: 100%;
     /* 48 = 2 x inset/sm + 24, sem token próprio. */
-    height: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
+    height: var(--size-control-md);
     padding: var(--space-inset-xs) var(--space-inset-md);
-    border: var(--border-width-default) solid var(--s-color-border-default);
-    background: var(--s-color-surface-default);
-    color: var(--s-color-content-secondary);
+    border: var(--border-width-default) solid var(--color-border-default);
+    background: var(--color-surface-default);
+    color: var(--color-content-secondary);
     cursor: text;
   }
   .field__input {
@@ -68,15 +68,15 @@ const {
     outline: 0;
     background: transparent;
     appearance: none;
-    color: var(--s-color-content-primary);
-    font-family: var(--s-typo-body-medium-family);
-    font-weight: var(--s-typo-body-medium-weight);
-    font-size: var(--s-typo-body-medium-size);
-    line-height: var(--s-typo-body-medium-line);
-    letter-spacing: var(--s-typo-body-medium-spacing);
+    color: var(--color-content-primary);
+    font-family: var(--typo-body-medium-family);
+    font-weight: var(--typo-body-medium-weight);
+    font-size: var(--typo-body-medium-size);
+    line-height: var(--typo-body-medium-line);
+    letter-spacing: var(--typo-body-medium-spacing);
   }
   .field__input::placeholder {
-    color: var(--s-color-content-muted);
+    color: var(--color-content-muted);
     opacity: 1;
   }
   .field__input::-webkit-search-cancel-button {
@@ -88,36 +88,36 @@ const {
   .field:focus-within,
   .field[data-state='hover'],
   .field[data-state='focus'] {
-    background: var(--s-color-surface-hover);
-    border-color: var(--s-color-border-accent);
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-accent);
   }
   /* digitando: fundo padrão, borda de destaque */
   .field:focus-within:has(.field__input:not(:placeholder-shown)),
   .field[data-state='typing'] {
-    background: var(--s-color-surface-default);
-    border-color: var(--s-color-border-accent);
+    background: var(--color-surface-default);
+    border-color: var(--color-border-accent);
   }
   /* anel de foco: só quando o foco chegou por Tab (data-ring, ver script) */
   .field[data-ring],
   .field[data-state='focus'] {
-    outline: var(--border-width-default) solid var(--s-color-border-focus);
+    outline: var(--border-width-default) solid var(--color-border-focus);
     outline-offset: calc(
       var(--primitives-spacing-4) - var(--border-width-default)
     );
   }
 
   .field[data-disabled] {
-    background: var(--s-color-surface-disabled);
-    border-color: var(--s-color-border-disabled);
-    color: var(--s-color-content-disabled);
+    background: var(--color-surface-disabled);
+    border-color: var(--color-border-disabled);
+    color: var(--color-content-disabled);
     cursor: not-allowed;
   }
   .field__input:disabled {
-    color: var(--s-color-content-disabled);
+    color: var(--color-content-disabled);
     cursor: not-allowed;
   }
   .field__input:disabled::placeholder {
-    color: var(--s-color-content-disabled);
+    color: var(--color-content-disabled);
   }
 </style>
 
