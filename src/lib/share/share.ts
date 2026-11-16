@@ -81,7 +81,7 @@ export function sharePreview(
     Partial<Pick<BeachModel, 'referenceBulletin'>>,
   current: BulletinRef | null,
 ): SharePreview {
-  const title = `${beach.name} · Praieros`;
+  const title = `${beach.name} - Praieros`;
   const ref = beach.referenceBulletin ?? current;
   if (!ref) {
     return { title, description: 'Balneabilidade das praias de Salvador.' };
@@ -97,8 +97,8 @@ export function sharePreview(
   }
   const bulletin = noResult && current ? current : ref;
   parts.push(
-    `Boletim nº ${bulletinNumber(bulletin)} · emitido em ${formatDate(bulletin.issuedAt)}`,
+    `Boletim nº ${bulletinNumber(bulletin)} - emitido em ${formatDate(bulletin.issuedAt)}`,
     'Fonte: Inema',
   );
-  return { title, description: parts.join(' · ') };
+  return { title, description: parts.join(' - ') };
 }

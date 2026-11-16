@@ -817,3 +817,7 @@ Substitui o "pendente" da sessão 16 e o "desabilitado" da sessão 24c para **Co
 
 - **Migração feita (2026-11-16):** o site está em https://praieros.design-caiomarinho.workers.dev (Workers Builds, projeto `praieros`, `wrangler.jsonc` com `assets.directory: ./dist`). Foi preciso: `NODE_VERSION=24.19.0` e `SITE_URL` como **Build variables** (as de Runtime não valem para o build) e o `wrangler.jsonc`. Conferido no endereço real: cabeçalhos do `_headers` (CSP, cache imutável em `/_astro/*`), canonical, og:image, robots.txt, sitemap e praia `noindex` com o endereço novo; mapa e marcadores carregam sem erro de CSP. O build roda a cada push no `main`.
 - **Pendente:** desativar o GitHub Pages (Settings → Pages) e passar o `deploy-pages.yml` para só manual; tirar a chamada `gh workflow run deploy-pages.yml` do `ingest-bulletins.yml` depois de ver um build automático após uma ingestão; página 404 (o Cloudflare serve o texto padrão; com a página pronta, usar `assets.not_found_handling: "404-page"` no `wrangler.jsonc`); testar a prévia no WhatsApp com o link novo.
+
+## Sessão 42: títulos e descrições das páginas (Caio)
+
+- **Padrão:** hífen (`-`) no lugar do ponto médio (·) nos textos de `<title>`, descrição e prévia de compartilhamento. Home: título `Praieros - Balneabilidade em Salvador`. Praia: título `{praia} - Praieros`, descrição `{Status} - Boletim nº N/AAAA - emitido em dd/mm/aaaa - Fonte: Inema`. A interface (chips, rodapés) segue o Figma, com o ponto médio.

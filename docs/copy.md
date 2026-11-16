@@ -22,12 +22,12 @@
 
 ## Página inicial (sessão 6)
 
-| Onde         | Texto                                                                                                                                       |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Título       | Praieros · Balneabilidade das praias de Salvador                                                                                            |
-| Descrição    | Boletim de balneabilidade do Inema para as praias de Salvador (BA), apresentado de forma clara. Site independente, sem vínculo com o Inema. |
-| Região mapa  | Mapa das praias (aria-label)                                                                                                                |
-| Região ficha | Ficha da praia (aria-label)                                                                                                                 |
+| Onde         | Texto                                                                                                                                        |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Título       | Praieros - Balneabilidade em Salvador                                                                                                        |
+| Descrição    | Boletim de balneabilidade do Inema para as praias de Salvador (BA), apresentado de forma clara - site independente, sem vínculo com o Inema. |
+| Região mapa  | Mapa das praias (aria-label)                                                                                                                 |
+| Região ficha | Ficha da praia (aria-label)                                                                                                                  |
 
 ## Mapa (sessão 8a)
 
@@ -138,6 +138,6 @@ Sessão 11: "Posição aproximada" e "Posição muito aproximada" (linhas acima)
 | Aviso após copiar (pílula sobre o mapa) | Link copiado com sucesso.                                                                                                   | **Provisório**                                      |
 | Cópia negada (pílula, ícone de alerta)  | Não foi possível copiar o link                                                                                              | **Provisório**                                      |
 | Mensagem do WhatsApp                    | Confira a balneabilidade de {praia} no Praieros: {link}                                                                     | **Provisório** (sem status nem data, R6)            |
-| Prévia, título                          | {praia} · Praieros                                                                                                          | **Provisório**                                      |
-| Prévia, descrição                       | {Status} · Boletim nº N/AAAA · emitido em dd/mm/aaaa · Fonte: Inema (desatualizada: "{Status} · Boletim desatualizado · …") | **Provisório**, status e data do momento da geração |
+| Prévia, título                          | {praia} - Praieros                                                                                                          | **Provisório**                                      |
+| Prévia, descrição                       | {Status} - Boletim nº N/AAAA - emitido em dd/mm/aaaa - Fonte: Inema (desatualizada: "{Status} - Boletim desatualizado - …") | **Provisório**, status e data do momento da geração |
 | Rótulos acessíveis                      | Voltar · Fechar compartilhamento · Compartilhar praia: {praia} · Mapa com o ponto da praia {praia}                          | Derivados (não visíveis)                            |

@@ -93,9 +93,9 @@ describe('sharePreview', () => {
       },
       current,
     );
-    expect(p.title).toBe('Porto da Barra · Praieros');
+    expect(p.title).toBe('Porto da Barra - Praieros');
     expect(p.description).toBe(
-      'Própria · Boletim nº 37/2026 · emitido em 06/11/2026 · Fonte: Inema',
+      'Própria - Boletim nº 37/2026 - emitido em 06/11/2026 - Fonte: Inema',
     );
   });
   it('R3: desatualizada mantém o último status, avisa e usa a data da última aparição', () => {
@@ -110,7 +110,7 @@ describe('sharePreview', () => {
       current,
     );
     expect(p.description).toBe(
-      'Imprópria · Boletim desatualizado · Boletim nº 36/2026 · emitido em 29/10/2026 · Fonte: Inema',
+      'Imprópria - Boletim desatualizado - Boletim nº 36/2026 - emitido em 29/10/2026 - Fonte: Inema',
     );
   });
   it.each(['never', 'too-old', 'reference'] as const)(
@@ -127,7 +127,7 @@ describe('sharePreview', () => {
         current,
       );
       expect(p.description).toBe(
-        'Sem resultado · Boletim nº 37/2026 · emitido em 06/11/2026 · Fonte: Inema',
+        'Sem resultado - Boletim nº 37/2026 - emitido em 06/11/2026 - Fonte: Inema',
       );
     },
   );
