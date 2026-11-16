@@ -36,10 +36,14 @@ const devPages = {
 
 // https://astro.build/config
 export default defineConfig({
-  // GitHub Pages do repositório (https://design-caiomarinho.github.io/praieros/): o prefixo só vale
-  // no build do GitHub Actions; em desenvolvimento e em build local o site continua na raiz.
-  site: 'https://design-caiomarinho.github.io',
-  base: process.env.GITHUB_ACTIONS ? '/praieros' : '/',
+  // Endereço publicado. Padrão: GitHub Pages do repositório
+  // (https://design-caiomarinho.github.io/praieros/). Em outro ambiente (ex.: Cloudflare Pages com
+  // domínio próprio) basta definir SITE_URL (ex.: https://praieros.com.br) e BASE_PATH (ex.: /).
+  // Sem BASE_PATH, o prefixo /praieros só vale no build do GitHub Actions; em desenvolvimento e em
+  // build local o site fica na raiz. Ver docs/maintenance.md.
+  site: process.env.SITE_URL ?? 'https://design-caiomarinho.github.io',
+  base:
+    process.env.BASE_PATH ?? (process.env.GITHUB_ACTIONS ? '/praieros' : '/'),
   integrations: [devPages],
   vite: {
     // MapLibre 6 acha o worker pelo próprio caminho; o pré-empacotamento do Vite o quebra.

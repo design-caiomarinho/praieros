@@ -83,6 +83,7 @@ Layout: desktop = mapa + painel lateral; mobile = mapa + folha inferior. Medidas
   - tipos: `npm run check` (astro check)
   - build: `npm run build`
   - docs dos tokens: `npm run tokens:docs` (gera `docs/tokens.md`; não editar à mão)
+  - ícones do site: `npm run icons:build` (favicon, apple-touch, manifesto; só quando o logo mudar)
 
 Tokens de design: `tokens/tokens.json` (fonte única). Não usar valores soltos de cor, espaçamento ou tipografia: sempre token.
 
@@ -142,3 +143,4 @@ Sessão 32: tela de detalhes (Figma 217:6800): cabeçalho "Detalhes" como o da b
 Sessão 36: Compartilhar praia (Figma 126:5695): painel como vista da ficha, link `/praia/<slug>/` com prévia `og:*` e redirecionamento para `/?praia=`, imagens em `public/share/` (`npm run share:images`), ícone `copy`. Pendentes: Termos do OpenFreeMap; testar a prévia no WhatsApp após publicar. Ver `docs/decisions.md`, sessão 36.
 Sessão 37: Compartilhar site (Figma 126:8129, painel pelo botão da navbar, sem esqueleto) e NoticePill com barra de progresso, aviso no topo no mobile (compartilhar site). Ver `docs/decisions.md`, sessão 37.
 Sessão 38: tokens renomeados (sem `s-`, `translucent`, `neutral`, escala `space.inline`), sombra excluída, `tokens/code.json` (só código) separado de `tokens/tokens.json` (Figma). Ver `docs/decisions.md`, sessão 38.
+Sessão 39: SEO, favicon e miniatura: meta tags num lugar só (`src/lib/seo/`, `base-layout`), `og.jpg` do Figma, ícones do símbolo do logo (`icons:build`), páginas de praia `noindex`, `robots.txt`, `sitemap.xml`, JSON-LD, `SITE_URL`/`BASE_PATH`. Ver `docs/decisions.md`, sessão 39.

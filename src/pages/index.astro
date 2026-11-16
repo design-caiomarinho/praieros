@@ -23,6 +23,7 @@ import OutdatedBanner from '../components/outdated-banner.astro';
 import NoResultBanner from '../components/no-result-banner.astro';
 import { loadSite } from '../lib/site/load-site.ts';
 import { toMarkers } from '../lib/site/map-markers.ts';
+import { websiteJsonLd } from '../lib/seo/meta.ts';
 import {
   bulletinNumber,
   formatDate,
@@ -75,12 +76,18 @@ const sourceBulletin = site.current
       pdfUrl: pdfUrls.get(bulletinNumber(site.current)),
     }
   : null;
+const pageTitle = 'Praieros · Balneabilidade das praias de Salvador';
+const pageDescription =
+  'Boletim de balneabilidade do Inema para as praias de Salvador (BA), apresentado de forma clara. Site independente, sem vínculo com o Inema.';
+const siteHome = new URL(import.meta.env.BASE_URL, Astro.site).href;
 ---
 
-<BaseLayout
-  title="Praieros · Balneabilidade das praias de Salvador"
-  description="Boletim de balneabilidade do Inema para as praias de Salvador (BA), apresentado de forma clara. Site independente, sem vínculo com o Inema."
->
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={websiteJsonLd({ url: siteHome, description: pageDescription })}
+  />
   <div class="app">
     <AppHeader searchId="search" />
     <div class="stage" id="stage">

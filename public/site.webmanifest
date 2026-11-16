@@ -1,0 +1,23 @@
+{
+  "name": "Praieros",
+  "short_name": "Praieros",
+  "description": "Balneabilidade das praias de Salvador (BA), a partir do boletim do Inema. Site independente.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#fcfdfd",
+  "background_color": "#fcfdfd",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
