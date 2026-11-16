@@ -9,7 +9,7 @@
 
 ## Hospedagem no Cloudflare Pages
 
-Situação: **preparado, ainda não migrado.** O site continua no GitHub Pages até Caio criar a conta no Cloudflare. A migração é feita uma vez, em `*.pages.dev`; o domínio próprio entra depois.
+Situação: **no ar em https://praieros.design-caiomarinho.workers.dev** (Workers Builds, build a cada push na `main`). O GitHub Pages ainda não foi desativado. O domínio próprio entra depois: trocar o `SITE_URL` (Build variables) e rodar um novo build.
 
 ### Configurar (uma vez, no painel do Cloudflare)
 

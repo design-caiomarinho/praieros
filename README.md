@@ -6,7 +6,7 @@ Site independente que mostra o Boletim de Balneabilidade do Inema para as praias
 
 > **Aviso:** o Praieros não tem vínculo com o Inema e não é um canal oficial. Os dados vêm do boletim público do Inema. Para decisões importantes, consulte sempre o [boletim original](https://www.ba.gov.br/inema/iniciativas/qualidade-das-praias).
 
-**Site:** https://design-caiomarinho.github.io/praieros/
+**Site:** https://praieros.design-caiomarinho.workers.dev/
 
 ## O problema
 
@@ -73,7 +73,7 @@ An independent website that shows the water quality bulletin from Inema for the 
 
 > **Notice:** Praieros is not connected to Inema and is not an official channel. The data comes from Inema's public bulletin. For important decisions, always check the [original bulletin](https://www.ba.gov.br/inema/iniciativas/qualidade-das-praias).
 
-**Website:** https://design-caiomarinho.github.io/praieros/
+**Website:** https://praieros.design-caiomarinho.workers.dev/
 
 ## The problem
 
