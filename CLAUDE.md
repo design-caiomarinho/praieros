@@ -18,7 +18,7 @@ Idioma do produto: pt-BR. Código, commits e nomes técnicos: inglês.
 - O PDF tem texto extraível (não é imagem). Cada ponto traz código (ex.: `SSA IN 100`), local da coleta e categoria (Própria | Imprópria). As colunas são inferidas pela ordem do texto: **validar a leitura** (campos obrigatórios, nº de pontos, categoria reconhecida) antes de gravar. Confirmar na Fase 1 que o código do ponto é um identificador estável entre boletins.
 - **Histórico é nosso:** cada boletim lido válido é salvo em `data/bulletins/` (JSON versionado no Git). R3 depende de comparar com o anterior. Se a leitura falhar, não sobrescrever (D4).
 - A leitura roda em tarefa agendada (GitHub Actions); novo boletim válido dispara novo build do site.
-- Pendente: confirmar termos de uso do site para reutilização e leitura automática.
+- Termos de uso do site (lidos na sessão 40): sem licença aberta nem permissão explícita de reuso; decisão de Caio: não pedir autorização, risco aceito (ver `docs/decisions.md`, sessão 40).
 
 ## Modelo de dados
 
@@ -74,7 +74,7 @@ Layout: desktop = mapa + painel lateral; mobile = mapa + folha inferior. Medidas
 
 - **Astro + TypeScript**, estilos em **CSS puro com variáveis** (tokens), mapa com **MapLibre GL**. Sem banco de dados nem servidor: dados em JSON versionado, hospedagem estática.
 - Interatividade (mapa, busca) em componentes isolados; o resto é HTML/CSS estático. Evitar dependências novas sem registrar em `docs/decisions.md`.
-- Pendente: provedor de tiles do mapa (plano gratuito e regras de uso).
+- Tiles: OpenFreeMap (termos lidos, uso liberado, atribuição obrigatória; ver `docs/decisions.md`, sessão 40).
 - Comandos:
   - instalar: `npm install`
   - rodar: `npm run dev`
