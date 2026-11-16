@@ -1,0 +1,9 @@
+{
+  // Publicação no Cloudflare (Workers Builds: `npx wrangler deploy`). Só arquivos estáticos:
+  // a pasta dist é servida como está, com os cabeçalhos de public/_headers.
+  "name": "praieros",
+  "compatibility_date": "2026-11-16",
+  "assets": {
+    "directory": "./dist",
+  },
+}

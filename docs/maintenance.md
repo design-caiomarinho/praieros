@@ -15,9 +15,9 @@ Situação: **preparado, ainda não migrado.** O site continua no GitHub Pages a
 
 1. Criar a conta (plano gratuito) em https://dash.cloudflare.com e abrir **Workers & Pages → Create → Pages → Connect to Git**.
 2. Autorizar o GitHub e escolher o repositório `praieros`; branch de produção: `main`.
-3. Build: framework **Astro** (ou "None"), comando `npm run build`, pasta de saída `dist`.
-4. Variáveis de ambiente (Production e Preview):
-   - `NODE_VERSION` = `22` (o `package.json` pede Node `>=22.23.4` para rodar `node x.ts`; se o build falhar por versão, usar `24`).
+3. Build: comando `npm run build`. O painel novo cria um projeto **Workers** (deploy command `npx wrangler deploy`); o arquivo `wrangler.jsonc` da raiz diz que a pasta `dist` é o site, e o nome (`praieros`) deve ser igual ao do projeto no painel.
+4. Variáveis em **Settings → Builds → Build variables and secrets** (não em "Runtime variables", que só vale depois do build):
+   - `NODE_VERSION` = `24.19.0` (a versão usada nos testes locais). **Não usar só `22`:** o Cloudflare resolve para uma 22.x antiga e o Astro 7 exige Node `>=22.23.4`, então o build falha.
    - `SITE_URL` = o endereço do projeto (ex.: `https://praieros.pages.dev`; depois, o domínio próprio).
    - **Não** definir `BASE_PATH` nem `GITHUB_ACTIONS`: sem eles o site fica na raiz (`/`).
 5. Salvar e rodar o primeiro build. Conferir o endereço `https://<projeto>.pages.dev`.
