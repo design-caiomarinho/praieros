@@ -1,8 +1,8 @@
-name: Publicar no GitHub Pages
+name: Publicar no GitHub Pages (backup, só manual)
 
+# O site está no Cloudflare (docs/maintenance.md). Este workflow ficou só como backup: roda apenas
+# à mão (Actions > Run workflow) e exige o GitHub Pages ativo em Settings > Pages.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

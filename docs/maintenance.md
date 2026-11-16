@@ -32,7 +32,7 @@ Situação: **no ar em https://praieros.design-caiomarinho.workers.dev** (Worker
 
 ### Ingestão e novo build
 
-O workflow de ingestão faz commit direto na `main`. O Cloudflare reage ao push do GitHub (evento do próprio GitHub, não a outro workflow), então **o build sai sem chamar nada**: a limitação do `GITHUB_TOKEN` não vale aqui. Depois de confirmar isso uma vez (esperar um boletim novo ou rodar o workflow à mão), remover do `ingest-bulletins.yml` o passo `gh workflow run deploy-pages.yml` e a permissão `actions: write`.
+O workflow de ingestão faz commit direto na `main`. O Cloudflare reage ao push do GitHub, então o build deveria sair sem chamar nada (a chamada ao deploy antigo foi removida do `ingest-bulletins.yml`). **Conferir no próximo boletim novo** (em Deployments, deve aparecer um build do commit `data: boletim…`). Se não aparecer, criar um **Deploy Hook** (Settings → Builds → Deploy Hooks), guardar a URL como secret do GitHub (`CLOUDFLARE_DEPLOY_HOOK`) e fazer um `curl -X POST` nela depois do push, no passo de ingestão.
 
 ### Desligar o GitHub Pages (decisão de Caio)
 
