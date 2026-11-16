@@ -7,11 +7,14 @@ import SearchPanel from '../components/search-panel.astro';
 import ClassificationPanel from '../components/classification-panel.astro';
 import SourcePanel from '../components/source-panel.astro';
 import SharePanel from '../components/share-panel.astro';
+import ShareSitePanel from '../components/share-site-panel.astro';
 import NoticePill from '../components/notice-pill.astro';
 import {
   shareImagePath,
   shareMessage,
   shareUrl,
+  siteShareMessage,
+  siteUrl,
   whatsappUrl,
 } from '../lib/share/share.ts';
 import { classificationFor } from '../lib/site/classification.ts';
@@ -58,6 +61,7 @@ const panels = site.beaches
       },
     ];
   });
+const siteShareLink = siteUrl(origin, base);
 const searchResults = toSearchResults(site.beaches, slugsOnMap);
 const currentBulletin = site.current
   ? {
@@ -98,7 +102,7 @@ const sourceBulletin = site.current
            entram e saem dela, para o leitor de tela anunciar. -->
       <div class="notices" id="notices" role="status">
         <div id="notice-copied" hidden>
-          <NoticePill icon="check" text="Link copiado com sucesso." />
+          <NoticePill icon="info" text="Link copiado com sucesso." />
         </div>
         <div id="notice-copy-failed" hidden>
           <NoticePill icon="warning" text="Não foi possível copiar o link" />
@@ -161,6 +165,13 @@ const sourceBulletin = site.current
           <!-- Fonte e como ler: só desktop; ocupa o lugar da ficha/busca enquanto está aberta. -->
           <div class="source-slot" id="source-slot" hidden>
             <SourcePanel bulletin={sourceBulletin} />
+          </div>
+          <!-- Compartilhar o site: aberto pelo botão do cabeçalho; ocupa o lugar da ficha/busca. -->
+          <div class="share-site-slot" id="share-site-slot" hidden>
+            <ShareSitePanel
+              url={siteShareLink}
+              whatsappHref={whatsappUrl(siteShareMessage(siteShareLink))}
+            />
           </div>
           <div class="sidebar__ghosts" aria-hidden="true"></div>
         </div>
@@ -346,6 +357,8 @@ const sourceBulletin = site.current
       source.hidden = true;
       panelBeforeSource = false;
     }
+    shareSiteSlot.hidden = true;
+    panelBeforeShareSite = false;
     if (!panel.hidden) close();
     if (marked || lastSlug) clearMark();
   });
@@ -385,38 +398,53 @@ const sourceBulletin = site.current
 
   /** Vista de onde o Compartilhar foi aberto. */
   let shareFrom: 'beach' | 'classification' = 'beach';
-  /** Quanto tempo o aviso fica (ms) e quanto o check fica no botão: o botão é só um aceno rápido. */
-  const COPY_FEEDBACK_MS = 2500;
-  const COPY_BUTTON_MS = 1200;
+  /** O check fica no botão por 3 s antes de voltar ao ícone de copiar. */
+  const COPY_BUTTON_MS = 3000;
   const noticeTimers = new Map<HTMLElement, number>();
-  /** Mostra uma pílula por um tempo; ao fim ela sai com a animação inversa. Chamar de novo reinicia. */
+  /** Mostra uma pílula com a barra de progresso do carregando do mapa: avança até 90% (tempo do
+   *  carregando), completa no tempo da faixa de aviso e então a pílula sai com a animação inversa.
+   *  Chamar de novo reinicia. */
   function flashNotice(box: HTMLElement) {
     const pill = box.firstElementChild as HTMLElement;
+    const fill = pill.querySelector<HTMLElement>('.pill__fill')!;
+    const css = getComputedStyle(pill);
+    const sweep = cssTimeMs(
+      css.getPropertyValue('--motion-duration-load-progress'),
+    );
+    const finish = cssTimeMs(css.getPropertyValue('--motion-duration-banner'));
+    const out = cssTimeMs(css.getPropertyValue('--motion-duration-pin-label'));
     window.clearTimeout(noticeTimers.get(box));
     pill.removeAttribute('data-leaving');
     box.hidden = false;
-    const out = cssTimeMs(
-      getComputedStyle(pill).getPropertyValue('--motion-duration-pin-label'),
-    );
-    noticeTimers.set(
-      box,
-      window.setTimeout(() => {
-        if (reduceMotion.matches) return void (box.hidden = true);
+    // Reinicia a barra do zero.
+    fill.removeAttribute('style');
+    fill.style.animation = 'none';
+    void fill.offsetWidth;
+    fill.style.animation = '';
+    const later = (fn: () => void, ms: number) =>
+      noticeTimers.set(box, window.setTimeout(fn, ms));
+    later(() => {
+      if (reduceMotion.matches) return later(() => (box.hidden = true), finish);
+      const progress = getComputedStyle(fill).transform;
+      fill.style.animation = 'none';
+      fill.style.transform = progress;
+      void fill.offsetWidth;
+      fill.style.transition = `transform ${finish}ms var(--motion-easing-hover)`;
+      fill.style.transform = 'scaleX(1)';
+      later(() => {
         pill.setAttribute('data-leaving', '');
-        noticeTimers.set(
-          box,
-          window.setTimeout(() => (box.hidden = true), out || 500),
-        );
-      }, COPY_FEEDBACK_MS),
-    );
+        later(() => (box.hidden = true), out || 500);
+      }, finish);
+    }, sweep);
   }
   /** Copia o link da praia (R6: a página dela abre o estado atual). Sucesso: o ícone do botão vira
    *  check por um instante e aparece "Link copiado com sucesso."; falha: aviso de que não foi possível. */
   async function copyShareLink(trigger: Element | null) {
-    const section = trigger?.closest('.layout-share section');
+    const section = trigger?.closest('section[data-share-url]');
     const url = section?.getAttribute('data-share-url');
     const button = trigger?.querySelector<HTMLElement>('button');
     if (!url || !button) return;
+    placeNotices(trigger);
     try {
       await navigator.clipboard.writeText(url);
     } catch {
@@ -432,6 +460,12 @@ const sourceBulletin = site.current
       }, COPY_BUTTON_MS),
     );
     flashNotice(document.getElementById('notice-copied')!);
+  }
+  /** O aviso do site fica no topo no mobile (pedido de Caio); o da praia, embaixo. */
+  function placeNotices(trigger: Element | null) {
+    document
+      .getElementById('notices')
+      ?.toggleAttribute('data-top', !!trigger?.closest('#share-site-slot'));
   }
 
   // Os cartões dos pontos são só visualização: quem escolhe o ponto é o pin no mapa.
@@ -495,6 +529,9 @@ const sourceBulletin = site.current
   // Fonte e como ler (desktop): ocupa o lugar da ficha/busca; voltar devolve a ficha que estava
   // aberta, fechar encerra tudo. O foco volta a quem abriu.
   const sourceSlot = document.getElementById('source-slot')!;
+  const shareSiteSlot = document.getElementById('share-site-slot')!;
+  const shell = document.getElementById('sidebar')!;
+  let panelBeforeShareSite = false;
   let sourceOpener: HTMLElement | null = null;
   let panelBeforeSource = false;
   // Aberta pelo link da ficha (fluxo do painel): só então a Fonte tem o botão de voltar. Aberta
@@ -502,6 +539,8 @@ const sourceBulletin = site.current
   let sourceFromFlow = false;
 
   function openSource(opener: HTMLElement) {
+    shareSiteSlot.hidden = true;
+    panelBeforeShareSite = false;
     // A busca sai (nunca dois painéis ao mesmo tempo).
     const search = document.getElementById('search');
     if (search && !search.hidden) {
@@ -541,6 +580,86 @@ const sourceBulletin = site.current
     target?.focus();
   }
 
+  // Compartilhar o site (navbar): ocupa o lugar da ficha/busca/Fonte, sem botão de voltar (como a
+  // Fonte aberta pela navbar); fechar encerra tudo. O foco volta ao botão do cabeçalho.
+  const shareSiteButton = document.querySelector<HTMLElement>(
+    'header [aria-controls="share-site-slot"]',
+  );
+  function openShareSite() {
+    shell.setAttribute('data-compact', ''); // antes de abrir: a câmera já mede a altura certa
+    const search = document.getElementById('search');
+    if (search && !search.hidden) {
+      document.dispatchEvent(new CustomEvent('search-dismiss'));
+    }
+    if (shareSiteSlot.hidden) {
+      sourceSlot.hidden = true;
+      panelBeforeSource = false;
+      panelBeforeShareSite = !panel.hidden;
+      panel.hidden = true;
+      syncBanner(null);
+      shareSiteSlot.hidden = false;
+    }
+    shareSiteSlot.querySelector<HTMLElement>('section')?.focus();
+  }
+  function closeShareSite() {
+    if (shareSiteSlot.hidden) return;
+    shareSiteSlot.hidden = true;
+    const hadBeach = panelBeforeShareSite && !!lastSlug;
+    panelBeforeShareSite = false;
+    if (hadBeach) {
+      close(); // fechar: encerra a ficha também (foco no marcador)
+      return;
+    }
+    shareSiteButton?.focus();
+  }
+  shareSiteButton?.addEventListener('click', () => {
+    if (shareSiteSlot.hidden) openShareSite();
+  });
+  shareSiteSlot.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    if (target.closest('[data-share-site-close]')) closeShareSite();
+    else if (target.closest('[data-share-copy]'))
+      void copyShareLink(target.closest('[data-share-copy]'));
+  });
+  // Esta é a única folha com a altura do conteúdo e sem alça de arraste (`data-compact` no
+  // sidebar, ver CSS). Sai quando o painel sai: com outro painel no lugar, na hora; ao fechar tudo,
+  // só depois da saída animada (`data-active` cai), para a folha não esticar enquanto some.
+  function syncCompact() {
+    const other = ['search', 'panel', 'source-slot'].some(
+      (id) => !document.getElementById(id)!.hidden,
+    );
+    shell.toggleAttribute(
+      'data-compact',
+      !shareSiteSlot.hidden ||
+        (shell.hasAttribute('data-active') &&
+          !other &&
+          shell.hasAttribute('data-compact')),
+    );
+  }
+  [
+    shareSiteSlot,
+    panel,
+    sourceSlot,
+    document.getElementById('search')!,
+  ].forEach((el) =>
+    new MutationObserver(syncCompact).observe(el, {
+      attributes: true,
+      attributeFilter: ['hidden'],
+    }),
+  );
+  new MutationObserver(syncCompact).observe(shell, {
+    attributes: true,
+    attributeFilter: ['data-active'],
+  });
+  // O cabeçalho e o botão acompanham (vão sob o botão de compartilhar; aria-expanded na hora).
+  new MutationObserver(() => {
+    header?.toggleAttribute('data-share-open', !shareSiteSlot.hidden);
+    shareSiteButton?.setAttribute(
+      'aria-expanded',
+      String(!shareSiteSlot.hidden),
+    );
+  }).observe(shareSiteSlot, { attributes: true, attributeFilter: ['hidden'] });
+
   document.addEventListener('click', (e) => {
     const link = (e.target as Element).closest<HTMLElement>('a[href="#fonte"]');
     if (!link) return;
@@ -561,10 +680,14 @@ const sourceBulletin = site.current
   map.addEventListener('marker-select', () => {
     sourceSlot.hidden = true;
     panelBeforeSource = false;
+    shareSiteSlot.hidden = true;
+    panelBeforeShareSite = false;
   });
   document.addEventListener('search-open', () => {
     sourceSlot.hidden = true;
     panelBeforeSource = false;
+    shareSiteSlot.hidden = true;
+    panelBeforeShareSite = false;
   });
 
   // Link compartilhado (R6): `?praia=<slug>` abre a ficha da praia, sempre com o estado atual.
@@ -606,6 +729,7 @@ const sourceBulletin = site.current
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (!sourceSlot.hidden) return closeSource(sourceFromFlow);
+    if (!shareSiteSlot.hidden) return closeShareSite();
     if (!panel.hidden) close();
     else if (marked) clearMark();
   });
@@ -624,6 +748,7 @@ const sourceBulletin = site.current
     justify-content: center;
     pointer-events: none;
   }
+  /* Compartilhar o site no mobile: o aviso vai para o topo, a 16 px da navbar. */
   .notices > [hidden] {
     display: none;
   }
@@ -634,7 +759,11 @@ const sourceBulletin = site.current
   }
   @media (max-width: 1023px) {
     .notices {
-      bottom: calc(60% + var(--space-inset-lg));
+      bottom: var(--space-inset-md);
+    }
+    .notices[data-top] {
+      top: var(--space-inset-md);
+      bottom: auto;
     }
   }
   .app {
@@ -723,9 +852,23 @@ const sourceBulletin = site.current
     .sidebar[data-expanded] {
       transform: translateY(var(--primitives-spacing-20));
     }
+    /* Compartilhar o site: folha com a altura do conteúdo, colada embaixo e sem alça de arraste
+       (Figma de Caio). */
+    .sidebar[data-compact] {
+      top: auto;
+      height: auto;
+      transform: none;
+    }
+    .sidebar[data-compact] .sidebar__viewport {
+      position: relative;
+      inset: auto;
+    }
+    .sidebar[data-compact] .sidebar__viewport :global(.sidebar__handle) {
+      display: none;
+    }
     .sidebar[data-expanded]
       .sidebar__viewport
-      :global(:is(#panel, #search, #source-slot)) {
+      :global(:is(#panel, #search, #source-slot, #share-site-slot)) {
       padding-bottom: var(--primitives-spacing-20);
     }
     /* Sem rolagem interna na posição de origem nem enquanto a folha se move: o conteúdo só rola com a
@@ -894,6 +1037,19 @@ const sourceBulletin = site.current
       position: absolute;
       inset: 0;
     }
+    /* Compartilhar o site: painel com a altura do conteúdo, no topo (Figma 126:8129), com a linha
+       de baixo. */
+    .sidebar[data-compact] {
+      bottom: auto;
+    }
+    .sidebar[data-compact] .sidebar__viewport {
+      position: relative;
+      inset: auto;
+    }
+    .sidebar[data-compact] .share-site-slot :global(section) {
+      border-bottom: var(--border-width-default) solid
+        var(--s-color-border-default);
+    }
     @media (prefers-reduced-motion: reduce) {
       .sidebar,
       .sidebar[data-open] {
@@ -937,7 +1093,7 @@ const sourceBulletin = site.current
         var(--motion-easing-panel) var(--motion-delay-panel-surface-close);
     }
     .stage:has(.sidebar[data-open]) :global(.zoom) {
-      right: calc(var(--size-panel-width) + var(--space-inset-lg));
+      right: calc(var(--size-panel-width) + var(--space-inset-md));
       transition-delay: var(--motion-delay-panel-surface);
       transition-timing-function: var(--motion-easing-panel);
     }
@@ -985,10 +1141,12 @@ const sourceBulletin = site.current
   }
   /* Fonte e como ler: mobile = folha inferior (60% do palco, rola por dentro), como a ficha;
      desktop = à direita como a ficha. */
-  .source-slot {
+  .source-slot,
+  .share-site-slot {
     display: none;
   }
-  .source-slot:not([hidden]) {
+  .source-slot:not([hidden]),
+  .share-site-slot:not([hidden]) {
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -996,12 +1154,18 @@ const sourceBulletin = site.current
     overflow: hidden;
     background: var(--s-color-surface-default);
   }
-  .source-slot :global(section) {
+  .source-slot :global(section),
+  .sidebar[data-compact] .share-site-slot:not([hidden]) {
+    position: relative;
+    inset: auto;
+  }
+  .share-site-slot :global(section) {
     flex: 1 1 auto;
     min-height: 0;
   }
   @media (min-width: 1024px) {
-    .source-slot:not([hidden]) {
+    .source-slot:not([hidden]),
+    .share-site-slot:not([hidden]) {
       width: auto;
     }
   }

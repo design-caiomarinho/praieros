@@ -127,12 +127,20 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   // Mobile: a folha inferior cobre 60% do palco (altura definida em index.astro).
   const SHEET_RATIO = 0.6;
   const covered = () => {
-    const open = ['search', 'panel', 'source-slot'].some(
+    const open = ['search', 'panel', 'source-slot', 'share-site-slot'].some(
       (id) => !document.getElementById(id)?.hidden,
     );
     if (!open) return { right: 0, bottom: 0 };
-    if (!desktop.matches)
-      return { right: 0, bottom: root.clientHeight * SHEET_RATIO };
+    if (!desktop.matches) {
+      // Compartilhar o site: a folha tem a altura do conteúdo (data-compact).
+      const sheet = document.getElementById('sidebar');
+      return {
+        right: 0,
+        bottom: sheet?.hasAttribute('data-compact')
+          ? sheet.offsetHeight
+          : root.clientHeight * SHEET_RATIO,
+      };
+    }
     const w = parseFloat(
       getComputedStyle(document.documentElement).getPropertyValue(
         '--size-panel-width',
@@ -465,8 +473,8 @@ const markersJson = JSON.stringify(markers).replace(/</g, '\\u003c');
   /* Zoom (Figma 117:4828): pilha no canto inferior direito. */
   .zoom {
     position: absolute;
-    right: var(--space-inset-lg);
-    bottom: var(--space-inset-lg);
+    right: var(--space-inset-md);
+    bottom: var(--space-inset-md);
     display: flex;
     flex-direction: column;
     gap: var(--space-stack-xs);

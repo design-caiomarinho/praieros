@@ -12,6 +12,16 @@ function root(origin: string, base: string): string {
   return `${origin.replace(/\/+$/, '')}/${b ? `${b}/` : ''}`;
 }
 
+/** Link compartilhado do site: a raiz, que abre o mapa. */
+export function siteUrl(origin: string, base: string): string {
+  return root(origin, base);
+}
+
+/** Mensagem do WhatsApp ao compartilhar o site. */
+export function siteShareMessage(url: string): string {
+  return `Veja a balneabilidade das praias de Salvador de forma clara, no Praieros:\n${url}`;
+}
+
 /** Link compartilhado da praia: página com a prévia, que redireciona para o estado atual. */
 export function shareUrl(origin: string, base: string, slug: string): string {
   return `${root(origin, base)}praia/${encodeURIComponent(slug)}/`;

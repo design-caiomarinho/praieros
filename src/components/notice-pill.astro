@@ -2,9 +2,9 @@
 import Icon from './icon.astro';
 import type { IconName } from './icon.astro';
 
-// Aviso passageiro sobre o mapa: a pílula "Carregando o mapa…" (Figma 117:4900) com outro ícone
-// no lugar do spinner (ex.: check + "Link copiado"). Só apresentação: quem a mostra e esconde
-// (e o tempo) é index.astro; o leitor de tela anuncia pela região `role="status"` que a envolve.
+// Aviso passageiro sobre o mapa (Figma 249:3926): ícone, texto e barra de progresso embaixo, com o
+// movimento da faixa de carregando do mapa. Só apresentação: quem a mostra e esconde (e o tempo
+// da barra) é index.astro; o leitor de tela anuncia pela região `role="status"` que a envolve.
 interface Props {
   icon: IconName;
   text: string;
@@ -17,7 +17,13 @@ const { icon, text } = Astro.props;
   <span class="pill__icon">
     <Icon name={icon} size={24} />
   </span>
-  <span class="pill__text">{text}</span>
+  <div class="pill__body">
+    <span class="pill__text">{text}</span>
+    <!-- Barra de progresso: a mesma do carregando do mapa (Figma 249:3951); quem a conduz é index.astro. -->
+    <span class="pill__bar">
+      <span class="pill__fill"></span>
+    </span>
+  </div>
 </div>
 
 <style>
@@ -69,20 +75,50 @@ const { icon, text } = Astro.props;
     background: var(--s-color-surface-accent-default);
     color: var(--s-color-content-on-accent);
   }
+  .pill__body {
+    display: flex;
+    flex-direction: column;
+    border: var(--border-width-default) solid var(--s-color-border-default);
+    border-left: 0;
+  }
   .pill__text {
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    height: 56px;
+    height: 48px;
     padding: var(--space-inset-sm) var(--space-inset-md);
-    border: var(--border-width-default) solid var(--s-color-border-default);
-    border-left: 0;
-    color: var(--s-color-content-primary);
+    color: var(--s-color-content-secondary);
     font-family: var(--s-typo-body-medium-family);
     font-weight: var(--s-typo-body-medium-weight);
     font-size: var(--s-typo-body-medium-size);
     line-height: var(--s-typo-body-medium-line);
     letter-spacing: var(--s-typo-body-medium-spacing);
     white-space: nowrap;
+  }
+  /* Barra de 8 px sob o texto; o azul avança até 90% e espera (index.astro completa e some). */
+  .pill__bar {
+    display: block;
+    height: var(--primitives-spacing-8);
+    overflow: clip;
+  }
+  .pill__fill {
+    display: block;
+    height: 100%;
+    background: var(--s-color-surface-accent-default);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: pill-progress var(--motion-duration-load-progress)
+      var(--motion-easing-hover) forwards;
+  }
+  @keyframes pill-progress {
+    to {
+      transform: scaleX(0.9);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pill__fill {
+      animation: none;
+      transform: scaleX(0.9);
+    }
   }
 </style>

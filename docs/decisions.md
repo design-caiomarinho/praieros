@@ -753,3 +753,19 @@ Substitui o "pendente" da sessão 16 e o "desabilitado" da sessão 24c para **Co
 - **Botão de copiar:** o ícone `copy` dá lugar ao `check` por 1,2 s (nova prop `swapIcon` do ButtonIcon, ligada por `data-swapped`; os dois ícones ficam empilhados e o principal continua na árvore de acessibilidade, então o botão nunca perde o nome "Copiar link").
 - **Falha ao copiar:** a mesma pílula com o ícone de alerta e "Não foi possível copiar o link" (substitui mostrar o link para copiar à mão, que usava o texto removido). Leitor de tela: a região `role="status"` é fixa e as pílulas entram nela.
 - **Mobile:** os botões da ficha de compartilhamento ficam abaixo da dobra da folha de 60%; aparecem ao subir a folha (como o resto do conteúdo). Sem frame mobile no Figma; não alterado.
+- **NoticePill com barra de progresso (Figma 126:7818 / 249:3926):** ícone `info` (como o Figma, no lugar do check), texto em `content/secondary` (48 px) e, embaixo, barra de 8 px em `surface/accent/default` com o mesmo movimento da faixa de carregando do mapa: avança a 90% em `load-progress` (2,5 s, curva `hover`), completa em `banner` (800 ms) e só então a pílula sai (slide down, `pin-label`). Mesma barra na pílula de falha (premissa: o Figma só mostra a de sucesso). Chamar de novo reinicia a barra. O check no botão de copiar passa de 1,2 s para 3 s (ajuste de Caio; substitui a duração da linha acima).
+- **Posição da NoticePill:** centralizada, a 24 px do rodapé no desktop (à esquerda do sidebar) e a 16 px do rodapé da tela no mobile, por cima da folha inferior (escolha de Caio; o topo foi testado e descartado).
+
+## Sessão 37: Compartilhar site (Figma 126:8129)
+
+- **Painel** `share-site-panel.astro` (pendente de componentizar): o do compartilhar praia sem a prévia: título "Compartilhar site" (o Figma ainda diz "Compartilhar praia", sobra da tela copiada), texto de abertura, "Compartilhar via WhatsApp" e copiar. Sem seta de voltar (aberto só pela navbar, como a Fonte), só fechar.
+- **Ligação:** botão de compartilhar do cabeçalho (antes desabilitado) abre `#share-site-slot`, painel do sidebar/folha como a Fonte (`sidebar-shell.ts`, `sidebar-sheet.ts` e a câmera do mapa o conhecem). Um painel por vez; escolher pin, abrir busca/Fonte, clicar no mapa ou Esc o fecham. Fechar com uma ficha por baixo encerra a ficha (igual à Fonte pela navbar). O botão fica "desabilitado" (`data-engaged`) e o cabeçalho abre o vão sob ele (`data-share-open`).
+- **Link e mensagem:** raiz do site; mensagem provisória "Veja a balneabilidade das praias de Salvador de forma clara, no Praieros:" + link (`siteShareMessage`, testada).
+- **Pílula:** no mobile, o aviso do compartilhar site fica no topo, a 16 px da navbar (pedido de Caio); o do compartilhar praia segue embaixo. No desktop, 24 px do rodapé nos dois.
+- **Esqueleto:** o do compartilhar site não existe: o painel é só texto estático e abre sem depender do mapa (o da busca existe porque ela depende do mapa). O da prévia do compartilhar praia (imagem local, `loading="lazy"`) fica pendente.
+
+## Sessão 37b: espaçamentos desktop (Caio)
+
+- **Navbar:** padding à esquerda do logo de 24 para 16 px (`inset-md`), igual ao mobile.
+- **Controle do mapa (zoom):** 16 px da lateral e de baixo (antes 24), também com o painel aberto (16 px à esquerda do painel).
+- **Compartilhar site com altura do conteúdo:** é a única folha assim e não tem alça de arraste. No desktop, painel no topo com a altura do texto e linha embaixo; no mobile, folha colada embaixo com a altura do conteúdo (`data-compact` no sidebar). A câmera usa a altura real da folha.

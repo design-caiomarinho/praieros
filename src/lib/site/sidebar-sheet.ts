@@ -17,7 +17,7 @@ import {
   visibleScroller,
 } from './scroll-area.ts';
 
-const PANE_IDS = ['search', 'panel', 'source-slot'];
+const PANE_IDS = ['search', 'panel', 'source-slot', 'share-site-slot'];
 /** Arrasto mínimo (px) para valer como arraste (e não toque). */
 const DRAG = 10;
 /** Soltar com esta fração da altura do palco além do ponto de partida já conta como intenção. */
@@ -105,7 +105,8 @@ export function initSidebarSheet(): void {
 
   /** O ponto (clientY) está na zona de arraste e fora de botões e campos? */
   function inZone(target: EventTarget | null, y: number): boolean {
-    if (!mobile.matches || !current()) return false;
+    if (!mobile.matches || !current() || shell!.hasAttribute('data-compact'))
+      return false;
     if (target instanceof Element && target.closest('.sidebar__handle'))
       return true;
     if (target instanceof Element && target.closest(INTERACTIVE)) return false;
@@ -136,6 +137,7 @@ export function initSidebarSheet(): void {
       mobile.matches &&
       !expanded &&
       !!current() &&
+      !shell!.hasAttribute('data-compact') &&
       !(target instanceof Element && target.closest('.sidebar__handle'))
     );
   }

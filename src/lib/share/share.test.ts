@@ -6,6 +6,8 @@ import {
   shareMessage,
   sharePreview,
   shareUrl,
+  siteShareMessage,
+  siteUrl,
   slugFromSearch,
   whatsappUrl,
 } from './share.ts';
@@ -41,6 +43,18 @@ describe('links', () => {
       '/praieros/?praia=porto-da-barra',
     );
     expect(openBeachPath('/', 'porto-da-barra')).toBe('/?praia=porto-da-barra');
+  });
+});
+
+describe('compartilhar o site', () => {
+  it('o link é a raiz, com e sem prefixo', () => {
+    expect(siteUrl(ORIGIN, '/praieros')).toBe(`${ORIGIN}/praieros/`);
+    expect(siteUrl(`${ORIGIN}/`, '/')).toBe(`${ORIGIN}/`);
+  });
+  it('a mensagem leva o link e nenhum status', () => {
+    const msg = siteShareMessage('https://x/');
+    expect(msg).toContain('https://x/');
+    expect(msg).not.toMatch(/Própria|Imprópria/);
   });
 });
 

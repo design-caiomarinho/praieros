@@ -117,6 +117,16 @@ Sessão 11: "Posição aproximada" e "Posição muito aproximada" (linhas acima)
 | Botão              | Boletim original                                                                                                                                                                | Figma                                                             |
 | Rótulos acessíveis | Voltar · Fechar fonte e como ler · (abre em nova aba) nos links de crédito                                                                                                      | Derivados (não visíveis)                                          |
 
+## Compartilhar site (Figma 126:8129)
+
+| Elemento             | Texto                                                                                                                                                          | Origem                                         |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Título               | Compartilhar site                                                                                                                                              | Derivado (o Figma repete "Compartilhar praia") |
+| Texto de abertura    | O Praieros é um site independente que mostra o boletim do Inema de forma mais clara. Compartilhe para ajudar mais pessoas a se informarem antes de ir à praia. | Figma                                          |
+| Botões               | Compartilhar via WhatsApp · (ícone) Copiar link                                                                                                                | Figma                                          |
+| Mensagem do WhatsApp | Veja a balneabilidade das praias de Salvador de forma clara, no Praieros: {link}                                                                               | **Provisório**                                 |
+| Rótulos acessíveis   | Compartilhar o site · Fechar compartilhamento                                                                                                                  | Derivados                                      |
+
 ## Compartilhar praia (Figma 126:5695)
 
 | Elemento                                | Texto                                                                                                                       | Origem                                              |

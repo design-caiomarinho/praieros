@@ -1,5 +1,5 @@
 // Sidebar do desktop: uma camada azul + painel que entram da direita por cima do mapa e hospedam
-// a busca, a ficha, a Classificação e a Fonte (docs/motion.md). Quem abre e fecha cada painel
+// a busca, a ficha, a Classificação, a Fonte e o Compartilhar site (docs/motion.md). Quem abre e fecha cada painel
 // continua mexendo só no `hidden` dele; este módulo observa isso e:
 //  - abre o sidebar quando algum painel aparece e o fecha (com a saída animada) quando nenhum
 //    resta; as animações de entrada e saída são CSS (`data-open`);
@@ -15,7 +15,7 @@ import { halfwayTime } from '../map/cubic-bezier.ts';
 import { cssTimeMs } from '../map/css-time.ts';
 import { resetScroll, visibleScroller } from './scroll-area.ts';
 
-const PANE_IDS = ['search', 'panel', 'source-slot'];
+const PANE_IDS = ['search', 'panel', 'source-slot', 'share-site-slot'];
 
 export function initSidebarShell(): void {
   const shell = document.getElementById('sidebar');
@@ -28,17 +28,31 @@ export function initSidebarShell(): void {
   const ms = (name: string) =>
     cssTimeMs(getComputedStyle(shell).getPropertyValue(name));
 
-  const infoButton = document.querySelector<HTMLElement>(
-    'header a[href="#fonte"]',
-  );
-  let engageTimer: number | undefined;
-  let engagedTarget = false;
-  /** Liga/desliga a aparência de desabilitado do botão de Fonte, no tempo do painel. */
-  function engageInfo(on: boolean, wasOpen: boolean, swapping: boolean) {
-    if (on === engagedTarget || !infoButton) return;
-    engagedTarget = on;
-    window.clearTimeout(engageTimer);
-    const apply = () => infoButton.toggleAttribute('data-engaged', on);
+  // Botões do cabeçalho que abrem um painel próprio (Fonte e Compartilhar o site).
+  const engaged = new Map<
+    string,
+    { button: HTMLElement; on: boolean; timer?: number }
+  >();
+  const openers: [paneId: string, selector: string][] = [
+    ['source-slot', 'header a[href="#fonte"]'],
+    ['share-site-slot', 'header [aria-controls="share-site-slot"]'],
+  ];
+  for (const [id, selector] of openers) {
+    const button = document.querySelector<HTMLElement>(selector);
+    if (button) engaged.set(id, { button, on: false });
+  }
+  /** Liga/desliga a aparência de desabilitado do botão do painel, no tempo do painel. */
+  function engageButton(
+    id: string,
+    on: boolean,
+    wasOpen: boolean,
+    swapping: boolean,
+  ) {
+    const state = engaged.get(id);
+    if (!state || on === state.on) return;
+    state.on = on;
+    window.clearTimeout(state.timer);
+    const apply = () => state.button.toggleAttribute('data-engaged', on);
     const half = halfwayTime(
       getComputedStyle(shell!).getPropertyValue('--motion-easing-panel'),
     );
@@ -50,7 +64,7 @@ export function initSidebarShell(): void {
         ? 0
         : half * ms('--motion-duration-panel');
     if (after <= 0 || reduce.matches) apply();
-    else engageTimer = window.setTimeout(apply, after);
+    else state.timer = window.setTimeout(apply, after);
   }
 
   let closeTimer: number | undefined;
@@ -160,11 +174,14 @@ export function initSidebarShell(): void {
       const area = visibleScroller(snap.el);
       if (area) area.scrollTop = snap.scroll;
     }
-    engageInfo(
-      pane?.id === 'source-slot',
-      shell!.hasAttribute('data-open'),
-      !!pane,
-    );
+    for (const id of engaged.keys()) {
+      engageButton(
+        id,
+        pane?.id === id,
+        shell!.hasAttribute('data-open'),
+        !!pane,
+      );
+    }
     if (pane) {
       // Um fantasma parado de uma saída interrompida também dissolve.
       ghosts!
