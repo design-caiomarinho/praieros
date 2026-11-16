@@ -168,7 +168,7 @@ export async function createBeachMap(
   });
   if (bounds) map.jumpTo({ zoom: map.getZoom() + INTRO_ZOOM });
   // Crédito no mapa: só "OpenFreeMap ©" (pedido de Caio). O texto completo (OpenStreetMap
-  // contributors, OpenMapTiles) fica no painel Fonte e como ler. À esquerda para não colidir
+  // contributors, OpenMapTiles) fica no painel Fonte dos dados. À esquerda para não colidir
   // com os controles de zoom. Usa as classes do próprio MapLibre para herdar o visual.
   map.addControl(
     {

@@ -150,9 +150,12 @@ const attrs = asLink
 
   /* Revelar o texto (Figma 214:2880): a largura cresce da esquerda do botão (ancorado à direita
      no cabeçalho) de 48 px até a do conteúdo. A coluna do texto vai de 0fr a 1fr (sem medir
-     nada em JS); o texto entra por opacidade, um pouco depois, e sai primeiro. Larguras e
-     tempos reaproveitam os tokens do pin (500 ms, curva pin-hover) e do dissolve (150 ms). */
+     nada em JS); o texto desliza da direita para a esquerda (sem opacidade). Larguras e
+     tempos reaproveitam os tokens do pin (500 ms, curva pin-hover). */
   .btn-icon[data-reveal] {
+    /* O texto só aparece dentro do botão: o que passa da borda (a entrada vem da direita) é cortado
+       e nunca cobre os botões vizinhos. O contorno de foco fica fora (não é cortado). */
+    overflow: clip;
     width: auto;
     min-width: calc(var(--space-inset-sm) * 2 + var(--primitives-spacing-24));
     /* 48 fechado = borda + padding + ícone de 20: o padding lateral é o que sobra. */
@@ -170,24 +173,29 @@ const attrs = asLink
     transition: grid-template-columns var(--motion-duration-pin-hover)
       var(--motion-easing-pin-hover);
   }
-  /* Sem recorte (overflow visível): o texto não é cortado enquanto a largura abre; ele só
-     aparece por opacidade. `min-width: 0` deixa a coluna ir a 0fr mesmo com o texto maior. */
+  /* O recorte é do botão (overflow: clip lá em cima). `min-width: 0` deixa a coluna ir a 0fr mesmo
+     com o texto maior. */
   .btn-icon__reveal-clip {
     min-width: 0;
   }
+  /* Padrão do texto revelado: sem opacidade, só deslize. Em repouso o texto fica deslocado por
+     toda a sua largura, à direita, fora do botão (recortado por ele); ao revelar, desliza da direita
+     para a esquerda até o lugar, com o tempo e a curva da largura, e ao esconder faz o caminho
+     inverso. Nunca aparece fora do botão nem cobre os vizinhos. */
   .btn-icon__reveal-text {
     display: block;
+    /* Largura do conteúdo (a coluna está em 0fr): o 100% do deslocamento conta a largura do texto. */
+    width: max-content;
     padding-left: var(--space-gap-xs);
     white-space: nowrap;
-    opacity: 0;
+    translate: 100% 0;
     font-family: var(--s-typo-label-medium-family);
     font-weight: var(--s-typo-label-medium-weight);
     font-size: var(--s-typo-label-medium-size);
     line-height: var(--s-typo-label-medium-line);
     letter-spacing: var(--s-typo-label-medium-spacing);
-    /* Entrada e saída com o mesmo tempo e atraso (espelhadas). */
-    transition: opacity var(--motion-duration-dissolve)
-      var(--motion-easing-dissolve) 100ms;
+    transition: translate var(--motion-duration-pin-hover)
+      var(--motion-easing-pin-hover);
   }
   .btn-icon__reveal-text::before {
     content: attr(data-text);
@@ -199,9 +207,7 @@ const attrs = asLink
       grid-template-columns: 1fr;
     }
     .btn-icon[data-reveal][data-engaged] .btn-icon__reveal-text {
-      opacity: 1;
-      transition-delay: 100ms;
-      transition-duration: var(--motion-duration-engage);
+      translate: 0 0;
     }
     .btn-icon[data-reveal][data-engaged] .btn-icon__reveal-text::before {
       content: attr(data-text-engaged);
@@ -215,8 +221,7 @@ const attrs = asLink
     }
     .btn-icon[data-reveal]:hover:not(:disabled):not([data-engaged])
       .btn-icon__reveal-text {
-      opacity: 1;
-      transition-delay: 100ms;
+      translate: 0 0;
     }
   }
   .btn-icon[data-reveal]:focus-visible:not([data-engaged]) .btn-icon__reveal,
@@ -227,8 +232,7 @@ const attrs = asLink
     .btn-icon__reveal-text,
   .btn-icon[data-reveal][data-state]:not([data-engaged])
     .btn-icon__reveal-text {
-    opacity: 1;
-    transition-delay: 100ms;
+    translate: 0 0;
   }
   @media (prefers-reduced-motion: reduce) {
     .btn-icon__reveal,

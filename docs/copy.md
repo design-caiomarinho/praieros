@@ -11,7 +11,8 @@
 
 | Onde                                              | Texto                                                                                                                   |
 | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Botões do cabeçalho (rótulo acessível)            | Compartilhar o site · Fonte e como ler · Buscar praia                                                                   |
+| Botões do cabeçalho (rótulo acessível)            | Compartilhar o site · Fonte dos dados · Buscar praia                                                                    |
+| Botões do cabeçalho (texto revelado)              | Compartilhar · Fonte · Buscar                                                                                           |
 | Logo (link, texto oculto)                         | Praieros, página inicial                                                                                                |
 | Painel                                            | Fechar ficha da praia · Ver classificação · Compartilhar praia · Pontos de coleta · Como ler e fonte · Boletim original |
 | Chip do boletim                                   | Boletim nº X · dd/mm/aaaa                                                                                               |
@@ -104,11 +105,11 @@ Sessão 11: "Posição aproximada" e "Posição muito aproximada" (linhas acima)
 | Status (Imprópria)               | A água não atendeu ao critério definido para o banho neste ponto, de acordo com a análise feita na coleta mais recente do boletim.                                                             | **Provisório**                                                                                     |
 | Sem resultado, referência        | Não se aplica                                                                                                                                                                                  | A Classificação não é oferecida                                                                    |
 
-## Fonte e como ler (Figma 126:4345)
+## Fonte dos dados (Figma 126:4345)
 
 | Elemento           | Texto                                                                                                                                                                           | Origem                                                            |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| Título             | Fonte e como ler                                                                                                                                                                | Figma                                                             |
+| Título             | Fonte dos dados                                                                                                                                                                 | Figma                                                             |
 | Introdução         | Um jeito mais claro de ler o boletim de balneabilidade das praias de Salvador. Aqui você entende os termos do boletim e de onde vêm as informações.                             | Figma                                                             |
 | Caixa              | O Praieros é independente. Não é um canal oficial e não tem vínculo com o Inema. Para consultar o documento original, use o link do boletim.                                    | Figma                                                             |
 | Glossário          | Balneabilidade · Própria · Imprópria · Sem resultado (textos do Figma; o título do 4º termo segue a decisão da sessão 15)                                                       | Figma                                                             |

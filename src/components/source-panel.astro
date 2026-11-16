@@ -2,7 +2,7 @@
 import Button from './button.astro';
 import ButtonIcon from './button-icon.astro';
 
-// Painel "Fonte e como ler" (Figma 126:4364, desktop). Só apresentação: número, data e PDF
+// Painel "Fonte dos dados" (Figma 126:4364, desktop). Só apresentação: número, data e PDF
 // vêm do boletim atual do modelo. Voltar e fechar são ligados em index.astro.
 interface Props {
   /** Boletim atual; `null` se o modelo não tem nenhum (a linha de fonte fica sem número). */
@@ -43,7 +43,7 @@ const mapCredits = [
 ];
 ---
 
-<section class="panel" aria-label="Fonte e como ler" tabindex="-1">
+<section class="panel" aria-label="Fonte dos dados" tabindex="-1">
   <header class="head">
     <div class="top">
       <div class="title">
@@ -56,14 +56,14 @@ const mapCredits = [
             label="Voltar"
           />
         </div>
-        <h2>Fonte e como ler</h2>
+        <h2>Fonte dos dados</h2>
       </div>
       <div class="close" data-source-close>
         <ButtonIcon
           variant="ghost"
           size="xsmall"
           icon="close"
-          label="Fechar fonte e como ler"
+          label="Fechar fonte dos dados"
         />
       </div>
     </div>

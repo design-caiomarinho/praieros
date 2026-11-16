@@ -6,7 +6,7 @@
 //  - com o sidebar já aberto, trocar de conteúdo não fecha nem reabre: o conteúdo que saiu vira um
 //    "fantasma" (clone) que dissolve por cima do novo. Ao fechar, o fantasma fica parado até o
 //    fim da saída, para o painel não deslizar vazio.
-// O botão de informação do cabeçalho (Fonte e como ler) fica com a aparência de desabilitado
+// O botão de informação do cabeçalho (Fonte dos dados) fica com a aparência de desabilitado
 // (`data-engaged`) como o de busca: liga quando o painel está a 50% em cena e desliga também a
 // 50% na saída; trocando de painel com o sidebar aberto, na hora.
 // No mobile é o mesmo sidebar, na vertical (folha inferior): só o CSS muda.

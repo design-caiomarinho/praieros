@@ -761,7 +761,7 @@ Substitui o "pendente" da sessão 16 e o "desabilitado" da sessão 24c para **Co
 - **Painel** `share-site-panel.astro` (pendente de componentizar): o do compartilhar praia sem a prévia: título "Compartilhar site" (o Figma ainda diz "Compartilhar praia", sobra da tela copiada), texto de abertura, "Compartilhar via WhatsApp" e copiar. Sem seta de voltar (aberto só pela navbar, como a Fonte), só fechar.
 - **Ligação:** botão de compartilhar do cabeçalho (antes desabilitado) abre `#share-site-slot`, painel do sidebar/folha como a Fonte (`sidebar-shell.ts`, `sidebar-sheet.ts` e a câmera do mapa o conhecem). Um painel por vez; escolher pin, abrir busca/Fonte, clicar no mapa ou Esc o fecham. Fechar com uma ficha por baixo encerra a ficha (igual à Fonte pela navbar). O botão fica "desabilitado" (`data-engaged`) e o cabeçalho abre o vão sob ele (`data-share-open`).
 - **Link e mensagem:** raiz do site; mensagem provisória "Veja a balneabilidade das praias de Salvador de forma clara, no Praieros:" + link (`siteShareMessage`, testada).
-- **Pílula:** no mobile, o aviso do compartilhar site fica no topo, a 16 px da navbar (pedido de Caio); o do compartilhar praia segue embaixo. No desktop, 24 px do rodapé nos dois.
+- **Pílula:** no mobile, o aviso do compartilhar site fica no topo, a 16 px da navbar (pedido de Caio); o do compartilhar praia segue embaixo. No desktop, 24 px do rodapé nos dois; o do compartilhar site se centraliza na tela toda (o painel é curto), o da praia fica à esquerda do painel.
 - **Esqueleto:** o do compartilhar site não existe: o painel é só texto estático e abre sem depender do mapa (o da busca existe porque ela depende do mapa). O da prévia do compartilhar praia (imagem local, `loading="lazy"`) fica pendente.
 
 ## Sessão 37b: espaçamentos desktop (Caio)
@@ -769,3 +769,10 @@ Substitui o "pendente" da sessão 16 e o "desabilitado" da sessão 24c para **Co
 - **Navbar:** padding à esquerda do logo de 24 para 16 px (`inset-md`), igual ao mobile.
 - **Controle do mapa (zoom):** 16 px da lateral e de baixo (antes 24), também com o painel aberto (16 px à esquerda do painel).
 - **Compartilhar site com altura do conteúdo:** é a única folha assim e não tem alça de arraste. No desktop, painel no topo com a altura do texto e linha embaixo; no mobile, folha colada embaixo com a altura do conteúdo (`data-compact` no sidebar). A câmera usa a altura real da folha.
+
+## Sessão 37c: nomes e texto revelado (Caio)
+
+- **Nomes fechados:** painel "Fonte dos dados" (antes "Fonte e como ler"; rótulos acessíveis atualizados), botão da navbar revela "Fonte"; "Compartilhar praia" e "Compartilhar site" nos painéis, botão revela "Compartilhar". O botão "Como ler e fonte" da ficha (Figma 123:2440) não foi renomeado: pendente de decisão.
+- **Texto revelado:** compartilhar e informações ganham o reveal da busca. O texto entra e sai só deslizando, sem opacidade (padrão do reveal): em repouso fica deslocado por toda a sua largura, à direita e fora do botão, recortado por ele (nunca cobre os vizinhos); revela de direita para esquerda e esconde no caminho inverso, com o tempo e a curva da largura (`pin-hover`). Vale também para a busca.
+- **Linha do cabeçalho:** como o botão cresce com o texto, o vão sob o botão de Fonte/Compartilhar (desktop) deixou de usar larguras fixas no cabeçalho (`data-source-open`/`data-share-open` removidos): o botão engajado cobre a linha na sua largura (`::after`), no tempo do painel.
+- **Controle do mapa:** com o Compartilhar site aberto (painel curto, no topo) o controle não se desloca para a esquerda; com os outros painéis, sim.
