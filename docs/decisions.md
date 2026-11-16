@@ -821,3 +821,9 @@ Substitui o "pendente" da sessão 16 e o "desabilitado" da sessão 24c para **Co
 ## Sessão 42: títulos e descrições das páginas (Caio)
 
 - **Padrão:** hífen (`-`) no lugar do ponto médio (·) nos textos de `<title>`, descrição e prévia de compartilhamento. Home: título `Praieros - Balneabilidade em Salvador`. Praia: título `{praia} - Praieros`, descrição `{Status} - Boletim nº N/AAAA - emitido em dd/mm/aaaa - Fonte: Inema`. A interface (chips, rodapés) segue o Figma, com o ponto médio.
+
+## Sessão 43: página 404 (Caio)
+
+- **Página:** `src/pages/404.astro` (Figma 283:2863), `noindex`. O Astro gera `dist/404.html`; o `wrangler.jsonc` tem `assets.not_found_handling: "404-page"`, e o Cloudflare serve essa página, com status 404, em qualquer endereço inexistente. Testado só no `astro dev` (status 404, medidas do Figma); falta ver no Cloudflare depois da publicação.
+- **"404" grande:** asset SVG do Figma (`src/assets/404.svg`, exportado por Caio), usado como `<img>` decorativo (`aria-hidden`, `alt=""`), com a cor e o 5 % de opacidade embutidos no arquivo. Sem token novo. Escala com a largura em telas estreitas (máx. a largura do arquivo, 650 px).
+- **Premissas (sem Figma mobile):** o botão tem largura mínima de 160 px (`spacing-40 × 4`) como no Figma, sobre o `Button` existente (natural: 123 px); a coluna de texto tem respiro lateral de 24 px (`inset-lg`) além do limite de `size-panel-width` (477 px, o token mais próximo dos 422 px do Figma): dá 429 px no desktop (2 linhas, como no Figma) e 274 px no mobile (4 linhas, como na imagem do mobile). Fundo `surface.strong`, título `heading/large`, texto `body/medium` secundário, intervalos `stack-md` (título/texto) e `stack-xl` (texto/botão).

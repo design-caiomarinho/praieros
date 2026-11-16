@@ -24,7 +24,7 @@ Mapa dos status: `positive` = Própria, `negative` = Imprópria, `neutral` = Sem
 | `surface.accent.translucent`   | `--color-surface-accent-translucent`   | `#00a6f44d` | `alpha.brand.300`   | 1    | destaque da marca: translúcida, sobre o mapa       |
 | `surface.disabled`             | `--color-surface-disabled`             | `#f3f6f7`   | `neutral.100`       | 4    | Fundo de controles desabilitados                   |
 | `surface.hover`                | `--color-surface-hover`                | `#f3f6f7`   | `neutral.100`       | 9    | Fundo de itens interativos no hover e no foco      |
-| `surface.strong`               | `--color-surface-strong`               | `#e0e9eb`   | `neutral.200`       | 3    | Fundo de ênfase leve, acima de muted               |
+| `surface.strong`               | `--color-surface-strong`               | `#e0e9eb`   | `neutral.200`       | 4    | Fundo de ênfase leve, acima de muted               |
 | `surface.positive.subtle`      | `--color-surface-positive-subtle`      | `#dbfce7`   | `green.100`         | 0    | Própria: fundo claro                               |
 | `surface.positive.soft`        | `--color-surface-positive-soft`        | `#b9f8cf`   | `green.200`         | 5    | Própria: fundo de chip                             |
 | `surface.positive.default`     | `--color-surface-positive-default`     | `#05df72`   | `green.400`         | 3    | Própria: cor cheia (marcador, badge)               |
@@ -65,9 +65,9 @@ Mapa dos status: `positive` = Própria, `negative` = Imprópria, `neutral` = Sem
 
 | Token               | Variável                    | Valor     | Primitivo     | Usos | Papel                                  |
 | ------------------- | --------------------------- | --------- | ------------- | ---- | -------------------------------------- |
-| `content.primary`   | `--color-content-primary`   | `#343e45` | `neutral.900` | 29   | Texto principal                        |
+| `content.primary`   | `--color-content-primary`   | `#343e45` | `neutral.900` | 30   | Texto principal                        |
 | `content.accent`    | `--color-content-accent`    | `#083aa0` | `brand.900`   | 6    | Texto e ícone de destaque da marca     |
-| `content.secondary` | `--color-content-secondary` | `#496471` | `neutral.600` | 22   | Texto de apoio                         |
+| `content.secondary` | `--color-content-secondary` | `#496471` | `neutral.600` | 23   | Texto de apoio                         |
 | `content.muted`     | `--color-content-muted`     | `#557885` | `neutral.500` | 9    | Texto discreto (legendas, metadados)   |
 | `content.disabled`  | `--color-content-disabled`  | `#c1d2d7` | `neutral.300` | 10   | Texto e ícone desabilitados            |
 | `content.on-accent` | `--color-content-on-accent` | `#ecf6ff` | `brand.50`    | 5    | Texto e ícone sobre a cor de destaque  |
@@ -82,10 +82,10 @@ Mapa dos status: `positive` = Própria, `negative` = Imprópria, `neutral` = Sem
 | Estilo           | Família | Peso     | Tamanho | Altura de linha | Espaço entre letras | Variáveis                 | Usos |
 | ---------------- | ------- | -------- | ------- | --------------- | ------------------- | ------------------------- | ---- |
 | `heading/xlarge` | Switzer | semibold | 40 px   | 1.1             | -2 %                | `--typo-heading-xlarge-*` | 0    |
-| `heading/large`  | Switzer | semibold | 24 px   | 1.1             | -2 %                | `--typo-heading-large-*`  | 7    |
+| `heading/large`  | Switzer | semibold | 24 px   | 1.1             | -2 %                | `--typo-heading-large-*`  | 12   |
 | `heading/medium` | Switzer | semibold | 20 px   | 1.1             | -2 %                | `--typo-heading-medium-*` | 53   |
 | `body/large`     | Switzer | regular  | 18 px   | 1.5             | -1 %                | `--typo-body-large-*`     | 4    |
-| `body/medium`    | Switzer | regular  | 16 px   | 1.5             | -1 %                | `--typo-body-medium-*`    | 84   |
+| `body/medium`    | Switzer | regular  | 16 px   | 1.5             | -1 %                | `--typo-body-medium-*`    | 89   |
 | `body/small`     | Switzer | regular  | 14 px   | 1.5             | -1 %                | `--typo-body-small-*`     | 43   |
 | `label/medium`   | Switzer | semibold | 14 px   | 1               | 0 %                 | `--typo-label-medium-*`   | 26   |
 | `label/small`    | Switzer | semibold | 12 px   | 1               | 0 %                 | `--typo-label-small-*`    | 4    |
@@ -133,10 +133,10 @@ Escala única (4, 8, 12, 16, 24, 32, 40, 48 px) repetida em quatro papéis. O pa
 | `2xs` | 4 px  | 7          | 0        | 8          | 1           |
 | `xs`  | 8 px  | 16         | 16       | 19         | 0           |
 | `sm`  | 12 px | 22         | 0        | 3          | 0           |
-| `md`  | 16 px | 40         | 12       | 11         | 0           |
-| `lg`  | 24 px | 32         | 3        | 4          | 0           |
-| `xl`  | 32 px | 0          | 3        | 5          | 0           |
-| `2xl` | 40 px | 2          | 0        | 1          | 0           |
+| `md`  | 16 px | 40         | 12       | 12         | 0           |
+| `lg`  | 24 px | 33         | 3        | 4          | 0           |
+| `xl`  | 32 px | 1          | 3        | 6          | 0           |
+| `2xl` | 40 px | 4          | 0        | 1          | 0           |
 | `3xl` | 48 px | 0          | 0        | 0          | 0           |
 
 Variável: `--space-<papel>-<passo>` (ex.: `--space-inset-md`).
@@ -151,7 +151,7 @@ Variável: `--space-<papel>-<passo>` (ex.: `--space-inset-md`).
 | `size.control.sm`           | `--size-control-sm`           | 40 px  | `spacing.40`     | 3    |
 | `size.control.md`           | `--size-control-md`           | 48 px  | `spacing.48`     | 6    |
 | `size.control.lg`           | `--size-control-lg`           | 56 px  | `spacing.56`     | 0    |
-| `size.panel-width`          | `--size-panel-width`          | 477 px | só do código     | 15   |
+| `size.panel-width`          | `--size-panel-width`          | 477 px | só do código     | 16   |
 | `size.share-preview-height` | `--size-share-preview-height` | 300 px | só do código     | 1    |
 | `radius.full`               | `--radius-full`               | 999 px | `radius.999`     | 12   |
 | `border-width.default`      | `--border-width-default`      | 1 px   | `border-width.1` | 71   |

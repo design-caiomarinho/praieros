@@ -141,3 +141,14 @@ Sessão 11: "Posição aproximada" e "Posição muito aproximada" (linhas acima)
 | Prévia, título                          | {praia} - Praieros                                                                                                          | **Provisório**                                      |
 | Prévia, descrição                       | {Status} - Boletim nº N/AAAA - emitido em dd/mm/aaaa - Fonte: Inema (desatualizada: "{Status} - Boletim desatualizado - …") | **Provisório**, status e data do momento da geração |
 | Rótulos acessíveis                      | Voltar · Fechar compartilhamento · Compartilhar praia: {praia} · Mapa com o ponto da praia {praia}                          | Derivados (não visíveis)                            |
+
+## Página 404 (Figma 283:2863)
+
+| Elemento         | Texto                                                                                                               | Origem |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| Título da aba    | Página não encontrada - Praieros                                                                                    | Caio   |
+| Descrição (meta) | Esta página não existe ou mudou de endereço. Volte ao mapa para ver o resultado das praias de Salvador.             | Caio   |
+| Título           | Página não encontrada                                                                                               | Figma  |
+| Texto            | O endereço pode estar errado ou a página mudou de lugar. Volte ao mapa para ver o resultado das praias de Salvador. | Figma  |
+| Botão            | Voltar ao mapa                                                                                                      | Figma  |
+| "404" grande     | Decorativo (asset SVG, `aria-hidden`); o texto acima já diz o que houve                                             | Figma  |

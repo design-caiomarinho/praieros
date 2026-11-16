@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import Button from '../components/button.astro';
+import code404 from '../assets/404.svg';
+
+// Página 404 (Figma 283:2863). O Cloudflare a serve, com status 404, em qualquer endereço
+// que não existe (assets.not_found_handling no wrangler.jsonc). Fora do índice do Google.
+const home = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="Página não encontrada - Praieros"
+  description="Esta página não existe ou mudou de endereço. Volte ao mapa para ver o resultado das praias de Salvador."
+  noindex
+>
+  <main class="not-found">
+    <!-- O "404" é só decoração (asset do Figma): o texto abaixo já diz o que houve. -->
+    <img
+      class="code"
+      src={code404.src}
+      width={code404.width}
+      height={code404.height}
+      alt=""
+      aria-hidden="true"
+    />
+    <div class="content">
+      <div class="copy">
+        <h1>Página não encontrada</h1>
+        <p>
+          O endereço pode estar errado ou a página mudou de lugar. Volte ao mapa
+          para ver o resultado das praias de Salvador.
+        </p>
+      </div>
+      <Button href={home}>Voltar ao mapa</Button>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .not-found {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 100dvh;
+    padding: var(--space-inset-xl) var(--space-inset-2xl);
+    background: var(--color-surface-strong);
+    overflow: hidden;
+  }
+  /* "404" atrás do texto, centralizado; em tela estreita encolhe com a largura. */
+  .code {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: calc(100% - 2 * var(--space-inset-2xl));
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+  .content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-stack-xl);
+    max-width: var(--size-panel-width);
+    /* Coluna de texto mais estreita que o "404" (422 px no desktop, ~270 px no mobile, como no Figma). */
+    padding-inline: var(--space-inset-lg);
+    text-align: center;
+  }
+  /* Botão com 160 px de largura, como no Figma (40 x 4, da escala de espaçamento). */
+  .content :global(.btn) {
+    min-width: calc(var(--primitives-spacing-40) * 4);
+  }
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+  }
+  h1 {
+    margin: 0;
+    color: var(--color-content-primary);
+    font-family: var(--typo-heading-large-family);
+    font-weight: var(--typo-heading-large-weight);
+    font-size: var(--typo-heading-large-size);
+    line-height: var(--typo-heading-large-line);
+    letter-spacing: var(--typo-heading-large-spacing);
+  }
+  p {
+    margin: 0;
+    color: var(--color-content-secondary);
+    font-family: var(--typo-body-medium-family);
+    font-weight: var(--typo-body-medium-weight);
+    font-size: var(--typo-body-medium-size);
+    line-height: var(--typo-body-medium-line);
+    letter-spacing: var(--typo-body-medium-spacing);
+    text-wrap: balance;
+  }
+</style>

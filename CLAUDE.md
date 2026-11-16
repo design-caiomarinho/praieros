@@ -145,3 +145,4 @@ Sessão 37: Compartilhar site (Figma 126:8129, painel pelo botão da navbar, sem
 Sessão 38: tokens renomeados (sem `s-`, `translucent`, `neutral`, escala `space.inline`), sombra excluída, `tokens/code.json` (só código) separado de `tokens/tokens.json` (Figma). Ver `docs/decisions.md`, sessão 38.
 Sessão 39: SEO, favicon e miniatura: meta tags num lugar só (`src/lib/seo/`, `base-layout`), `og.jpg` do Figma, ícones do símbolo do logo (`icons:build`), páginas de praia `noindex`, `robots.txt`, `sitemap.xml`, JSON-LD, `SITE_URL`/`BASE_PATH`. Ver `docs/decisions.md`, sessão 39.
 Sessão 41: preparação do Cloudflare Pages (`public/_headers` com CSP testada, guia em `docs/maintenance.md`); migração só quando houver conta, em `pages.dev`. Ver `docs/decisions.md`, sessão 41.
+Sessão 43: página 404 (Figma 283:2863, `404.astro`, asset `src/assets/404.svg`, `not_found_handling` no `wrangler.jsonc`). Ver `docs/decisions.md`, sessão 43.
